@@ -1,8 +1,8 @@
 {
 	"corpo_teste": {
 		"sprite": "/Planetas/marte.png",
-		"raio_colisao": 2.0,
-		"raio_gravidade": 4.0,
+		"raio_colisao": 10.0,
+		"raio_gravidade": 20.0,
 		"forca_gravidade": 9.8,
 		"estatico": true,
 		"objetivo": false

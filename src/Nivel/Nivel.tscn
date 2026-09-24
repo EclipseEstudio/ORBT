@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://88laspqwjff" path="res://src/Nivel/nivel.gd" id="1_p2vsw"]
 [ext_resource type="Script" uid="uid://bmwymqjm8lm1r" path="res://src/Nivel/gerador_estrelas.gd" id="2_5xy4d"]
+[ext_resource type="PackedScene" uid="uid://b0bca4xcf6gtf" path="res://src/Nave/Nave.tscn" id="3_jp3x2"]
 
 [sub_resource type="Environment" id="Environment_5xy4d"]
 background_mode = 3
@@ -11,7 +12,6 @@ glow_enabled = true
 glow_normalized = true
 glow_strength = 1.4
 glow_bloom = 0.2
-glow_blend_mode = 0
 adjustment_enabled = true
 adjustment_brightness = 1.5
 
@@ -40,3 +40,6 @@ numero_de_estrelas = 150
 [node name="Inicio" type="Marker2D" parent="Estaticos" unique_id=1299389240]
 
 [node name="Dinamicos" type="Node2D" parent="." unique_id=621938843]
+
+[node name="Nave" parent="." unique_id=647923066 instance=ExtResource("3_jp3x2")]
+position = Vector2(92, 236)

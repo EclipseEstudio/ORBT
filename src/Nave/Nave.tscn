@@ -1,8 +1,20 @@
 [gd_scene format=3 uid="uid://b0bca4xcf6gtf"]
 
+[ext_resource type="Texture2D" uid="uid://dloi23kpyiq6k" path="res://Recursos/Sprites/nave1.png" id="1_nsb7m"]
+[ext_resource type="Script" uid="uid://bwxwt6xwaxinh" path="res://src/Nave/nave.gd" id="1_x6s2j"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ha6vo"]
+size = Vector2(8, 15)
 
 [node name="Nave" type="RigidBody2D" unique_id=647923066]
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_x6s2j")
+torque = 500.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1913769667]
+position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_ha6vo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=181634679]
+texture = ExtResource("1_nsb7m")

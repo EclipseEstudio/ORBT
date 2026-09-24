@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bsskvcv8paqi5"]
 
-[ext_resource type="Texture2D" uid="uid://bxa7c0to4dp3y" path="res://Recursos/Sprites/icon.svg" id="1_mdwsq"]
 [ext_resource type="Script" uid="uid://cuka5cvl2uvnv" path="res://src/CorpoEstelar/corpo_estelar.gd" id="1_o1noj"]
 [ext_resource type="Script" uid="uid://bfeu7lptx1oth" path="res://src/CorpoEstelar/corpo_estelar_res.gd" id="2_ko1w3"]
+[ext_resource type="Texture2D" uid="uid://hrddylp6eyln" path="res://Recursos/Sprites/Planetas/marte.png" id="3_ko1w3"]
 
 [sub_resource type="Resource" id="Resource_o1noj"]
 script = ExtResource("2_ko1w3")
@@ -21,7 +21,7 @@ corpo_estelar_res = SubResource("Resource_o1noj")
 shape = SubResource("CircleShape2D_mdwsq")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1372116637]
-texture = ExtResource("1_mdwsq")
+texture = ExtResource("3_ko1w3")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1623095228]
 
