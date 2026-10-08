@@ -2,19 +2,115 @@
 
 [ext_resource type="Texture2D" uid="uid://dloi23kpyiq6k" path="res://Recursos/Sprites/nave1.png" id="1_nsb7m"]
 [ext_resource type="Script" uid="uid://bwxwt6xwaxinh" path="res://src/Nave/nave.gd" id="1_x6s2j"]
+[ext_resource type="Texture2D" uid="uid://b6rogh2mkwaav" path="res://Recursos/Sprites/fogo1.png" id="3_15q8d"]
+[ext_resource type="Texture2D" uid="uid://ctru13hi20rlw" path="res://Recursos/Sprites/fogo2.png" id="4_fpfwb"]
+[ext_resource type="Texture2D" uid="uid://coyxw1y6m06ge" path="res://Recursos/Sprites/fogo3.png" id="5_yguqn"]
+[ext_resource type="Texture2D" uid="uid://bu403thrnubnl" path="res://Recursos/Sprites/fogo4.png" id="6_kounw"]
+[ext_resource type="Texture2D" uid="uid://drybcf1mr5a6p" path="res://Recursos/Sprites/fogo5.png" id="7_ytl75"]
+[ext_resource type="Texture2D" uid="uid://cr4ttl81vijle" path="res://Recursos/Sprites/fogo6.png" id="8_di8vb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ha6vo"]
 size = Vector2(8, 15)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ha6vo"]
+spread = 20.0
+initial_velocity_max = 10.75
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x6s2j"]
+direction = Vector3(-1, 0, 0)
+spread = 20.0
+initial_velocity_max = 10.75
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_jq6u7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fogo:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_15q8d")]
+}
+
+[sub_resource type="Animation" id="Animation_cbpa6"]
+resource_name = "default"
+length = 0.06667000347711147
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fogo:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [null]
+}
+
+[sub_resource type="Animation" id="Animation_ys344"]
+resource_name = "fogo"
+length = 0.5000083482347428
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fogo:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.2503708, 0.3325237, 0.41728467),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("3_15q8d"), ExtResource("4_fpfwb"), ExtResource("5_yguqn"), ExtResource("6_kounw"), ExtResource("7_ytl75"), ExtResource("8_di8vb")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xh1w2"]
+_data = {
+&"RESET": SubResource("Animation_jq6u7"),
+&"default": SubResource("Animation_cbpa6"),
+&"fogo": SubResource("Animation_ys344")
+}
 
 [node name="Nave" type="RigidBody2D" unique_id=647923066]
 gravity_scale = 0.0
 can_sleep = false
 script = ExtResource("1_x6s2j")
 torque = 500.0
+torque_damping = null
+impulso = null
+limite_angulo = null
+zona_morta = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1913769667]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_ha6vo")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=181634679]
+[node name="Nave" type="Sprite2D" parent="." unique_id=181634679]
 texture = ExtResource("1_nsb7m")
+
+[node name="Fogo" type="Sprite2D" parent="." unique_id=714837423]
+position = Vector2(-2, 7)
+texture = ExtResource("3_15q8d")
+centered = false
+
+[node name="RCSDireito" type="GPUParticles2D" parent="." unique_id=1868103804]
+position = Vector2(2, -3)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_ha6vo")
+
+[node name="RCSEsquerdo" type="GPUParticles2D" parent="." unique_id=542946468]
+position = Vector2(-2, -3)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_x6s2j")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=825896534]
+libraries/ = SubResource("AnimationLibrary_xh1w2")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
