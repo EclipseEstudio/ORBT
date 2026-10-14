@@ -1,22 +1,3 @@
 {
-	"teste_001":{
-		"tamanho": {
-			"x": 180, 
-			"y": 320
-		},
-		"inicio": {
-			"x": 60, 
-			"y": 130
-		},
-		"fim": {
-			"x": 130, 
-			"y": 190
-		},
-		"corpos_estelares": {
-			"corpo_teste": {
-				"x": 95,
-				"y": 160
-			}
-		}	
-	}
+  "teste_001": "res://Recursos/Fases/teste_001.json"
 }

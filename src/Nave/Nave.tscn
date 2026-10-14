@@ -2,15 +2,14 @@
 
 [ext_resource type="Texture2D" uid="uid://dloi23kpyiq6k" path="res://Recursos/Sprites/nave1.png" id="1_nsb7m"]
 [ext_resource type="Script" uid="uid://bwxwt6xwaxinh" path="res://src/Nave/nave.gd" id="1_x6s2j"]
+[ext_resource type="Script" path="res://src/Nave/entrada_nave.gd" id="9_entrada"]
+[ext_resource type="Script" path="res://src/Nave/mira_nave.gd" id="10_mira"]
 [ext_resource type="Texture2D" uid="uid://b6rogh2mkwaav" path="res://Recursos/Sprites/fogo1.png" id="3_15q8d"]
 [ext_resource type="Texture2D" uid="uid://ctru13hi20rlw" path="res://Recursos/Sprites/fogo2.png" id="4_fpfwb"]
 [ext_resource type="Texture2D" uid="uid://coyxw1y6m06ge" path="res://Recursos/Sprites/fogo3.png" id="5_yguqn"]
 [ext_resource type="Texture2D" uid="uid://bu403thrnubnl" path="res://Recursos/Sprites/fogo4.png" id="6_kounw"]
 [ext_resource type="Texture2D" uid="uid://drybcf1mr5a6p" path="res://Recursos/Sprites/fogo5.png" id="7_ytl75"]
 [ext_resource type="Texture2D" uid="uid://cr4ttl81vijle" path="res://Recursos/Sprites/fogo6.png" id="8_di8vb"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ha6vo"]
-size = Vector2(8, 15)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ha6vo"]
 spread = 20.0
@@ -78,19 +77,17 @@ _data = {
 &"fogo": SubResource("Animation_ys344")
 }
 
-[node name="Nave" type="RigidBody2D" unique_id=647923066]
-gravity_scale = 0.0
-can_sleep = false
+[node name="Nave" type="Node2D" unique_id=647923066]
 script = ExtResource("1_x6s2j")
-torque = 500.0
-torque_damping = null
-impulso = null
-limite_angulo = null
-zona_morta = null
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1913769667]
-position = Vector2(0, -0.5)
-shape = SubResource("RectangleShape2D_ha6vo")
+[node name="Entrada" type="Node" parent="."]
+script = ExtResource("9_entrada")
+
+[node name="Indicadores" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Mira" type="Node2D" parent="Indicadores"]
+script = ExtResource("10_mira")
 
 [node name="Nave" type="Sprite2D" parent="." unique_id=181634679]
 texture = ExtResource("1_nsb7m")

@@ -25,8 +25,10 @@ environment = SubResource("Environment_5xy4d")
 layer = -100
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1677124368]
-offset_right = 180.0
-offset_bottom = 320.0
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 color = Color(0, 0, 0, 1)
 
 [node name="GeradorEstrelas" type="Node2D" parent="CanvasLayer" unique_id=2104664141]

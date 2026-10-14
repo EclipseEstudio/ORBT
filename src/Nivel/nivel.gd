@@ -1,33 +1,44 @@
 extends Node2D
 
+const FabricaCorpos = preload("res://src/CorpoEstelar/gerenciador_corpos_estelares.gd")
+const Partida = preload("res://src/ControladorJogo/partida.gd")
+const CameraNivel = preload("res://src/Nivel/camera_nivel.gd")
+const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
 
-# nodo dos objetos estaticos
-@onready var objetos_estaticos = $Estaticos
-# nodo dos objetos dinâmicos
-@onready var objetos_dinamicos = $Dinamicos
-# sinceramente não sei como funciona mas sei que é importante
-# Pelo o que li, talvez seja melhor torna-lo um nodo da 
-# cena main
-@onready var world_environment = $WorldEnvironment
-@onready var fim :=  $Estaticos/Fim
-@onready var inicio := $Estaticos/Inicio
+var nivel_res: NivelRes
+var partida: Node
+var camera: Camera2D
+var corpos_visuais: Dictionary = {}
 
-# !!!!!esta propriedade deve ser definida ANTES de adicionar
-# o nodo à árvore de nodos!!!!!!!!!!
-var nivel_res : NivelRes
 
 func _ready() -> void:
-	iniciar()
-
-func iniciar() -> void:
 	if nivel_res == null:
-		return # lançar excessão
+		$Nave.hide()
+		$Nave.simulacao_automatica = false
+		$Nave.entrada.habilitada = false
+		return
+	for dados in nivel_res.corpos:
+		var corpo := FabricaCorpos.criar(dados)
+		$Estaticos.add_child(corpo)
+		corpos_visuais[dados.id] = corpo
+	partida = Partida.new()
+	add_child(partida)
+	partida.proximidade_alterada.connect(_ao_alerta)
+	partida.iniciar(nivel_res, $Nave)
+	camera = CameraNivel.new()
+	camera.partida = partida
+	add_child(camera)
+	var hud := InterfacePartida.new()
+	hud.partida = partida
+	add_child(hud)
+	queue_redraw()
 
-	fim.position = nivel_res.fim
-	inicio.position = nivel_res.inicio
-	
-	for corpo in nivel_res.corpos_estelares:
-		if not corpo:
-			continue
-		var pos = nivel_res.corpos_estelares[corpo]
-		GLOBAL.gerenciador_corpos_estelares.adicionar_corpo_estelar(objetos_estaticos,corpo, pos)
+
+func _ao_alerta(id_corpo: String, ativo: bool) -> void:
+	if corpos_visuais.has(id_corpo):
+		corpos_visuais[id_corpo].proximo = ativo
+
+
+func _draw() -> void:
+	if nivel_res != null:
+		draw_rect(nivel_res.limites, Color(0.35, 0.5, 0.7, 0.35), false, 1)
