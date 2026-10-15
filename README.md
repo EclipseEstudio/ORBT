@@ -45,6 +45,8 @@ Depois de configurar JDK, SDK Android e modelos de exportação no mesmo editor 
 ./scripts/exportar-android.ps1 -Godot godot
 ```
 
+Se `godot` não for reconhecido, passe em `-Godot` o caminho completo do executável entre aspas. Veja o [exemplo sem PATH](docs/android.md#gerar-e-instalar).
+
 Saída: `build/android/ORBT-debug.apk`. APKs, pacotes e logs em `build/` ficam fora do Git.
 
 Para verificar o conteúdo exportado sem precisar do SDK Android:

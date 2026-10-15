@@ -31,7 +31,15 @@ Na raiz do repositório, com a Godot configurada no PATH:
 ./scripts/exportar-android.ps1 -Godot godot
 ```
 
-Ou passe o caminho completo do executável da Godot ao parâmetro `-Godot`. Saída: `build/android/ORBT-debug.apk`; diagnóstico: `build/android/export-apk.log`. O script falha se a engine reportar erro, retornar código diferente de zero ou não produzir arquivo válido. Um APK antigo é removido antes da tentativa para evitar entrega desatualizada.
+Se aparecer **'godot' não é reconhecido**, o executável não está no PATH. Use o caminho do arquivo `.exe` que abre seu editor, entre aspas. Exemplo (substitua pela pasta onde você extraiu a Godot):
+
+```powershell
+.\scripts\exportar-android.ps1 -Godot "C:\Ferramentas\Godot\Godot_v4.7.2-stable_win64_console.exe"
+```
+
+Não é necessário alterar o PATH quando se usa o caminho completo. Prefira o executável terminado em `_console.exe` para acompanhar o diagnóstico no terminal.
+
+Saída: `build/android/ORBT-debug.apk`; diagnóstico: `build/android/export-apk.log`. O script verifica o executável antes de alterar a saída e falha se a engine reportar erro, retornar código diferente de zero ou não produzir arquivo válido. Com o executável localizado, um APK antigo é removido antes da tentativa para evitar entrega desatualizada.
 
 Pelo editor, abra **Project > Export**, selecione **Android**, clique em **Export Project** e mantenha **Export With Debug** marcado. Salve em `build/android/ORBT-debug.apk`.
 

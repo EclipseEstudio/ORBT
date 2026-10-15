@@ -4,6 +4,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$orbtComando = Get-Command -Name $Godot -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $orbtComando) {
+    throw "Godot não encontrada: '$Godot'. Informe o caminho completo do executável com -Godot, por exemplo: .\scripts\exportar-android.ps1 -Godot 'C:\Ferramentas\Godot\Godot_console.exe'. O nome 'godot' só funciona quando o executável está no PATH."
+}
+# Resolver antes de mudar de pasta também permite caminhos relativos ao terminal.
+$orbtExecutavel = $orbtComando.Source
 $orbtProjeto = Split-Path $PSScriptRoot -Parent
 Push-Location $orbtProjeto
 try {
@@ -15,7 +21,7 @@ try {
     # Não confundir um artefato antigo com uma exportação que acabou de falhar.
     if (Test-Path -LiteralPath $orbtDestino) { Remove-Item -LiteralPath $orbtDestino }
     $ErrorActionPreference = 'Continue'
-    $orbtSaida = & $Godot --headless --path $orbtProjeto --log-file $orbtLog $orbtModo Android $orbtDestino 2>&1
+    $orbtSaida = & $orbtExecutavel --headless --path $orbtProjeto --log-file $orbtLog $orbtModo Android $orbtDestino 2>&1
     $orbtCodigo = $LASTEXITCODE
     $ErrorActionPreference = 'Stop'
     $orbtSaida | Write-Output
