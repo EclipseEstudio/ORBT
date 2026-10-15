@@ -21,7 +21,8 @@ try {
     # Não confundir um artefato antigo com uma exportação que acabou de falhar.
     if (Test-Path -LiteralPath $orbtDestino) { Remove-Item -LiteralPath $orbtDestino }
     $ErrorActionPreference = 'Continue'
-    $orbtSaida = & $orbtExecutavel --headless --path $orbtProjeto --log-file $orbtLog $orbtModo Android $orbtDestino 2>&1
+    # Windows PowerShell 5.1 encapsula stderr em ErrorRecord; manter o diagnóstico como texto.
+    $orbtSaida = & $orbtExecutavel --headless --path $orbtProjeto --log-file $orbtLog $orbtModo Android $orbtDestino 2>&1 | ForEach-Object { $_.ToString() }
     $orbtCodigo = $LASTEXITCODE
     $ErrorActionPreference = 'Stop'
     $orbtSaida | Write-Output

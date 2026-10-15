@@ -1,6 +1,6 @@
 # Estado da branch e continuidade das issues
 
-Atualizado em 14/10/2026. Repositório: [EclipseEstudio/ORBT](https://github.com/EclipseEstudio/ORBT).
+Atualizado em 15/10/2026. Repositório: [EclipseEstudio/ORBT](https://github.com/EclipseEstudio/ORBT).
 
 ## Situação do Git
 
@@ -26,7 +26,7 @@ Dependências implementadas para não deixar essas funcionalidades isoladas:
 - **#7–#14:** corpos por dados, gravidade suavizada, contatos por segmento, zonas separadas e alertas de proximidade por ID. O modelo e as regras são candidatos documentados para aceite.
 - **#32/#33:** contrato de fase v1, arquivo por fase, validação de tipos/referências/geometria, diagnóstico de erro e carregamento por arquivo ou memória. Os dados autorais não são alterados pela simulação.
 - **#34–#37:** início no apoio, Terra, limites independentes da tela, vitória/derrota, tempo, pausa e reinício. Foram corrigidas a instanciação e a limpeza nas trocas de mundo/interface.
-- **Integração #4:** HUD, câmera de abertura/acompanhamento/exploração, rota reproduzível e início direto da fase quando a plataforma é Android. Preset e script de exportação, JSON incluído, tela em retrato e margens de área segura. Pacote de recursos validado; geração de APK e instalação em aparelho ainda pendentes.
+- **Integração #4:** HUD, câmera de abertura/acompanhamento/exploração, rota reproduzível e início direto da fase quando a plataforma é Android. Preset e script de exportação, JSON incluído, tela em retrato e margens de área segura. APK de depuração gerado, com assinatura, alinhamento e conteúdo verificados; instalação em aparelho ainda pendente.
 
 As cenas da nave e dos corpos usam agora simulação explícita compartilhada com a prévia, em vez de combinar `RigidBody2D` com outro cálculo para a previsão. Sprites e animações foram preservados. O cadastro global antigo de corpos foi substituído pelos dados completos de cada fase.
 
@@ -37,6 +37,7 @@ Godot `4.7.2.stable.official.ed1daf0bf`, Windows:
 - **68 verificações de controles/interface**, sem falhas.
 - **139 verificações de dados, física e partida**, sem falhas.
 - **10 verificações do pacote exportado**, sem falhas: fase e catálogo incluídos, arquivos de desenvolvimento excluídos, cena principal e rota funcionando em pasta isolada.
+- Em 15/10, APK exportado com Godot 4.7.2 / Windows PowerShell 5.1; assinatura v2/v3 e alinhamento de 16 KB verificados. Conteúdo JSON conferido e manifesto lido com AAPT2. Metadados e observações em [android.md](android.md).
 - Rota de um impulso até a Terra com saldo inicial 5 e com o último combustível.
 - Comparação de prévia e voo, com erro inferior a 0,001 unidade nos pontos testados.
 - Rejeição de eventos duplicados/atrasados, inclusive entre reinícios; pausa sem cobrança pendente.
@@ -52,8 +53,8 @@ Para reproduzir, consulte o [README](../README.md). O executor `tests/run.ps1` t
 
 O [contrato de fases e simulação](fases-e-simulacao.md) registra parâmetros, unidades, regras propostas e limites de aceite. As escolhas não foram apresentadas como decisões já aprovadas no GDD.
 
-A implementação desta branch está preparada para revisão. O pacote exportado usa os mesmos recursos de jogo e completou a rota de teste. A tentativa de APK identificou dependências ausentes no editor usado: JDK configurado, SDK Android e modelos de exportação da versão 4.7.2. Instruções e roteiro estão em [android.md](android.md).
+A implementação desta branch está preparada para revisão. O pacote exportado usa os mesmos recursos de jogo e completou a rota de teste. Em 15/10 foram instalados/configurados JDK, SDK Android e modelos 4.7.2; também foi habilitada a importação ETC2/ASTC exigida pela plataforma. O APK foi gerado em `build/android/ORBT-debug.apk`. Instruções e roteiro estão em [android.md](android.md).
 
-Para encerrar as issues que exigem aceite Android, ainda é necessário gerar/instalar o APK e registrar aparelho/versão, ergonomia, gestos reais, suspensão/retomada, legibilidade e desempenho da prévia. Também é necessário validar com a equipe as regras de direção livre, gravidade, contato contra origem, contato seguro sem combustível e contagem durante pouso. Nenhuma dessas evidências foi substituída por teste desktop.
+Para encerrar as issues que exigem aceite Android, ainda é necessário instalar/testar o APK e registrar aparelho/versão, ergonomia, gestos reais, suspensão/retomada, legibilidade e desempenho da prévia. Também é necessário validar com a equipe as regras de direção livre, gravidade, contato contra origem, contato seguro sem combustível e contagem durante pouso. Nenhuma dessas evidências foi substituída por teste desktop.
 
 Depois do aceite de M1, seguem editor (#2/#21–#26), seleção/campanha (#5/#38–#41), persistência e acabamento visual (#3/#27–#31). Essas entregas não foram acrescentadas à branch de nave e controles.

@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2. A branch `implementa-nave-e-controles` contém u
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em **Start**. O fluxo Android abre a fase diretamente quando executado nessa plataforma. A configuração de exportação está incluída; a geração do APK depende das ferramentas Android e o teste em aparelho permanece pendente.
+Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em **Start**. O fluxo Android abre a fase diretamente quando executado nessa plataforma. O APK de depuração foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
@@ -37,7 +37,7 @@ Para capturas com renderizador real, execute `godot --path . --script tests/capt
 
 ## Android
 
-O preset **Android** inclui catálogo e fases JSON, usa orientação retrato e gera um APK de depuração para ARM de 32/64 bits. Consulte a [preparação e validação Android](docs/android.md).
+O preset **Android** inclui catálogo e fases JSON, usa orientação retrato e gera um APK de depuração para ARM de 32/64 bits. A importação de texturas ETC2/ASTC necessária ao renderizador Mobile está habilitada. Consulte a [preparação e validação Android](docs/android.md).
 
 Depois de configurar JDK, SDK Android e modelos de exportação no mesmo editor utilizado pelo comando:
 

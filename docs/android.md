@@ -9,6 +9,7 @@ O preset `Android` em `export_presets.cfg` está pronto para um APK de depuraç�
 - Catálogo `Recursos/Niveis.json` e arquivos `Recursos/Fases/*.json` incluídos explicitamente.
 - Testes, documentação, scripts auxiliares, referências visuais e temporários excluídos.
 - Tela em retrato; HUD ajustado à área segura informada pelo Android, em coordenadas lógicas.
+- Importação ETC2/ASTC habilitada em `project.godot`, exigida pela exportação Mobile para Android.
 - A fase abre diretamente no Android. Suspender/perder foco pausa a partida e cancela a entrada; é preciso tocar em Retomar.
 
 O renderizador continua Mobile. A compatibilidade gráfica, os recortes de tela e o desempenho precisam ser verificados no aparelho escolhido. Nenhuma regra proposta do protótipo ganha aceite por causa da exportação.
@@ -18,6 +19,8 @@ O renderizador continua Mobile. A compatibilidade gráfica, os recortes de tela 
 Use Godot 4.7.2, versão que validou esta implementação, e modelos correspondentes ao editor. Em **Editor > Manage Export Templates**, instale os modelos Android. [Modelos de exportação](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html#export-templates).
 
 Instale OpenJDK 17 e Android SDK, incluindo os componentes exigidos pela versão do Godot. O Android Studio fornece o SDK Manager. Em **Editor > Editor Settings > Export > Android**, informe **Java SDK Path** e **Android SDK Path**. O segundo deve apontar para a pasta que contém `platform-tools` e `build-tools`. Siga as versões de componentes do [guia oficial Android](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html).
+
+Para **Godot 4.7.2**, o [arquivo de versões da própria engine](https://github.com/godotengine/godot/blob/4.7.2-stable/platform/android/java/app/config.gradle) define Java 17, SDK 36 e Build-Tools 36.1.0. Use essas versões se o guia genérico da documentação indicar versões anteriores. O preset desta branch usa modelos APK prontos, com Gradle desativado; não compila a engine nem precisa de NDK/CMake para esse fluxo.
 
 As configurações de SDK pertencem ao editor utilizado, não ao projeto. Um editor portátil em modo autocontido pode ter configurações e modelos diferentes do editor instalado. Execute os scripts com o caminho do mesmo editor configurado.
 
@@ -53,6 +56,19 @@ Transfira o APK para o telefone e abra pelo gerenciador de arquivos; autorize a 
 - A exportação de APK foi tentada. O editor usado informou modelos Android ausentes, Java SDK não configurado e ausência de SDK válido com `adb`/`apksigner`. Nenhum APK foi produzido.
 - O primeiro teste de empacotamento encontrou bloqueio do armazenamento interno `user://` pelo ambiente restrito. Reexecutado com acesso normal aos dados da Godot, passou sem erros de script/exportação. A mensagem sobre `build-tools` ausente não impede exportar apenas PCK.
 - PCK não é um aplicativo Android. Não há evidência de instalação, desempenho ou ergonomia em aparelho nesta entrega.
+
+## APK gerado em 15/10/2026
+
+As dependências foram instaladas e os caminhos foram configurados no editor Godot do computador de desenvolvimento. Uma cópia das configurações anteriores foi preservada antes de alterar os dois caminhos de SDK.
+
+- Eclipse Temurin JDK 17.0.20.1+1; Android Platform-Tools 37.0.1; SDK Platform 36 e Build-Tools 36.1.0; modelos Android oficiais 4.7.2.stable. Downloads conferidos contra os checksums publicados.
+- Exportação executada com Windows PowerShell 5.1 e Godot 4.7.2, concluída com código zero. O script normaliza stderr para texto nesse PowerShell, mantendo os erros detectáveis.
+- Artefato: `build/android/ORBT-debug.apk`, 57.748.423 bytes (55,1 MiB), assinatura de depuração. SHA-256: `3a7dfaad05c14a6554f2d7f1032b9d275447a359308ce4b5cf1e2a59f30c8b89`.
+- `apksigner verify`: assinatura válida nos esquemas v2 e v3. `zipalign -c -P 16 4`: passou.
+- AAPT2 leu o manifesto: `com.eclipseestudio.orbt`, versão 0.1.0 / código 1, Android mínimo API 24, alvo API 36, arquiteturas `arm64-v8a` e `armeabi-v7a`.
+- O AAPT legado não interpreta os atributos Vulkan adicionados pelo exportador; a leitura com AAPT2 foi concluída. Este reportou um aviso de referência a `themed_icon.xml` ausente na tabela de recursos do modelo; o ícone principal está empacotado. Conferir apresentação do ícone no aparelho durante o aceite.
+- Catálogo e fase dentro do APK conferidos byte a byte com os JSON do projeto; testes, scripts auxiliares, documentação, temporários e referências visuais não foram incluídos.
+- Instalação e execução em telefone ainda não realizadas. As verificações do pacote não substituem o roteiro abaixo.
 
 ## Roteiro para aceite em aparelho — issues #4 e #15–#20
 
