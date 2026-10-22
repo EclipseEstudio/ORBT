@@ -1,6 +1,7 @@
 extends Control
 
 const AreaSegura = preload("res://src/Nivel/interface_partida.gd")
+const Tema = preload("res://src/Visual/tema_visual.gd")
 signal fase_escolhida(id: String)
 signal voltar
 signal recarregar
@@ -16,6 +17,7 @@ var _transformacao := Transform2D()
 
 
 func _ready() -> void:
+	theme = Tema.criar()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var fundo := ColorRect.new()
 	fundo.color = Color("0b1423")
