@@ -20,6 +20,8 @@ func _executar() -> void:
 	conferir(FileAccess.file_exists("res://Recursos/Niveis.json"), "Catálogo incluído no pacote")
 	conferir(FileAccess.file_exists("res://Recursos/Fases/teste_001.json"), "JSON da fase incluído no pacote")
 	conferir(not ResourceLoader.exists("res://tests/test_controles.gd"), "Testes excluídos da entrega")
+	conferir(not ResourceLoader.exists("res://addons/orbt_editor/plugin.gd"), "Plugin de edição excluído da entrega")
+	conferir(not ResourceLoader.exists("res://addons/orbt_editor/teste.tscn"), "Cena de teste do editor excluída da entrega")
 	conferir(not DirAccess.dir_exists_absolute("res://Recursos/ModelosVisuais"), "Referências autorais excluídas da entrega")
 	conferir(not DirAccess.dir_exists_absolute("res://tmp"), "Arquivos temporários excluídos da entrega")
 	conferir(ProjectSettings.get_setting("display/window/handheld/orientation") == 1, "Orientação retrato incluída")

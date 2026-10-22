@@ -1,6 +1,6 @@
 # ORBT
 
-Puzzle espacial em Godot 4.7.2. A branch `implementa-nave-e-controles` contém uma fase de protótipo com pouso, impulsos, combustível, gravidade, prévia de trajetória e ciclo de partida.
+Puzzle espacial em Godot 4.7.2, com fase de protótipo, pouso, impulsos, combustível, gravidade, prévia de trajetória e ciclo de partida.
 
 ## Jogar
 
@@ -57,10 +57,15 @@ Para verificar o conteúdo exportado sem precisar do SDK Android:
 
 Esse teste exporta um PCK com o preset Android e carrega a fase em uma pasta isolada, conferindo inclusões/exclusões e vitória. Ele verifica recursos e scripts empacotados no desktop; não substitui gerar o APK nem testar toque e desempenho no telefone.
 
+## Editor de fases
+
+Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [guia do editor](docs/editor-de-fases.md), incluindo ativação/desativação, alterações pendentes e roteiro de reprodução.
+
 ## Documentação
 
 - [Estado da branch, issues e evidências](docs/estado-da-branch.md)
 - [Contrato JSON e regras do protótipo](docs/fases-e-simulacao.md)
 - [Exportação e aceite Android](docs/android.md)
+- [Editor de fases JSON](docs/editor-de-fases.md)
 
-O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. O carregador valida os dados antes de criar a simulação e também aceita dados em memória para a futura integração com o editor. Campanha, persistência e plugin de edição continuam fora desta branch.
+O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Campanha e persistência continuam fora desta entrega.

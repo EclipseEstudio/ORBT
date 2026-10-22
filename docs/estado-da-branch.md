@@ -1,5 +1,11 @@
 # Estado da branch e continuidade das issues
 
+## Atualização de 22/10/2026
+
+O PR #42 integrou a base de #1/#6/#4 à `main` no commit `d0c0cae`. A aprovação formal foi recusada pelo GitHub por ser a mesma conta autora; o merge foi autorizado pelo usuário. Aceite Android de #4 permanece pendente, conforme [android.md](android.md).
+
+A branch `feat/issue-2-editor-fases` implementa o plugin de edição #2/#21–#26. O [guia do editor](editor-de-fases.md) registra funcionalidades, testes e reprodução independente pendente. As notas abaixo são histórico da primeira implementação, anterior ao merge e ao plugin.
+
 Atualizado em 15/10/2026. Repositório: [EclipseEstudio/ORBT](https://github.com/EclipseEstudio/ORBT).
 
 ## Situação do Git
