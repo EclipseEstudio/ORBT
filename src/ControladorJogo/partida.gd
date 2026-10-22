@@ -5,6 +5,8 @@ signal concluida(id_fase: String)
 signal perdida(motivo: String)
 signal proximidade_alterada(id_corpo: String, proximo: bool)
 signal reiniciada
+signal selecao_solicitada
+var campanha_permitida := false
 
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
 var estado := Estado.JOGANDO

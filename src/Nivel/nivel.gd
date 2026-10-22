@@ -6,6 +6,7 @@ const CameraNivel = preload("res://src/Nivel/camera_nivel.gd")
 const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
 
 var nivel_res: NivelRes
+var campanha_permitida := false
 var partida: Node
 var camera: Camera2D
 var corpos_visuais: Dictionary = {}
@@ -22,6 +23,7 @@ func _ready() -> void:
 		$Estaticos.add_child(corpo)
 		corpos_visuais[dados.id] = corpo
 	partida = Partida.new()
+	partida.campanha_permitida = campanha_permitida
 	add_child(partida)
 	partida.proximidade_alterada.connect(_ao_alerta)
 	partida.iniciar(nivel_res, $Nave)

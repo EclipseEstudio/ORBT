@@ -20,12 +20,18 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -24.0
+offset_right = 60.0
+offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1588711710]
 layout_mode = 2
-text = "Start"
+text = "Campanha"
+custom_minimum_size = Vector2(120, 48)
+theme_override_font_sizes/font_size = 12
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
