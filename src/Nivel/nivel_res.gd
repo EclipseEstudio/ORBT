@@ -1,3 +1,4 @@
+@tool
 class_name NivelRes extends Resource
 ## Dados validados; cada tentativa recebe sua própria cópia.
 

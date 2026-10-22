@@ -1,3 +1,4 @@
+@tool
 class_name CarregadorFase extends RefCounted
 
 const Nivel = preload("res://src/Nivel/nivel_res.gd")

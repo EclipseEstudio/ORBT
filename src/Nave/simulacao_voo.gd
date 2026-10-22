@@ -1,3 +1,4 @@
+@tool
 class_name SimulacaoVoo extends RefCounted
 ## Integrador compartilhado pelo voo e pela prévia. Corpos estáticos.
 
