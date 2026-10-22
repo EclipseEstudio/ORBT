@@ -267,7 +267,11 @@ func testar_cena_principal() -> void:
 	mouse(centro, false)
 	await process_frame
 	conferir(impulsos.is_empty(), "Start não lança a nave do menu")
-	conferir(cena.mundo_atual.nivel_res != null, "Start carrega nível JSON")
+	conferir(cena.interface_atual.cartoes.get_child_count() == 1, "Menu abre seleção por catálogo")
+	cena.interface_atual.escolher("teste_001")
+	await process_frame
+	await process_frame
+	conferir(cena.mundo_atual.nivel_res != null, "Escolha carrega nível JSON")
 	var nave_jogo = cena.mundo_atual.get_node("Nave")
 	cena.mundo_atual.partida.set_physics_process(false)
 	cena.mundo_atual.camera._process(2.0)

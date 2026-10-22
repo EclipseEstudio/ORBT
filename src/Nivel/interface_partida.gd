@@ -63,7 +63,7 @@ func _ready() -> void:
 	base.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	base.offset_left = 6
 	base.offset_right = -6
-	base.offset_top = -100
+	base.offset_top = -130 if partida.campanha_permitida else -100
 	base.offset_bottom = -6
 	_mensagem = rotulo(base, "", 10)
 	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -73,6 +73,10 @@ func _ready() -> void:
 	base.add_child(acoes)
 	_explorar = botao(acoes, "Explorar mapa", partida.alternar_exploracao)
 	botao(acoes, "Reiniciar", partida.reiniciar)
+	if partida.campanha_permitida:
+		botao(base, "Seleção de fases", func():
+			partida.nave.entrada.cancelar()
+			partida.selecao_solicitada.emit.call_deferred())
 	get_viewport().size_changed.connect(_atualizar_area_segura)
 	_atualizar_area_segura()
 

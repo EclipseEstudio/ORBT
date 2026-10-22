@@ -2,6 +2,8 @@
 
 ## Atualização de 22/10/2026
 
+O PR #43 do editor também foi aprovado e integrado à `main` em `45466e2`. A entrega seguinte está em `feat/issue-5-selecao-fases`: seleção e progressão em memória de M2, documentadas em [campanha.md](campanha.md). Persistência M3 e aceite Android continuam pendentes. Verificações atuais: 69 controles, 142 partida, 32 editor, 31 campanha e 15 pacote, todas passando.
+
 O PR #42 integrou a base de #1/#6/#4 à `main` no commit `d0c0cae`. A aprovação formal foi recusada pelo GitHub por ser a mesma conta autora; o merge foi autorizado pelo usuário. Aceite Android de #4 permanece pendente, conforme [android.md](android.md).
 
 A branch `feat/issue-2-editor-fases` implementa o plugin de edição #2/#21–#26. O [guia do editor](editor-de-fases.md) registra funcionalidades, testes e reprodução independente pendente. As notas abaixo são histórico da primeira implementação, anterior ao merge e ao plugin.

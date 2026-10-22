@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2, com fase de protótipo, pouso, impulsos, combust
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em **Start**. O fluxo Android abre a fase diretamente quando executado nessa plataforma. O APK de depuração foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
+Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em **Campanha** e escolha a fase. O fluxo Android abre diretamente a primeira fase do catálogo. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
@@ -12,6 +12,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - **Explorar mapa** muda o arraste para a câmera; **Voltar à nave** restaura a mira.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
+- **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. O progresso desta etapa vale somente durante a sessão; fechar o aplicativo reinicia a liberação.
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A prévia termina no primeiro contato ou após três segundos.
 
@@ -67,5 +68,6 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Contrato JSON e regras do protótipo](docs/fases-e-simulacao.md)
 - [Exportação e aceite Android](docs/android.md)
 - [Editor de fases JSON](docs/editor-de-fases.md)
+- [Campanha e seleção de fases](docs/campanha.md)
 
-O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Campanha e persistência continuam fora desta entrega.
+O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados do catálogo e progresso da sessão. Persistência e checkpoints ficam para M3.

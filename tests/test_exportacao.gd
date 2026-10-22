@@ -47,6 +47,11 @@ func _executar() -> void:
 	for passo in range(180):
 		partida.avancar(1.0 / 60)
 	conferir(partida.estado == partida.Estado.CONCLUIDA and nave.combustivel == 4, "Rota exportada chega à Terra com uma cobrança")
+	jogo.mostrar_selecao()
+	await process_frame
+	conferir(jogo.interface_atual.cartoes.get_child_count() == 1, "Campanha funciona no pacote isolado")
+	conferir(jogo.progresso.estado("teste_001") == "Concluída", "Vitória exportada atualiza estado da sessão")
+	conferir(jogo.iniciar_fase("teste_001") and jogo.mundo_atual.get_node("Nave").combustivel == 5, "Repetição exportada restaura combustível")
 	jogo.queue_free()
 	await process_frame
 	print("Exportação: %d verificações, %d falhas." % [verificacoes, falhas])
