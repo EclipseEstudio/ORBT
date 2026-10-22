@@ -48,7 +48,15 @@ Pelo editor, abra **Project > Export**, selecione **Android**, clique em **Expor
 
 Transfira o APK para o telefone e abra pelo gerenciador de arquivos; autorize a instalação por esse aplicativo quando solicitada. Abra ORBT e aguarde a câmera apresentar a Terra e voltar à nave. A rota de referência é um arraste vertical para baixo de 80 unidades lógicas na área central livre: um impulso completo para cima chega à Terra.
 
-## Evidências locais em 14/10/2026
+## Retomada da issue #4 em 22/10/2026
+
+Base integrada `8c4c5c0`, branch `feat/issue-4-primeira-fase-android`. Controles: 68 verificações; partida: 142; pacote exportado: 10. Todas passaram com Godot 4.7.2. A referência remota `main` consultada ainda aponta para `1de3c4d`; a integração permanece na branch de trabalho.
+
+A nova exportação APK falhou porque `export/android/java_sdk_path` está vazio no editor utilizado. ADB iniciou, mas não encontrou aparelho conectado. Não há APK novo nem aceite Android nesta retomada.
+
+Após configurar Java, gerar o APK e conectar/autorizar o telefone, execute `./scripts/evidencias-android.ps1 -Adb '<caminho do adb.exe>'`. Com vários aparelhos, informe `-Serial`. O script grava modelo, Android/API, hashes do APK e JSON e informações do pacote instalado em `build/android/evidencias-*.json`. Não instala nem abre o aplicativo. Complete o registro com o roteiro manual abaixo, versão da Godot, revisão testada, resultados e capturas; os metadados sozinhos não demonstram aceite ou que o APK instalado corresponde ao arquivo local.
+
+## Histórico de 14/10/2026
 
 - Godot 4.7.2.stable.official.ed1daf0bf / Windows.
 - Controles e interface: 68 verificações; dados, física e partida: 139; nenhuma falha.
