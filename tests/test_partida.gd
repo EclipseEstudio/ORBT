@@ -89,6 +89,14 @@ func testar_fisica(nivel: NivelRes) -> void:
 	var contato := Fisica.passo(Vector2(-100, 0), Vector2(12000, 0), 1.0 / 60, [corpo], vazio, limites, 8)
 	conferir(not contato.contact.is_empty() and contato.position.x < 0, "Segmento rápido não atravessa corpo")
 	var saida := Vector2(0, -corpo.collision_radius - 8)
+	contato = Fisica.passo(saida, Vector2(80, 0), 1.0 / 60, [corpo], vazio, limites, 8, corpo.id)
+	conferir(contato.contact.is_empty(), "Saída tangencial não recaptura na superfície")
+	contato = Fisica.passo(saida + Vector2(0, 0.0005), Vector2(0, -80), 1.0 / 60, [corpo], vazio, limites, 8, corpo.id)
+	conferir(not contato.contact.is_empty(), "Origem não ignora penetração pequena")
+	var asteroide: Dictionary = corpo.duplicate(true)
+	asteroide.type = "asteroid"
+	asteroide.mass = 1000
+	conferir(Fisica.aceleracao(Vector2(100, 0), [asteroide], nivel.fisica) == Vector2.ZERO, "Asteroide não gera gravidade")
 	contato = Fisica.passo(saida, Vector2(0, -80), 1.0 / 60, [corpo], vazio, limites, 8, corpo.id)
 	conferir(contato.contact.is_empty(), "Decolagem externa ignora só recaptura")
 	contato = Fisica.passo(saida, Vector2(0, 80), 1.0 / 60, [corpo], vazio, limites, 8, corpo.id)

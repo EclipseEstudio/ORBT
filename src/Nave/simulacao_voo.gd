@@ -6,7 +6,7 @@ static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> V
 	var epsilon: float = fisica.get("softening", 8.0)
 	var constante: float = fisica.get("gravity_constant", 1.0)
 	for corpo in corpos:
-		if corpo.mass <= 0.0:
+		if corpo.type in ["asteroid", "earth"] or corpo.mass <= 0.0:
 			continue
 		var r: Vector2 = corpo.position - posicao
 		resultado += constante * corpo.mass * r / pow(r.length_squared() + epsilon * epsilon, 1.5)
@@ -50,7 +50,7 @@ static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: A
 		var relativo: Vector2 = posicao - corpo.position
 		# A proteção vale só para saída externa do apoio de origem.
 		if corpo.id == origem and corpo.type in ["planet", "satellite"]:
-			if relativo.length() >= corpo.collision_radius + raio_nave - 0.001 and relativo.dot(fim - posicao) > 0.0:
+			if relativo.length() >= corpo.collision_radius + raio_nave and relativo.dot(fim - posicao) >= 0.0:
 				continue
 		var t := intersecao_circulo(posicao, fim, corpo.position, raio_contato(corpo) + raio_nave)
 		var p := 0 if corpo.type in ["sun", "asteroid"] else (1 if corpo.type == "earth" else 2)
