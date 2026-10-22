@@ -1,17 +1,14 @@
 extends Control
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
 func _on_button_pressed() -> void:
-	GLOBAL.controlador_jogo.alterar_interface_nodo(Control.new(), true)
-	GLOBAL.controlador_jogo.alterar_mundo_nodo(GLOBAL.gerendiador_de_nivel.obter_nivel_instancia("teste_001"))
-	
+	if not GLOBAL.controlador_jogo.iniciar_fase("teste_001"):
+		$VBoxContainer/Button.text = "Fase indisponível"
+		$VBoxContainer/Button.tooltip_text = "\n".join(GLOBAL.gerendiador_de_nivel.erros)
+		var diagnostico := Label.new()
+		diagnostico.text = $VBoxContainer/Button.tooltip_text
+		diagnostico.custom_minimum_size.x = 160
+		diagnostico.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		diagnostico.add_theme_font_size_override("font_size", 9)
+		$VBoxContainer.add_child(diagnostico)
+		$VBoxContainer/Button.disabled = true

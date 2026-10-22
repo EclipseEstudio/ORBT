@@ -22,10 +22,13 @@ UTILITARIO="*uid://bmf5ansau0jn"
 
 [display]
 
-window/size/viewport_width=720
-window/size/viewport_height=1280
+window/size/viewport_width=180
+window/size/viewport_height=320
+window/size/window_width_override=360
+window/size/window_height_override=640
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [dotnet]
 
@@ -41,5 +44,7 @@ pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
