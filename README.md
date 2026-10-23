@@ -12,7 +12,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - **Explorar mapa** muda o arraste para a câmera; **Voltar à nave** restaura a mira.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
-- **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. O progresso desta etapa vale somente durante a sessão; fechar o aplicativo reinicia a liberação.
+- **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A prévia termina no primeiro contato ou após três segundos.
 
@@ -70,4 +70,4 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Editor de fases JSON](docs/editor-de-fases.md)
 - [Campanha e seleção de fases](docs/campanha.md)
 
-O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados do catálogo e progresso da sessão. Persistência e checkpoints ficam para M3.
+O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados e progresso persistente por ID, com backup recuperável. Checkpoints de pouso e preferências continuam pendentes.

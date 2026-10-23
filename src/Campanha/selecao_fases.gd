@@ -13,6 +13,8 @@ var _margem: MarginContainer
 var _ocupada := false
 var _segura := Rect2()
 var _transformacao := Transform2D()
+var _nota: Label
+var _tentar_salvar: Button
 
 
 func _ready() -> void:
@@ -30,7 +32,7 @@ func _ready() -> void:
 	var coluna := VBoxContainer.new()
 	_margem.add_child(coluna)
 	_rotulo(coluna, "Campanha", 18)
-	_rotulo(coluna, "O progresso desta versão é reiniciado ao fechar o aplicativo.", 9)
+	_nota = _rotulo(coluna, progresso.descricao() if progresso != null else "", 9)
 	mensagem = _rotulo(coluna, "", 10)
 	var rolagem := ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -39,6 +41,10 @@ func _ready() -> void:
 	cartoes = VBoxContainer.new()
 	cartoes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rolagem.add_child(cartoes)
+	_tentar_salvar = _botao(coluna, "Tentar salvar novamente", func():
+		progresso.salvar()
+		_nota.text = progresso.descricao()
+		_tentar_salvar.visible = progresso.salvamento_pendente(), 40)
 	_botao(coluna, "Atualizar lista", func(): recarregar.emit(), 28)
 	_botao(coluna, "Voltar ao menu", func(): voltar.emit(), 40)
 	atualizar(itens, erros)
@@ -71,6 +77,8 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 	if not is_instance_valid(cartoes):
 		return
 	_ocupada = false
+	_nota.text = progresso.descricao() if progresso != null else ""
+	_tentar_salvar.visible = progresso != null and progresso.salvamento_pendente()
 	for filho in cartoes.get_children():
 		cartoes.remove_child(filho)
 		filho.queue_free()

@@ -11,6 +11,7 @@ var campanha_permitida := false
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
 var estado := Estado.JOGANDO
 var motivo := ""
+var aviso_salvamento := ""
 var tempo_restante := 0.0
 var temporizador_ativo := false
 var explorando := false

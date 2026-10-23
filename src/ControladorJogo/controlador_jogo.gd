@@ -1,6 +1,9 @@
 class_name ControladorJogo extends Node
 
 const ProgressoSessao = preload("res://src/Campanha/progresso_sessao.gd")
+const ProgressoPersistente = preload("res://src/Campanha/progresso_persistente.gd")
+@export var persistir_progresso := true
+var caminho_progresso := "user://progresso.json"
 const Selecao = preload("res://src/Campanha/selecao_fases.gd")
 var progresso := ProgressoSessao.new()
 var erro_abertura := ""
@@ -14,6 +17,11 @@ var interface_atual: Control
 
 func _ready() -> void:
 	GLOBAL.controlador_jogo = self
+	if persistir_progresso:
+		var salvo := ProgressoPersistente.new()
+		salvo.caminho = caminho_progresso
+		salvo.carregar()
+		progresso = salvo
 	if interface.get_child_count() > 0:
 		interface_atual = interface.get_child(0)
 	if mundo.get_child_count() > 0:
@@ -47,7 +55,8 @@ func iniciar_fase(id_nivel: String) -> bool:
 	alterar_mundo_nodo(instancia)
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
-			progresso.concluir(id, GLOBAL.gerendiador_de_nivel.itens))
+			progresso.concluir(id, GLOBAL.gerendiador_de_nivel.itens)
+			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:
 			mostrar_selecao())

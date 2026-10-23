@@ -2,6 +2,8 @@
 
 ## Atualização de 22/10/2026
 
+A revisão visual do PR #45 foi adiada pelo usuário. A branch `feat/issue-40-progresso-persistente`, baseada na `main` de #44, completa gravação/restauração de conclusão e desbloqueio por ID, backup, validação e retentativa de gravação. São 314 verificações passando (69 controles, 142 partida, 32 editor, 31 campanha, 24 persistência e 16 pacote). Checkpoints de pouso e preferências seguem pendentes. Contrato e evidências atuais em [campanha.md](campanha.md).
+
 O PR #43 do editor também foi aprovado e integrado à `main` em `45466e2`. A entrega seguinte está em `feat/issue-5-selecao-fases`: seleção e progressão em memória de M2, documentadas em [campanha.md](campanha.md). Persistência M3 e aceite Android continuam pendentes. Verificações atuais: 69 controles, 142 partida, 32 editor, 31 campanha e 15 pacote, todas passando.
 
 O PR #42 integrou a base de #1/#6/#4 à `main` no commit `d0c0cae`. A aprovação formal foi recusada pelo GitHub por ser a mesma conta autora; o merge foi autorizado pelo usuário. Aceite Android de #4 permanece pendente, conforme [android.md](android.md).

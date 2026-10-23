@@ -91,6 +91,7 @@ func _executar() -> void:
 	conferir(Catalogo.carregar(caminho).itens.is_empty() and Catalogo.carregar(caminho).erros.is_empty(), "Catálogo vazio válido")
 	gravar(caminho, catalogo)
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.persistir_progresso = false
 	root.add_child(jogo)
 	await process_frame
 	var gerenciador = jogo.get_node("GerenciadorDeNivel")
@@ -130,6 +131,7 @@ func _executar() -> void:
 	conferir(not paused, "Retorno da pausa mantém seleção operável")
 	await process_frame
 	conferir(jogo.iniciar_fase("a"), "Concluída pode ser repetida")
+	jogo.mundo_atual.partida.set_physics_process(false)
 	await process_frame
 	conferir(jogo.mundo_atual.get_node("Nave").combustivel == 3 and jogo.mundo_atual.partida.proximos.is_empty(), "Repetição restaura saldo e contatos")
 	jogo.mostrar_selecao()

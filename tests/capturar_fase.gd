@@ -7,6 +7,7 @@ func _initialize() -> void:
 
 func _capturar() -> void:
 	var main = load("res://src/ControladorJogo/main.tscn").instantiate()
+	main.persistir_progresso = false
 	root.add_child(main)
 	await process_frame
 	main.iniciar_fase("teste_001")
