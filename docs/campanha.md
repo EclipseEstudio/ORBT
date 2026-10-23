@@ -1,6 +1,6 @@
 # Campanha e seleção de fases
 
-Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`. Esta entrega completa a integração de progresso persistente da #40, sobre essa base. Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão de imagens está adiada no PR #45; aceite Android de #4 permanece pendente.
+Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`. Esta entrega completa a integração de progresso persistente da #40 e foi atualizada com a `main` que integrou #45 em `6db0abb`. Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite Android de #4 permanece pendente.
 
 ## Fluxo
 
@@ -32,8 +32,8 @@ O contrato continua com `configurar(itens)`, `estado(id)`, `pode_abrir(id)` e `c
 
 Em 22/10/2026, Godot 4.7.2 / Windows:
 
-- `tests/run.ps1`: 69 controles, 142 partida, 32 editor, 31 campanha e 24 persistência, todos passando.
-- `tests/run_exportacao.ps1`: 16 verificações no pacote isolado, incluindo gravação e restauração reais; todas passando. Total atual: **314**. Não equivale a APK/aparelho.
+- `tests/run.ps1`: 69 controles, 142 partida, 32 editor, 31 campanha, 38 visuais e 24 persistência, todos passando.
+- `tests/run_exportacao.ps1`: 23 verificações no pacote isolado, incluindo gravação e restauração reais e recursos da arte; todas passando. Total integrado: **359**. Não equivale a APK/aparelho.
 - `tests/test_persistencia.gd`: reabertura em processo separado, backup, truncamento, temporário incompleto, checksum alterado, versão futura, falha de disco e retentativa. Usa caminhos temporários e preserva os saves reais. O pacote exportado também usa arquivo exclusivo de teste e o remove ao terminar.
 
 A suíte da campanha usa dois JSONs temporários com combustíveis distintos e verifica ordenação, renomeação, atualização sem duplicação, bloqueio direto antes do carregamento, vitória/liberação idempotente, última fase, repetição, troca de mundos, retorno da pausa, erro de arquivo e navegação. Os temporários são removidos ao terminar; arquivos autorais são preservados.

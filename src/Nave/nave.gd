@@ -8,6 +8,7 @@ signal condicao_alterada
 
 enum Condicao { POUSADA, EM_VOO, A_DERIVA }
 const Fisica = preload("res://src/Nave/simulacao_voo.gd")
+const Arte = preload("res://src/Visual/arte_pixel.gd")
 
 @onready var rcs_direito: GPUParticles2D = $RCSDireito
 @onready var rcs_esquerdo: GPUParticles2D = $RCSEsquerdo
@@ -33,6 +34,8 @@ var _ultimo_pedido := -1
 
 
 func _ready() -> void:
+	$Nave.texture = Arte.textura("ship")
+	Arte.ajustar($Nave, raio)
 	entrada.impulso_solicitado.connect(_preparar_impulso)
 	entrada.gesto_cancelado.connect(cancelar_pedidos)
 	animation_player.play("default")
@@ -45,6 +48,7 @@ func configurar(nivel: NivelRes) -> void:
 	limites = nivel.limites
 	massa = nivel.parametros_nave.mass
 	raio = nivel.parametros_nave.radius
+	Arte.ajustar($Nave, raio)
 	combustivel = nivel.combustivel_inicial
 	entrada.configurar(nivel.parametros_nave)
 	origem_decolagem = ""

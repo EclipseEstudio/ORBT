@@ -1,5 +1,9 @@
 extends CanvasLayer
 
+const Tema = preload("res://src/Visual/tema_visual.gd")
+const Indicadores = preload("res://src/Visual/indicadores.gd")
+var _indicadores: Control
+
 var partida: Node
 var _status: Label
 var _mensagem: Label
@@ -36,6 +40,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 10
 	var raiz := Control.new()
+	raiz.theme = Tema.criar()
 	_raiz = raiz
 	raiz.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(raiz)
@@ -54,6 +59,8 @@ func _ready() -> void:
 	_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_indicadores = Indicadores.new()
+	topo.add_child(_indicadores)
 	_destino = rotulo(topo, "")
 	_alerta = rotulo(topo, "", 9)
 	_alerta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -63,11 +70,13 @@ func _ready() -> void:
 	base.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	base.offset_left = 6
 	base.offset_right = -6
-	base.offset_top = -130 if partida.campanha_permitida else -100
+	base.offset_top = -104 if partida.campanha_permitida else -74
 	base.offset_bottom = -6
-	_mensagem = rotulo(base, "", 10)
+	base.minimum_size_changed.connect(func(): base.offset_top = -base.get_combined_minimum_size().y - 6)
+	_mensagem = rotulo(base, "", 9)
 	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_mensagem.custom_minimum_size.y = 50
+	_mensagem.custom_minimum_size.y = 36
+	_mensagem.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	var acoes := HBoxContainer.new()
 	acoes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base.add_child(acoes)
@@ -77,6 +86,7 @@ func _ready() -> void:
 		botao(base, "Seleção de fases", func():
 			partida.nave.entrada.cancelar()
 			partida.selecao_solicitada.emit.call_deferred())
+	base.set_deferred("offset_top", -base.get_combined_minimum_size().y - 6)
 	get_viewport().size_changed.connect(_atualizar_area_segura)
 	_atualizar_area_segura()
 
@@ -112,6 +122,11 @@ func _process(_delta: float) -> void:
 	if OS.has_feature("android") and (_area_fisica != Rect2(DisplayServer.get_display_safe_area()) or _transformacao_tela != get_viewport().get_screen_transform()):
 		_atualizar_area_segura()
 	_status.text = "Combustível: %d\nTempo: %.1f s" % [partida.nave.combustivel, partida.tempo_restante]
+	_indicadores.combustivel = partida.nave.combustivel
+	_indicadores.capacidade = partida.nivel.combustivel_inicial
+	_indicadores.tempo = partida.tempo_restante
+	_indicadores.duracao = partida.nivel.tempo_voo
+	_indicadores.queue_redraw()
 	_pausa.text = "Retomar" if partida.estado == partida.Estado.PAUSADO else "Pausar"
 	_pausa.disabled = partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]
 	_explorar.text = "Voltar à nave" if partida.explorando else "Explorar mapa"
@@ -124,8 +139,10 @@ func _process(_delta: float) -> void:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:
 		_mensagem.text = "À deriva. Ainda é possível chegar à Terra."
+	elif partida.nave.condicao != partida.nave.Condicao.POUSADA:
+		_mensagem.text = "Arraste para corrigir."
 	else:
-		_mensagem.text = "Arraste e solte para lançar.\nVolte ao círculo para cancelar.\nTrajetória estimada."
+		_mensagem.text = "Arraste e solte para lançar.\nCírculo cancela. Prévia estimada."
 	var avisos := PackedStringArray()
 	for id_corpo in partida.proximos:
 		if id_corpo == partida.nave.corpo_apoio:

@@ -34,12 +34,14 @@ func _draw() -> void:
 	var origem: Vector2 = entrada.gesto.origem
 	var valido: bool = not entrada.gesto.obter_impulso().is_zero_approx()
 	var cor := Color("82f0d1") if valido else Color("f5cc77")
-	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, cor, 1.2, true)
+	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, Color("0b1423"), 3)
+	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, cor, 1)
 	if not valido:
 		draw_line(origem - Vector2(3, 3), origem + Vector2(3, 3), cor, 1)
 		draw_line(origem - Vector2(-3, 3), origem + Vector2(-3, 3), cor, 1)
 	var transformacao: Transform2D = nave.get_canvas_transform()
 	for indice in range(1, pontos.size()):
-		draw_line(transformacao * pontos[indice - 1], transformacao * pontos[indice], Color(0.5, 0.94, 0.85, 0.75), 1.0, true)
+		draw_line(transformacao * pontos[indice - 1], transformacao * pontos[indice], Color("0b1423"), 3)
+		draw_line(transformacao * pontos[indice - 1], transformacao * pontos[indice], Color("b8f5e2"), 1)
 	if pontos.size() > 1:
 		draw_circle(transformacao * pontos[-1], 2, cor, false, 1)
