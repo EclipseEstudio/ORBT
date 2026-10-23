@@ -1,9 +1,21 @@
 extends RefCounted
-## Adaptador M2. Não lê nem grava saves; substituir pelo serviço persistente em M3.
+## Contrato e implementação em memória para testes; o serviço de disco herda esta base.
 
 signal alterado
 var concluidas: Dictionary = {}
 var liberadas: Dictionary = {}
+
+
+func descricao() -> String:
+	return "Progresso de teste: vale somente nesta sessão."
+
+
+func salvamento_pendente() -> bool:
+	return false
+
+
+func aviso_para_partida() -> String:
+	return ""
 
 
 func configurar(itens: Array) -> void:

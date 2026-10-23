@@ -34,6 +34,8 @@ func _executar() -> void:
 		quit(1)
 		return
 	var jogo = principal.instantiate()
+	var caminho_progresso := "user://progresso-exportacao-%d.json" % OS.get_process_id()
+	jogo.caminho_progresso = caminho_progresso
 	root.add_child(jogo)
 	await process_frame
 	conferir(jogo.iniciar_fase("teste_001"), "Fase carrega usando apenas dados exportados")
@@ -54,8 +56,14 @@ func _executar() -> void:
 	await process_frame
 	conferir(jogo.interface_atual.cartoes.get_child_count() == 1, "Campanha funciona no pacote isolado")
 	conferir(jogo.progresso.estado("teste_001") == "Concluída", "Vitória exportada atualiza estado da sessão")
+	var restaurado = jogo.progresso.get_script().new()
+	restaurado.caminho = caminho_progresso
+	conferir(restaurado.carregar() and restaurado.estado("teste_001") == "Concluída", "Pacote exportado grava e restaura progresso real")
 	conferir(jogo.iniciar_fase("teste_001") and jogo.mundo_atual.get_node("Nave").combustivel == 5, "Repetição exportada restaura combustível")
 	jogo.queue_free()
 	await process_frame
+	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
+		if FileAccess.file_exists(caminho_progresso + sufixo):
+			DirAccess.remove_absolute(caminho_progresso + sufixo)
 	print("Exportação: %d verificações, %d falhas." % [verificacoes, falhas])
 	quit(0 if falhas == 0 else 1)

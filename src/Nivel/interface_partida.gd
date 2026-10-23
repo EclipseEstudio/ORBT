@@ -150,6 +150,8 @@ func _process(_delta: float) -> void:
 		var tipo: String = partida.proximos[id_corpo]
 		avisos.append(("! Perigo: " if tipo in ["sun", "asteroid"] else "+ Próximo: ") + id_corpo)
 	_alerta.text = "  ".join(avisos)
+	if not partida.aviso_salvamento.is_empty():
+		_alerta.text += "\n" + partida.aviso_salvamento
 	var alvo: Vector2 = partida.nivel.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
 	var tamanho := get_viewport().get_visible_rect().size

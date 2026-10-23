@@ -91,6 +91,7 @@ func _executar() -> void:
 	conferir(Catalogo.carregar(caminho).itens.is_empty() and Catalogo.carregar(caminho).erros.is_empty(), "Catálogo vazio válido")
 	gravar(caminho, catalogo)
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.persistir_progresso = false
 	root.add_child(jogo)
 	await process_frame
 	var gerenciador = jogo.get_node("GerenciadorDeNivel")
