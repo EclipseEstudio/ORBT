@@ -2,6 +2,8 @@
 
 ## Atualização de 22/10/2026
 
+O PR #44 da campanha foi aprovado e integrado em `fcd576b`. A branch `feat/issue-3-identidade-visual` entrega seis sprites gerados, variações de apoio, marcas sem dependência só de cor e tema/indicadores de interface. Inventário, fontes, prompts e pendências em [arte/README.md](arte/README.md). São 334 verificações atuais: 69 controles, 142 partida, 32 editor, 31 campanha, 38 visuais e 22 do pacote. Aceite visual no Android e revisão da origem da propulsão legada permanecem pendentes.
+
 O PR #43 do editor também foi aprovado e integrado à `main` em `45466e2`. A entrega seguinte está em `feat/issue-5-selecao-fases`: seleção e progressão em memória de M2, documentadas em [campanha.md](campanha.md). Persistência M3 e aceite Android continuam pendentes. Verificações atuais: 69 controles, 142 partida, 32 editor, 31 campanha e 15 pacote, todas passando.
 
 O PR #42 integrou a base de #1/#6/#4 à `main` no commit `d0c0cae`. A aprovação formal foi recusada pelo GitHub por ser a mesma conta autora; o merge foi autorizado pelo usuário. Aceite Android de #4 permanece pendente, conforme [android.md](android.md).

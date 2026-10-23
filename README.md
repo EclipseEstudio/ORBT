@@ -69,5 +69,6 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Exportação e aceite Android](docs/android.md)
 - [Editor de fases JSON](docs/editor-de-fases.md)
 - [Campanha e seleção de fases](docs/campanha.md)
+- [Identidade visual, fontes e inventário](docs/arte/README.md)
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados do catálogo e progresso da sessão. Persistência e checkpoints ficam para M3.

@@ -1,0 +1,29 @@
+{
+  "base": "Create one production sprite for ORBT, a minimalist 2D space puzzle. Genuine transparent background. One centered isolated object only, orthographic top down, filling about 85 percent of square canvas. Strict low-resolution pixel art: draw as if exactly a 32x32 sprite enlarged by nearest-neighbor. Large clean square pixel clusters, maximum 8 flat colors, no gradients, no glow, no blur, no shadows outside silhouette, no tiny speckles, no text, no decorative backdrop. Dark navy outline plus a thin icy-white outer edge makes it readable on both dark and light game backgrounds. Clear strong silhouette at 24 pixels.",
+  "subjects": [
+    [
+      "nave",
+      "A single peaceful compact exploration spacecraft pointing UP. Symmetric short swept wings, sharp triangular nose, white/silver hull, single cyan cockpit. No engine flame, no exhaust, no weapons. Fit entire ship including wings inside a circle. About 16x16 logical pixels of detail."
+    ],
+    [
+      "planeta",
+      "A single SAFE LANDABLE PLANET. Perfect circular solid silhouette with neutral light gray stone surface, three broad flat gray bands of terrain. Smooth round edge, no spikes, no rings, no holes. Neutral grayscale interior for later tinting by game. Minimal features."
+    ],
+    [
+      "satelite",
+      "A single SAFE LANDABLE MOON. Perfect circular solid silhouette, cool gray surface, exactly three large dark circular craters. Smooth circular rim, no spikes, no rings. Visually distinct from a banded safe planet."
+    ],
+    [
+      "terra",
+      "Planet EARTH as our home. Single perfect circular blue ocean world, broad unmistakable green continent shapes and two tiny white polar caps. Very simple chunky pixel clusters, no surrounding stars, no halo, no rings. Distinct from grayscale planets."
+    ],
+    [
+      "sol",
+      "A single SUN HAZARD. A golden circular core with exactly eight short angular triangular flame spikes distributed around its rim. Red-orange outline and bright yellow center. Compact spiky silhouette entirely inside a circle, no detached particles or glow. Recognizably dangerous by silhouette."
+    ],
+    [
+      "asteroide",
+      "A single dangerous ASTEROID. Irregular angular gray rock with five chunky jagged corners and three large dark craters. Contrasting pale gray upper facets and dark navy underside. Entire jagged shape fits inside a circle; no detached rocks, no glow."
+    ]
+  ]
+}

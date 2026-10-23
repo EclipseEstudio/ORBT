@@ -8,11 +8,11 @@
 background_mode = 3
 tonemap_exposure = 1.1
 tonemap_white = 21.0
-glow_enabled = true
+glow_enabled = false
 glow_normalized = true
 glow_strength = 1.4
 glow_bloom = 0.2
-adjustment_enabled = true
+adjustment_enabled = false
 adjustment_brightness = 1.5
 
 [node name="Nivel" type="Node2D" unique_id=1474968261]
@@ -29,7 +29,7 @@ mouse_filter = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 1)
+color = Color(0.043, 0.078, 0.137, 1)
 
 [node name="GeradorEstrelas" type="Node2D" parent="CanvasLayer" unique_id=2104664141]
 script = ExtResource("2_5xy4d")
