@@ -1,31 +1,30 @@
-extends RigidBody2D
+extends Node2D
+## Desenho não determina contato: a simulação usa os raios do JSON.
 
-# !!!!!esta propriedade deve ser definida ANTES de adicionar
-# o nodo à árvore de nodos!!!!!!!!!!
-@export var corpo_estelar_res : CorpoEstelarRes
+const Arte = preload("res://src/Visual/arte_pixel.gd")
+const Marcas = preload("res://src/Visual/marcas_corpo.gd")
+var sprite: Sprite2D
+var marcas: Node2D
 
-
-@onready var colisao := $CollisionShape2D
-@onready var sprite := $Sprite2D
-@onready var area_gravidade := $Area2D/CollisionShape2D
+var dados: Dictionary = {}
+var proximo := false:
+	set(valor):
+		proximo = valor
+		if is_instance_valid(marcas):
+			marcas.proximo = valor
+			marcas.queue_redraw()
 
 
 func _ready() -> void:
-	iniciar()
-
-
-func iniciar() -> void:
-	if corpo_estelar_res == null:
-		return # lancar excessão
-	
-	
-	freeze = corpo_estelar_res.estatico
-	
-	var forma_colisao := CircleShape2D.new()
-	forma_colisao.radius = corpo_estelar_res.raio_colisao
-	colisao.shape = forma_colisao
-	sprite.texture = corpo_estelar_res.sprite
-	
-	var forma_gravidade := CircleShape2D.new() 
-	forma_gravidade.radius = corpo_estelar_res.raio_gravidade
-	area_gravidade.shape = forma_gravidade
+	position = dados.position
+	sprite = Sprite2D.new()
+	sprite.name = "Sprite"
+	sprite.texture = Arte.textura(dados.type)
+	Arte.ajustar(sprite, dados.visual_radius)
+	if dados.type == "planet":
+		sprite.modulate = Arte.cor_apoio(dados.id)
+	add_child(sprite)
+	marcas = Marcas.new()
+	marcas.dados = dados
+	marcas.proximo = proximo
+	add_child(marcas)

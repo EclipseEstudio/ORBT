@@ -12,6 +12,7 @@ Os documentos do projeto ficam organizados nesta pasta. O [README principal](../
 
 - [Contrato JSON e regras do protótipo](fases-e-simulacao.md)
 - [Campanha e seleção de fases](campanha.md)
+- [Aceite da issue 40 e evidências da execução](validacao-issue-40.md)
 - [Editor de fases: manual de uso](guia-editor-de-fases.md)
 - [Editor de fases: detalhes técnicos](editor-de-fases.md)
 - [Identidade visual, fontes e inventário](arte/README.md)

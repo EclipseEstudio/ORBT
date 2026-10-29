@@ -1,0 +1,22 @@
+ORBT - validação da issue 40 em 29/10/2026 (America/Sao_Paulo)
+Windows; Godot 4.7.2.stable.official.ed1daf0bf
+Revisão dos testes: 2dc4b5bb3001e63fe13127d18f7bd88c0e8dcd9e
+
+tests/run.ps1:
+Controles: 69 verificações, 0 falhas.
+Partida: 142 verificações, 0 falhas.
+Editor: 32 verificações, 0 falhas.
+Campanha: 31 verificações, 0 falhas.
+Visual: 38 verificações, 0 falhas.
+Reabertura: 9 verificações, 0 falhas.
+PROGRESSO_REABERTO
+Persistência: 28 verificações, 0 falhas.
+
+tests/run_editor_plugin.ps1:
+Plugin: 11 verificações, 0 falhas.
+
+tests/run_exportacao.ps1:
+Exportação: 23 verificações, 0 falhas.
+
+Importação e execuções sem ERROR: ou SCRIPT ERROR:.
+Total: 383 verificações, 0 falhas. Execução no desktop; Android em aparelho pendente.

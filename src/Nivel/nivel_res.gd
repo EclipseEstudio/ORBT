@@ -1,9 +1,22 @@
+@tool
 class_name NivelRes extends Resource
-# esta classe define um nível, o intuito é evitar criar níveis como xml's, res ou yaml(ainda não decidido qual) e simplesmente carrega-los atráves da classe GerenciadorDeNiveis
-# idealmente os níveis serão criados utilizando um editor de níveis imbutido no jogo em si
+## Dados validados; cada tentativa recebe sua própria cópia.
 
-@export var nome : String
-@export var tamanho : Vector2
-@export var inicio : Vector2
-@export var fim : Vector2 # talvez alterar o fim para um nome de corpo estelar
-@export var corpos_estelares : Dictionary[CorpoEstelarRes , Vector2] = {}
+var id := ""
+var nome := ""
+var ordem := 1
+var limites := Rect2()
+var combustivel_inicial := 5
+var tempo_voo := 30.0
+var fisica: Dictionary = {}
+var parametros_nave: Dictionary = {}
+var inicio: Dictionary = {}
+var corpos: Array = []
+var dados_autorais: Dictionary = {}
+
+
+func obter_corpo(id_corpo: String) -> Dictionary:
+	for corpo in corpos:
+		if corpo.id == id_corpo:
+			return corpo
+	return {}

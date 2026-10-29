@@ -1,76 +1,144 @@
 class_name ControladorJogo extends Node
-# Este script é o primeiro a ser rodado ao iniciar o jogo, na função _ready deste script deve ser realizado todas as funções de 
-# Inicialização 
-# Note também que este será o game controller, ou seja, uma máquina de estado que controla o jogo.
-# Qualquer mudança de tela, requisição de estado do jogo, etc deve ser enviado para este nodo, e toda a carga e descarga
-# de nodos deve ser realizada neste nodo
-# Caso este acumular muitas funções, iremos separar em um Resourcemanager(Gerenciador de recursos) e um GameStateManager (Gerenciador
-# de estado)
 
-@onready var mundo = $Mundo
-@onready var interface =  $Interface
+const ProgressoSessao = preload("res://src/Campanha/progresso_sessao.gd")
+const ProgressoPersistente = preload("res://src/Campanha/progresso_persistente.gd")
+@export var persistir_progresso := true
+var caminho_progresso := "user://progresso.json"
+const Selecao = preload("res://src/Campanha/selecao_fases.gd")
+var progresso := ProgressoSessao.new()
+var erro_abertura := ""
+var _abrindo := false
 
-# cena do mundo carregada no momento, pode ser o plano de fundo do menu, nível, etc etc
-var mundo_atual  
-# cena de interface atual, menu, seleção de níveis, etc
-var interface_atual 
+@onready var mundo: Node = $Mundo
+@onready var interface: Control = $Interface
+var mundo_atual: Node2D
+var interface_atual: Control
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GLOBAL.controlador_jogo = self
-	if interface.get_child_count() != 0:
-		interface_atual = interface.get_children().front()
-	if mundo.get_child_count() != 0:
-		mundo_atual = mundo.get_children().front()
+	if persistir_progresso:
+		var salvo := ProgressoPersistente.new()
+		salvo.caminho = caminho_progresso
+		salvo.carregar()
+		progresso = salvo
+	if interface.get_child_count() > 0:
+		interface_atual = interface.get_child(0)
+	if mundo.get_child_count() > 0:
+		mundo_atual = mundo.get_child(0)
+	interface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	progresso.configurar(GLOBAL.gerendiador_de_nivel.itens)
+	if OS.has_feature("android"):
+		var itens: Array = GLOBAL.gerendiador_de_nivel.itens
+		if itens.is_empty():
+			mostrar_selecao()
+		elif not iniciar_fase(itens[0].id):
+			mostrar_selecao()
+			interface_atual.falhou(erro_abertura)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+
+func iniciar_fase(id_nivel: String) -> bool:
+	if _abrindo:
+		return false
+	if not progresso.pode_abrir(id_nivel):
+		erro_abertura = "Fase bloqueada ou indisponível."
+		return false
+	_abrindo = true
+	var instancia := GLOBAL.gerendiador_de_nivel.obter_nivel_instancia(id_nivel)
+	if instancia == null:
+		erro_abertura = "Não foi possível abrir a fase.\n" + "\n".join(GLOBAL.gerendiador_de_nivel.erros)
+		_abrindo = false
+		return false
+	erro_abertura = ""
+	instancia.campanha_permitida = true
+	get_tree().paused = false
+	alterar_mundo_nodo(instancia)
+	instancia.partida.concluida.connect(func(id: String):
+		if mundo_atual == instancia:
+			progresso.concluir(id, GLOBAL.gerendiador_de_nivel.itens)
+			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
+	instancia.partida.selecao_solicitada.connect(func():
+		if mundo_atual == instancia:
+			mostrar_selecao())
+	var vazio := Control.new()
+	vazio.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	alterar_interface_nodo(vazio)
+	_liberar_abertura.call_deferred()
+	return true
 
 
-func alterar_interface(interface_nova : String, deletar := false, manter_rodando := false) -> void:
-	validar_interface_atual(deletar, manter_rodando)
-	var interface_instancia = load(interface_nova)
-	interface.add_child(interface_instancia)
-	interface_atual = interface_instancia
+func _liberar_abertura() -> void:
+	_abrindo = false
 
 
-func alterar_interface_nodo(interface_nova : Control, deletar := false, manter_rodando := false) -> void:
-	validar_interface_atual(deletar, manter_rodando)
-	interface.add_child(interface_nova)
-	interface_atual = interface_nova
-	
+func mostrar_selecao() -> void:
+	get_tree().paused = false
+	alterar_mundo_nodo(Node2D.new())
+	var gerenciador = GLOBAL.gerendiador_de_nivel
+	gerenciador.carregar_niveis()
+	progresso.configurar(gerenciador.itens)
+	var tela := Selecao.new()
+	tela.itens = gerenciador.itens
+	tela.erros = gerenciador.erros.duplicate()
+	tela.progresso = progresso
+	tela.fase_escolhida.connect(func(id: String):
+		if interface_atual == tela and not iniciar_fase(id):
+			tela.falhou(erro_abertura))
+	tela.voltar.connect(mostrar_menu)
+	tela.recarregar.connect(func():
+		gerenciador.carregar_niveis()
+		progresso.configurar(gerenciador.itens)
+		tela.atualizar(gerenciador.itens, gerenciador.erros))
+	alterar_interface_nodo(tela)
 
-func validar_interface_atual(deletar : bool, manter_rodando : bool) -> void:
-	if interface_atual != null:
-		if deletar:
+
+func mostrar_menu() -> void:
+	get_tree().paused = false
+	alterar_mundo_nodo(Node2D.new())
+	alterar_interface("res://src/MenuPrincipal/MenuPrincipal.tscn")
+
+
+func alterar_interface(caminho: String, deletar := true, manter_rodando := false) -> void:
+	var cena = load(caminho)
+	if cena is PackedScene:
+		var instancia = cena.instantiate()
+		if instancia is Control:
+			alterar_interface_nodo(instancia, deletar, manter_rodando)
+		else:
+			instancia.free()
+
+
+func alterar_interface_nodo(nova: Control, _deletar := true, manter_rodando := false) -> void:
+	if is_instance_valid(interface_atual):
+		if manter_rodando:
+			interface_atual.hide()
+		else:
+			interface.remove_child(interface_atual)
 			interface_atual.queue_free()
-		elif manter_rodando:
-			interface_atual.visible = false
+	interface_atual = nova
+	interface.add_child(nova)
+
+
+func alterar_mundo(caminho: String, deletar := true, manter_rodando := false) -> void:
+	var cena = load(caminho)
+	if cena is PackedScene:
+		var instancia = cena.instantiate()
+		if instancia is Node2D:
+			alterar_mundo_nodo(instancia, deletar, manter_rodando)
 		else:
-			interface.remove_child(mundo_atual)	
+			instancia.free()
 
 
-func alterar_mundo(mundo_novo : String, deletar : bool = false, manter_rodando : bool = false) -> void:
-	validar_mundo_atual(deletar, manter_rodando)	
-	var mundo_instancia = load(mundo_novo) 
-	mundo.add_child(mundo_instancia)
-	mundo_atual = mundo_instancia
-
-
-func alterar_mundo_nodo(mundo_novo : Node2D, deletar : bool = false, manter_rodando : bool = false) -> void:
-	validar_mundo_atual(deletar, manter_rodando)
-	mundo.add_child(mundo_novo)
-	mundo_atual = mundo_novo
-	pass
-
-
-func validar_mundo_atual(deletar : bool, manter_rodando : bool) -> void:
-	if mundo_atual != null:
-		if deletar:
+func alterar_mundo_nodo(novo: Node2D, _deletar := true, manter_rodando := false) -> void:
+	if is_instance_valid(mundo_atual):
+		var partida = mundo_atual.get("partida")
+		if is_instance_valid(partida):
+			partida.nave.parar()
+			partida.set_physics_process(false)
+		if manter_rodando:
+			mundo_atual.hide()
+		else:
+			mundo.remove_child(mundo_atual)
 			mundo_atual.queue_free()
-		elif manter_rodando:
-			mundo_atual.visible = false
-		else:
-			mundo.remove_child(mundo_atual)	
+	mundo_atual = novo
+	mundo.add_child(novo)
