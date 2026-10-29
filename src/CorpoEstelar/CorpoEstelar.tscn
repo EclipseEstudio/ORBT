@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bsskvcv8paqi5"]
-
-[ext_resource type="Script" path="res://src/CorpoEstelar/corpo_estelar.gd" id="1"]
-
-[node name="CorpoEstelar" type="Node2D"]
-script = ExtResource("1")
