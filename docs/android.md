@@ -1,14 +1,15 @@
 # Exportação e aceite Android
 
-## Estado em 26/10/2026
+## Estado em 29/10/2026
 
-Integração de código concluída pelos PRs #42–#46. O APK histórico abaixo é de 15/10 e não representa as últimas alterações de corpos, campanha, arte e persistência. Gerar um APK da revisão integrada antes do aceite. Instalação, toque físico, retomada, ergonomia, persistência após reabertura e desempenho no Android continuam pendentes. Acompanhar #4/#33/#37/#38/#40 e [estado consolidado](estado-da-branch.md).
+Integração de código concluída pelos PRs #42–#46. O APK de 29/10 abaixo contém as integrações de corpos, campanha, arte e persistência; o de 15/10 é histórico. Instalação, toque físico, retomada, ergonomia, persistência após reabertura e desempenho no Android continuam pendentes em #4/#33/#37/#38. Os quatro critérios funcionais da #40 têm [aceite demonstrado no Windows](validacao-issue-40.md). Consulte o [estado consolidado](estado-da-branch.md).
 
 ## APK de teste gerado em 29/10/2026
 
 APK exportado localmente da revisão `846785b` (PR #46 integrado), Godot 4.7.2 e JDK Temurin 17.0.20.1. Arquivo: `build/android/ORBT-debug.apk`, 57.787.925 bytes (55,1 MiB), SHA-256 `abdcb3e9ae77403bc92579c95b9bace7a0698bd977fb90ed4d1763491c4f7458`. Assinatura de depuração verificada nos esquemas APK v2/v3; alinhamento de 16 KB aprovado. Manifesto lido com AAPT2: pacote `com.eclipseestudio.orbt`, versão 0.1.0/código 1, mínimo API 24, alvo API 36, ARM 32/64 bits.
 
 O JDK portátil foi baixado do Adoptium; SHA-256 conferido com a release oficial. Foi usado de `build/android/` apenas durante a exportação e não altera a configuração persistente do editor. A tentativa de enumerar aparelhos pelo ADB não iniciou o daemon neste ambiente. Instalação e teste no telefone ainda pendentes.
+
 ## Preparação de exportação
 
 O preset `Android` em `export_presets.cfg` está pronto para um APK de depuração:

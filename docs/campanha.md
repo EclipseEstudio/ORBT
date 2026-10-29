@@ -1,6 +1,6 @@
 # Campanha e seleção de fases
 
-Atualizado em 26/10/2026. Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`; progresso persistente da #40 integrado pelo PR #46 em `a774a82`, incluindo a identidade visual do PR #45. Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite Android de #4/#38/#40 permanece pendente. Estado e continuidade: [estado-da-branch.md](estado-da-branch.md).
+Atualizado em 29/10/2026. Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`; progresso persistente da #40 integrado pelo PR #46 em `a774a82`, incluindo a identidade visual do PR #45. Os quatro critérios da #40 foram demonstrados no Windows, com [evidências e reprodução](validacao-issue-40.md). Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite integrado Android de #4/#38 permanece pendente. Estado e continuidade: [estado-da-branch.md](estado-da-branch.md).
 
 ## Fluxo
 
@@ -29,6 +29,8 @@ A gravação escreve e relê `.tmp`, preserva o último save válido em `.bak` p
 O contrato continua com `configurar(itens)`, `estado(id)`, `pode_abrir(id)` e `concluir(id, itens)`. `ControladorJogo.persistir_progresso` vem habilitado; testes o desativam ou fornecem `caminho_progresso` isolado antes de entrar na árvore. O teste do editor instancia o nível diretamente e não lê/grava progresso real. Checkpoints de pouso, retomar uma tentativa em pausa, preferências, dez fases autorais e menus completos continuam pendentes; esta entrega cobre progresso da campanha, não todo o RF18.
 
 ## Evidências e aceite pendente
+
+Em 29/10/2026, a validação para integração na `alpha` passou em **383 verificações**, incluindo 28 de persistência, nove de reabertura do controlador em outro processo, 23 do PCK isolado e 11 do ciclo do plugin. O [registro de aceite da #40](validacao-issue-40.md) apresenta revisão, passos, resultados e saída da execução. A primeira vitória, a repetição, o bloqueio, a restauração e a última fase foram exercitados com o serviço real de disco e duas fases temporárias.
 
 Em 22/10/2026, Godot 4.7.2 / Windows:
 
