@@ -1,7 +1,24 @@
-# Godot 4+ specific ignores
+# Cache e configurações locais da Godot 4+
 .godot/
+
+# Exportações e ferramentas Android geradas localmente
 /android/
-.vscode/
 /build/
+/*.apk
+/*.aab
+/*.pck
+
+# Chaves de assinatura locais
 *.keystore
 *.jks
+
+# Configurações e temporários do editor
+.vscode/
+*.swp
+*.swo
+*~
+
+# Metadados do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini

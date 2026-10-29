@@ -27,7 +27,7 @@ try {
     $ErrorActionPreference = 'Stop'
     $orbtSaida | Write-Output
     if ($orbtCodigo -ne 0 -or ($orbtSaida -match 'SCRIPT ERROR:|ERROR:') -or -not (Test-Path -LiteralPath $orbtDestino)) {
-        throw "Exportação falhou. Consulte $orbtLog e docs/android.md para configurar JDK, SDK e modelos da Godot."
+        throw "Exportação falhou. Consulte $orbtLog e docs/tecnica/android.md para configurar JDK, SDK e modelos da Godot."
     }
     if ((Get-Item -LiteralPath $orbtDestino).Length -eq 0) { throw 'Arquivo exportado vazio.' }
     Write-Output "Gerado: $orbtDestino"

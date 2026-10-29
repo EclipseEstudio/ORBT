@@ -2,7 +2,7 @@
 
 ## Estado em 29/10/2026
 
-Integração de código concluída pelos PRs #42–#46. O APK de 29/10 abaixo contém as integrações de corpos, campanha, arte e persistência; o de 15/10 é histórico. Instalação, toque físico, retomada, ergonomia, persistência após reabertura e desempenho no Android continuam pendentes em #4/#33/#37/#38. Os quatro critérios funcionais da #40 têm [aceite demonstrado no Windows](validacao-issue-40.md). Consulte o [estado consolidado](estado-da-branch.md).
+Integração de código concluída pelos PRs #42–#46. O APK de 29/10 abaixo contém as integrações de corpos, campanha, arte e persistência; o de 15/10 é histórico. Instalação, toque físico, retomada, ergonomia, persistência após reabertura e desempenho no Android continuam pendentes em #4/#33/#37/#38. Os quatro critérios funcionais da #40 têm [aceite demonstrado no Windows](../auxiliar/validacao-issue-40.md). Consulte o [estado consolidado](../auxiliar/estado-da-branch.md).
 
 ## APK de teste gerado em 29/10/2026
 
@@ -109,4 +109,4 @@ Registre modelo do aparelho, versão do Android, versão/hash da branch, versão
 | Recortes e navegação do sistema | HUD legível e botões acessíveis na área segura | Pendente |
 | Mira repetida durante voo | Prévia limpa ao cancelar; medir FPS/custo e comparar com voo | Pendente |
 
-As escolhas de direção livre, gravidade, tempo, pouso sem saldo e contato contra origem estão registradas em [fases-e-simulacao.md](fases-e-simulacao.md) como propostas. O aceite dessas regras e a execução deste roteiro são condições para encerrar as issues que exigem demonstração no Android.
+As escolhas de direção livre, gravidade, tempo, pouso sem saldo e contato contra origem estão registradas nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md#aceite-e-limites-do-protótipo) como propostas. O aceite dessas regras e a execução deste roteiro são condições para encerrar as issues que exigem demonstração no Android.

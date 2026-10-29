@@ -3,7 +3,7 @@ extends SceneTree
 
 func _initialize() -> void:
 	for nome in ["nave", "planeta", "satelite", "terra", "sol", "asteroide"]:
-		var fonte := Image.load_from_file("res://docs/arte/fontes/" + nome + ".png")
+		var fonte := Image.load_from_file("res://docs/auxiliar/arte/fontes/" + nome + ".png")
 		if fonte == null or fonte.is_empty():
 			quit(1)
 			return

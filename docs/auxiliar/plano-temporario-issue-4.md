@@ -1,4 +1,4 @@
-> SUBSTITUÍDO em 26/10/2026: plano histórico, anterior aos PRs #42–#46. Não executar sua sequência de branches/integrações. Retomar por [estado atual](estado-da-branch.md) e [roteiro Android](android.md). Conteúdo original preservado abaixo.
+> SUBSTITUÍDO em 26/10/2026: plano histórico, anterior aos PRs #42–#46. Não executar sua sequência de branches/integrações. Retomar por [estado atual](estado-da-branch.md) e [roteiro Android](../tecnica/android.md). Conteúdo original preservado abaixo.
 
 # Plano temporário — issue #4
 
@@ -26,9 +26,9 @@ A branch de nave já contém boa parte da integração: contrato JSON v1 e carre
 
 Referências locais:
 
-- `docs/fases-e-simulacao.md`: contrato, unidades e regras propostas.
-- `docs/estado-da-branch.md`: implementação e evidências históricas.
-- `docs/android.md`: preparação, APK histórico e roteiro em aparelho.
+- `docs/tecnica/fases-e-simulacao.md`: contrato, unidades e regras propostas.
+- `docs/auxiliar/estado-da-branch.md`: implementação e evidências históricas.
+- `docs/tecnica/android.md`: preparação, APK histórico e roteiro em aparelho.
 - `Recursos/Fases/teste_001.json`: fase de referência.
 - `src/Nivel/carregador_fase.gd`, `src/Nivel/nivel.gd`, `src/Nivel/camera_nivel.gd` e `src/Nivel/interface_partida.gd`.
 - `src/ControladorJogo/partida.gd` e `src/Nave/simulacao_voo.gd`.

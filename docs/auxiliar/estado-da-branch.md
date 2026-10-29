@@ -4,7 +4,7 @@ Atualizado em 29/10/2026. Fonte de acompanhamento: [Projects ORBT](https://githu
 
 ## Base conferida
 
-O PR #46 foi integrado à `main` em `a774a824b0a5824c0a049911383253c10b538d10` (22/10/2026 no horário de São Paulo). A branch `codex/issue-40-alpha` reúne essa base e a documentação já publicada na `alpha` em `09cb305`, para disponibilizar as entregas dos PRs #42–#46 na `alpha`. Os testes de aceite da #40 estão em `2dc4b5b`; os quatro critérios foram demonstrados no Windows, conforme [registro de execução](validacao-issue-40.md).
+O PR #47 integrou à `alpha` as entregas dos PRs #42–#46 e a documentação, no commit `bc2d2e4`. A integração reúne a base anteriormente publicada na `main` em `a774a824b0a5824c0a049911383253c10b538d10` (22/10/2026 no horário de São Paulo) e os documentos da `alpha` em `09cb305`. Os testes de aceite da #40 estão em `2dc4b5b`; os quatro critérios foram demonstrados no Windows, conforme [registro de execução](validacao-issue-40.md).
 
 | Entrega | Integração | Estado funcional |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Os itens encerrados foram preservados como registrados no GitHub. As pendências
 
 Execução integrada em 29/10/2026, Godot 4.7.2 / Windows: 69 controles, 142 partida, 32 editor, 31 campanha, 38 visuais, 28 persistência, nove reabertura em processo separado, 23 pacote e 11 ciclo do plugin: **383 verificações aprovadas**. Revisão, passos, resultados e saída estão no [aceite da #40](validacao-issue-40.md). O histórico de 22/10 permanece nos guias.
 
-O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide com a `main` integrada em `a774a82`; assinatura e alinhamento foram verificados. Pacote PCK executado no desktop não comprova execução Android. [android.md](android.md) mantém hash, roteiro e histórico; instalação e teste em aparelho ainda pendentes.
+O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide com a `main` integrada em `a774a82`; assinatura e alinhamento foram verificados. Pacote PCK executado no desktop não comprova execução Android. [android.md](../tecnica/android.md) mantém hash, roteiro e histórico; instalação e teste em aparelho ainda pendentes.
 
 ## Próximas ações para retomar
 

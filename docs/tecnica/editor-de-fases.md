@@ -2,7 +2,7 @@
 
 Implementação de #2 e #21–#26 integrada pelo PR #43 em `45466e2`, em Godot 4.7.2. Estado conferido em 26/10/2026; reprodução por outro integrante permanece pendente (#2/#25). O plugin é uma ferramenta interna para o contrato v1 de [fases e simulação](fases-e-simulacao.md). O aceite Android de #4 continua independente e pendente.
 
-Para instruções completas de uso, consulte o [manual do editor de fases](guia-editor-de-fases.md). Esta página registra contexto técnico, implementação e roteiro para reprodução do aceite.
+Para instruções completas de uso, consulte o [manual do editor de fases](../auxiliar/guia-editor-de-fases.md). Esta página registra contexto técnico, implementação e roteiro para reprodução do aceite.
 
 ## Abrir, ativar e desativar
 

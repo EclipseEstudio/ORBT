@@ -44,4 +44,4 @@ A contagem de persistência inclui uma asserção sobre o sucesso do subprocesso
 
 Este registro conclui os quatro critérios funcionais da #40 no Windows. O PCK foi executado no desktop. O catálogo autoral continua com uma fase; os testes usam duas/três fases temporárias para demonstrar progressão.
 
-O APK de 29/10/2026 e seu hash estão em [android.md](android.md). Não houve execução em aparelho nesta validação. Instalação, toque físico, ergonomia e persistência após reabertura no Android continuam no aceite integrado de [#4](https://github.com/EclipseEstudio/ORBT/issues/4) e na navegação de [#38](https://github.com/EclipseEstudio/ORBT/issues/38). Checkpoints, Continuar e preferências permanecem fora desta entrega.
+O APK de 29/10/2026 e seu hash estão em [android.md](../tecnica/android.md). Não houve execução em aparelho nesta validação. Instalação, toque físico, ergonomia e persistência após reabertura no Android continuam no aceite integrado de [#4](https://github.com/EclipseEstudio/ORBT/issues/4) e na navegação de [#38](https://github.com/EclipseEstudio/ORBT/issues/38). Checkpoints, Continuar e preferências permanecem fora desta entrega.

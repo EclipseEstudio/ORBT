@@ -41,7 +41,7 @@ Os seis novos sprites foram gerados pela ferramenta integrada **OpenAI ImageGen*
 
 Os prompts completos estão em [prompts.json](prompts.json): concatenar `base` com a entrada correspondente de `subjects`. [manifesto.json](manifesto.json) registra arquivos, origem, preparação e hashes SHA-256 das fontes e saídas. Não se atribui CC0/MIT nem uma licença pública adicional aos novos materiais; não há atribuição de arte de terceiros para eles. A licença dos materiais legados de propulsão permanece como pendência explícita do inventário.
 
-As fontes originais estão em `docs/arte/fontes/`, excluídas da importação e exportação; os seis arquivos de produção ficam em `Recursos/Sprites/Identidade/`. Para repetir a preparação, execute Godot com `--headless --path . --script scripts/preparar_sprites.gd`. O script somente recorta transparência, centraliza em um quadrado e reduz por nearest-neighbor para 32×32; preserva as fontes. Depois, importe o projeto no editor. Edições manuais nas fontes exigem regenerar saídas e atualizar os hashes do manifesto.
+As fontes originais estão em `docs/auxiliar/arte/fontes/`, excluídas da importação e exportação; os seis arquivos de produção ficam em `Recursos/Sprites/Identidade/`. Para repetir a preparação, execute Godot com `--headless --path . --script scripts/preparar_sprites.gd`. O script somente recorta transparência, centraliza em um quadrado e reduz por nearest-neighbor para 32×32; preserva as fontes. Depois, importe o projeto no editor. Edições manuais nas fontes exigem regenerar saídas e atualizar os hashes do manifesto.
 
 ## Verificação
 

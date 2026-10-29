@@ -1,12 +1,12 @@
 # Fases e simulação — contrato de protótipo v1
 
-Implementado em 14/10/2026 para integrar #15–#20 às dependências #7–#14 e #32–#37. As escolhas de jogabilidade abaixo são regras explícitas do protótipo, ainda sujeitas ao aceite da equipe e à calibração no Android. O GDD original permanece preservado.
+Implementado em 14/10/2026 para integrar #15–#20 às dependências #7–#14 e #32–#37. Este documento registra o contrato JSON, a arquitetura e a resolução determinística da simulação. O comportamento esperado pelo jogador está nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md). As escolhas do protótipo continuam sujeitas ao aceite da equipe e à calibração no Android; o GDD original permanece preservado.
 
 ## Formato e validação
 
 `Recursos/Niveis.json` mapeia IDs estáveis para caminhos `res://Recursos/Fases/*.json`. Não é mais um agrupamento de fases embutidas. O antigo cadastro global `CorposEstelares.json` foi migrado para a lista de corpos de cada fase, permitindo dois corpos do mesmo tipo com propriedades distintas.
 
-O arquivo `Recursos/Fases/teste_001.json` é o exemplo executável. `CarregadorFase.carregar(caminho)` e `CarregadorFase.validar(dados)` retornam `{nivel, erros}`; `nivel` só é preenchido quando todos os campos e relações são válidos. Esse validador é o contrato comum do jogo e do futuro editor. A suíte `tests/test_partida.gd` constrói exemplos inválidos a partir do exemplo válido.
+O arquivo `Recursos/Fases/teste_001.json` é o exemplo executável. `CarregadorFase.carregar(caminho)` e `CarregadorFase.validar(dados)` retornam `{nivel, erros}`; `nivel` só é preenchido quando todos os campos e relações são válidos. Esse validador é o contrato comum do jogo e do [editor de fases](editor-de-fases.md). A suíte `tests/test_partida.gd` constrói exemplos inválidos a partir do exemplo válido.
 
 | Campo | Tipo, unidade e regra |
 | --- | --- |
@@ -64,26 +64,26 @@ Nave e corpos agora são `Node2D`, com atualização explícita em `SimulacaoVoo
 
 Contato é testado no segmento do passo, contra círculos expandidos pelo raio da nave. A captura usa o maior entre raio de colisão e captura; perigos usam o raio fatal. O contato mais cedo vence. Para frações iguais dentro de `1e-6`: perigo antes de Terra antes de apoio. Saída dos limites vence empate com contato. Colisão ocorre no segmento mesmo se a nave atravessaria todo o corpo em um único passo.
 
-Ao sair da origem, a captura é ignorada somente se a nave está fora da superfície sólida e o movimento aponta para fora. Um impulso para dentro colide imediatamente: no protótipo, a nave pousa novamente e o impulso aceito continua custando uma unidade. Não existe imunidade temporal à colisão.
+Ao sair da origem, a captura é ignorada somente se a nave está fora da superfície sólida e o movimento aponta para fora. Um impulso para dentro produz contato imediato, sem imunidade temporal à colisão. O consumo já confirmado não é revertido pelo contato; o resultado segue as [regras de pouso e combustível](../regras-de-negocio/jogabilidade.md#combustível-pouso-e-deriva).
 
-## Combustível e ciclo da tentativa
+## Pedidos de impulso e estado da tentativa
 
 - Cada pedido carrega um ID monotônico. Repetições são rejeitadas antes e depois da aplicação, inclusive após reinício. Cancelar a mira não gera pedido; cancelar outro gesto no mesmo passo preserva um lançamento já solicitado. Pausa, perda de foco e bloqueio de controle descartam pedidos ainda não processados sem cobrança.
-- A física aceita cada pedido uma vez, desconta uma unidade e emite a confirmação que reinicia o tempo. Correção em voo soma à velocidade; decolagem parte de velocidade zero do apoio estático.
-- O último impulso é executado; a nave entra em deriva e continua sob gravidade. Saldo zero bloqueia novos gestos, não o voo. Terra pode vencer com saldo zero.
-- Contato seguro com saldo positivo pousa, zera velocidade e guarda ID/posição relativa. Não recarrega. A contagem fica suspensa no pouso até a próxima decolagem.
-- **Regra de protótipo:** contato seguro com saldo zero perde por falta de movimentos. Lançamento contra origem segue essa mesma regra após pagar o impulso.
-- Deriva utiliza o tempo do último lançamento, sem temporizador adicional. Observação/cancelamento não reiniciam a contagem. O passo é limitado ao tempo restante; contato dentro desse passo é resolvido antes do timeout.
-- Pausa/perda de foco/suspensão cancela a mira e congela a árvore da simulação. O HUD continua ativo; voltar ao foco não retoma automaticamente. Exploração de câmera mantém a simulação ativa, mas bloqueia lançamento.
-- Vitória/derrota são estados estáveis com um único evento e causa visível. Reinício restaura posição, orientação, combustível, tempo, vínculos, alertas, câmera e gestos.
+- A física aceita cada pedido uma vez, desconta uma unidade e emite a confirmação que reinicia o temporizador. Correção em voo soma o incremento à velocidade existente; decolagem parte de velocidade zero do apoio estático.
+- `Partida` mantém os estados `JOGANDO`, `PAUSADO`, `PERDIDA` e `CONCLUIDA`; `Nave` distingue pouso, voo e deriva. O saldo zero bloqueia a entrada, mas não interrompe a integração física. Pousar zera a velocidade e guarda ID/posição relativa do apoio.
+- O temporizador é ativado e reiniciado pela confirmação do impulso. Só é decrementado fora do pouso. A deriva reutiliza o tempo restante do último lançamento, sem temporizador adicional. Cada passo é limitado ao tempo restante; contato dentro desse passo é resolvido antes do timeout.
+- A pausa cancela a entrada e congela a árvore da simulação. `Partida` e HUD continuam processando os controles de retomada. As notificações de perda de foco/suspensão acionam a pausa; o retorno de foco não altera o estado. A exploração desabilita o controle da nave sem pausar a árvore.
+- A finalização emite um único evento de conclusão ou perda e mantém o resultado estável. O reinício reconfigura a nave com os dados autorais e restaura posição, orientação, combustível, tempo, vínculos, alertas, câmera e gestos.
 
-## Prévia e apresentação
+As condições de vitória, derrota, consumo e retomada estão centralizadas nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md), incluindo o pouso sem combustível adotado pelo protótipo.
 
-O círculo fica no ponto inicial do toque, em coordenadas lógicas de tela. Dentro dele há uma cruz; fora dele aparece a trajetória estimada. O traçado nasce na nave, inclui sua velocidade atual quando está em voo e usa o mesmo integrador/contatos da execução.
+## Implementação da prévia e apresentação
+
+O círculo da mira fica no ponto inicial do toque, em coordenadas lógicas de tela. O traçado nasce na nave, inclui sua velocidade atual quando está em voo e usa o mesmo integrador/contatos da execução.
 
 São até 180 passos (3 s a 60 Hz), com pontos a cada três passos e atualização limitada a 15 Hz. O primeiro contato ou limite encerra a previsão. Cancelar, lançar, pausar, explorar ou terminar limpa o indicador. A prévia usa apenas dados locais, sem cobrar combustível nem mover o mundo.
 
-O HUD mostra combustível, tempo, direção/distância da Terra, proximidade por ID, causa do desfecho e controles de pausa, exploração e reinício. A câmera apresenta a Terra por 1,2 s antes de voltar à nave e habilitar mira. Durante exploração, o arraste movimenta apenas a câmera.
+A câmera apresenta a Terra por 1,2 s antes de voltar à nave e habilitar a entrada. A transformação da câmera não altera as unidades lógicas do gesto. Os indicadores e controles disponíveis ao jogador estão descritos nas [regras de apresentação](../regras-de-negocio/jogabilidade.md#prévia-câmera-e-indicadores).
 
 ## Evidências e limites de aceite
 
@@ -91,6 +91,6 @@ Na Godot 4.7.2/Windows, a rota do exemplo, partindo da superfície de `origem` e
 
 As capturas de mira/pausa/vitória foram verificadas no renderizador Mobile/D3D12 e também geradas com Compatibility/OpenGL em Intel UHD Graphics. O ambiente restrito impediu o cache de shaders em `user://`; os PNGs foram gerados normalmente em `.godot/`. Isso não substitui medir desempenho, ergonomia e suspensão no Android.
 
-Ainda precisam de aceite da equipe: mapeamento livre, curva/valores de impulso, gravidade, regra contra origem, contato seguro sem saldo e contagem no pouso. Nenhuma issue foi encerrada apenas por esses testes. O APK de depuração foi gerado e verificado em 15/10/2026; instalação e aparelho de referência permanecem pendentes, conforme [android.md](android.md). Campanha, editor e progresso persistente já estão integrados pelos PRs #43/#44/#46. Checkpoints e recursos condicionais continuam pendentes. Consulte [estado-da-branch.md](estado-da-branch.md) para o estado consolidado em 26/10/2026.
+Ainda precisam de aceite da equipe: mapeamento livre, curva/valores de impulso, gravidade, regra contra origem, contato seguro sem saldo e contagem no pouso. Nenhuma issue foi encerrada apenas por esses testes. O APK de depuração foi gerado e verificado em 15/10/2026; instalação e aparelho de referência permanecem pendentes, conforme [android.md](android.md). Campanha, editor e progresso persistente já estão integrados pelos PRs #43/#44/#46. Checkpoints e recursos condicionais continuam pendentes. Consulte [estado-da-branch.md](../auxiliar/estado-da-branch.md) para o estado consolidado em 26/10/2026.
 
 Referências da engine: [pausa e modos de processamento](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html), [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html), [fluxo de entrada](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html).

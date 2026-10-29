@@ -2,7 +2,7 @@
 
 Este manual explica como criar, editar, validar, salvar e testar fases do ORBT no plugin **ORBT Fases** da Godot. Ele cobre o editor disponível no projeto: composição visual dos corpos, propriedades JSON, validação pelo carregador do jogo e execução de uma cópia temporária.
 
-O plugin foi desenvolvido para Godot 4.7.2 e para o contrato JSON v1 descrito em [fases-e-simulacao.md](fases-e-simulacao.md). O editor é uma ferramenta de autoria: não altera a física, não completa uma campanha e não substitui testes de jogabilidade no telefone.
+O plugin foi desenvolvido para Godot 4.7.2 e para o contrato JSON v1 descrito em [fases-e-simulacao.md](../tecnica/fases-e-simulacao.md). O editor é uma ferramenta de autoria: não altera a física, não completa uma campanha e não substitui testes de jogabilidade no telefone.
 
 ## 1. Preparar e abrir o editor
 
@@ -236,7 +236,9 @@ Use uma cópia do projeto e registre a versão da Godot e a revisão testada:
 
 ## Referências do projeto
 
-- [Contrato JSON e regras do protótipo](fases-e-simulacao.md)
-- [Guia técnico do plugin e testes](editor-de-fases.md)
-- [Catálogo e progressão da campanha](campanha.md)
+- [Regras de jogabilidade do protótipo](../regras-de-negocio/jogabilidade.md)
+- [Contrato JSON e modelo de simulação](../tecnica/fases-e-simulacao.md)
+- [Guia técnico do plugin e testes](../tecnica/editor-de-fases.md)
+- [Catálogo e progressão da campanha](../tecnica/campanha.md)
+- [Regras de acesso e progressão](../regras-de-negocio/campanha.md)
 - [Estado atual e continuidade](estado-da-branch.md)

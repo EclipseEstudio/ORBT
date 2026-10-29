@@ -38,7 +38,7 @@ Para capturas com renderizador real, execute `godot --path . --script tests/capt
 
 ## Android
 
-O preset **Android** inclui catálogo e fases JSON, usa orientação retrato e gera um APK de depuração para ARM de 32/64 bits. A importação de texturas ETC2/ASTC necessária ao renderizador Mobile está habilitada. Consulte a [preparação e validação Android](docs/android.md).
+O preset **Android** inclui catálogo e fases JSON, usa orientação retrato e gera um APK de depuração para ARM de 32/64 bits. A importação de texturas ETC2/ASTC necessária ao renderizador Mobile está habilitada. Consulte a [preparação e validação Android](docs/tecnica/android.md).
 
 Depois de configurar JDK, SDK Android e modelos de exportação no mesmo editor utilizado pelo comando:
 
@@ -46,7 +46,7 @@ Depois de configurar JDK, SDK Android e modelos de exportação no mesmo editor 
 ./scripts/exportar-android.ps1 -Godot godot
 ```
 
-Se `godot` não for reconhecido, passe em `-Godot` o caminho completo do executável entre aspas. Veja o [exemplo sem PATH](docs/android.md#gerar-e-instalar).
+Se `godot` não for reconhecido, passe em `-Godot` o caminho completo do executável entre aspas. Veja o [exemplo sem PATH](docs/tecnica/android.md#gerar-e-instalar).
 
 Saída: `build/android/ORBT-debug.apk`. APKs, pacotes e logs em `build/` ficam fora do Git.
 
@@ -60,19 +60,22 @@ Esse teste exporta um PCK com o preset Android e carrega a fase em uma pasta iso
 
 ## Editor de fases
 
-Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [manual completo do editor](docs/guia-editor-de-fases.md) para o fluxo de autoria, propriedades, validação, salvamento e testes. Os [detalhes técnicos e roteiro de reprodução](docs/editor-de-fases.md) ficam na documentação de desenvolvimento.
+Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [manual completo do editor](docs/auxiliar/guia-editor-de-fases.md) para o fluxo de autoria, propriedades, validação, salvamento e testes. Os [detalhes técnicos e roteiro de reprodução](docs/tecnica/editor-de-fases.md) ficam na documentação de desenvolvimento.
 
 ## Documentação
 
 - [Índice completo da documentação](docs/README.md)
-- [Estado atual, Projects, issues e próximos passos](docs/estado-da-branch.md)
-- [Histórico das implementações e evidências](docs/historico-implementacao.md)
-- [Contrato JSON e regras do protótipo](docs/fases-e-simulacao.md)
-- [Exportação e aceite Android](docs/android.md)
-- [Editor de fases JSON](docs/editor-de-fases.md)
-- [Campanha e seleção de fases](docs/campanha.md)
-- [Identidade visual, fontes e inventário](docs/arte/README.md)
+- [Documentação técnica](docs/tecnica/README.md)
+- [Regras de negócio: jogabilidade e campanha](docs/regras-de-negocio/README.md)
+- [Documentação auxiliar: guias, arte e acompanhamento](docs/auxiliar/README.md)
+- [Estado atual, Projects, issues e próximos passos](docs/auxiliar/estado-da-branch.md)
+- [Histórico das implementações e evidências](docs/auxiliar/historico-implementacao.md)
+- [Contrato JSON e modelo de simulação](docs/tecnica/fases-e-simulacao.md)
+- [Exportação e aceite Android](docs/tecnica/android.md)
+- [Editor de fases JSON](docs/tecnica/editor-de-fases.md)
+- [Campanha e seleção de fases](docs/regras-de-negocio/campanha.md)
+- [Identidade visual, fontes e inventário](docs/auxiliar/arte/README.md)
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados e progresso persistente por ID, com backup recuperável. Checkpoints de pouso e preferências continuam pendentes.
 
-Estado atualizado em 29/10/2026: PRs #42–#46 integrados à `main`, incluindo progresso persistente; código e documentação reunidos na branch `codex/issue-40-alpha` para o PR destinado à `alpha`. Os [quatro critérios da #40](docs/validacao-issue-40.md) foram demonstrados no Windows; validação integrada com 383 verificações sem falhas. O catálogo real contém uma fase. Aceite Android, checkpoints/Continuar, preferências e expansão da campanha permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 29/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46, incluindo progresso persistente. Os [quatro critérios da #40](docs/auxiliar/validacao-issue-40.md) foram demonstrados no Windows; validação integrada com 383 verificações sem falhas. O catálogo real contém uma fase. Aceite Android, checkpoints/Continuar, preferências e expansão da campanha permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
