@@ -89,19 +89,57 @@ func _executar() -> void:
 	conferir(falha.salvar() and novo(falha.caminho).estado("b") == "Concluída", "Nova tentativa grava vitórias pendentes")
 	var permissao = novo(base + "/pasta-ausente/progresso.json")
 	conferir(permissao.concluir("a", itens) and not permissao.aviso.is_empty(), "Destino indisponível não perde resultado em memória")
+	# Catálogo isolado de duas fases para testar o fluxo real antes/depois da reabertura.
+	var pasta := "res://Recursos/Fases/.teste-persistencia-%d" % OS.get_process_id()
+	DirAccess.make_dir_recursive_absolute(pasta)
+	var exemplo: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Fases/teste_001.json"))
+	var catalogo := {}
+	for indice in range(2):
+		var fase := exemplo.duplicate(true)
+		fase.id = "a" if indice == 0 else "b"
+		fase.name = "Persistência %d" % (indice + 1)
+		fase.order = indice + 1
+		fase.initial_fuel = 3 - indice
+		var arquivo: String = pasta + "/" + fase.id + ".json"
+		escrever(arquivo, JSON.stringify(fase))
+		catalogo[fase.id] = arquivo
+	var caminho_catalogo := base + "-catalogo.json"
+	escrever(caminho_catalogo, JSON.stringify(catalogo))
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.caminho_progresso = base + "-jogo"
+	jogo.get_node("GerenciadorDeNivel").caminho = caminho_catalogo
 	root.add_child(jogo)
 	await process_frame
-	conferir(jogo.iniciar_fase("teste_001"), "Fluxo aceita serviço persistente")
-	jogo.mundo_atual.partida.finalizar(true, "Chegada")
+	jogo.mostrar_selecao()
+	conferir(jogo.progresso.estado("a") == "Disponível" and jogo.progresso.estado("b") == "Bloqueada", "Controlador persistente inicia somente com a primeira fase disponível")
+	var gerenciador = jogo.get_node("GerenciadorDeNivel")
+	var mundo_antes: Node = jogo.mundo_atual
+	gerenciador.erros.append("sentinela")
+	conferir(not jogo.iniciar_fase("b") and jogo.mundo_atual == mundo_antes and gerenciador.erros.has("sentinela") and not FileAccess.file_exists(jogo.caminho_progresso), "Bloqueio direto não chama carregador nem grava save no fluxo persistente")
+	jogo.interface_atual.escolher("b")
+	conferir(jogo.interface_atual.mensagem.text.contains("bloqueada") and jogo.mundo_atual == mundo_antes, "Seleção também impede abrir a fase bloqueada com serviço persistente")
+	var abriu: bool = jogo.iniciar_fase("a")
+	conferir(abriu, "Fluxo persistente abre a primeira fase pelo catálogo temporário")
+	if abriu:
+		var partida = jogo.mundo_atual.partida
+		partida.set_physics_process(false)
+		partida.finalizar(true, "Chegada")
+		conferir(jogo.progresso.estado("a") == "Concluída" and jogo.progresso.pode_abrir("b") and FileAccess.file_exists(jogo.caminho_progresso), "Vitória do controlador salva a conclusão e libera a segunda fase")
+		var primeira_vitoria := FileAccess.get_file_as_string(jogo.caminho_progresso)
+		partida.reiniciar()
+		partida.finalizar(true, "Chegada repetida")
+		conferir(FileAccess.get_file_as_string(jogo.caminho_progresso) == primeira_vitoria and jogo.progresso.concluidas.size() == 1 and jogo.progresso.liberadas.size() == 2, "Segunda vitória real não regrava nem duplica a liberação")
 	jogo.queue_free()
 	await process_frame
-	conferir(novo(base + "-jogo").estado("teste_001") == "Concluída", "Vitória real do controlador persiste ao fechar a cena")
 	# Segunda execução de processo: não compartilha objeto ou estado em memória.
 	var saida: Array = []
-	var codigo := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", "res://tests/verificar_progresso.gd", "--log-file", ProjectSettings.globalize_path("res://.godot/filho-progresso.log"), "--", base + "-jogo"], saida, true)
-	conferir(codigo == 0 and "PROGRESSO_REABERTO" in "\n".join(saida), "Processo separado restaura progresso do arquivo")
+	var codigo := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", "res://tests/verificar_progresso.gd", "--log-file", ProjectSettings.globalize_path("res://.godot/filho-progresso.log"), "--", base + "-jogo", caminho_catalogo], saida, true)
+	print("\n".join(saida))
+	conferir(codigo == 0 and "PROGRESSO_REABERTO" in "\n".join(saida), "Processo separado reabre controlador, conclui última fase e permite repetição")
+	for arquivo in catalogo.values():
+		DirAccess.remove_absolute(arquivo)
+	DirAccess.remove_absolute(pasta)
+	DirAccess.remove_absolute(caminho_catalogo)
 	for prefixo in [base, base + "-falha", base + "-jogo"]:
 		for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 			if FileAccess.file_exists(prefixo + sufixo):
