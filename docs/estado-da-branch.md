@@ -1,72 +1,111 @@
-# Estado da branch e continuidade das issues
+# Estado atual e continuidade do ORBT
 
-## Atualização de 22/10/2026
+Atualizado em 26/10/2026. Fonte de acompanhamento: [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1), issues e PRs do [repositório](https://github.com/EclipseEstudio/ORBT). Esta documentação distingue implementação integrada de aceite final.
 
-O PR #45 foi integrado à `main` em `6db0abb`; a revisão das imagens continua adiada. A branch `feat/issue-40-progresso-persistente` foi atualizada com essa base para resolver os conflitos do PR #46, preservando as suítes visual e de persistência. A entrega reúne gravação/restauração por ID, backup, validação e retentativa. Verificação integrada: 69 controles, 142 partida, 32 editor, 31 campanha, 38 visuais, 24 persistência e 23 pacote (359 ao todo). Checkpoints de pouso e preferências seguem pendentes. Contrato e evidências em [campanha.md](campanha.md).
+## Base conferida
 
-O PR #44 da campanha foi aprovado e integrado em `fcd576b`. A identidade visual de #45 acrescentou seis sprites, variações de apoio, marcas sem dependência só de cor e tema/indicadores. Inventário e pendências em [arte/README.md](arte/README.md). Aceite visual no Android e revisão da origem da propulsão legada permanecem pendentes.
+O PR #46 foi integrado à main em `a774a824b0a5824c0a049911383253c10b538d10` (22/10/2026 no horário de São Paulo). O checkout analisado está na branch `feat/issue-40-progresso-persistente`, commit `846785b`, cabeça desse PR. Não é uma nova implementação pendente de merge. Antes de desenvolver, atualizar a main e criar uma branch de trabalho sem descartar arquivos locais.
 
-O PR #43 do editor também foi aprovado e integrado à `main` em `45466e2`. A entrega seguinte está em `feat/issue-5-selecao-fases`: seleção e progressão em memória de M2, documentadas em [campanha.md](campanha.md). Persistência M3 e aceite Android continuam pendentes. Verificações atuais: 69 controles, 142 partida, 32 editor, 31 campanha e 15 pacote, todas passando.
-
-O PR #42 integrou a base de #1/#6/#4 à `main` no commit `d0c0cae`. A aprovação formal foi recusada pelo GitHub por ser a mesma conta autora; o merge foi autorizado pelo usuário. Aceite Android de #4 permanece pendente, conforme [android.md](android.md).
-
-A branch `feat/issue-2-editor-fases` implementa o plugin de edição #2/#21–#26. O [guia do editor](editor-de-fases.md) registra funcionalidades, testes e reprodução independente pendente. As notas abaixo são histórico da primeira implementação, anterior ao merge e ao plugin.
-
-Atualizado em 15/10/2026. Repositório: [EclipseEstudio/ORBT](https://github.com/EclipseEstudio/ORBT).
-
-## Situação do Git
-
-Branch `implementa-nave-e-controles`, baseada em `a93376c7b58d36b4f998cdee5ef99775e4e5ac3b`. A análise inicial confirmou esse commit idêntico ao remoto. Esta entrega reúne implementação, testes e preparação de exportação em commit local. Publicação no remoto e fechamento de issues não fazem parte da evidência de validação abaixo.
-
-Na consulta realizada, as 41 issues estavam abertas. Foram preservados o GDD local e os arquivos preexistentes não rastreados em `Recursos/ModelosVisuais/` e `tmp/`.
-
-## Escopo entregue
-
-O controle da nave deixou de ser apenas um protótipo de impulso: agora pode ser testado numa fase com gravidade, pouso, combustível, prévia, tempo, câmera e desfechos. A implementação cobre o núcleo de [#6](https://github.com/EclipseEstudio/ORBT/issues/6) e as integrações necessárias para exercitá-lo.
-
-| Issue | Implementação presente | Aceite ainda pendente |
+| Entrega | Integração | Estado funcional |
 | --- | --- | --- |
-| [#15](https://github.com/EclipseEstudio/ORBT/issues/15) | Pousada/voo/deriva, vínculo por ID e posição relativa, decolagem, contato contra origem e restauração | Validação das regras propostas e aparelho |
-| [#16](https://github.com/EclipseEstudio/ORBT/issues/16) | Um dedo, zona morta, cancelamento, prioridade da GUI, foco/suspensão/pausa e bloqueio em exploração/desfecho | Ergonomia e eventos reais no Android |
-| [#17](https://github.com/EclipseEstudio/ORBT/issues/17) | Direção livre oposta ao arraste, curva contínua saturada e coordenadas lógicas independentes da câmera | Calibração e aceite da direção |
-| [#18](https://github.com/EclipseEstudio/ORBT/issues/18) | Círculo, estimativa com velocidade atual, gravidade e interrupção em contato; limite de custo e limpeza | Legibilidade, custo e tolerância no Android |
-| [#19](https://github.com/EclipseEstudio/ORBT/issues/19) | Combustível do JSON, cobrança única por ID, confirmação para tempo, correção aditiva e último impulso em deriva | Validação integrada no aparelho |
-| [#20](https://github.com/EclipseEstudio/ORBT/issues/20) | Mouse emula toque pelo mesmo ciclo, incluindo cancelamento, interface, câmera e combustível | Comparação com toque físico |
+| Núcleo, corpos, controles e primeira fase | PR #42, `d0c0cae` | JSON v1, gravidade/contatos, gestos, combustível, prévia, tempo, câmera, HUD, pausa e resultados implementados |
+| Editor Godot | PR #43, `45466e2` | Criar/abrir/editar/validar/salvar/testar; carregador comum e teste isolado |
+| Seleção/campanha | PR #44, `fcd576b` | Catálogo por ID, bloqueio, liberação, repetição e troca de mundos |
+| Identidade visual mínima | PR #45, `6db0abb` | Seis sprites, marcas por função, tema e indicadores; revisão das imagens adiada |
+| Progresso persistente | PR #46, `a774a82` | Conclusões/desbloqueios por ID, checksum, temporário, backup, recuperação e retentativa |
 
-Dependências implementadas para não deixar essas funcionalidades isoladas:
+O catálogo real em `Recursos/Niveis.json` contém somente `teste_001`. Catálogos de duas/dez fases usados por testes/capturas não são campanha autoral entregue. No desktop há menu mínimo e seleção; no Android a primeira fase abre diretamente. Não há Continuar por checkpoint.
 
-- **#7–#14:** corpos por dados, gravidade suavizada, contatos por segmento, zonas separadas e alertas de proximidade por ID. O modelo e as regras são candidatos documentados para aceite.
-- **#32/#33:** contrato de fase v1, arquivo por fase, validação de tipos/referências/geometria, diagnóstico de erro e carregamento por arquivo ou memória. Os dados autorais não são alterados pela simulação.
-- **#34–#37:** início no apoio, Terra, limites independentes da tela, vitória/derrota, tempo, pausa e reinício. Foram corrigidas a instanciação e a limpeza nas trocas de mundo/interface.
-- **Integração #4:** HUD, câmera de abertura/acompanhamento/exploração, rota reproduzível e início direto da fase quando a plataforma é Android. Preset e script de exportação, JSON incluído, tela em retrato e margens de área segura. APK de depuração gerado, com assinatura, alinhamento e conteúdo verificados; instalação em aparelho ainda pendente.
+## Critério de status no Projects
 
-As cenas da nave e dos corpos usam agora simulação explícita compartilhada com a prévia, em vez de combinar `RigidBody2D` com outro cálculo para a previsão. Sprites e animações foram preservados. O cadastro global antigo de corpos foi substituído pelos dados completos de cada fase.
+- **Backlog:** demanda identificada ainda a detalhar.
+- **A Fazer:** escopo definido e pronto para implementação.
+- **Em Desenvolvimento:** implementação em andamento.
+- **Em Revisão:** implementação integrada, com revisão, decisão de regra ou evidência de aceite pendente. Merge sozinho não conclui o aceite.
+- **Concluído:** issue encerrada com evidência do seu escopo; não implica aceite global Android ou de todos os requisitos do GDD.
 
-## Validação realizada
+Na consulta inicial havia 41 issues: 21 encerradas e 20 abertas. Todas as abertas apareciam como A Fazer, apesar de terem implementação. As 20 abertas implementadas foram movidas para Em Revisão no Projects. As descrições originais das issues foram preservadas: o conector recusou edição com HTTP 403 (Resource not accessible by integration). As pendências reconciliadas estão na matriz abaixo e no README do Projects. Responsáveis existentes são preservados; não foram inventados prazos nem atribuídas aprovações humanas.
 
-Godot `4.7.2.stable.official.ed1daf0bf`, Windows:
+## Matriz das issues existentes
 
-- **68 verificações de controles/interface**, sem falhas.
-- **139 verificações de dados, física e partida**, sem falhas.
-- **10 verificações do pacote exportado**, sem falhas: fase e catálogo incluídos, arquivos de desenvolvimento excluídos, cena principal e rota funcionando em pasta isolada.
-- Em 15/10, APK exportado com Godot 4.7.2 / Windows PowerShell 5.1; assinatura v2/v3 e alinhamento de 16 KB verificados. Conteúdo JSON conferido e manifesto lido com AAPT2. Metadados e observações em [android.md](android.md).
-- Rota de um impulso até a Terra com saldo inicial 5 e com o último combustível.
-- Comparação de prévia e voo, com erro inferior a 0,001 unidade nos pontos testados.
-- Rejeição de eventos duplicados/atrasados, inclusive entre reinícios; pausa sem cobrança pendente.
-- Contato rápido, lançamento contra origem, limites, timeout, proximidades simultâneas e desfecho único.
-- Troca real de fase libera o mundo anterior e restaura o saldo.
-- Exploração limpa contato mesmo com soltura consumida pela GUI; redimensionamento, cancelamento do sistema e perda de foco também limpam o arraste.
-- Conversão da área segura para a escala lógica verificada com recortes, barras e janela deslocada.
-- Capturas de mira, pausa e vitória inspecionadas; execução gráfica Mobile/D3D12 e Compatibility/OpenGL no desktop.
+| Issue | Demanda | Estado de acompanhamento | Pendência / evidência necessária |
+| --- | --- | --- | --- |
+| [#1](https://github.com/EclipseEstudio/ORBT/issues/1) | Implementar corpos celestes, gravidade e contatos | Em Revisão | Aprovar modelo/tolerâncias (#13) e registrar integração no Android (#4). |
+| [#2](https://github.com/EclipseEstudio/ORBT/issues/2) | Criar o editor de fases JSON como plugin da Godot | Em Revisão | Reprodução do ciclo criar/salvar/reabrir/testar por outro integrante (#25). |
+| [#3](https://github.com/EclipseEstudio/ORBT/issues/3) | Produzir e integrar a identidade visual mínima em pixel art | Em Revisão | Revisão das imagens adiada; validar legibilidade/paleta/escala no Android e origem da propulsão legada. |
+| [#4](https://github.com/EclipseEstudio/ORBT/issues/4) | Integrar e validar a primeira fase funcional no Android | Em Revisão | Gerar APK da revisão integrada; instalar e executar roteiro Android, registrar aparelho, versão, hash, resultados e reprodução por outro integrante. |
+| [#5](https://github.com/EclipseEstudio/ORBT/issues/5) | Implementar seleção de fases e acesso à campanha | Em Revisão | Validar navegação pelo polegar (#38) e persistência após reabertura no Android (#40). Dez fases, checkpoints e menus completos são demandas complementares. |
+| [#6](https://github.com/EclipseEstudio/ORBT/issues/6) | Implementar controle da nave por toque, mira e impulso | Em Revisão | Validar toque físico, direção/intensidade, cancelamento e desempenho/legibilidade da prévia no Android (#16–#18). |
+| [#7](https://github.com/EclipseEstudio/ORBT/issues/7) | Definir propriedades dos corpos celestes no JSON | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#8](https://github.com/EclipseEstudio/ORBT/issues/8) | Definir região de proximidade dos corpos celestes | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#9](https://github.com/EclipseEstudio/ORBT/issues/9) | Definir regiões de contato, captura e perigo | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#10](https://github.com/EclipseEstudio/ORBT/issues/10) | Emitir eventos de proximidade e contato sem duplicação | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#11](https://github.com/EclipseEstudio/ORBT/issues/11) | Calcular o vetor de atração | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#12](https://github.com/EclipseEstudio/ORBT/issues/12) | Aplicar gravidade no passo fixo de física | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#13](https://github.com/EclipseEstudio/ORBT/issues/13) | Validar e registrar o modelo de gravidade da primeira fase | Em Revisão | Aprovar formalmente modelo gravitacional, parâmetros e tolerâncias; a implementação existe e permanece proposta documentada. |
+| [#14](https://github.com/EclipseEstudio/ORBT/issues/14) | Criar cenários de teste de gravidade, proximidade e contato | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#15](https://github.com/EclipseEstudio/ORBT/issues/15) | Organizar a nave e implementar vínculo de pouso | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#16](https://github.com/EclipseEstudio/ORBT/issues/16) | Controlar o ciclo do toque e o cancelamento pela zona morta | Em Revisão | Executar cancelamento, multitouch, GUI, suspensão e retomada com toque físico no Android. |
+| [#17](https://github.com/EclipseEstudio/ORBT/issues/17) | Calcular direção e intensidade a partir do arraste | Em Revisão | Aprovar direção livre oposta ao arraste e calibrar intensidade/ergonomia no Android. |
+| [#18](https://github.com/EclipseEstudio/ORBT/issues/18) | Exibir círculo de cancelamento e prévia de trajetória | Em Revisão | Validar alcance/tolerância, legibilidade e custo da prévia no Android. |
+| [#19](https://github.com/EclipseEstudio/ORBT/issues/19) | Aplicar impulsos e controlar o consumo de combustível | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#20](https://github.com/EclipseEstudio/ORBT/issues/20) | Reproduzir os controles de toque com mouse para desenvolvimento | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#21](https://github.com/EclipseEstudio/ORBT/issues/21) | Criar a estrutura ativável do plugin de edição | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#22](https://github.com/EclipseEstudio/ORBT/issues/22) | Criar a cena de edição @tool sem executar a partida | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#23](https://github.com/EclipseEstudio/ORBT/issues/23) | Visualizar corpos, Terra e regiões físicas na viewport | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#24](https://github.com/EclipseEstudio/ORBT/issues/24) | Inserir, selecionar, mover e excluir objetos no editor | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#25](https://github.com/EclipseEstudio/ORBT/issues/25) | Editar propriedades e abrir/salvar fases JSON no plugin | Em Revisão | Outro integrante deve reproduzir edição, salvar/reabrir, alterações pendentes e retorno do teste sem alterar dados autorais. |
+| [#26](https://github.com/EclipseEstudio/ORBT/issues/26) | Validar e testar a fase pelo carregador comum | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#27](https://github.com/EclipseEstudio/ORBT/issues/27) | Definir inventário e padrões dos recursos visuais | Em Revisão | Aprovar paleta/grade/escala no aparelho; inventário e fontes já estão integrados. |
+| [#28](https://github.com/EclipseEstudio/ORBT/issues/28) | Criar o sprite legível e orientado da nave | Em Revisão | Aprovar orientação e leitura da nave no tamanho real, pouso/mira/voo no Android. |
+| [#29](https://github.com/EclipseEstudio/ORBT/issues/29) | Criar sprites dos apoios, perigos e Terra | Em Revisão | Aprovar distinção entre apoio, perigo e Terra no Android e revisar autoria/licença da propulsão legada na entrega audiovisual. |
+| [#30](https://github.com/EclipseEstudio/ORBT/issues/30) | Organizar variações de cor preservando contraste e função | Em Revisão | Aprovar as duas variações de apoio em tela real preservando identificação sem depender só da cor. |
+| [#31](https://github.com/EclipseEstudio/ORBT/issues/31) | Integrar sprites e indicadores sem alterar a física | Em Revisão | Capturar mira/pouso/alerta/derrota no Android; validar margens, oclusão e leitura sem alterar física. |
+| [#32](https://github.com/EclipseEstudio/ORBT/issues/32) | Definir e documentar o formato JSON das fases | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#33](https://github.com/EclipseEstudio/ORBT/issues/33) | Carregar e validar JSON para construir a fase | Em Revisão | Demonstrar carregamento offline no Android com os arquivos empacotados. |
+| [#34](https://github.com/EclipseEstudio/ORBT/issues/34) | Posicionar a nave no apoio inicial e criar a Terra | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#35](https://github.com/EclipseEstudio/ORBT/issues/35) | Detectar saída dos limites do mundo | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#36](https://github.com/EclipseEstudio/ORBT/issues/36) | Detectar chegada à Terra e concluir a tentativa | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#37](https://github.com/EclipseEstudio/ORBT/issues/37) | Controlar estados, temporizador, desfechos e reinício da partida | Em Revisão | Registrar aceite das regras de tempo/deriva/pouso sem saldo/origem e demonstrar pausa/reinício/desfechos no Android. |
+| [#38](https://github.com/EclipseEstudio/ORBT/issues/38) | Criar a tela de seleção de fases para uso pelo polegar | Em Revisão | Validar navegação pelo polegar, nomes longos, margens seguras e alvos de toque no Android. |
+| [#39](https://github.com/EclipseEstudio/ORBT/issues/39) | Gerar cartões pelo catálogo de fases e progresso | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
+| [#40](https://github.com/EclipseEstudio/ORBT/issues/40) | Respeitar desbloqueio e conclusão das fases | Em Revisão | Demonstrar conclusão/desbloqueio e reabertura real no Android; serviço persistente integrado no PR #46. |
+| [#41](https://github.com/EclipseEstudio/ORBT/issues/41) | Abrir a fase selecionada pelo ID e limpar a tentativa anterior | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
 
-Para reproduzir, consulte o [README](../README.md). O executor `tests/run.ps1` trata erros da engine como falha mesmo quando o processo retorna zero.
+Os itens encerrados foram preservados como registrados no GitHub. As pendências transversais de aparelho e aprovação de regras continuam cobertas pelas issues abertas, especialmente #4/#13/#37. Não reabrir ou encerrar em lote apenas por existir código ou PR integrado.
 
-## Regras explícitas e trabalho seguinte
+## Evidências disponíveis
 
-O [contrato de fases e simulação](fases-e-simulacao.md) registra parâmetros, unidades, regras propostas e limites de aceite. As escolhas não foram apresentadas como decisões já aprovadas no GDD.
+Última execução integrada documentada em 22/10/2026, Godot 4.7.2 / Windows: 69 controles, 142 partida, 32 editor, 31 campanha, 38 visuais, 24 persistência e 23 pacote: **359 verificações aprovadas**. É evidência histórica; os testes não foram reexecutados na reconciliação documental de 26/10. O teste de ciclo do plugin tem registro separado de 12 verificações; não somá-lo novamente às 359.
 
-A implementação desta branch está preparada para revisão. O pacote exportado usa os mesmos recursos de jogo e completou a rota de teste. Em 15/10 foram instalados/configurados JDK, SDK Android e modelos 4.7.2; também foi habilitada a importação ETC2/ASTC exigida pela plataforma. O APK foi gerado em `build/android/ORBT-debug.apk`. Instruções e roteiro estão em [android.md](android.md).
+O APK de 15/10 é anterior às últimas integrações. Pacote PCK executado no desktop não comprova APK atual nem execução Android. [android.md](android.md) mantém o roteiro e o histórico, não um aceite concluído.
 
-Para encerrar as issues que exigem aceite Android, ainda é necessário instalar/testar o APK e registrar aparelho/versão, ergonomia, gestos reais, suspensão/retomada, legibilidade e desempenho da prévia. Também é necessário validar com a equipe as regras de direção livre, gravidade, contato contra origem, contato seguro sem combustível e contagem durante pouso. Nenhuma dessas evidências foi substituída por teste desktop.
+## Próximas ações para retomar
 
-Depois do aceite de M1, seguem editor (#2/#21–#26), seleção/campanha (#5/#38–#41), persistência e acabamento visual (#3/#27–#31). Essas entregas não foram acrescentadas à branch de nave e controles.
+1. Atualizar a base main preservando os arquivos locais e conferir alterações posteriores ao PR #46.
+2. Priorizar #4: gerar APK da revisão integrada e registrar revisão, hash, modelo/Android/Godot, passos, esperado/observado e evidências. Exercitar também navegação #38 e persistência #40 com pelo menos duas fases autorais.
+3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
+4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
+5. Próxima implementação recomendada: checkpoints de pouso/fase e retomada (RF17 e parte do RF18). Antes do código, definir quando salvar checkpoint de fase, pouso sem saldo, restauração após derrota e relação com Reiniciar.
+6. Expandir campanha até dez fases com solução e revisão por outra pessoa; depois completar menus, dicas, preferências, áudio e narrativa.
+
+## Backlog complementar do GDD
+
+| Frente | Requisito | Situação / próximo passo |
+| --- | --- | --- |
+| Checkpoints e Continuar | RF17 e parte de RF18 | Ausentes; definir contrato, invalidar estado incompatível, restaurar pausado e sem recarga/cobrança duplicada |
+| Preferências e recuperação da tentativa | RF18 | Conclusão/desbloqueio persistem; preferências e tentativa pausada ainda não |
+| Menus completos | RF19 | Menu mínimo/campanha existem; configurações/créditos e fluxo completo pendentes |
+| Dez fases autorais | RF20 | Uma fase entregue; iniciar segunda fase para progressão real e depois balancear as dez |
+| Dicas contextuais | RF21 | Há instruções mínimas no HUD; falta tutorial contextual com playtest |
+| Música e efeitos/volumes | RF24 | Duas músicas e volumes separados persistidos pendentes |
+| Narrativa | RF25 | Integração de piloto/corporação/retorno e desfecho pendente |
+| Rotação/faixa segura/órbitas/portais/infinito | RF26–RF30 | Condicionais; não iniciar sem decisão de escopo e regras |
+
+O GDD local é referência de requisitos, não evidência de funcionalidade. Recomendações acima não representam aprovação de regras ainda abertas.
+
+## Regra de manutenção
+
+A cada entrega, atualizar issue e Projects com implementação, PR, teste e pendência; atualizar este documento quando mudar a situação consolidada. Fechar uma issue somente com seu aceite demonstrado. Registros antigos ficam em [historico-implementacao.md](historico-implementacao.md); guias técnicos mantêm seus contratos e evidências datadas.
+
+Preservar os arquivos locais preexistentes não rastreados: `Recursos/ModelosVisuais/` e `docs/orbt - game design document.md`. O plano temporário da #4 foi substituído por este documento e pelo roteiro Android.

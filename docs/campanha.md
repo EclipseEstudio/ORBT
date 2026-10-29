@@ -1,6 +1,6 @@
 # Campanha e seleção de fases
 
-Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`. Esta entrega completa a integração de progresso persistente da #40 e foi atualizada com a `main` que integrou #45 em `6db0abb`. Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite Android de #4 permanece pendente.
+Atualizado em 26/10/2026. Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`; progresso persistente da #40 integrado pelo PR #46 em `a774a82`, incluindo a identidade visual do PR #45. Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite Android de #4/#38/#40 permanece pendente. Estado e continuidade: [estado-da-branch.md](estado-da-branch.md).
 
 ## Fluxo
 

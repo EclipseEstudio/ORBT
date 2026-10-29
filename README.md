@@ -60,11 +60,13 @@ Esse teste exporta um PCK com o preset Android e carrega a fase em uma pasta iso
 
 ## Editor de fases
 
-Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [guia do editor](docs/editor-de-fases.md), incluindo ativação/desativação, alterações pendentes e roteiro de reprodução.
+Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [manual completo do editor](docs/guia-editor-de-fases.md) para o fluxo de autoria, propriedades, validação, salvamento e testes. Os [detalhes técnicos e roteiro de reprodução](docs/editor-de-fases.md) ficam na documentação de desenvolvimento.
 
 ## Documentação
 
-- [Estado da branch, issues e evidências](docs/estado-da-branch.md)
+- [Índice completo da documentação](docs/README.md)
+- [Estado atual, Projects, issues e próximos passos](docs/estado-da-branch.md)
+- [Histórico das implementações e evidências](docs/historico-implementacao.md)
 - [Contrato JSON e regras do protótipo](docs/fases-e-simulacao.md)
 - [Exportação e aceite Android](docs/android.md)
 - [Editor de fases JSON](docs/editor-de-fases.md)
@@ -72,3 +74,5 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Identidade visual, fontes e inventário](docs/arte/README.md)
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados e progresso persistente por ID, com backup recuperável. Checkpoints de pouso e preferências continuam pendentes.
+
+Estado reconciliado em 26/10/2026: PRs #42–#46 integrados, incluindo progresso persistente. O catálogo real contém uma fase. Aceite Android, checkpoints/Continuar, preferências e expansão da campanha permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.

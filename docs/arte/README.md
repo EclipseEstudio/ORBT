@@ -1,6 +1,6 @@
 # Identidade visual mínima — #3 / #27–#31
 
-Entrega sobre o PR #44, integrado à `main` em `fcd576b`. Recursos propostos para revisão em Godot 4.7.2, retrato. A linguagem segue o GDD: exploração espacial, tecnologia clara, fundos azul-escuros, pixel art de leitura rápida. Não altera raios, massa, gravidade, combustível, limites ou contato dos JSONs.
+Implementação integrada pelo PR #45 à `main` em `6db0abb`, preservada no PR #46. Estado conferido em 26/10/2026; revisão das imagens continua adiada. Recursos propostos para revisão em Godot 4.7.2, retrato. A linguagem segue o GDD: exploração espacial, tecnologia clara, fundos azul-escuros, pixel art de leitura rápida. Não altera raios, massa, gravidade, combustível, limites ou contato dos JSONs.
 
 ![Prancha de sprites e variações](prancha.png)
 
