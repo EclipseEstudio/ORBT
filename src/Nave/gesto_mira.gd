@@ -4,11 +4,13 @@ class_name GestoMira extends RefCounted
 var zona_morta := 10.0
 var arraste_maximo := 80.0
 var impulso_maximo := 80.0
+var margem_histerese := 2.0
 
 var contato_ativo := -1
 var origem := Vector2.ZERO
 var posicao := Vector2.ZERO
 var saiu_da_zona_morta := false
+var _direcao_estavel := Vector2.ZERO
 
 
 func iniciar(contato: int, ponto: Vector2) -> bool:
@@ -17,6 +19,7 @@ func iniciar(contato: int, ponto: Vector2) -> bool:
 	contato_ativo = contato
 	origem = ponto
 	posicao = ponto
+	_direcao_estavel = Vector2.ZERO
 	return true
 
 
@@ -27,9 +30,16 @@ func mover(contato: int, ponto: Vector2) -> void:
 		cancelar()
 		return
 	posicao = ponto
-	if origem.distance_to(posicao) > zona_morta:
+	var distancia := origem.distance_to(posicao)
+	var margem := clampf(margem_histerese, 0.0, zona_morta)
+	var limiar_saida := zona_morta + margem
+	var limiar_retorno := maxf(0.0, zona_morta - margem)
+	if distancia > limiar_saida:
 		saiu_da_zona_morta = true
-	elif saiu_da_zona_morta:
+		var arraste := origem - posicao
+		if not arraste.is_zero_approx():
+			_direcao_estavel = arraste.normalized()
+	elif saiu_da_zona_morta and distancia < limiar_retorno:
 		# Após voltar ao círculo, somente um novo toque pode preparar outro impulso.
 		cancelar()
 
@@ -46,7 +56,19 @@ func soltar(contato: int, ponto: Vector2) -> Vector2:
 func obter_impulso() -> Vector2:
 	if contato_ativo == -1:
 		return Vector2.ZERO
-	return calcular_impulso(origem, posicao, zona_morta, arraste_maximo, impulso_maximo)
+	var arraste := origem - posicao
+	var distancia := arraste.length()
+	if distancia <= zona_morta or not is_finite(distancia):
+		return Vector2.ZERO
+	var direcao := arraste.normalized()
+	var margem := clampf(margem_histerese, 0.0, zona_morta)
+	var limiar_saida := zona_morta + margem
+	if saiu_da_zona_morta and distancia < limiar_saida and not _direcao_estavel.is_zero_approx():
+		direcao = _direcao_estavel
+	elif not direcao.is_zero_approx():
+		_direcao_estavel = direcao
+	var intensidade := clampf((distancia - zona_morta) / (arraste_maximo - zona_morta), 0.0, 1.0)
+	return direcao * intensidade * impulso_maximo
 
 
 func cancelar() -> void:
@@ -54,6 +76,7 @@ func cancelar() -> void:
 	origem = Vector2.ZERO
 	posicao = Vector2.ZERO
 	saiu_da_zona_morta = false
+	_direcao_estavel = Vector2.ZERO
 
 
 static func calcular_impulso(
