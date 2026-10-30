@@ -46,6 +46,7 @@ func _executar() -> void:
 		conferir(partida.estado == partida.Estado.PAUSADO and paused, "recuperação inicia pausada")
 		conferir(partida.nave.corpo_apoio == "apoio" and partida.nave.combustivel == 3 and is_equal_approx(partida.tempo_restante, 12.5), "checkpoint e saldo corretos após novo processo")
 		conferir(partida.nave.entrada.gesto.contato_ativo == -1 and partida.nave.velocidade == Vector2.ZERO, "gesto cancelado e velocidade zero")
+		conferir(jogo.mundo_atual.camera.global_position.is_equal_approx(partida.nave.global_position) and jogo.mundo_atual.camera._abertura == 0.0, "recuperação pausada enquadra a nave no checkpoint")
 		paused = false
 		jogo.queue_free()
 		print("CHECKPOINT_REABERTO")
