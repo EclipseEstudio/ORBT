@@ -1,6 +1,6 @@
 extends Control
 
-const AreaSegura = preload("res://src/Nivel/interface_partida.gd")
+const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 const Tema = preload("res://src/Visual/tema_visual.gd")
 signal fase_escolhida(id: String)
 signal voltar
@@ -16,6 +16,7 @@ var _segura := Rect2()
 var _transformacao := Transform2D()
 var _nota: Label
 var _tentar_salvar: Button
+var rolagem: ScrollContainer
 
 
 func _ready() -> void:
@@ -33,20 +34,25 @@ func _ready() -> void:
 		_margem.add_theme_constant_override("margin_" + lado, 8)
 	var coluna := VBoxContainer.new()
 	_margem.add_child(coluna)
-	_rotulo(coluna, "Campanha", 18)
-	_nota = _rotulo(coluna, progresso.descricao() if progresso != null else "", 9)
-	mensagem = _rotulo(coluna, "", 10)
-	var rolagem := ScrollContainer.new()
+	rolagem = ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	rolagem.follow_focus = true
 	coluna.add_child(rolagem)
+	var conteudo := VBoxContainer.new()
+	conteudo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rolagem.add_child(conteudo)
+	_rotulo(conteudo, "Campanha", 18)
+	_nota = _rotulo(conteudo, progresso.descricao() if progresso != null else "", 9)
+	mensagem = _rotulo(conteudo, "", 10)
 	cartoes = VBoxContainer.new()
 	cartoes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rolagem.add_child(cartoes)
+	conteudo.add_child(cartoes)
 	_tentar_salvar = _botao(coluna, "Tentar salvar novamente", func():
 		progresso.salvar()
 		_nota.text = progresso.descricao()
-		_tentar_salvar.visible = progresso.salvamento_pendente(), 40)
+		_tentar_salvar.visible = progresso.salvamento_pendente()
+		_mostrar_controle(_nota), 40)
 	_botao(coluna, "Atualizar lista", func(): recarregar.emit(), 28)
 	_botao(coluna, "Voltar ao menu", func(): voltar.emit(), 40)
 	atualizar(itens, erros)
@@ -79,6 +85,7 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 	if not is_instance_valid(cartoes):
 		return
 	_ocupada = false
+	rolagem.scroll_vertical = 0
 	_nota.text = progresso.descricao() if progresso != null else ""
 	_tentar_salvar.visible = progresso != null and progresso.salvamento_pendente()
 	for filho in cartoes.get_children():
@@ -113,17 +120,20 @@ func escolher(id: String) -> void:
 func falhou(texto: String) -> void:
 	_ocupada = false
 	mensagem.text = texto
+	_mostrar_controle(mensagem)
+
+
+func _mostrar_controle(controle: Control) -> void:
+	# Aviso e rodapé mudam de altura; aguardar a organização dos containers.
+	await get_tree().process_frame
+	if is_instance_valid(controle):
+		rolagem.ensure_control_visible(controle)
 
 
 func _area_segura() -> void:
-	var viewport := get_viewport().get_visible_rect()
 	_segura = Rect2(DisplayServer.get_display_safe_area()) if OS.has_feature("android") else Rect2()
 	_transformacao = get_viewport().get_screen_transform()
-	var area := AreaSegura.area_segura_logica(_segura, _transformacao, viewport)
-	_margem.offset_left = area.position.x
-	_margem.offset_top = area.position.y
-	_margem.offset_right = area.end.x - viewport.end.x
-	_margem.offset_bottom = area.end.y - viewport.end.y
+	AreaSegura.aplicar(_margem, 0, _segura)
 
 
 func _process(_delta: float) -> void:
