@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "na_diagonal",
   "name": "O Estilingue",
   "order": 3,
@@ -54,9 +54,9 @@
       120
     ],
     "mass": 0,
-    "visual_radius": 16,
-    "collision_radius": 16,
-    "capture_radius": 16,
+    "visual_radius": 32,
+    "collision_radius": 32,
+    "capture_radius": 40,
     "danger_radius": 0,
     "proximity_radius": 45
   },
