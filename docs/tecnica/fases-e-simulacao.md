@@ -53,7 +53,7 @@ O recurso validado mantém uma cópia dos dados autorais. Cada nave recebe uma c
 
 ## Modelo físico e decisão de arquitetura
 
-A fórmula adotada para teste de #13 é a candidata do GDD:
+A decisão proposta para aceite na #13 é manter a fórmula suavizada candidata do GDD, substituindo as antigas faixas discretas de força:
 
 ```text
 r_i = posição da fonte i − posição da nave
@@ -63,6 +63,8 @@ p_nova = p + v_nova × dt
 ```
 
 Usa-se Euler semi-implícito, a 60 passos fixos/s, sem amortecimento ou frenagem gratuita. A aceleração não é multiplicada pela massa da nave. O impulso é dividido por essa massa exatamente uma vez. Apenas os corpos com massa positiva atraem; gravitação mútua e movimento dos corpos não são simulados.
+
+O modelo soma contribuições contínuas e permite calibrar cada fase. Longe da fonte a intensidade se aproxima do inverso do quadrado da distância; com suavização positiva ela é finita, nula no centro e não cresce indefinidamente ao se aproximar. Portanto, a intensidade não é monotônica em todas as distâncias: atinge seu máximo em `epsilon / sqrt(2)`. `G` e massa são grandezas convencionais de jogo; posição e epsilon usam unidades de mundo, tempo usa segundos, velocidade unidades/s e aceleração unidades/s². Os limites validados estão na tabela acima. O raio de proximidade não altera a força. O registro dos cenários e tolerâncias está em [validação da #13](../auxiliar/validacao-issue-13.md); integração em Android continua na #4.
 
 Nave e corpos são `Node2D`, com atualização explícita em `SimulacaoVoo`. Isso evita misturar a integração nativa de `RigidBody2D` com outra física de previsão. Sprites, fogo e RCS foram preservados; a orientação da nave em voo é visual e não altera a direção livre do impulso. O pouso preserva orientação radial e posição relativa no apoio estático. O início livre usa `Nave.Condicao.PRONTA`: fica imóvel até o primeiro impulso, e o reinício restaura essa condição sem vínculo residual com um apoio anterior. `NivelRes.obter_posicao_inicial()` é compartilhado pela nave, pelo carregador e pelo mapa do editor.
 
