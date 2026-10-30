@@ -8,7 +8,7 @@ Os fluxos de navegação, bloqueio, conclusão e repetição estão nas [regras 
 
 Os nomes quebram linha e a lista rola para acomodar dez ou mais itens. Os botões de escolha têm 48 unidades lógicas de altura; a ergonomia real ainda precisa ser testada no telefone. A interface aplica a transformação da área segura e se atualiza após redimensionamento/alterações das margens do Android. Rótulos e ações de cada estado seguem as [regras de acesso às fases](../regras-de-negocio/campanha.md#acesso-conclusão-e-repetição).
 
-O catálogo real contém uma fase. As dez fases usadas na captura são dados visuais de teste, não conteúdo de campanha entregue.
+O catálogo real contém seis fases: `teste_001`, `salto_curto`, `na_diagonal`, `curva_suave`, `escala_segura` e `entre_asteroides`. A captura de dez fases continua sendo uma massa visual de teste.
 
 ## Catálogo e carregamento
 
@@ -20,7 +20,7 @@ A autorização é conferida no controlador antes de chamar o carregador, além 
 
 ## Progresso persistente
 
-`src/Campanha/progresso_persistente.gd` usa o mesmo contrato da base em memória `progresso_sessao.gd`. Conclusões e liberações são conjuntos identificados pelo ID estável da fase. A transição de conclusão é idempotente; a configuração libera o primeiro item do catálogo e a conclusão libera o seguinte quando ele existe. O comportamento percebido pelo jogador está nas [regras de progressão](../regras-de-negocio/campanha.md#acesso-conclusão-e-repetição).
+`src/Campanha/progresso_persistente.gd` usa o mesmo contrato da base em memória `progresso_sessao.gd`. Conclusões e liberações são conjuntos identificados pelo ID estável da fase. A transição de conclusão é idempotente; a configuração libera o primeiro item do catálogo e reconcilia a sucessora de cada fase já concluída. Isso permite expandir uma campanha sem bloquear quem concluiu a antiga última fase. A reconciliação de um save válido é gravada com o mesmo mecanismo de backup e retentativa; a primeira configuração sem save continua sem gravar. A conclusão libera o seguinte quando ele existe. O comportamento percebido pelo jogador está nas [regras de progressão](../regras-de-negocio/campanha.md#acesso-conclusão-e-repetição).
 
 O serviço grava `user://progresso.json`, separado dos JSONs autorais. Formato v1: `schema_version`, `geracao`, arrays de IDs `concluidas`/`liberadas` e checksum SHA-256 do conteúdo canônico. Valida versão, tipos, IDs únicos, referências entre os conjuntos e integridade. IDs ausentes do catálogo atual são preservados no save; o controlador só abre IDs presentes no catálogo e autorizados. Alterar o conteúdo de uma fase não apaga conquistas do mesmo ID.
 
@@ -28,7 +28,32 @@ A gravação escreve e relê `.tmp`, preserva o último save válido em `.bak` p
 
 O contrato continua com `configurar(itens)`, `estado(id)`, `pode_abrir(id)` e `concluir(id, itens)`. `ControladorJogo.persistir_progresso` vem habilitado; testes o desativam ou fornecem `caminho_progresso` isolado antes de entrar na árvore. O teste do editor instancia o nível diretamente e não lê/grava progresso real. Checkpoints de pouso, retomar uma tentativa em pausa, preferências, dez fases autorais e menus completos continuam pendentes; esta entrega cobre progresso da campanha, não todo o RF18.
 
+## Fases autorais e rotas de referência
+
+As cinco fases adicionais usam `NIVEL_1` até `NIVEL_5` de `dev-macb/orbt/src/levels/__init__.py` como modelo. Os IDs e arquivos já cadastrados foram preservados para manter o progresso. `scripts/importar_fases_modelo.py` converte os dados por AST restrita, sem importar nem executar o projeto externo; as linhas de rochas mantêm o mesmo jitter determinístico. Para reproduzir, passe o caminho do `__init__.py` ao script.
+
+Os mapas mantêm coordenadas e raios 1:1, mundo de 900×600 com margem de 200 unidades, nave de raio 6 e impulso máximo 260. `gravity_constant=500` e massas multiplicadas por 1.000 preservam o produto GM do original. A suavização é 1 no contrato atual. Os 44/58/68/59/60 asteroides de cada mapa incluem a cerca perimetral original. Nos sóis, o campo original `danger_radius` representa o anel visual; o contato fatal usa o raio da estrela, assim como na colisão do Python.
+
+Órbitas foram adaptadas para posições autorais estáticas, e o portal opcional da última fase foi omitido. A adaptação preserva a composição dos mapas e usa as regras de voo, pouso e correção da Godot. A câmera de voo usa zoom 0,5; explorar enquadra o mapa entre o HUD e o rodapé, com recálculo ao redimensionar.
+
+`tests/test_fases.gd` percorre o catálogo real pelo controlador de produção, vence as seis fases em sequência, confere desbloqueio, quantidade de rochas, início livre, câmera, consumo e correspondência entre prévia e voo. As variações de mira são próprias de cada mapa e combinadas independentemente por etapa. Cada trecho até contato tem limite de vinte segundos no teste; o tempo autoral continua sendo 30 s por impulso.
+
+| ID / mapa | Rota de referência | Tempo aproximado | Saldo final |
+| --- | --- | --- | --- |
+| `teste_001` / Primeiro impulso | Impulso `(0, -80)` | 2,12 s | 4 |
+| `salto_curto` / Tutorial | 260 a −14,5° | 1,73 s | 2 |
+| `na_diagonal` / O Estilingue | 260 a −0,7° | 2,95 s | 2 |
+| `curva_suave` / O Labirinto | 260 a −40° até `apoio_1`; cerca de +10,49° até `apoio_2`; cerca de +45,19° até Terra | 3,55 s | 0 |
+| `escala_segura` / O Sol | 260 a +11,7° | 2,68 s | 2 |
+| `entre_asteroides` / Deriva Final | 260 a +18°; após 90 passos (1,5 s), corrigir com 130 a −50° | 2,45 s | 3 |
+
+Os ângulos estão em coordenadas de mundo: zero aponta à direita e valores positivos, para baixo. No Labirinto, a mira é reajustada conforme o ponto efetivo do pouso; o teste usa o ângulo radial do primeiro pouso ×0,137−1,43° no segundo lançamento e a direção da Terra +7° no terceiro. Isso é apenas uma rota de validação, sem piloto automático no produto. Margens verificadas: Tutorial ±0,5°, Estilingue ±0,4°, Labirinto ±0,5°/±0,25°/±1°, Sol ±0,5° e Deriva ±1° em ambos os impulsos. A prévia permite escolher trajetórias alternativas.
+
+As dicas do campo `tutorial` são exibidas no HUD antes do lançamento e durante o pouso. Os cinco arquivos estão cadastrados em `Recursos/Niveis.json`. O preset Android já inclui `Recursos/Fases/*.json`. O teste de rotas pode ser executado externamente contra o PCK, assim como `tests/test_exportacao.gd`.
+
 ## Evidências e aceite pendente
+
+Na adaptação dos cinco mapas Python, também em 29/10/2026, passaram **923 verificações**: 660 da suíte local completa, 240 de rotas no PCK isolado e 23 de recursos/campanha no PCK. As cinco vistas gerais e os enquadramentos de voo/exploração foram inspecionados no OpenGL real, incluindo espaço entre mapa, HUD e rodapé. O resultado valida a adaptação estática no desktop; não representa teste de APK em aparelho.
 
 Em 29/10/2026, a validação para integração na `alpha` passou em **383 verificações**, incluindo 28 de persistência, nove de reabertura do controlador em outro processo, 23 do PCK isolado e 11 do ciclo do plugin. O [registro de aceite da #40](../auxiliar/validacao-issue-40.md) apresenta revisão, passos, resultados e saída da execução. A primeira vitória, a repetição, o bloqueio, a restauração e a última fase foram exercitados com o serviço real de disco e duas fases temporárias.
 
@@ -40,4 +65,4 @@ Em 22/10/2026, Godot 4.7.2 / Windows:
 
 A suíte da campanha usa dois JSONs temporários com combustíveis distintos e verifica ordenação, renomeação, atualização sem duplicação, bloqueio direto antes do carregamento, vitória/liberação idempotente, última fase, repetição, troca de mundos, retorno da pausa, erro de arquivo e navegação. Os temporários são removidos ao terminar; arquivos autorais são preservados.
 
-Para validar no aparelho: registrar modelo/Android/Godot/revisão/APK; concluir uma fase, fechar completamente o aplicativo, reabrir e conferir conclusão/liberação; repetir e confirmar saldo inicial. Usar duas fases autorais para conferir bloqueio e próxima fase. O catálogo real ainda tem uma fase; testes automatizados usam duas/três fases de dados. Verificar comportamento sem espaço para gravação e recuperação da cópia anterior. O aceite de reabertura no Android permanece pendente; desktop e PCK não o substituem.
+Para validar no aparelho: registrar modelo/Android/Godot/revisão/APK; concluir uma fase, fechar completamente o aplicativo, reabrir e conferir conclusão/liberação; repetir e confirmar saldo inicial. Usar as seis fases autorais para conferir bloqueio e próximas fases. Os testes de falhas também usam catálogos temporários. Verificar comportamento sem espaço para gravação e recuperação da cópia anterior. O aceite de reabertura no Android permanece pendente; desktop e PCK não o substituem.

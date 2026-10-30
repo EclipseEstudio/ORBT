@@ -21,6 +21,15 @@ func aviso_para_partida() -> String:
 	return "Progresso novo ainda não foi salvo." if _sujo else ""
 
 
+func configurar(itens: Array) -> void:
+	var quantidade_anterior := liberadas.size()
+	super.configurar(itens)
+	# A primeira configuração continua sem save; reconciliar um save válido é persistente.
+	if liberadas.size() > quantidade_anterior and not _ultimo_valido.is_empty() and not _bloqueado:
+		_sujo = true
+		salvar()
+
+
 func _ler(arquivo: String) -> Dictionary:
 	if not FileAccess.file_exists(arquivo):
 		return {"estado": "ausente"}

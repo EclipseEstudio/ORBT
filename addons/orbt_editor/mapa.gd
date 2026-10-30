@@ -10,6 +10,7 @@ var navegando := false
 var _deslocamento := Vector2.ZERO
 var regioes := {"visual_radius": true, "collision_radius": true, "capture_radius": true, "proximity_radius": true, "danger_radius": true}
 const CORES = {"visual_radius": Color.SKY_BLUE, "collision_radius": Color.WHITE, "capture_radius": Color.LIME_GREEN, "proximity_radius": Color.SLATE_BLUE, "danger_radius": Color.ORANGE_RED}
+const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 
 
 func _ready() -> void:
@@ -53,11 +54,12 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 		if documento.selecao == indice:
 			draw_rect(Rect2(posicao - Vector2.ONE * 7, Vector2.ONE * 14), Color.YELLOW, false, 2)
-		if corpo.id == dados.start.body_id:
-			var normal := Vector2.RIGHT.rotated(deg_to_rad(dados.start.angle_degrees))
-			var inicio: Vector2 = posicao + normal * (corpo.collision_radius + dados.ship.radius) * escala
-			draw_colored_polygon(PackedVector2Array([inicio + normal * 8, inicio + normal.rotated(2.4) * 7, inicio + normal.rotated(-2.4) * 7]), Color.YELLOW)
-			draw_string(ThemeDB.fallback_font, inicio + Vector2(10, 16), "Nave inicial", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.YELLOW)
+	var validacao := Carregador.validar(dados)
+	if validacao.nivel != null:
+		var inicio := tela(validacao.nivel.obter_posicao_inicial())
+		var normal := Vector2.RIGHT if dados.start.has("position") else Vector2.RIGHT.rotated(deg_to_rad(dados.start.angle_degrees))
+		draw_colored_polygon(PackedVector2Array([inicio + normal * 8, inicio + normal.rotated(2.4) * 7, inicio + normal.rotated(-2.4) * 7]), Color.YELLOW)
+		draw_string(ThemeDB.fallback_font, inicio + Vector2(10, 16), "Nave inicial", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.YELLOW)
 
 
 func _gui_input(event: InputEvent) -> void:

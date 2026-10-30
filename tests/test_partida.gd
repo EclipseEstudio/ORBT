@@ -73,6 +73,10 @@ func testar_dados(dados: Dictionary) -> void:
 
 
 func testar_fisica(nivel: NivelRes) -> void:
+	var planeta := nivel.obter_corpo("origem")
+	var distante: Vector2 = planeta.position + Vector2.RIGHT * 200.0
+	var queda := Fisica.prever(distante, Vector2.ZERO, [planeta], nivel.fisica, nivel.limites, nivel.parametros_nave.radius)
+	conferir(distante.x - queda[-1].x >= 5.0, "Planeta atrai perceptivelmente a 200 unidades: pelo menos 5 unidades em 3 segundos")
 	var corpo: Dictionary = nivel.corpos[0].duplicate(true)
 	corpo.position = Vector2.ZERO
 	var a := Fisica.aceleracao(Vector2(100, 0), [corpo], nivel.fisica)
@@ -93,6 +97,25 @@ func testar_fisica(nivel: NivelRes) -> void:
 	conferir(contato.contact.is_empty(), "Saída tangencial não recaptura na superfície")
 	contato = Fisica.passo(saida + Vector2(0, 0.0005), Vector2(0, -80), 1.0 / 60, [corpo], vazio, limites, 8, corpo.id)
 	conferir(not contato.contact.is_empty(), "Origem não ignora penetração pequena")
+	var apoio_diagonal: Dictionary = corpo.duplicate(true)
+	apoio_diagonal.collision_radius = 16.0
+	apoio_diagonal.capture_radius = 20.0
+	var normal_diagonal := Vector2(1, -1).normalized()
+	var saida_diagonal: Vector2 = normal_diagonal * (apoio_diagonal.collision_radius + 8)
+	contato = Fisica.passo(saida_diagonal, normal_diagonal * 80, 1.0 / 60, [apoio_diagonal], vazio, limites, 8, apoio_diagonal.id)
+	conferir(contato.contact.is_empty(), "Arredondamento na superfície não bloqueia decolagem diagonal")
+	contato = Fisica.passo(saida_diagonal - normal_diagonal * 0.0005, normal_diagonal * 80, 1.0 / 60, [apoio_diagonal], vazio, limites, 8, apoio_diagonal.id)
+	conferir(not contato.contact.is_empty(), "Decolagem diagonal também rejeita penetração de 0,0005 unidade")
+	var nave_pousada = CenaNave.instantiate()
+	root.add_child(nave_pousada)
+	nave_pousada.simulacao_automatica = false
+	nave_pousada.corpos = [apoio_diagonal]
+	nave_pousada.fisica = vazio
+	nave_pousada.global_position = Vector2(100, -100)
+	nave_pousada.pousar(apoio_diagonal)
+	lancar(nave_pousada, normal_diagonal * 80)
+	conferir(nave_pousada.avancar(1.0 / 60).is_empty() and nave_pousada.global_position.length() > saida_diagonal.length(), "Pouso seguido de novo impulso libera a nave apesar do arredondamento")
+	nave_pousada.queue_free()
 	var asteroide: Dictionary = corpo.duplicate(true)
 	asteroide.type = "asteroid"
 	asteroide.mass = 1000
@@ -205,14 +228,17 @@ func _executar() -> void:
 	nave.entrada.cancelar()
 	lancar(nave, Vector2(0, -80))
 	var indice := 1
+	var desvio_lateral := 0.0
 	for passo in range(180):
 		partida.avancar(1.0 / 60)
+		desvio_lateral = maxf(desvio_lateral, nave.global_position.x - inicio.x)
 		if (passo % 3 == 2 or partida.estado != partida.Estado.JOGANDO) and indice < pontos.size():
 			conferir(nave.global_position.distance_to(pontos[indice]) < 0.001, "Prévia corresponde ao voo no ponto %d" % indice)
 			indice += 1
 		if partida.estado != partida.Estado.JOGANDO:
 			break
 	conferir(partida.estado == partida.Estado.CONCLUIDA and vitorias == 1, "Rota de um impulso chega à Terra")
+	conferir(desvio_lateral >= 5.0, "Atração do apoio curva o lançamento vertical em pelo menos 5 unidades")
 	posicao = nave.global_position
 	partida.resolver_contato({"kind": "bounds"})
 	partida.avancar(50)
@@ -225,8 +251,11 @@ func _executar() -> void:
 	partida.avancar(1.0 / 60)
 	conferir(nave.combustivel == 0 and nave.condicao == nave.Condicao.A_DERIVA and partida.estado == partida.Estado.JOGANDO, "Último impulso mantém deriva ativa")
 	conferir(not nave.solicitar_impulso(2, Vector2(0, -80)), "Saldo zero bloqueia impulso")
+	var velocidade_deriva: Vector2 = nave.velocidade
 	for passo in range(180):
 		partida.avancar(1.0 / 60)
+		if passo == 59:
+			conferir(nave.condicao == nave.Condicao.A_DERIVA and nave.velocidade.x > velocidade_deriva.x + 1.0, "Gravidade acelera a nave lateralmente mesmo sem combustível")
 	conferir(vitorias == 2 and partida.estado == partida.Estado.CONCLUIDA, "Último combustível pode vencer")
 	partida.reiniciar()
 	lancar(nave, Vector2(0, 40))
@@ -259,6 +288,19 @@ func _executar() -> void:
 	nave.global_position = Vector2(290, 140)
 	partida.avancar(0)
 	conferir(not partida.proximos.has("origem") and partida.proximos.has("apoio"), "Sair de uma área não limpa a outra")
+	partida.reiniciar()
+	nave.global_position = nivel.obter_corpo("origem").position + Vector2.DOWN * 110.0
+	partida.avancar(0)
+	conferir(partida.proximos.has("origem"), "Aviso de proximidade do planeta alcança 110 unidades")
+	partida.reiniciar()
+	lancar(nave, Vector2(0, -30))
+	partida.avancar(1.0 / 60)
+	conferir(nave.condicao == nave.Condicao.EM_VOO, "Impulso fraco ainda decola da origem")
+	for passo in range(180):
+		partida.avancar(1.0 / 60)
+		if nave.condicao == nave.Condicao.POUSADA:
+			break
+	conferir(nave.condicao == nave.Condicao.POUSADA and nave.corpo_apoio == "origem" and nave.combustivel == 4, "Gravidade da origem recaptura lançamento fraco sem cobrar outro impulso")
 	conferir(nivel.dados_autorais == dados, "Simulação não altera JSON autoral")
 	for repeticao in range(5):
 		partida.reiniciar()

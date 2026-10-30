@@ -64,8 +64,26 @@ static func validar(dados: Variant) -> Dictionary:
 		if numero(nave.get("dead_zone"), 0.01) and numero(nave.get("max_drag"), 0.01) and nave.max_drag <= nave.dead_zone:
 			erros.append("ship.max_drag: deve superar dead_zone")
 	var inicio = dados.get("start")
-	if not inicio is Dictionary or not texto(inicio.get("body_id")) or not numero(inicio.get("angle_degrees"), -360, 360):
+	if not inicio is Dictionary:
+		erros.append("start: esperado apoio ou position [x, y]")
+	elif inicio.has("position"):
+		if not vetor(inicio.position) or inicio.has("body_id") or inicio.has("angle_degrees"):
+			erros.append("start: position [x, y] não pode ser misturada com body_id ou angle_degrees")
+	elif not texto(inicio.get("body_id")) or not numero(inicio.get("angle_degrees"), -360, 360):
 		erros.append("start: body_id e angle_degrees entre -360 e 360 obrigatórios")
+	if dados.has("camera"):
+		var camera = dados.camera
+		if not camera is Dictionary:
+			erros.append("camera: esperado objeto")
+		else:
+			if camera.has("zoom") and (not numero(camera.zoom, 0, 4) or camera.zoom == 0):
+				erros.append("camera.zoom: valor positivo até 4")
+			if camera.has("overview"):
+				var visao = camera.overview
+				if not visao is Dictionary or not vetor(visao.get("position")) or not vetor(visao.get("size")):
+					erros.append("camera.overview: position e size devem conter [x, y]")
+				elif visao["size"][0] <= 0 or visao["size"][1] <= 0:
+					erros.append("camera.overview.size: dimensões positivas")
 	if not dados.get("bodies") is Array:
 		erros.append("bodies: lista obrigatória")
 	if not dados.get("goal") is Dictionary:
@@ -94,6 +112,8 @@ static func validar(dados: Variant) -> Dictionary:
 			erros.append(prefixo + ".type: tipo inválido")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
+		if corpo.has("show_proximity") and not corpo.show_proximity is bool:
+			erros.append(prefixo + ".show_proximity: esperado booleano")
 		for campo in ["visual_radius", "collision_radius", "capture_radius", "danger_radius", "proximity_radius", "mass"]:
 			var minimo := 0.01 if campo in ["visual_radius", "collision_radius", "proximity_radius"] else 0.0
 			if not numero(corpo.get(campo), minimo):
@@ -127,20 +147,23 @@ static func validar(dados: Variant) -> Dictionary:
 	nivel.dados_autorais = dados.duplicate(true)
 	if not Fisica.dentro_limites(normalizados[-1].position, nivel.limites):
 		erros.append("goal.position: Terra fora dos limites")
-	var apoio := nivel.obter_corpo(inicio.body_id)
-	if apoio.is_empty() or not apoio.type in ["planet", "satellite"]:
+	var apoio := nivel.obter_corpo(inicio.get("body_id", ""))
+	if not inicio.has("position") and (apoio.is_empty() or not apoio.type in ["planet", "satellite"]):
 		erros.append("start.body_id: apoio seguro inexistente")
 	else:
-		var posicao: Vector2 = apoio.position + Vector2.RIGHT.rotated(deg_to_rad(inicio.angle_degrees)) * (apoio.collision_radius + nave.radius)
+		var posicao := nivel.obter_posicao_inicial()
 		if not Fisica.dentro_limites(posicao, nivel.limites):
 			erros.append("start: nave fora dos limites")
 		for corpo in normalizados:
-			if corpo.id != apoio.id and posicao.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + nave.radius:
+			if corpo.id != apoio.get("id", "") and posicao.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + nave.radius:
 				erros.append("start: sobreposto ao corpo " + corpo.id)
 	for i in range(normalizados.size()):
 		for j in range(i + 1, normalizados.size()):
 			var a: Dictionary = normalizados[i]
 			var b: Dictionary = normalizados[j]
+			# Muros de rochas/perigos podem formar uma única região fatal.
+			if a.type in ["sun", "asteroid"] and b.type in ["sun", "asteroid"]:
+				continue
 			if a.position.distance_to(b.position) <= Fisica.raio_contato(a) + Fisica.raio_contato(b) + 2 * nave.radius:
 				erros.append("contato: zonas incompatíveis entre %s e %s" % [a.id, b.id])
 	if not erros.is_empty():

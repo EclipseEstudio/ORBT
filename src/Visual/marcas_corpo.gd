@@ -33,7 +33,7 @@ func _draw() -> void:
 	else:
 		traco(Vector2(-3, 0), Vector2(3, 0))
 		traco(Vector2(0, -3), Vector2(0, 3))
-	if proximo:
+	if proximo or dados.get("show_proximity", false):
 		for indice in range(16):
 			var inicio := indice * TAU / 16
 			draw_arc(Vector2.ZERO, dados.proximity_radius, inicio, inicio + TAU / 32, 4, cor, 1)

@@ -139,10 +139,11 @@ func _process(_delta: float) -> void:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:
 		_mensagem.text = "À deriva. Ainda é possível chegar à Terra."
-	elif partida.nave.condicao != partida.nave.Condicao.POUSADA:
+	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:
 		_mensagem.text = "Arraste para corrigir."
 	else:
-		_mensagem.text = "Arraste e solte para lançar.\nCírculo cancela. Prévia estimada."
+		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
+		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Prévia estimada."
 	var avisos := PackedStringArray()
 	for id_corpo in partida.proximos:
 		if id_corpo == partida.nave.corpo_apoio:

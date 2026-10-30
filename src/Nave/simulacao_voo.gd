@@ -2,6 +2,8 @@
 class_name SimulacaoVoo extends RefCounted
 ## Integrador compartilhado pelo voo e pela prévia. Corpos estáticos.
 
+const TOLERANCIA_SUPERFICIE := 0.0001
+
 static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> Vector2:
 	var resultado := Vector2.ZERO
 	var epsilon: float = fisica.get("softening", 8.0)
@@ -51,7 +53,8 @@ static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: A
 		var relativo: Vector2 = posicao - corpo.position
 		# A proteção vale só para saída externa do apoio de origem.
 		if corpo.id == origem and corpo.type in ["planet", "satellite"]:
-			if relativo.length() >= corpo.collision_radius + raio_nave and relativo.dot(fim - posicao) >= 0.0:
+			# Normalizar e reposicionar no pouso pode arredondar para dentro da superfície.
+			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao) >= 0.0:
 				continue
 		var t := intersecao_circulo(posicao, fim, corpo.position, raio_contato(corpo) + raio_nave)
 		var p := 0 if corpo.type in ["sun", "asteroid"] else (1 if corpo.type == "earth" else 2)

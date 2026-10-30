@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="ORBT"
+config/version="0.3"
 run/main_scene="uid://jrr7wucsctnn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://Recursos/Sprites/icon.svg"

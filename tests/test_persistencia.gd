@@ -38,7 +38,58 @@ func novo(caminho: String) -> RefCounted:
 	return progresso
 
 
+func testar_expansao_catalogo() -> void:
+	var original: Array = [{"id": "teste_001"}]
+	for quantidade in [2, 6]:
+		var caminho := base + "-expansao-%d" % quantidade
+		var legado := Progresso.new()
+		legado.caminho = caminho
+		legado.configurar(original)
+		conferir(legado.concluir("teste_001", original), "Catálogo antigo salva conclusão da única fase (%d)" % quantidade)
+		var salvo := FileAccess.get_file_as_string(caminho)
+		var expandido: Array = original.duplicate(true)
+		for indice in range(1, quantidade):
+			expandido.append({"id": "nova_%d" % indice})
+		var progresso := Progresso.new()
+		progresso.caminho = caminho
+		conferir(progresso.carregar() and not progresso.pode_abrir("nova_1"), "Save legado carrega antes de reconciliar expansão (%d)" % quantidade)
+		progresso.configurar(expandido)
+		conferir(progresso.estado("teste_001") == "Concluída" and progresso.estado("nova_1") == "Disponível" and progresso.liberadas.size() == 2, "Expansão libera somente sucessora da fase concluída (%d)" % quantidade)
+		conferir(expandido.slice(2).all(func(item: Dictionary): return progresso.estado(item.id) == "Bloqueada"), "Expansão mantém fases futuras bloqueadas (%d)" % quantidade)
+		var reconciliado := FileAccess.get_file_as_string(caminho)
+		var reaberto := Progresso.new()
+		reaberto.caminho = caminho
+		conferir(reaberto.carregar() and reaberto.estado("teste_001") == "Concluída" and reaberto.estado("nova_1") == "Disponível" and FileAccess.get_file_as_string(caminho + ".bak") == salvo, "Reconciliação persiste e preserva save anterior (%d)" % quantidade)
+		reaberto.configurar(expandido)
+		conferir(not reaberto.concluir("teste_001", expandido) and FileAccess.get_file_as_string(caminho) == reconciliado, "Reconfiguração e vitória repetida não regravam expansão (%d)" % quantidade)
+		for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
+			if FileAccess.file_exists(caminho + sufixo):
+				DirAccess.remove_absolute(caminho + sufixo)
+
+	var caminho := base + "-expansao-falha"
+	var legado := Progresso.new()
+	legado.caminho = caminho
+	legado.configurar(original)
+	legado.concluir("teste_001", original)
+	var salvo := FileAccess.get_file_as_string(caminho)
+	var falha := FalhaDisco.new()
+	falha.caminho = caminho
+	falha.carregar()
+	falha.falhar = true
+	falha.configurar([{"id": "teste_001"}, {"id": "nova_1"}, {"id": "nova_2"}])
+	conferir(falha.pode_abrir("nova_1") and not falha.pode_abrir("nova_2") and falha.salvamento_pendente(), "Falha ao salvar expansão preserva liberação em memória e sinaliza retentativa")
+	conferir(FileAccess.get_file_as_string(caminho) == salvo and not falha.carregar(), "Falha na reconciliação preserva save e não descarta liberação pendente")
+	falha.falhar = false
+	var reaberto := Progresso.new()
+	reaberto.caminho = caminho
+	conferir(falha.salvar() and reaberto.carregar() and reaberto.pode_abrir("nova_1") and not reaberto.pode_abrir("nova_2"), "Retentativa persiste somente próxima fase após expansão")
+	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
+		if FileAccess.file_exists(caminho + sufixo):
+			DirAccess.remove_absolute(caminho + sufixo)
+
+
 func _executar() -> void:
+	testar_expansao_catalogo()
 	var progresso = novo(base)
 	conferir(progresso.aviso.is_empty() and progresso.pode_abrir("a") and not progresso.pode_abrir("b"), "Primeira execução configura acesso sem save")
 	conferir(not progresso.concluir("b", itens) and not FileAccess.file_exists(base), "Pedido bloqueado não grava progresso")

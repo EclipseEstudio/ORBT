@@ -4,7 +4,7 @@ Estas regras descrevem o comportamento implementado no protótipo, conferido na 
 
 ## Objetivo e corpos celestes
 
-O objetivo de cada fase é levar a nave até a Terra. A nave começa pousada em um planeta ou satélite seguro, com combustível e tempo de voo definidos pela fase.
+O objetivo de cada fase é levar a nave até a Terra. A nave pode começar pousada em um planeta ou satélite seguro, ou parada em uma posição livre no espaço, com combustível e tempo de voo definidos pela fase. No início livre, ela aguarda o primeiro impulso sem se mover nem consumir tempo.
 
 | Elemento | Regra no jogo |
 | --- | --- |

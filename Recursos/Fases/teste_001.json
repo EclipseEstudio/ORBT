@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "teste_001",
   "name": "Primeiro impulso",
   "order": 1,
   "bounds": {"position": [-180, -200], "size": [540, 800]},
   "initial_fuel": 5,
   "flight_timeout": 30,
-  "physics": {"gravity_constant": 1, "softening": 8},
+  "physics": {"gravity_constant": 2, "softening": 8},
   "ship": {"radius": 8, "mass": 1, "dead_zone": 10, "max_drag": 80, "max_impulse": 80},
   "start": {"body_id": "origem", "angle_degrees": -90},
   "goal": {
@@ -17,12 +17,12 @@
   },
   "bodies": [
     {
-      "id": "origem", "type": "planet", "position": [90, 250], "mass": 6000,
+      "id": "origem", "type": "planet", "position": [90, 250], "mass": 24000,
       "visual_radius": 20, "collision_radius": 20, "capture_radius": 24,
-      "danger_radius": 0, "proximity_radius": 55
+      "danger_radius": 0, "proximity_radius": 110
     },
     {
-      "id": "apoio", "type": "satellite", "position": [210, 140], "mass": 500,
+      "id": "apoio", "type": "satellite", "position": [210, 140], "mass": 30000,
       "visual_radius": 12, "collision_radius": 12, "capture_radius": 16,
       "danger_radius": 0, "proximity_radius": 40
     },

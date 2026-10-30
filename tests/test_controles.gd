@@ -268,7 +268,7 @@ func testar_cena_principal() -> void:
 	mouse(centro, false)
 	await process_frame
 	conferir(impulsos.is_empty(), "Start não lança a nave do menu")
-	conferir(cena.interface_atual.cartoes.get_child_count() == 1, "Menu abre seleção por catálogo")
+	conferir(cena.interface_atual.cartoes.get_child_count() == cena.get_node("GerenciadorDeNivel").itens.size(), "Menu abre todas as fases do catálogo")
 	cena.interface_atual.escolher("teste_001")
 	await process_frame
 	await process_frame

@@ -6,7 +6,7 @@ signal contato_detectado(contato: Dictionary)
 signal combustivel_alterado(saldo: int)
 signal condicao_alterada
 
-enum Condicao { POUSADA, EM_VOO, A_DERIVA }
+enum Condicao { POUSADA, EM_VOO, A_DERIVA, PRONTA }
 const Fisica = preload("res://src/Nave/simulacao_voo.gd")
 const Arte = preload("res://src/Visual/arte_pixel.gd")
 
@@ -56,10 +56,16 @@ func configurar(nivel: NivelRes) -> void:
 	entrada.ultimo_gesto = maxi(entrada.ultimo_gesto, _ultimo_pedido)
 	simulacao_ativa = true
 	controle_permitido = true
-	var apoio := nivel.obter_corpo(nivel.inicio.body_id)
-	var normal := Vector2.RIGHT.rotated(deg_to_rad(nivel.inicio.angle_degrees))
-	global_position = apoio.position + normal * (apoio.collision_radius + raio)
-	pousar(apoio)
+	global_position = nivel.obter_posicao_inicial()
+	if nivel.inicio.has("position"):
+		velocidade = Vector2.ZERO
+		corpo_apoio = ""
+		posicao_relativa = Vector2.ZERO
+		global_rotation = PI / 2.0
+		condicao = Condicao.PRONTA
+		condicao_alterada.emit()
+	else:
+		pousar(nivel.obter_corpo(nivel.inicio.body_id))
 	combustivel_alterado.emit(combustivel)
 	animation_player.play("default")
 	atualizar_entrada()
@@ -103,7 +109,7 @@ func aplicar_pedidos() -> void:
 	for pedido in pedidos:
 		if not entrada.pode_controlar() or combustivel <= 0:
 			break
-		if condicao == Condicao.POUSADA:
+		if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
 			velocidade = Vector2.ZERO
 			origem_decolagem = corpo_apoio
 			corpo_apoio = ""
@@ -123,7 +129,7 @@ func avancar(delta: float) -> Dictionary:
 		return {}
 	aplicar_pedidos()
 	_atualizar_orientacao(delta)
-	if condicao == Condicao.POUSADA:
+	if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
 		return {}
 	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem)
 	global_position = resultado.position
@@ -159,7 +165,7 @@ func prever_trajetoria() -> PackedVector2Array:
 	var impulso: Vector2 = entrada.gesto.obter_impulso()
 	if not entrada.pode_controlar() or impulso.is_zero_approx():
 		return PackedVector2Array()
-	var velocidade_inicial := Vector2.ZERO if condicao == Condicao.POUSADA else velocidade
+	var velocidade_inicial := Vector2.ZERO if condicao in [Condicao.POUSADA, Condicao.PRONTA] else velocidade
 	var origem := corpo_apoio if condicao == Condicao.POUSADA else origem_decolagem
 	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second)
 

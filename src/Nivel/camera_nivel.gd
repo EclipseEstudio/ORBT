@@ -8,16 +8,38 @@ var _destino := Vector2.ZERO
 var _eventos_aguardando_interface: Dictionary[int, bool] = {}
 
 
+func _configuracao() -> Dictionary:
+	return partida.nivel.dados_autorais.get("camera", {})
+
+
+func _zoom_voo() -> Vector2:
+	return Vector2.ONE * float(_configuracao().get("zoom", 1.0))
+
+
+func _mostrar_mapa() -> void:
+	var configuracao := _configuracao()
+	if not configuracao.has("overview"):
+		return
+	var vista: Dictionary = configuracao.overview
+	var tamanho := Vector2(vista["size"][0], vista["size"][1])
+	var viewport := get_viewport_rect().size
+	var area_util := Rect2(Vector2(12, 70), (viewport - Vector2(24, 180)).max(Vector2(60, 60)))
+	zoom = Vector2.ONE * minf(area_util.size.x / tamanho.x, area_util.size.y / tamanho.y)
+	var centro := Vector2(vista.position[0], vista.position[1]) + tamanho / 2.0
+	global_position = centro + (viewport / 2.0 - area_util.get_center()) / zoom
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	partida.estado_alterado.connect(_cancelar)
 	partida.reiniciada.connect(apresentar)
-	get_viewport().size_changed.connect(_encerrar_arraste)
+	get_viewport().size_changed.connect(_ao_redimensionar)
 	apresentar()
 
 
 func apresentar() -> void:
 	_cancelar()
+	zoom = _zoom_voo()
 	_destino = partida.nivel.corpos[-1].position
 	global_position = _destino
 	_abertura = 1.2
@@ -67,6 +89,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _cancelar() -> void:
 	_encerrar_arraste()
+	zoom = _zoom_voo()
+	if partida.explorando:
+		_mostrar_mapa()
 	if partida.estado != partida.Estado.JOGANDO or partida.explorando:
 		_abertura = 0
 
@@ -75,6 +100,12 @@ func _encerrar_arraste() -> void:
 	_contato = -1
 	_ultima_posicao = Vector2.ZERO
 	_eventos_aguardando_interface.clear()
+
+
+func _ao_redimensionar() -> void:
+	_encerrar_arraste()
+	if partida.explorando:
+		_mostrar_mapa()
 
 
 func _cancelar_evento_consumido(evento_id: int) -> void:

@@ -1,6 +1,6 @@
 # ORBT
 
-Puzzle espacial em Godot 4.7.2, com fase de protótipo, pouso, impulsos, combustível, gravidade, prévia de trajetória e ciclo de partida.
+Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gravidade, prévia de trajetória e ciclo de partida.
 
 ## Jogar
 
@@ -10,6 +10,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
 - Cada impulso custa uma unidade. Correções em voo somam velocidade.
 - **Explorar mapa** muda o arraste para a câmera; **Voltar à nave** restaura a mira.
+- Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
@@ -78,4 +79,4 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados e progresso persistente por ID, com backup recuperável. Checkpoints de pouso e preferências continuam pendentes.
 
-Estado atualizado em 29/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46, incluindo progresso persistente. Os [quatro critérios da #40](docs/auxiliar/validacao-issue-40.md) foram demonstrados no Windows; validação integrada com 383 verificações sem falhas. O catálogo real contém uma fase. Aceite Android, checkpoints/Continuar, preferências e expansão da campanha permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 29/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46, incluindo progresso persistente. Os [quatro critérios da #40](docs/auxiliar/validacao-issue-40.md) foram demonstrados no Windows; validação integrada com 383 verificações sem falhas. O catálogo atual contém seis fases: a original e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`, com rotas verificadas em `tests/test_fases.gd`. Consulte a [lista e as dicas da campanha](docs/regras-de-negocio/campanha.md#conteúdo-entregue-e-aceite-pendente). Aceite Android, checkpoints/Continuar, preferências e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.

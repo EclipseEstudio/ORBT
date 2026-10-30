@@ -21,6 +21,10 @@ func aviso_para_partida() -> String:
 func configurar(itens: Array) -> void:
 	if not itens.is_empty():
 		liberadas[itens[0].id] = true
+	# Uma campanha pode ganhar fases depois da conclusão da antiga última.
+	for indice in range(itens.size() - 1):
+		if concluidas.has(itens[indice].id):
+			liberadas[itens[indice + 1].id] = true
 
 
 func estado(id: String) -> String:

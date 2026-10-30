@@ -14,7 +14,7 @@ O PR #47 integrou à `alpha` as entregas dos PRs #42–#46 e a documentação, n
 | Identidade visual mínima | PR #45, `6db0abb` | Seis sprites, marcas por função, tema e indicadores; revisão das imagens adiada |
 | Progresso persistente | PR #46, `a774a82` | Conclusões/desbloqueios por ID, checksum, temporário, backup, recuperação e retentativa |
 
-O catálogo real em `Recursos/Niveis.json` contém somente `teste_001`. Catálogos de duas/dez fases usados por testes/capturas não são campanha autoral entregue. No desktop há menu mínimo e seleção; no Android a primeira fase abre diretamente. Não há Continuar por checkpoint.
+O catálogo real em `Recursos/Niveis.json` contém seis fases: `teste_001` e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`: Tutorial, O Estilingue, O Labirinto, O Sol e Deriva Final. Os cinco IDs já criados foram preservados, com início livre, corredores de asteroides e visão geral para explorar. Os mapas têm corpos estáticos e rotas verificadas na Godot; órbitas e portal opcional permanecem fora desta adaptação. Saves da campanha anterior liberam a sucessora sem perder conclusões. Catálogos temporários de testes/capturas continuam separados desse conteúdo. No desktop há menu mínimo e seleção; no Android a primeira fase abre diretamente. Não há Continuar por checkpoint.
 
 ## Critério de status no Projects
 
@@ -96,7 +96,7 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 | Checkpoints e Continuar | RF17 e parte de RF18 | Ausentes; definir contrato, invalidar estado incompatível, restaurar pausado e sem recarga/cobrança duplicada |
 | Preferências e recuperação da tentativa | RF18 | Conclusão/desbloqueio persistem; preferências e tentativa pausada ainda não |
 | Menus completos | RF19 | Menu mínimo/campanha existem; configurações/créditos e fluxo completo pendentes |
-| Dez fases autorais | RF20 | Uma fase entregue; iniciar segunda fase para progressão real e depois balancear as dez |
+| Dez fases autorais | RF20 | Seis fases entregues e com rotas verificadas; expandir e balancear as quatro restantes |
 | Dicas contextuais | RF21 | Há instruções mínimas no HUD; falta tutorial contextual com playtest |
 | Música e efeitos/volumes | RF24 | Duas músicas e volumes separados persistidos pendentes |
 | Narrativa | RF25 | Integração de piloto/corporação/retorno e desfecho pendente |
