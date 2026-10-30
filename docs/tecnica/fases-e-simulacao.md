@@ -92,6 +92,8 @@ O círculo da mira fica no ponto inicial do toque, em coordenadas lógicas de te
 
 São até 180 passos (3 s a 60 Hz), com pontos a cada três passos e atualização limitada a 15 Hz. O primeiro contato ou limite encerra a previsão. Cancelar, lançar, pausar, explorar ou terminar limpa o indicador. A prévia usa apenas dados locais, sem cobrar combustível nem mover o mundo.
 
+Na primeira fase (`teste_001`), o HUD usa o texto autoral `tutorial` na instrução inicial e acompanha o contato ativo e a saída da zona morta para orientar arraste, cancelamento, soltura e custo. Após o primeiro impulso, apresenta custo e ausência de recarga no pouso. O rótulo ignora entrada, não bloqueia a simulação e não adiciona estado persistente. Pausa, exploração e desfecho têm prioridade; reinício volta às dicas iniciais. As demais fases mantêm suas dicas autorais. O resultado e os limites estão em [validação da #54](../auxiliar/validacao-issue-54.md).
+
 A câmera apresenta a Terra por 1,2 s antes de voltar à nave e habilitar a entrada. A transformação da câmera não altera as unidades lógicas do gesto. Os indicadores e controles disponíveis ao jogador estão descritos nas [regras de apresentação](../regras-de-negocio/jogabilidade.md#prévia-câmera-e-indicadores).
 
 ## Evidências e limites de aceite

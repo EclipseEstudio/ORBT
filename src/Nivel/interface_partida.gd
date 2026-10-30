@@ -143,6 +143,18 @@ func _abrir_configuracoes() -> void:
 	_raiz.add_child(tela)
 
 
+func _dica_tutorial() -> String:
+	var gesto = partida.nave.entrada.gesto
+	if gesto.contato_ativo != -1:
+		if gesto.saiu_da_zona_morta:
+			return "Solte para lançar: custa 1.\nVolte ao círculo para cancelar."
+		return "Arraste para mirar.\nVolte ao círculo para cancelar."
+	if partida.nave.combustivel < partida.nivel.combustivel_inicial:
+		return "Cada impulso custa 1.\nPousar não recarrega combustível."
+	var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
+	return "Toque e segure para mirar.\n" + dica if not dica.is_empty() else "Toque e segure para mirar.\nArraste e solte para lançar."
+
+
 func _process(_delta: float) -> void:
 	if OS.has_feature("android") and (_area_fisica != Rect2(DisplayServer.get_display_safe_area()) or _transformacao_tela != get_viewport().get_screen_transform()):
 		_atualizar_area_segura()
@@ -173,6 +185,8 @@ func _process(_delta: float) -> void:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:
 		_mensagem.text = "À deriva. Ainda é possível chegar à Terra."
+	elif partida.nivel.id == "teste_001":
+		_mensagem.text = _dica_tutorial()
 	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:
 		_mensagem.text = "Arraste para corrigir."
 	else:
