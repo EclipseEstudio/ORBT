@@ -3,9 +3,12 @@ class_name ControladorJogo extends Node
 const ProgressoSessao = preload("res://src/Campanha/progresso_sessao.gd")
 const ProgressoPersistente = preload("res://src/Campanha/progresso_persistente.gd")
 const CheckpointPersistente = preload("res://src/Campanha/checkpoint_persistente.gd")
+const Preferencias = preload("res://src/Configuracoes/preferencias.gd")
 @export var persistir_progresso := true
 var caminho_progresso := "user://progresso.json"
 var caminho_checkpoint := "user://checkpoint.json"
+var caminho_preferencias := "user://preferencias.json"
+var preferencias = Preferencias.new()
 var checkpoint = CheckpointPersistente.new()
 const Selecao = preload("res://src/Campanha/selecao_fases.gd")
 var progresso := ProgressoSessao.new()
@@ -20,6 +23,9 @@ var interface_atual: Control
 
 func _ready() -> void:
 	GLOBAL.controlador_jogo = self
+	preferencias.caminho = caminho_preferencias
+	preferencias.persistir = persistir_progresso
+	preferencias.carregar()
 	if persistir_progresso:
 		var salvo := ProgressoPersistente.new()
 		salvo.caminho = caminho_progresso
@@ -58,6 +64,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 		return false
 	erro_abertura = ""
 	instancia.campanha_permitida = true
+	instancia.preferencias = preferencias
 	get_tree().paused = false
 	alterar_mundo_nodo(instancia)
 	instancia.partida.concluida.connect(func(id: String):

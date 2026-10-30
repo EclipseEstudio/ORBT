@@ -37,6 +37,7 @@ func _executar() -> void:
 	var caminho_progresso := "user://progresso-exportacao-%d.json" % OS.get_process_id()
 	jogo.caminho_progresso = caminho_progresso
 	jogo.caminho_checkpoint = caminho_progresso + "-checkpoint"
+	jogo.caminho_preferencias = caminho_progresso + "-preferencias"
 	root.add_child(jogo)
 	await process_frame
 	conferir(jogo.iniciar_fase("teste_001"), "Fase carrega usando apenas dados exportados")

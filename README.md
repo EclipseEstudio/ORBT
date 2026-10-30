@@ -12,6 +12,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - **Explorar mapa** muda o arraste para a câmera; **Voltar à nave** restaura a mira.
 - Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
+- **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
 - Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O menu oferece **Continuar** para recuperar o último checkpoint salvo após reabrir o jogo.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
@@ -78,6 +79,6 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Campanha e seleção de fases](docs/regras-de-negocio/campanha.md)
 - [Identidade visual, fontes e inventário](docs/auxiliar/arte/README.md)
 
-O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso e checkpoint são persistidos separadamente, com cópias recuperáveis. Preferências continuam pendentes.
+O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso, checkpoint e preferências são persistidos separadamente; progresso e checkpoint têm cópias recuperáveis.
 
-Estado atualizado em 30/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46; os PRs #58 e #59 integraram a validação da gravidade e checkpoints em memória. O catálogo contém seis fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, preferências e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 30/10/2026: os PRs #58–#60 integraram a validação da gravidade e checkpoints. O catálogo contém seis fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, áudio e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
