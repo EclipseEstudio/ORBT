@@ -1,6 +1,8 @@
 extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
+const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
+var _margem: MarginContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -12,6 +14,7 @@ func _ready() -> void:
 	add_child(fundo)
 	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var margem := MarginContainer.new()
+	_margem = margem
 	add_child(margem)
 	margem.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
@@ -39,3 +42,12 @@ func _ready() -> void:
 	voltar.custom_minimum_size.y = 36
 	coluna.add_child(voltar)
 	voltar.pressed.connect(queue_free)
+	get_viewport().size_changed.connect(_area_segura)
+	_area_segura()
+
+func _area_segura() -> void:
+	AreaSegura.aplicar(_margem, 0, AreaSegura.fisica())
+
+func _process(_delta: float) -> void:
+	if OS.has_feature("android"):
+		_area_segura()

@@ -4,6 +4,7 @@ const Tema = preload("res://src/Visual/tema_visual.gd")
 const Indicadores = preload("res://src/Visual/indicadores.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 const Narrativa = preload("res://src/Narrativa/narrativa.gd")
+const AreaSeguraMenu = preload("res://src/Visual/area_segura_menu.gd")
 var _indicadores: Control
 
 var partida: Node
@@ -120,10 +121,7 @@ func _ready() -> void:
 
 
 static func area_segura_logica(area_fisica: Rect2, transformacao: Transform2D, viewport: Rect2) -> Rect2:
-	if not area_fisica.has_area() or is_zero_approx(transformacao.determinant()):
-		return viewport
-	var area := (transformacao.affine_inverse() * area_fisica).intersection(viewport)
-	return area if area.has_area() else viewport
+	return AreaSeguraMenu.logica(area_fisica, transformacao, viewport)
 
 
 static func direcao_alvo(na_tela: Vector2, viewport: Rect2, status: Rect2) -> String:

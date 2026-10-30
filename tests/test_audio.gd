@@ -27,7 +27,7 @@ func _executar() -> void:
 	await create_timer(0.75).timeout
 	conferir(audio._musicas[audio._indice].playing, "música continua após atravessar o fim da faixa")
 	audio._musicas[audio._indice].pitch_scale = 1.0
-	conferir(jogo.interface_atual.get_node("VBoxContainer/Button").pressed.is_connected(audio._tocar_botao), "botão existente recebe som")
+	conferir(jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Button").pressed.is_connected(audio._tocar_botao), "botão existente recebe som")
 	var indice: int = audio._indice
 	audio.trocar_musica("menu")
 	conferir(audio._indice == indice, "mesma música não reinicia")

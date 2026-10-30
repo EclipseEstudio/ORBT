@@ -141,7 +141,7 @@ func _executar() -> void:
 	gravar(arquivo_a, a)
 	conferir(not jogo.iniciar_fase("a") and jogo.interface_atual is Control and jogo.erro_abertura.contains("schema_version"), "Erro físico usa carregador comum e preserva navegação")
 	jogo.mostrar_menu()
-	conferir(jogo.interface_atual.has_node("VBoxContainer/Button"), "Erro permite voltar ao menu")
+	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Button"), "Erro permite voltar ao menu")
 	jogo.queue_free()
 	await process_frame
 	for arquivo in arquivos:

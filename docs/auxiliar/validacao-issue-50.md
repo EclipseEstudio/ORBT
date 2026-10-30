@@ -1,5 +1,7 @@
 # Validação de configurações — issue #50
 
+Continuidade após PR #77: configurações passam a respeitar área segura e permitem rolagem vertical em telas curtas. Volumes e retorno são alcançáveis com recortes simulados; preferências e pausa mantêm seus testes. [Evidências e limites](validacao-areas-menus.md). Validação com recortes reais e toque Android permanece pendente.
+
 Execução em 30/10/2026, Windows, Godot 4.7.2, base `03c80e3` com as alterações deste PR. `tests/run.ps1`: 890 verificações, zero falhas, incluindo 12 de preferências e reabertura em processo separado com três verificações. `tests/run_exportacao.ps1`: PCK exportado, 23 verificações, zero falhas. O PCK foi testado no desktop e não substitui teste em aparelho Android.
 
 | Cenário | Esperado e observado |

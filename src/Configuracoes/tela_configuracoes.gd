@@ -1,9 +1,11 @@
 extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
+const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 signal fechada
 var preferencias: RefCounted
 var _aviso: Label
+var _margem: MarginContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -15,6 +17,7 @@ func _ready() -> void:
 	add_child(fundo)
 	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var margem := MarginContainer.new()
+	_margem = margem
 	add_child(margem)
 	margem.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
@@ -22,7 +25,13 @@ func _ready() -> void:
 	var coluna := VBoxContainer.new()
 	coluna.alignment = BoxContainer.ALIGNMENT_CENTER
 	coluna.add_theme_constant_override("separation", 8)
-	margem.add_child(coluna)
+	var rolagem := ScrollContainer.new()
+	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	rolagem.follow_focus = true
+	margem.add_child(rolagem)
+	coluna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	coluna.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rolagem.add_child(coluna)
 	var titulo := Label.new()
 	titulo.text = "Configurações"
 	titulo.add_theme_font_size_override("font_size", 14)
@@ -41,6 +50,15 @@ func _ready() -> void:
 	voltar.add_theme_font_size_override("font_size", 10)
 	coluna.add_child(voltar)
 	voltar.pressed.connect(func(): fechada.emit(); queue_free())
+	get_viewport().size_changed.connect(_area_segura)
+	_area_segura()
+
+func _area_segura() -> void:
+	AreaSegura.aplicar(_margem, 0, AreaSegura.fisica())
+
+func _process(_delta: float) -> void:
+	if OS.has_feature("android"):
+		_area_segura()
 
 func _criar_volume(coluna: VBoxContainer, titulo: String, campo: String, valor: float) -> void:
 	var rotulo := Label.new()
