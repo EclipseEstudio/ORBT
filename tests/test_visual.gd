@@ -3,6 +3,7 @@ extends SceneTree
 const Arte = preload("res://src/Visual/arte_pixel.gd")
 const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const Fabrica = preload("res://src/CorpoEstelar/gerenciador_corpos_estelares.gd")
+const HUD = preload("res://src/Nivel/interface_partida.gd")
 var verificacoes := 0
 var falhas := 0
 
@@ -66,6 +67,13 @@ func _executar() -> void:
 		if filho is CanvasLayer:
 			if filho.get("partida") != null:
 				hud = filho
+	var tela := Rect2(0, 0, 180, 390)
+	var topo := Rect2(4, 3, 172, 75)
+	conferir(HUD.direcao_alvo(Vector2(90, 35), tela, topo) == "↑", "Alvo encoberto pelo HUD tem indicação para cima")
+	conferir(HUD.direcao_alvo(Vector2(90, 100), tela, topo) == "", "Alvo visível fora do HUD não recebe seta")
+	conferir(HUD.direcao_alvo(Vector2(-10, -5), tela, topo) == "↑←", "Alvo fora da tela mantém indicação diagonal")
+	conferir(HUD.direcao_alvo(Vector2(90, 400), tela, topo) == "↓", "Alvo abaixo da tela mantém indicação")
+	conferir(hud._status.mouse_filter == Control.MOUSE_FILTER_IGNORE and hud._status.get_theme_stylebox("normal").bg_color.a == 1.0, "Fundo do status preserva contraste sem capturar gestos")
 	for estado in ["jogando", "pausado", "concluida"]:
 		partida.reiniciar()
 		if estado == "pausado":
