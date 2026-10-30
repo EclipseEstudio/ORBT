@@ -55,3 +55,26 @@ Com o aplicativo de teste fechado, o checkpoint principal foi substituído por t
 Um arquivo com `schema_version` 99 foi inserido no checkpoint da cópia QA, mantendo backup válido: o [menu indicou incompatibilidade e ofereceu reinício](evidencias-android-2026-10-30/qa-incompativel.png), sem Continuar. O reinício descartou o checkpoint e mostrou a [primeira fase concluída e a segunda disponível](evidencias-android-2026-10-30/qa-progresso-preservado.png). Em outro ensaio, um arquivo inválido sem cópia apresentou [diagnóstico e reinício](evidencias-android-2026-10-30/qa-corrompido-sem-copia.png). O SHA-256 do progresso QA permaneceu `be9aae3051ef13fb562a037e663f07fc4090c593eadda822624fcad9a3d71f35` nos cenários; os hashes do checkpoint e progresso da instalação principal também permaneceram iguais. A instalação temporária e seus dados de teste foram removidos ao final.
 
 Godot 4.7.2: 1.230 verificações nas suítes e 23 do pacote; o teste do menu falha antes da correção e passa depois. Os arquivos danificados foram inseridos deliberadamente com o aplicativo fechado: isso demonstra tratamento e recuperação no Android, mas não reproduz uma interrupção real durante uma gravação, que permanece pendente.
+
+## Interrupção controlada durante gravação — issue #49
+
+Em Samsung SM-A556E/Android 16, a revisão `5173920` foi exportada em uma instalação isolada `com.eclipseestudio.orbt.qa`, sem usar os dados do ORBT principal. Depois de concluir e repetir a primeira fase, o teste dispunha de um checkpoint inicial válido e progresso salvo. Para interromper de forma reproduzível uma gravação que normalmente termina muito rápido, uma segunda versão QA incluiu instrumentação **apenas na cópia de teste**: em `_gravar`, quando um arquivo sinalizador existia, gravou e descarregou metade do texto no arquivo temporário, criou um sinal de sincronização e aguardou 30 segundos antes de prosseguir. A implementação da alpha não recebeu essa instrumentação.
+
+O trecho abaixo foi inserido na cópia QA após a abertura bem-sucedida de `fluxo`, antes de `fluxo.store_string(texto)`. O sinalizador `user://teste_interromper_gravacao` foi criado pelo ADB somente depois de existir o checkpoint válido; o processo foi encerrado ao aparecer `user://teste_gravacao_pausada`.
+
+```gdscript
+if arquivo.ends_with(".tmp") and FileAccess.file_exists("user://teste_interromper_gravacao"):
+	fluxo.store_string(texto.substr(0, int(texto.length() / 2)))
+	fluxo.flush()
+	var sinal := FileAccess.open("user://teste_gravacao_pausada", FileAccess.WRITE)
+	sinal.store_string("gravacao temporaria parcial")
+	sinal.flush()
+	sinal.close()
+	OS.delay_msec(30000)
+```
+
+O teste ativou o sinalizador, acionou Reiniciar e aguardou a confirmação da escrita parcial. Nesse ponto, `checkpoint.json` tinha 388 bytes e `checkpoint.json.tmp`, 194 bytes; o processo QA foi encerrado com `adb shell am force-stop` antes de concluir a gravação. O checkpoint original manteve SHA-256 `4ce439ba9b6c95212650ff2dc2d1819d3c4c39ffef50e0c2674a3ba7ba219c7e` e o progresso manteve SHA-256 `be9aae3051ef13fb562a037e663f07fc4090c593eadda822624fcad9a3d71f35` antes e depois do encerramento.
+
+A versão QA sem instrumentação foi reinstalada por atualização, preservando os arquivos. O [menu ofereceu Continuar](evidencias-android-2026-10-30/interrupcao-menu.png), e a [partida abriu pausada](evidencias-android-2026-10-30/interrupcao-continuar.png), no apoio inicial com combustível 5 e tempo 30 s. O checkpoint e o progresso mantiveram os mesmos hashes após a recuperação. A instalação QA foi removida; os hashes dos arquivos do ORBT principal também permaneceram iguais aos registrados antes do ensaio.
+
+O APK QA sem instrumentação tinha SHA-256 `243628cfe997d2eeb0d7509cd1adc0038a8446e3f50a76a30d5fb69734a642a6`; o instrumentado, `7beba1f33bd8c33effbca68dce6a36c1cc07b70eb9758d6c613ca6509661578b`. Ambos foram exportados com Godot 4.7.2 e a mesma chave temporária de depuração. O teste demonstra um encerramento real do processo durante escrita parcial do arquivo temporário, com uma pausa inserida para sincronização. Não é corte físico de energia e não cobre todos os pontos da transação, como a substituição da cópia anterior ou a renomeação final.
