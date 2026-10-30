@@ -157,12 +157,14 @@ func _alternar_pausa() -> void:
 		partida.pausar()
 
 func _abrir_configuracoes() -> void:
-	if partida.estado != partida.Estado.PAUSADO or preferencias == null or _raiz.has_node("TelaConfiguracoes"):
+	if partida.estado != partida.Estado.PAUSADO or preferencias == null or has_node("TelaConfiguracoes"):
 		return
 	var tela := TelaConfiguracoes.new()
 	tela.name = "TelaConfiguracoes"
 	tela.preferencias = preferencias
-	_raiz.add_child(tela)
+	# A tela calcula sua própria área segura a partir do viewport inteiro.
+	# Ser filha da raiz já recuada do HUD aplicaria as margens duas vezes.
+	add_child(tela)
 
 
 func _dica_tutorial() -> String:
