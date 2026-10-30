@@ -14,13 +14,13 @@ O JDK portátil foi baixado do Adoptium; SHA-256 conferido com a release oficial
 
 O preset `Android` em `export_presets.cfg` está pronto para um APK de depuração:
 
-- Identificador `com.eclipseestudio.orbt`, nome ORBT, versão 0.1.0 / código 1.
+- Identificador `com.eclipseestudio.orbt`, nome ORBT; versão e código definidos em `export_presets.cfg`.
 - ARM de 32 e 64 bits; modelos prontos da Godot, sem build Gradle personalizado.
 - Catálogo `Recursos/Niveis.json` e arquivos `Recursos/Fases/*.json` incluídos explicitamente.
 - Testes, documentação, scripts auxiliares, referências visuais e temporários excluídos.
 - Tela em retrato; HUD ajustado à área segura informada pelo Android, em coordenadas lógicas.
 - Importação ETC2/ASTC habilitada em `project.godot`, exigida pela exportação Mobile para Android.
-- A fase abre diretamente no Android. Suspender/perder foco pausa a partida e cancela a entrada; é preciso tocar em Retomar.
+- O aplicativo abre no menu principal. Durante uma fase, suspender/perder foco pausa a partida e cancela a entrada; é preciso tocar em Retomar.
 
 O renderizador continua Mobile. A compatibilidade gráfica, os recortes de tela e o desempenho precisam ser verificados no aparelho escolhido. Nenhuma regra proposta do protótipo ganha aceite por causa da exportação.
 
@@ -35,6 +35,14 @@ Para **Godot 4.7.2**, o [arquivo de versões da própria engine](https://github.
 As configurações de SDK pertencem ao editor utilizado, não ao projeto. Um editor portátil em modo autocontido pode ter configurações e modelos diferentes do editor instalado. Execute os scripts com o caminho do mesmo editor configurado.
 
 Não coloque senhas no preset. Credenciais ficam nas configurações locais da Godot; arquivos de assinatura `.keystore` e `.jks` estão ignorados pelo Git. A entrega usa assinatura de depuração para teste.
+
+## APK automático para revisão de PR
+
+PRs destinados à `alpha` executam o fluxo **APK Android para revisão** no GitHub Actions. Ele importa o projeto, executa as suítes e a verificação do pacote, gera um APK de depuração e confere a assinatura e o alinhamento. Após uma execução bem-sucedida, baixe o artefato `ORBT-android-debug-pr-N` na página da execução. O arquivo `revisao.txt` identifica as revisões da cabeça, da base e do merge testado, além do SHA-256 do APK. A execução é substituída quando o PR recebe uma nova revisão; o artefato expira após 14 dias.
+
+O fluxo usa Godot e modelos oficiais 4.7.2 conferidos por SHA-256, Java 17 e o SDK Android da máquina do GitHub (plataforma 36 e Build-Tools 36.1.0). Se uma dependência estiver ausente, a execução falha com o caminho necessário. PRs de forks podem precisar de autorização de um mantenedor para executar Actions.
+
+Uma chave de depuração temporária é criada em cada execução. Como a assinatura muda entre execuções, o Android pode exigir a desinstalação do APK anterior antes de instalar outro; a desinstalação pode apagar os dados do aplicativo. Esse APK serve para testes, não para publicação. A geração automática não substitui a instalação e os testes em aparelho.
 
 ## Gerar e instalar
 
@@ -56,7 +64,7 @@ Saída: `build/android/ORBT-debug.apk`; diagnóstico: `build/android/export-apk.
 
 Pelo editor, abra **Project > Export**, selecione **Android**, clique em **Export Project** e mantenha **Export With Debug** marcado. Salve em `build/android/ORBT-debug.apk`.
 
-Transfira o APK para o telefone e abra pelo gerenciador de arquivos; autorize a instalação por esse aplicativo quando solicitada. Abra ORBT e aguarde a câmera apresentar a Terra e voltar à nave. A rota de referência é um arraste vertical para baixo de 80 unidades lógicas na área central livre: um impulso completo para cima chega à Terra.
+Transfira o APK para o telefone e abra pelo gerenciador de arquivos; autorize a instalação por esse aplicativo quando solicitada. Abra ORBT, inicie uma fase pelo menu e aguarde a câmera apresentar a Terra e voltar à nave. A rota de referência da primeira fase é um arraste vertical para baixo de 80 unidades lógicas na área central livre: um impulso completo para cima chega à Terra.
 
 ## Retomada da issue #4 em 22/10/2026
 
@@ -88,7 +96,7 @@ As dependências foram instaladas e os caminhos foram configurados no editor God
 - Catálogo e fase dentro do APK conferidos byte a byte com os JSON do projeto; testes, scripts auxiliares, documentação, temporários e referências visuais não foram incluídos.
 - Instalação e execução em telefone ainda não realizadas. As verificações do pacote não substituem o roteiro abaixo.
 
-## Roteiro para aceite em aparelho — issues #4 e #15–#20
+## Roteiro histórico para aceite em aparelho — issues #4 e #15–#20
 
 Registre modelo do aparelho, versão do Android, versão/hash da branch, versão da Godot, JSON usado e gravação ou captura. Preencha resultado observado, sem marcar itens apenas pela implementação existir.
 
