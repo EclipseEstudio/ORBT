@@ -7,14 +7,14 @@ const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const CenaNivel = preload("res://src/Nivel/Nivel.tscn")
 const ROTAS = [
 	{"id": "teste_001", "margem": 3.0, "etapas": [{"angulo": -90.0, "contato": "terra"}]},
-	{"id": "salto_curto", "modelo": 1, "rochas": 44, "margem": 0.5, "etapas": [{"angulo": -14.5, "contato": "terra"}]},
-	{"id": "na_diagonal", "modelo": 2, "rochas": 58, "margem": 0.4, "etapas": [{"angulo": -0.7, "contato": "terra"}]},
+	{"id": "salto_curto", "modelo": 1, "rochas": 44, "margem": 0.5, "variacoes_extras": [[-2.0]], "etapas": [{"angulo": -14.5, "contato": "terra"}]},
+	{"id": "na_diagonal", "modelo": 2, "rochas": 58, "margem": 1.0, "etapas": [{"angulo": -0.7, "contato": "terra"}]},
 	{"id": "curva_suave", "modelo": 3, "rochas": 68, "margem": 0.5, "etapas": [
 		{"angulo": -40.0, "contato": "apoio_1"},
 		{"radial": "apoio_1", "fator": 0.137, "correcao": -1.43, "margem": 0.25, "contato": "apoio_2"},
 		{"alvo": "terra", "correcao": 7.0, "margem": 1.0, "contato": "terra"},
 	]},
-	{"id": "escala_segura", "modelo": 4, "rochas": 59, "margem": 0.5, "etapas": [{"angulo": 11.7, "contato": "terra"}]},
+	{"id": "escala_segura", "modelo": 4, "rochas": 59, "margem": 0.5, "variacoes_extras": [[1.5]], "etapas": [{"angulo": 11.7, "contato": "terra"}]},
 	{"id": "entre_asteroides", "modelo": 5, "rochas": 60, "margem": 1.0, "etapas": [{"angulo": 18.0, "passos": 90}, {"angulo": -50.0, "forca": 0.5, "contato": "terra"}]},
 	{"id": "contorno", "margem": 1.0, "etapas": [{"angulo": -15.0, "passos": 120}, {"angulo": 100.0, "forca": 0.8, "contato": "terra"}]},
 	{"id": "duas_rotas", "margem": 1.0, "etapas": [{"angulo": -25.0, "passos": 120}, {"angulo": 90.0, "forca": 0.8, "contato": "terra"}], "alternativa": [{"angulo": 25.0, "passos": 120}, {"angulo": -90.0, "forca": 0.8, "contato": "terra"}]},
@@ -130,6 +130,13 @@ func _executar() -> void:
 		conferir(jogo.progresso.estado(rota.id) == "Concluída", rota.id + ": vitória registrada na campanha")
 		jogo.mostrar_selecao()
 		await process_frame
+		for desvio_extra in rota.get("variacoes_extras", []):
+			var extra = CenaNivel.instantiate()
+			extra.nivel_res = resultado.nivel
+			root.add_child(extra)
+			jogar(extra, rota.etapas, desvio_extra)
+			extra.queue_free()
+			await process_frame
 		if rota.has("alternativa"):
 			for desvios in [[], [-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]:
 				var alternativa = CenaNivel.instantiate()

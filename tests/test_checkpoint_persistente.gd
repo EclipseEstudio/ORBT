@@ -81,6 +81,11 @@ func _executar() -> void:
 	alterado.dados_autorais = nivel.dados_autorais.duplicate(true)
 	alterado.dados_autorais.content_version += 1
 	conferir(salvo.validar(alterado).is_empty() and salvo.bloqueado, "versão incompatível é bloqueada")
+	for id in ["salto_curto", "na_diagonal", "escala_segura"]:
+		var fase_rebalanceada = Carregador.carregar("res://Recursos/Fases/" + id + ".json").nivel
+		var antigo := Save.new()
+		antigo.dados = {"fase": id, "content_version": 2}
+		conferir(antigo.validar(fase_rebalanceada).is_empty() and antigo.bloqueado and not antigo.aviso.is_empty(), id + ": checkpoint anterior é recusado com diagnóstico")
 	var falha := FalhaDisco.new()
 	falha.caminho = base
 	falha.carregar()

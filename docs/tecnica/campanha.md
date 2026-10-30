@@ -36,7 +36,7 @@ As preferências da #50 usam `user://preferencias.json`, separadas do progresso 
 
 As cinco fases adicionais usam `NIVEL_1` até `NIVEL_5` de `dev-macb/orbt/src/levels/__init__.py` como modelo. Os IDs e arquivos já cadastrados foram preservados para manter o progresso. `scripts/importar_fases_modelo.py` converte os dados por AST restrita, sem importar nem executar o projeto externo; as linhas de rochas mantêm o mesmo jitter determinístico. Para reproduzir, passe o caminho do `__init__.py` ao script.
 
-Os mapas mantêm coordenadas e raios 1:1, mundo de 900×600 com margem de 200 unidades, nave de raio 6 e impulso máximo 260. `gravity_constant=500` e massas multiplicadas por 1.000 preservam o produto GM do original. A suavização é 1 no contrato atual. Os 44/58/68/59/60 asteroides de cada mapa incluem a cerca perimetral original. Nos sóis, o campo original `danger_radius` representa o anel visual; o contato fatal usa o raio da estrela, assim como na colisão do Python.
+Os mapas mantêm coordenadas e raios do protótipo, exceto a Terra nas fases Tutorial, Estilingue e Sol, ajustada na #53 para ampliar a chegada. O mundo tem 900×600 com margem de 200 unidades, nave de raio 6 e impulso máximo 260. `gravity_constant=500` e massas multiplicadas por 1.000 preservam o produto GM do original. A suavização é 1 no contrato atual. Os 44/58/68/59/60 asteroides de cada mapa incluem a cerca perimetral original. Nos sóis, o campo original `danger_radius` representa o anel visual; o contato fatal usa o raio da estrela, assim como na colisão do Python.
 
 Órbitas foram adaptadas para posições autorais estáticas, e o portal opcional da última fase foi omitido. A adaptação preserva a composição dos mapas e usa as regras de voo, pouso e correção da Godot. A câmera de voo usa zoom 0,5; explorar enquadra o mapa entre o HUD e o rodapé, com recálculo ao redimensionar.
 
@@ -45,17 +45,17 @@ Os mapas mantêm coordenadas e raios 1:1, mundo de 900×600 com margem de 200 un
 | ID / mapa | Rota de referência | Tempo aproximado | Saldo final |
 | --- | --- | --- | --- |
 | `teste_001` / Primeiro impulso | Impulso `(0, -80)` | 2,12 s | 4 |
-| `salto_curto` / Tutorial | 260 a −14,5° | 1,73 s | 2 |
-| `na_diagonal` / O Estilingue | 260 a −0,7° | 2,95 s | 2 |
+| `salto_curto` / Tutorial | 260 a −14,5° | 98 passos (1,63 s) | 2 |
+| `na_diagonal` / O Estilingue | 260 a −0,7° | 171 passos (2,85 s) | 2 |
 | `curva_suave` / O Labirinto | 260 a −40° até `apoio_1`; cerca de +10,49° até `apoio_2`; cerca de +45,19° até Terra | 3,55 s | 0 |
-| `escala_segura` / O Sol | 260 a +11,7° | 2,68 s | 2 |
+| `escala_segura` / O Sol | 260 a +11,7° | 155 passos (2,58 s) | 2 |
 | `entre_asteroides` / Deriva Final | 260 a +18°; após 90 passos (1,5 s), corrigir com 130 a −50° | 2,45 s | 3 |
 | `contorno` / O Contorno | 100 a −15°; após 120 passos, 80 a +100° | teste automatizado | 1 |
 | `duas_rotas` / Duas Rotas | 100 a −25° e 80 a +90° após 120 passos; alternativa: +25° e −90° | teste automatizado | 1 |
 | `portas_gemeas` / Portas Gêmeas | 100 a +65° e 80 a +180° após 120 passos; alternativa: +115° e 0° | teste automatizado | 1 |
 | `retorno_a_terra` / Retorno à Terra | 100 a −40°; após 120 passos, 80 a +75° | teste automatizado | 2 |
 
-Os ângulos estão em coordenadas de mundo: zero aponta à direita e valores positivos, para baixo. No Labirinto, a mira é reajustada conforme o ponto efetivo do pouso; o teste usa o ângulo radial do primeiro pouso ×0,137−1,43° no segundo lançamento e a direção da Terra +7° no terceiro. Isso é apenas uma rota de validação, sem piloto automático no produto. Margens verificadas: Tutorial ±0,5°, Estilingue ±0,4°, Labirinto ±0,5°/±0,25°/±1°, Sol ±0,5° e Deriva ±1° em ambos os impulsos. A prévia permite escolher trajetórias alternativas.
+Os ângulos estão em coordenadas de mundo: zero aponta à direita e valores positivos, para baixo. No Labirinto, a mira é reajustada conforme o ponto efetivo do pouso; o teste usa o ângulo radial do primeiro pouso ×0,137−1,43° no segundo lançamento e a direção da Terra +7° no terceiro. Isso é apenas uma rota de validação, sem piloto automático no produto. Resultados de varredura e limitações estão na [avaliação da #53](../auxiliar/balanceamento-issue-53.md); teste de toque em aparelho permanece pendente.
 
 As dicas do campo `tutorial` são exibidas no HUD antes do lançamento e durante o pouso. Os cinco arquivos estão cadastrados em `Recursos/Niveis.json`. O preset Android já inclui `Recursos/Fases/*.json`. O teste de rotas pode ser executado externamente contra o PCK, assim como `tests/test_exportacao.gd`.
 
