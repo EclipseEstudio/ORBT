@@ -1,0 +1,17 @@
+{
+  "schema_version": 1, "content_version": 1, "id": "duas_rotas", "name": "Duas Rotas", "order": 8,
+  "bounds": {"position": [-100, -100], "size": [800, 700]},
+  "initial_fuel": 3, "flight_timeout": 20,
+  "physics": {"gravity_constant": 1, "softening": 8},
+  "ship": {"radius": 6, "mass": 1, "dead_zone": 10, "max_drag": 80, "max_impulse": 100},
+  "start": {"position": [100, 250]},
+  "camera": {"zoom": 0.5, "overview": {"position": [50, 50], "size": [500, 400]}},
+  "goal": {"id": "terra", "position": [500, 250], "mass": 0, "visual_radius": 20, "collision_radius": 20, "capture_radius": 20, "danger_radius": 0, "proximity_radius": 50},
+  "bodies": [
+    {"id": "centro", "type": "asteroid", "position": [300, 250], "mass": 0, "visual_radius": 40, "collision_radius": 40, "capture_radius": 0, "danger_radius": 40, "proximity_radius": 70},
+    {"id": "alto", "type": "asteroid", "position": [310, 60], "mass": 0, "visual_radius": 20, "collision_radius": 20, "capture_radius": 0, "danger_radius": 20, "proximity_radius": 45},
+    {"id": "baixo", "type": "asteroid", "position": [310, 440], "mass": 0, "visual_radius": 20, "collision_radius": 20, "capture_radius": 0, "danger_radius": 20, "proximity_radius": 45}
+  ],
+  "tutorial": "Escolha passar acima ou abaixo e corrija o voo para a Terra.",
+  "notes": "Duas alternativas simétricas usando somente impulso e correção em voo."
+}

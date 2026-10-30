@@ -8,7 +8,7 @@ No menu, **Campanha** abre a seleção de fases no computador e no Android. **Co
 
 **Seleção de fases**, na interface da partida, permite retornar à campanha durante o jogo, a pausa ou após o desfecho. A tentativa anterior é descartada. A seleção oferece **Atualizar lista**, para reler o conteúdo disponível, e **Voltar ao menu**.
 
-Escolher uma fase começa uma tentativa com posição, combustível, tempo, contatos e câmera iniciais. Repetir uma fase não recupera o voo anterior. Não há comando **Continuar** por checkpoint.
+Escolher uma fase começa uma tentativa com posição, combustível, tempo, contatos e câmera iniciais. Repetir uma fase não recupera o voo anterior; **Continuar** recupera o checkpoint salvo.
 
 ## Acesso, conclusão e repetição
 
@@ -38,7 +38,7 @@ Quando o arquivo principal está inválido, o jogo pode recuperar a última cóp
 
 ## Conteúdo entregue e aceite pendente
 
-O catálogo real contém seis fases: a original e cinco mapas baseados no protótipo Python `dev-macb/orbt`. Os mapas adaptados começam com a nave parada no espaço e três unidades de combustível, exceto **Deriva Final**, que começa com cinco. A gravidade e o tempo de voo passam a atuar após o primeiro impulso. A dica aparece enquanto a nave aguarda o lançamento ou está pousada.
+O catálogo contém dez fases: a original, cinco mapas baseados no protótipo Python `dev-macb/orbt` e quatro mapas novos. Os mapas adaptados começam com a nave parada no espaço e três unidades de combustível, exceto **Deriva Final**, que começa com cinco. Os novos também começam em posição livre, com três unidades, ou quatro no retorno final. A gravidade e o tempo de voo passam a atuar após o primeiro impulso. A dica aparece enquanto a nave aguarda o lançamento ou está pousada.
 
 | Ordem | Fase | Proposta |
 | --- | --- | --- |
@@ -48,10 +48,14 @@ O catálogo real contém seis fases: a original e cinco mapas baseados no protó
 | 4 | O Labirinto | Usar os satélites para atravessar os muros de asteroides. |
 | 5 | O Sol | Contornar a estrela e passar pelos portões rochosos. |
 | 6 | Deriva Final | Cruzar o campo dos dois sóis e corrigir o voo até a Terra. |
+| 7 | O Contorno | Desviar de uma rocha e corrigir a direção. |
+| 8 | Duas Rotas | Escolher contorno superior ou inferior. |
+| 9 | Portas Gêmeas | Escolher uma passagem lateral ao redor de duas rochas. |
+| 10 | Retorno à Terra | Combinar correção em voo e atração de dois planetas. |
 
 **Explorar mapa** mostra a visão geral dos mapas maiores; **Voltar à nave** restaura o enquadramento de voo e o controle de lançamento. Os círculos dos planetas e sóis indicam proximidade e permanecem visíveis nesses mapas. O contato fatal com o Sol ocorre na superfície da estrela; seu anel maior é um aviso.
 
-A composição, os muros e o combustível seguem o modelo. Nesta adaptação, os corpos permanecem parados nas posições autorais; as órbitas e o portal opcional da última fase não estão implementados. As rotas são verificadas na física da Godot, com margens de mira próprias de cada mapa.
+Nos cinco mapas adaptados, composição, muros e combustível seguem o modelo. Os corpos permanecem parados; órbitas e o portal opcional do protótipo não estão implementados. As quatro fases novas reutilizam perigos, correção e gravidade já conhecidos: a sétima é mais simples depois dos mapas densos; a oitava oferece duas rotas, a nona prolonga o obstáculo e a décima combina desvio com fontes gravitacionais. Dificuldade e legibilidade ainda precisam de playtest na #53.
 
 Os quatro critérios de progresso da issue #40 foram demonstrados em Windows em 29/10/2026, incluindo primeira vitória, repetição, bloqueio, restauração e última fase. Consulte o [registro de aceite e evidências](../auxiliar/validacao-issue-40.md) e as [verificações técnicas datadas](../tecnica/campanha.md#evidências-e-aceite-pendente).
 

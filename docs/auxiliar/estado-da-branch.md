@@ -14,7 +14,7 @@ O PR #47 integrou à `alpha` as entregas dos PRs #42–#46 e a documentação, n
 | Identidade visual mínima | PR #45, `6db0abb` | Seis sprites, marcas por função, tema e indicadores; revisão das imagens adiada |
 | Progresso persistente | PR #46, `a774a82` | Conclusões/desbloqueios por ID, checksum, temporário, backup, recuperação e retentativa |
 
-O catálogo real em `Recursos/Niveis.json` contém seis fases: `teste_001` e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`: Tutorial, O Estilingue, O Labirinto, O Sol e Deriva Final. Os cinco IDs já criados foram preservados, com início livre, corredores de asteroides e visão geral para explorar. Os mapas têm corpos estáticos e rotas verificadas na Godot; órbitas e portal opcional permanecem fora desta adaptação. Saves da campanha anterior liberam a sucessora sem perder conclusões. Catálogos temporários de testes/capturas continuam separados desse conteúdo. O menu inicial é usado também no Android, com Campanha, configurações, créditos e Continuar quando houver checkpoint válido.
+O catálogo real em `Recursos/Niveis.json` contém dez fases: a original, cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py` e quatro novos mapas. Os IDs anteriores foram preservados, com corpos estáticos e rotas verificadas na Godot; órbitas e portal opcional permanecem fora desta adaptação. Saves da campanha anterior liberam a sucessora sem perder conclusões. Catálogos temporários de testes/capturas continuam separados desse conteúdo. O menu inicial é usado também no Android, com Campanha, configurações, créditos e Continuar quando houver checkpoint válido.
 
 ## Critério de status no Projects
 
@@ -87,7 +87,7 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
 5. #48 integrada pelo PR #59, #49 pelo PR #60 e #50 pelo PR #61; validar persistência e preferências em aparelho. #51 implementa menus e resultados para revisão; preservar o progresso existente.
-6. Preservar as seis fases como entrega parcial da #52; completar quatro restantes e balancear/revisar a campanha inteira na #53. Tutorial #54, áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
+6. #52 acrescenta quatro fases e mantém as seis existentes; revisar conteúdo e seguir com o balanceamento e a revisão cruzada da campanha inteira na #53. Tutorial #54, áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
 
 A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
 
@@ -98,7 +98,7 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 | Checkpoints e Continuar | RF17 e parte de RF18 | #48 integrada; #49 implementa persistência, diagnóstico e Continuar pausado. Aceite Android pendente; menus completos na #51 |
 | Preferências e recuperação da tentativa | RF18 | Checkpoint e preferências persistidos separadamente; validação em aparelho pendente |
 | Menus completos | RF19 | Créditos e ações de pausa/resultados na #51; revisão e validação de toque em aparelho pendentes |
-| Dez fases autorais | RF20 | Seis fases entregues e com rotas verificadas; expandir e balancear as quatro restantes |
+| Dez fases autorais | RF20 | Dez fases e rotas automatizadas na #52; balancear e revisar a campanha inteira na #53 |
 | Dicas contextuais | RF21 | Há instruções mínimas no HUD; falta tutorial contextual com playtest |
 | Música e efeitos/volumes | RF24 | Volumes separados persistidos na #50; duas músicas e efeitos pendentes na #55 |
 | Narrativa | RF25 | Integração de piloto/corporação/retorno e desfecho pendente |
