@@ -2,6 +2,12 @@
 
 Escopo e critérios de aceite preservados. Nenhuma issue é encerrada por esta sincronização. A próxima implementação é #48, após consolidar a revisão da #13. Validação Android permanece na #4.
 
+## Validação da sincronização
+
+Em 30/10/2026, Windows/Godot 4.7.2, executado `tests/run.ps1` sobre `67f4c24`, após incorporar `origin/alpha` (`19af5c8`). Resultado observado: controles 69, partida 158, início livre 40, editor 32, campanha 31, fases 240, visual 38, persistência 43 e reabertura em outro processo 9: **660 verificações, zero falhas**. O executor também rejeita erros da engine. Logs locais em `.godot/test_*.log`. Esperado: todas as suítes aprovadas, incluindo as novas fases e a compatibilidade de progresso. Não foi executado aceite em aparelho Android nesta sincronização.
+
+As descrições das issues #13/#48/#49/#51/#52/#53 foram atualizadas e o conteúdo retornado pelo GitHub foi conferido. O conector recusou escrita com HTTP 403; a atualização foi concluída pela API usando a autenticação Git existente. Não houve mudança de estado, responsáveis ou critérios de aceite.
+
 ## [Issue #13](https://github.com/EclipseEstudio/ORBT/issues/13)
 
 Implementação parcial existente: `SimulacaoVoo` soma a aceleração das fontes com suavização, usa Euler semi-implícito a 60 Hz e compartilha integrador/contatos com a prévia (#11/#12/#18). Proximidade não limita a atração. A atualização da alpha reúne recalibração da primeira fase (G=2, softening=8, massas 24.000/30.000) e testes adicionais; a fórmula não muda.
