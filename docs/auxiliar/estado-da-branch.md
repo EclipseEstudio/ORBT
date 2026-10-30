@@ -42,7 +42,7 @@ Na consulta de 26/10 havia 41 issues: 21 encerradas e 20 abertas. Todas as abert
 | [#10](https://github.com/EclipseEstudio/ORBT/issues/10) | Emitir eventos de proximidade e contato sem duplicação | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
 | [#11](https://github.com/EclipseEstudio/ORBT/issues/11) | Calcular o vetor de atração | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
 | [#12](https://github.com/EclipseEstudio/ORBT/issues/12) | Aplicar gravidade no passo fixo de física | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
-| [#13](https://github.com/EclipseEstudio/ORBT/issues/13) | Validar e registrar o modelo de gravidade da primeira fase | Em Revisão | Decisão e cenários registrados em [validação da #13](validacao-issue-13.md); aprovar o PR e seus parâmetros/tolerâncias. Android segue na #4. |
+| [#13](https://github.com/EclipseEstudio/ORBT/issues/13) | Validar e registrar o modelo de gravidade da primeira fase | Concluído | PR #58 aprovado e integrado; decisão e cenários registrados em [validação da #13](validacao-issue-13.md). Android segue na #4. |
 | [#14](https://github.com/EclipseEstudio/ORBT/issues/14) | Criar cenários de teste de gravidade, proximidade e contato | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
 | [#15](https://github.com/EclipseEstudio/ORBT/issues/15) | Organizar a nave e implementar vínculo de pouso | Concluído | Issue encerrada no GitHub; conclusão preservada nesta reconciliação. |
 | [#16](https://github.com/EclipseEstudio/ORBT/issues/16) | Controlar o ciclo do toque e o cancelamento pela zona morta | Em Revisão | Executar cancelamento, multitouch, GUI, suspensão e retomada com toque físico no Android. |
@@ -82,11 +82,11 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 
 ## Próximas ações para retomar
 
-1. Consolidar a revisão da #13: preservar o integrador compartilhado, registrar decisão, parâmetros, tolerâncias e evidências de aproximação, desvio lateral e duas fontes. A integração do PR #47 já ocorreu. A sincronização de 30/10 incorpora a correção de mira `19af5c8`, a recalibração da primeira fase e as cinco fases adaptadas; não equivale ao aceite das issues.
+1. #13 concluída pelo PR #58; manter o integrador compartilhado e o registro dos cenários ao recalibrar. A integração do PR #47 e a correção de mira `19af5c8` já ocorreram.
 2. Priorizar #4: instalar o APK integrado de 29/10 e registrar revisão, hash, modelo/Android/Godot, passos, esperado/observado e evidências. Exercitar também navegação #38 e persistência após reabertura com pelo menos duas fases autorais.
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
-5. Próxima implementação recomendada: #48, checkpoints de pouso/fase. Definir início livre, pouso sem saldo, restauração após derrota e relação com Reiniciar. Depois seguir #49 (persistência), #50 (preferências) e #51 (menus/Continuar), preservando o progresso existente.
+5. #48 implementa checkpoints de início e pouso em memória; [validar e revisar](validacao-issue-48.md). Depois seguir #49 (persistência), #50 (preferências) e #51 (menus/Continuar), preservando o progresso existente.
 6. Preservar as seis fases como entrega parcial da #52; completar quatro restantes e balancear/revisar a campanha inteira na #53. Tutorial #54, áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
 
 A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
@@ -95,7 +95,7 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 | Frente | Requisito | Situação / próximo passo |
 | --- | --- | --- |
-| Checkpoints e Continuar | RF17 e parte de RF18 | Ausentes; definir contrato, invalidar estado incompatível, restaurar pausado e sem recarga/cobrança duplicada |
+| Checkpoints e Continuar | RF17 e parte de RF18 | Checkpoints em memória na #48; persistência, validação de estado incompatível e Continuar pausado pertencem à #49/#51 |
 | Preferências e recuperação da tentativa | RF18 | Conclusão/desbloqueio persistem; preferências e tentativa pausada ainda não |
 | Menus completos | RF19 | Menu mínimo/campanha existem; configurações/créditos e fluxo completo pendentes |
 | Dez fases autorais | RF20 | Seis fases entregues e com rotas verificadas; expandir e balancear as quatro restantes |

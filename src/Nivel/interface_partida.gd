@@ -11,6 +11,7 @@ var _alerta: Label
 var _destino: Label
 var _pausa: Button
 var _explorar: Button
+var _checkpoint: Button
 var _raiz: Control
 var _area_fisica := Rect2()
 var _transformacao_tela := Transform2D()
@@ -82,6 +83,8 @@ func _ready() -> void:
 	base.add_child(acoes)
 	_explorar = botao(acoes, "Explorar mapa", partida.alternar_exploracao)
 	botao(acoes, "Reiniciar", partida.reiniciar)
+	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
+	_checkpoint.visible = false
 	if partida.campanha_permitida:
 		botao(base, "Seleção de fases", func():
 			partida.nave.entrada.cancelar()
@@ -131,10 +134,11 @@ func _process(_delta: float) -> void:
 	_pausa.disabled = partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]
 	_explorar.text = "Voltar à nave" if partida.explorando else "Explorar mapa"
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
+	_checkpoint.visible = partida.estado == partida.Estado.PERDIDA
 	if partida.estado == partida.Estado.PAUSADO:
 		_mensagem.text = "Partida pausada.\nToque em Retomar para continuar."
 	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
-		_mensagem.text = partida.motivo + "\nToque em Reiniciar para tentar novamente."
+		_mensagem.text = partida.motivo + "\nEscolha como continuar."
 	elif partida.explorando:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:

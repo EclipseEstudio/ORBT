@@ -18,6 +18,7 @@ var explorando := false
 var proximos: Dictionary = {}
 var nivel: NivelRes
 var nave: Node2D
+var _checkpoint: Dictionary = {}
 
 
 func _ready() -> void:
@@ -42,6 +43,7 @@ func reiniciar() -> void:
 	temporizador_ativo = false
 	_limpar_proximidade()
 	nave.configurar(nivel)
+	_registrar_checkpoint()
 	estado_alterado.emit()
 	reiniciada.emit()
 
@@ -84,8 +86,59 @@ func resolver_contato(contato: Dictionary) -> void:
 			finalizar(true, "Você chegou à Terra!")
 		_:
 			nave.pousar(corpo)
+			_registrar_checkpoint()
 			if nave.combustivel == 0:
 				finalizar(false, "Sem combustível para decolar")
+
+
+func _registrar_checkpoint() -> void:
+	_checkpoint = {
+		"fase": nivel.id,
+		"corpo": nave.corpo_apoio,
+		"posicao": nave.global_position,
+		"posicao_relativa": nave.posicao_relativa,
+		"orientacao": nave.global_rotation,
+		"combustivel": nave.combustivel,
+		"tempo": tempo_restante,
+		"temporizador_ativo": temporizador_ativo,
+	}
+
+
+func restaurar_checkpoint() -> bool:
+	if estado not in [Estado.PERDIDA, Estado.PAUSADO] or _checkpoint.is_empty() or _checkpoint.fase != nivel.id:
+		return false
+	var corpo: Dictionary = nivel.obter_corpo(_checkpoint.corpo) if not _checkpoint.corpo.is_empty() else {}
+	if not _checkpoint.corpo.is_empty() and corpo.is_empty():
+		return false
+	get_tree().paused = false
+	estado = Estado.JOGANDO
+	motivo = ""
+	explorando = false
+	_limpar_proximidade()
+	nave.entrada.cancelar()
+	nave.cancelar_pedidos()
+	nave.simulacao_ativa = true
+	nave.controle_permitido = true
+	nave.velocidade = Vector2.ZERO
+	nave.corpo_apoio = _checkpoint.corpo
+	nave.posicao_relativa = _checkpoint.posicao_relativa
+	nave.global_position = corpo.position + nave.posicao_relativa if not corpo.is_empty() else _checkpoint.posicao
+	nave.global_rotation = _checkpoint.orientacao
+	nave.origem_decolagem = ""
+	nave.combustivel = _checkpoint.combustivel
+	nave.condicao = nave.Condicao.POUSADA if not corpo.is_empty() else nave.Condicao.PRONTA
+	tempo_restante = _checkpoint.tempo
+	temporizador_ativo = _checkpoint.temporizador_ativo
+	nave.animation_player.play("default")
+	nave.combustivel_alterado.emit(nave.combustivel)
+	nave.condicao_alterada.emit()
+	nave.atualizar_entrada()
+	if nave.combustivel == 0:
+		finalizar(false, "Sem combustível para decolar")
+	else:
+		estado_alterado.emit()
+	reiniciada.emit()
+	return true
 
 
 func finalizar(venceu: bool, causa: String) -> void:
