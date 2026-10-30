@@ -2,7 +2,6 @@ extends Node2D
 
 @onready var nave = get_parent().get_parent()
 var pontos := PackedVector2Array()
-var _acumulado := 1.0
 
 
 func _ready() -> void:
@@ -12,18 +11,14 @@ func _ready() -> void:
 
 func limpar() -> void:
 	pontos.clear()
-	_acumulado = 1.0
 	queue_redraw()
 
 
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not nave.entrada.pode_controlar() or nave.entrada.gesto.contato_ativo == -1:
 		limpar()
 		return
-	_acumulado += delta
-	if _acumulado >= 1.0 / 15.0:
-		pontos = nave.prever_trajetoria()
-		_acumulado = 0.0
+	pontos = nave.prever_trajetoria()
 	queue_redraw()
 
 
