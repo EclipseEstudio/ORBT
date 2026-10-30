@@ -6,6 +6,8 @@ Estas regras descrevem o fluxo implementado em 29/10/2026. A seleção e o progr
 
 No menu, **Campanha** abre a seleção de fases no computador e no Android. **Continuar** aparece quando há checkpoint válido e recupera a tentativa pausada. O menu também oferece configurações e créditos.
 
+A proposta de narrativa apresenta Lia, piloto veterana da Corporação Horizonte, transportando suprimentos médicos para a Terra, seu lar. A chegada exibe uma mensagem sobre a carga; ao concluir a última fase, uma mensagem encerra a missão com a entrega dos suprimentos. Esses textos e nomes aguardam aprovação da equipe na #56.
+
 **Seleção de fases**, na interface da partida, permite retornar à campanha durante o jogo, a pausa ou após o desfecho. A tentativa anterior é descartada. A seleção oferece **Atualizar lista**, para reler o conteúdo disponível, e **Voltar ao menu**.
 
 Escolher uma fase começa uma tentativa com posição, combustível, tempo, contatos e câmera iniciais. Repetir uma fase não recupera o voo anterior; **Continuar** recupera o checkpoint salvo.

@@ -3,6 +3,7 @@ extends CanvasLayer
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const Indicadores = preload("res://src/Visual/indicadores.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
+const Narrativa = preload("res://src/Narrativa/narrativa.gd")
 var _indicadores: Control
 
 var partida: Node
@@ -179,6 +180,8 @@ func _process(_delta: float) -> void:
 		_configuracoes.visible = partida.estado == partida.Estado.PAUSADO
 	if partida.estado == partida.Estado.PAUSADO:
 		_mensagem.text = "Partida pausada.\nToque em Retomar para continuar."
+	elif partida.estado == partida.Estado.CONCLUIDA and partida.campanha_permitida:
+		_mensagem.text = Narrativa.chegada(proxima_fase.is_empty())
 	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
 		_mensagem.text = partida.motivo + "\nEscolha como continuar."
 	elif partida.explorando:

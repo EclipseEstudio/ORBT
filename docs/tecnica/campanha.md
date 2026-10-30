@@ -30,6 +30,8 @@ O contrato continua com `configurar(itens)`, `estado(id)`, `pode_abrir(id)` e `c
 
 Na #51, o menu é a entrada também no Android. Antes de oferecer Continuar, valida-se checkpoint e acesso à fase; incompatibilidade gera diagnóstico e opção explícita de descarte. A próxima fase é resolvida pela ordem do catálogo, após a conclusão desbloquear a sucessora; na última não há botão Próxima. Transições removem a cena anterior e interrompem sua simulação. Créditos registram colaboradores identificados no histórico, Godot/MIT, origem dos sprites e a pendência de autoria/licença da propulsão legada. Ver [validação dos menus](../auxiliar/validacao-issue-51.md).
 
+A #56 centraliza os textos propostos em `src/Narrativa/narrativa.gd`: introdução no menu, mensagem de chegada e desfecho na última fase do catálogo. A narrativa não controla desbloqueios ou física. O rótulo da introdução ignora entrada e é ocultado quando um diagnóstico do checkpoint precisa de espaço; o resultado de derrota mantém a causa. [Evidências e limites de revisão](../auxiliar/validacao-issue-56.md).
+
 As preferências da #50 usam `user://preferencias.json`, separadas do progresso e do checkpoint, com `schema_version`, `musica` e `efeitos` entre 0 e 1. Valores ausentes, inválidos ou incompatíveis usam padrão 1; falha de gravação informa o jogador e mantém a escolha na sessão. A gravação usa arquivo temporário antes da substituição. Os canais Godot `Musica` e `Efeitos` são criados se necessário e enviados a `Master`, com volume linear convertido para dB e canal silenciado em zero. A #55 direciona os reprodutores aos canais correspondentes; consulte [validação do áudio](../auxiliar/validacao-issue-55.md).
 
 ## Fases autorais e rotas de referência
