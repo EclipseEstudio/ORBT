@@ -1,5 +1,7 @@
 # Validação dos menus e resultados — issue #51
 
+Continuidade após PR #76, base `9f3187a`: a propulsão legada foi substituída por seis quadros desenhados em código para ORBT. Créditos descrevem a nova origem e o preset exclui os bitmaps antigos. [Registro e capturas](arte/propulsao/README.md). A origem histórica dos arquivos antigos não foi determinada; a distribuição atual deixa de depender deles. Validação de menus e apresentação em Android continua pendente.
+
 Execução em 30/10/2026, Windows, Godot 4.7.2, base `8ea8757` com alterações deste PR. `tests/run.ps1`: 910 verificações, zero falhas, incluindo 20 de menus. `tests/run_exportacao.ps1`: PCK exportado e 23 verificações no desktop, zero falhas. O PCK não é um APK instalável.
 
 | Passo | Esperado e observado |

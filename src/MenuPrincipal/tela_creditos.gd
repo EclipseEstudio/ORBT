@@ -31,7 +31,7 @@ func _ready() -> void:
 	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	texto.add_theme_font_size_override("font_size", 10)
-	texto.text = "ORBT\nEclipse Estudio\n\nColaboradores do repositório\nMiguel Alves Cordeiro Braz\nRubensAugustoMM\n\nMotor\nGodot Engine — licença MIT\n\nArte\nSprites de identidade gerados com OpenAI ImageGen. Nenhuma licença pública adicional declarada.\n\nÁudio\nTrilhas e efeitos sintetizados para ORBT, sem amostras de terceiros. Licença pública não declarada.\n\nPropulsão legada\nAutoria e licença ainda em revisão.\n\nFases\nCinco mapas adaptados do protótipo dev-macb/orbt."
+	texto.text = "ORBT\nEclipse Estudio\n\nColaboradores do repositório\nMiguel Alves Cordeiro Braz\nRubensAugustoMM\n\nMotor\nGodot Engine — licença MIT\n\nArte\nSprites de identidade gerados com OpenAI ImageGen. Nenhuma licença pública adicional declarada.\n\nÁudio\nTrilhas e efeitos sintetizados para ORBT, sem amostras de terceiros. Licença pública não declarada.\n\nPropulsão\nEfeito em pixel art desenhado em código para ORBT, sem imagens de terceiros. Licença pública não declarada.\n\nFases\nCinco mapas adaptados do protótipo dev-macb/orbt."
 	rolagem.add_child(texto)
 	var voltar := Button.new()
 	voltar.name = "Voltar"
