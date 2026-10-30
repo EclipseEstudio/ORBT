@@ -26,6 +26,7 @@ func _executar() -> void:
 		var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 		jogo.caminho_checkpoint = argumentos[0]
 		jogo.caminho_progresso = argumentos[0] + "-progresso"
+		jogo.caminho_preferencias = argumentos[0] + "-preferencias"
 		root.add_child(jogo)
 		await process_frame
 		var botao: Button
@@ -52,6 +53,7 @@ func _executar() -> void:
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.caminho_checkpoint = base
 	jogo.caminho_progresso = base + "-progresso"
+	jogo.caminho_preferencias = base + "-preferencias"
 	root.add_child(jogo)
 	await process_frame
 	conferir(jogo.iniciar_fase("teste_001"), "inicia fase no catálogo")

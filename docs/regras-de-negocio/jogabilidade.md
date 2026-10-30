@@ -38,6 +38,8 @@ Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O 
 
 **Pausar** cancela a mira e suspende a tentativa. Perder o foco ou suspender o aplicativo também pausa. Voltar ao aplicativo mantém a pausa até o jogador escolher **Retomar**.
 
+**Configurações** no menu ou na pausa ajusta separadamente música e efeitos de 0 a 100%. Voltar das configurações mantém a partida pausada; os volumes permanecem no aparelho ao reabrir. Quando as preferências estiverem ausentes ou inválidas, o jogo usa 100% para ambos. A produção e integração de áudio estão na #55.
+
 **Explorar mapa** permite arrastar a câmera e bloqueia novos lançamentos. A nave continua se movendo e o tempo de voo continua correndo. **Voltar à nave** restaura a mira.
 
 ## Vitória, derrota e reinício

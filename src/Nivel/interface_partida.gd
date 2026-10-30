@@ -2,9 +2,11 @@ extends CanvasLayer
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const Indicadores = preload("res://src/Visual/indicadores.gd")
+const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 var _indicadores: Control
 
 var partida: Node
+var preferencias: RefCounted
 var _status: Label
 var _mensagem: Label
 var _alerta: Label
@@ -12,6 +14,7 @@ var _destino: Label
 var _pausa: Button
 var _explorar: Button
 var _checkpoint: Button
+var _configuracoes: Button
 var _raiz: Control
 var _area_fisica := Rect2()
 var _transformacao_tela := Transform2D()
@@ -85,6 +88,9 @@ func _ready() -> void:
 	botao(acoes, "Reiniciar", partida.reiniciar)
 	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
 	_checkpoint.visible = false
+	if preferencias != null:
+		_configuracoes = botao(base, "Configurações", _abrir_configuracoes)
+		_configuracoes.visible = false
 	if partida.campanha_permitida:
 		botao(base, "Seleção de fases", func():
 			partida.nave.entrada.cancelar()
@@ -120,6 +126,14 @@ func _alternar_pausa() -> void:
 	else:
 		partida.pausar()
 
+func _abrir_configuracoes() -> void:
+	if partida.estado != partida.Estado.PAUSADO or preferencias == null or _raiz.has_node("TelaConfiguracoes"):
+		return
+	var tela := TelaConfiguracoes.new()
+	tela.name = "TelaConfiguracoes"
+	tela.preferencias = preferencias
+	_raiz.add_child(tela)
+
 
 func _process(_delta: float) -> void:
 	if OS.has_feature("android") and (_area_fisica != Rect2(DisplayServer.get_display_safe_area()) or _transformacao_tela != get_viewport().get_screen_transform()):
@@ -135,6 +149,8 @@ func _process(_delta: float) -> void:
 	_explorar.text = "Voltar à nave" if partida.explorando else "Explorar mapa"
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
 	_checkpoint.visible = partida.estado == partida.Estado.PERDIDA
+	if _configuracoes != null:
+		_configuracoes.visible = partida.estado == partida.Estado.PAUSADO
 	if partida.estado == partida.Estado.PAUSADO:
 		_mensagem.text = "Partida pausada.\nToque em Retomar para continuar."
 	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:

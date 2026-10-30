@@ -159,6 +159,7 @@ func _executar() -> void:
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.caminho_progresso = base + "-jogo"
 	jogo.caminho_checkpoint = base + "-checkpoint"
+	jogo.caminho_preferencias = base + "-preferencias"
 	jogo.get_node("GerenciadorDeNivel").caminho = caminho_catalogo
 	root.add_child(jogo)
 	await process_frame

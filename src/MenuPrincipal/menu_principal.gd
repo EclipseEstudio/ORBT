@@ -1,6 +1,7 @@
 extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
+const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 
 
 func _ready() -> void:
@@ -11,6 +12,18 @@ func configurar_checkpoint() -> void:
 	if jogo == null:
 		return
 	var coluna: VBoxContainer = $VBoxContainer
+	var configuracoes := Button.new()
+	configuracoes.name = "Configuracoes"
+	configuracoes.text = "Configurações"
+	configuracoes.custom_minimum_size = Vector2(120, 48)
+	configuracoes.add_theme_font_size_override("font_size", 12)
+	coluna.add_child(configuracoes)
+	configuracoes.pressed.connect(func():
+		if not has_node("TelaConfiguracoes"):
+			var tela := TelaConfiguracoes.new()
+			tela.name = "TelaConfiguracoes"
+			tela.preferencias = jogo.preferencias
+			add_child(tela))
 	if not jogo.checkpoint.dados.is_empty():
 		var continuar := Button.new()
 		continuar.text = "Continuar"
