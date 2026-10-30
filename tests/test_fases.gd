@@ -10,9 +10,9 @@ const ROTAS = [
 	{"id": "salto_curto", "modelo": 1, "rochas": 44, "margem": 1.5, "variacoes_extras": [[-1.25], [0.75]], "etapas": [{"angulo": -15.25, "contato": "terra"}]},
 	{"id": "na_diagonal", "modelo": 2, "rochas": 58, "margem": 1.0, "etapas": [{"angulo": -0.7, "contato": "terra"}]},
 	{"id": "curva_suave", "modelo": 3, "rochas": 68, "margem": 0.5, "etapas": [
-		{"angulo": -40.0, "contato": "apoio_1"},
-		{"radial": "apoio_1", "fator": 0.137, "correcao": -1.43, "margem": 0.25, "contato": "apoio_2"},
-		{"alvo": "terra", "correcao": 7.0, "margem": 1.0, "contato": "terra"},
+		{"angulo": -39.5, "contato": "apoio_1"},
+		{"radial": "apoio_1", "fator": 0.137, "correcao": -3.5, "margem": 0.5, "contato": "apoio_2"},
+		{"alvo": "terra", "correcao": 12.0, "margem": 1.0, "contato": "terra"},
 	]},
 	{"id": "escala_segura", "modelo": 4, "rochas": 59, "margem": 1.25, "variacoes_extras": [[-0.75], [0.75]], "etapas": [{"angulo": 12.45, "contato": "terra"}]},
 	{"id": "entre_asteroides", "modelo": 5, "rochas": 60, "margem": 1.0, "etapas": [{"angulo": 18.0, "passos": 90}, {"angulo": -50.0, "forca": 0.5, "contato": "terra"}]},
@@ -151,7 +151,9 @@ func _executar() -> void:
 			var seguintes: Array = []
 			var margem: float = etapa.get("margem", rota.margem)
 			for combinacao in variacoes:
-				for desvio in [-margem, 0.0, margem]:
+				# No Labirinto, verificar também os meios das margens entre pousos.
+				var amostras := [-margem, -margem / 2.0, 0.0, margem / 2.0, margem] if rota.id == "curva_suave" else [-margem, 0.0, margem]
+				for desvio in amostras:
 					seguintes.append(combinacao + [desvio])
 			variacoes = seguintes
 		for desvios in variacoes:

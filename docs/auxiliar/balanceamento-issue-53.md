@@ -31,6 +31,20 @@ As três fases alteradas passam de `content_version` 2 para 3. Um checkpoint da 
 
 ## Roteiro de revisão cruzada
 
+### Ajuste do Labirinto após PR #75
+
+Sobre a base `76c4074`, os apoios `apoio_1` e `apoio_2` passam de raio 13 para 16 em visual, colisão e captura. A Terra passa de raio visual/colisão 16 para 32 e captura 16 para 40, como nos outros alvos ampliados. Posições, 68 asteroides, massas, gravidade, impulso e combustível são preservados. O terceiro apoio permanece com raio 13.
+
+A rota de referência usa −39,5° no primeiro impulso, ângulo radial do primeiro pouso ×0,137−3,5° no segundo e direção da Terra +12° no terceiro. Na rota nominal, os lançamentos são −39,5°, +8,55° e +49,35°, com 56/85/60 passos até os contatos (3,35 s no total). Mantém três impulsos, dois pousos intermediários e saldo final zero.
+
+A varredura de 0,25° mede margens isoladas negativas/positivas de 0,5°/1°, 0,75°/0,5° e pelo menos 4°/4°. Além da varredura, a rota completa passa nas 125 combinações de cinco amostras por etapa: −0,5°, −0,25°, 0°, +0,25° e +0,5° nos dois primeiros lançamentos; −1°, −0,5°, 0°, +0,5° e +1° no terceiro. A margem combinada exigida do segundo lançamento dobrou de ±0,25° para ±0,5°. O primeiro lançamento ainda é sensível; estas amostras não demonstram facilidade no toque nem cobrem todos os ângulos entre elas.
+
+Godot 4.7.2/Windows: 2.599 verificações aprovadas na suíte, incluindo 1.859 de rotas e 19 do processo principal de checkpoint persistente. As dez rotas nominais passaram na medição. O PCK passou em 23 verificações de recursos e 1.859 de rotas no desktop. Capturas de visão geral e início foram inspecionadas com renderizador D3D12 real; a inspeção cobre esses enquadramentos, sem comprovar ergonomia em aparelho. A #53 continua aberta para revisão por outro integrante e playtest Android.
+
+`curva_suave` passa de `content_version` 2 para 3: checkpoint anterior dessa fase requer reinício com diagnóstico. Conclusões e desbloqueios por ID são preservados. O teste de incompatibilidade inclui a fase alterada.
+
+Capturas desktop da revisão: [visão geral](evidencias-balanceamento-2026-10-30/labirinto-visao-geral.png) e [início](evidencias-balanceamento-2026-10-30/labirinto-inicio.png).
+
 ### Continuidade após PR #74 — rotas recentralizadas
 
 Na base `1833d57`, a rota de referência do Tutorial passou de −14,5° para −15,25° e a do Sol de +11,7° para +12,45°. A varredura de 0,25° mede, respectivamente, margens negativas/positivas de 1,75°/1,5° e 1,25°/1,25°. Os tempos nominais são 99 passos (1,65 s) e 156 passos (2,60 s), com saldo 2 em ambos. As tabelas anteriores registram a medição histórica.

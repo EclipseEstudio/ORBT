@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "curva_suave",
   "name": "O Labirinto",
   "order": 4,
@@ -54,9 +54,9 @@
       300
     ],
     "mass": 0,
-    "visual_radius": 16,
-    "collision_radius": 16,
-    "capture_radius": 16,
+    "visual_radius": 32,
+    "collision_radius": 32,
+    "capture_radius": 40,
     "danger_radius": 0,
     "proximity_radius": 45
   },
@@ -69,9 +69,9 @@
         120
       ],
       "mass": 450.0,
-      "visual_radius": 13,
-      "collision_radius": 13,
-      "capture_radius": 13,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 16,
       "danger_radius": 0,
       "proximity_radius": 49.89512162874653,
       "show_proximity": true
@@ -84,9 +84,9 @@
         120
       ],
       "mass": 450.0,
-      "visual_radius": 13,
-      "collision_radius": 13,
-      "capture_radius": 13,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 16,
       "danger_radius": 0,
       "proximity_radius": 49.89512162874653,
       "show_proximity": true
