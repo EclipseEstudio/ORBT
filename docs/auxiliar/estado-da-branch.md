@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Após o PR #78 (`bc7361e`), a #38 move cabeçalho e avisos da seleção para a mesma rolagem dos cartões, mantendo ações no rodapé. A suíte passou com 2.633 verificações; 30 de exportação e 12 de layout também passaram contra o PCK no desktop. [Evidências e limites](validacao-campanha-layout.md). Toque, recortes reais e ergonomia da campanha em Android continuam pendentes.
+
 Após integrar o PR #77 aprovado (`1604781`), a continuidade das #50/#51 aplica área segura ao menu principal, configurações e créditos e acrescenta rolagem ao menu/configurações. Dez verificações novas cobrem recortes simulados, avisos longos e alcance dos controles; [capturas e limitações](validacao-areas-menus.md). Validação física Android continua pendente.
 
 Continuidade sobre `9f3187a` (PR #76 integrado): #29/#51 substituem os bitmaps de propulsão com origem não identificada por seis quadros em código. Créditos e exclusões do pacote acompanham a troca; arquivos antigos permanecem no repositório. [Origem, reprodução e capturas](arte/propulsao/README.md). Revisão visual e menus em Android continuam pendentes.
