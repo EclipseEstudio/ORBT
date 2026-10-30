@@ -6,6 +6,7 @@ signal perdida(motivo: String)
 signal proximidade_alterada(id_corpo: String, proximo: bool)
 signal reiniciada
 signal selecao_solicitada
+signal checkpoint_alterado(checkpoint: Dictionary)
 var campanha_permitida := false
 
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
@@ -102,9 +103,10 @@ func _registrar_checkpoint() -> void:
 		"tempo": tempo_restante,
 		"temporizador_ativo": temporizador_ativo,
 	}
+	checkpoint_alterado.emit(_checkpoint.duplicate(true))
 
 
-func restaurar_checkpoint() -> bool:
+func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	if estado not in [Estado.PERDIDA, Estado.PAUSADO] or _checkpoint.is_empty() or _checkpoint.fase != nivel.id:
 		return false
 	var corpo: Dictionary = nivel.obter_corpo(_checkpoint.corpo) if not _checkpoint.corpo.is_empty() else {}
@@ -133,7 +135,9 @@ func restaurar_checkpoint() -> bool:
 	nave.combustivel_alterado.emit(nave.combustivel)
 	nave.condicao_alterada.emit()
 	nave.atualizar_entrada()
-	if nave.combustivel == 0:
+	if ao_reabrir:
+		pausar()
+	elif nave.combustivel == 0:
 		finalizar(false, "Sem combustível para decolar")
 	else:
 		estado_alterado.emit()
@@ -175,6 +179,9 @@ func retomar() -> void:
 	nave.controle_permitido = true
 	get_tree().paused = false
 	nave.atualizar_entrada()
+	if nave.combustivel == 0:
+		finalizar(false, "Sem combustível para decolar")
+		return
 	estado_alterado.emit()
 
 

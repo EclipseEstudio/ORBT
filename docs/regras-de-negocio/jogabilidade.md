@@ -46,7 +46,7 @@ Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, tempo
 
 **Reiniciar** começa uma nova tentativa com posição, orientação, combustível, tempo, câmera e contatos iniciais. A tentativa anterior não é retomada. Conclusões e desbloqueios da campanha seguem as [regras de progressão](campanha.md).
 
-Durante a tentativa, o jogo guarda em memória o início da fase e depois substitui esse ponto a cada pouso seguro. Após uma derrota, **Voltar ao último pouso** recupera o último ponto, posição e orientação, combustível e tempo registrados, sem repetir a mira ou um impulso. Um início livre também é recuperável. Se o último pouso ocorreu sem combustível, restaurá-lo mantém a derrota; use **Reiniciar** para voltar ao começo com o saldo inicial. Fechar o aplicativo descarta esse checkpoint: persistência e Continuar serão tratados na #49.
+O jogo guarda o início da fase e depois substitui esse ponto a cada pouso seguro. Após uma derrota, **Voltar ao último pouso** recupera o último ponto, posição e orientação, combustível e tempo registrados, sem repetir a mira ou um impulso. Um início livre também é recuperável. Se o último pouso ocorreu sem combustível, restaurá-lo mantém a derrota; use **Reiniciar** para voltar ao começo com o saldo inicial. Ao reabrir o jogo, **Continuar** recupera o checkpoint pausado. Dados incompatíveis ou danificados geram aviso e opção para reiniciar uma fase; o progresso de campanha é independente.
 
 ## Prévia, câmera e indicadores
 
@@ -58,4 +58,4 @@ A câmera apresenta a Terra no início e depois volta à nave para habilitar a m
 
 Ainda precisam de aceite da equipe e calibração no Android: direção livre oposta ao arraste, curva e valores de impulso, gravidade, contato contra a origem, pouso seguro sem combustível e suspensão da contagem no pouso. A prévia, os gestos, a pausa e a legibilidade também dependem de teste no aparelho.
 
-As verificações e capturas em Windows estão registradas no [documento técnico](../tecnica/fases-e-simulacao.md#evidências-e-limites-de-aceite). O [roteiro Android](../tecnica/android.md) mantém os critérios de validação no telefone. Checkpoints persistentes, movimento dos corpos e portais não fazem parte desta versão implementada.
+As verificações e capturas em Windows estão registradas no [documento técnico](../tecnica/fases-e-simulacao.md#evidências-e-limites-de-aceite). O [roteiro Android](../tecnica/android.md) mantém os critérios de validação no telefone. Movimento dos corpos e portais não fazem parte desta versão implementada.

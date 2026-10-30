@@ -13,7 +13,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
-- Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O checkpoint fica em memória até sair da fase.
+- Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O menu oferece **Continuar** para recuperar o último checkpoint salvo após reabrir o jogo.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A prévia termina no primeiro contato ou após três segundos.
@@ -78,6 +78,6 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 - [Campanha e seleção de fases](docs/regras-de-negocio/campanha.md)
 - [Identidade visual, fontes e inventário](docs/auxiliar/arte/README.md)
 
-O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. A seleção usa metadados e progresso persistente por ID, com backup recuperável. Persistência de checkpoints e preferências continuam pendentes.
+O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso e checkpoint são persistidos separadamente, com cópias recuperáveis. Preferências continuam pendentes.
 
-Estado atualizado em 29/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46, incluindo progresso persistente. Os [quatro critérios da #40](docs/auxiliar/validacao-issue-40.md) foram demonstrados no Windows; validação integrada com 383 verificações sem falhas. O catálogo atual contém seis fases: a original e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`, com rotas verificadas em `tests/test_fases.gd`. Consulte a [lista e as dicas da campanha](docs/regras-de-negocio/campanha.md#conteúdo-entregue-e-aceite-pendente). Aceite Android, checkpoints/Continuar, preferências e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 30/10/2026: o PR #47 integrou à `alpha` o código e a documentação dos PRs #42–#46; os PRs #58 e #59 integraram a validação da gravidade e checkpoints em memória. O catálogo contém seis fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, preferências e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.

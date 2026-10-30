@@ -158,6 +158,7 @@ func _executar() -> void:
 	escrever(caminho_catalogo, JSON.stringify(catalogo))
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.caminho_progresso = base + "-jogo"
+	jogo.caminho_checkpoint = base + "-checkpoint"
 	jogo.get_node("GerenciadorDeNivel").caminho = caminho_catalogo
 	root.add_child(jogo)
 	await process_frame
@@ -191,7 +192,7 @@ func _executar() -> void:
 		DirAccess.remove_absolute(arquivo)
 	DirAccess.remove_absolute(pasta)
 	DirAccess.remove_absolute(caminho_catalogo)
-	for prefixo in [base, base + "-falha", base + "-jogo"]:
+	for prefixo in [base, base + "-falha", base + "-jogo", base + "-checkpoint"]:
 		for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 			if FileAccess.file_exists(prefixo + sufixo):
 				DirAccess.remove_absolute(prefixo + sufixo)
