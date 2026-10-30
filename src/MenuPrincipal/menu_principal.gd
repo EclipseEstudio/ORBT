@@ -46,23 +46,25 @@ func configurar_checkpoint() -> void:
 			var tela := TelaCreditos.new()
 			tela.name = "TelaCreditos"
 			add_child(tela))
-	if jogo.checkpoint_disponivel():
+	var checkpoint_disponivel: bool = jogo.checkpoint_disponivel()
+	if checkpoint_disponivel:
 		var continuar := Button.new()
 		continuar.name = "Continuar"
 		continuar.text = "Continuar"
 		continuar.custom_minimum_size = Vector2(120, 48)
+		continuar.add_theme_font_size_override("font_size", 12)
 		coluna.add_child(continuar)
 		continuar.pressed.connect(func():
 			if not jogo.continuar_checkpoint():
 				_exibir_aviso(jogo.checkpoint.aviso))
 	if not jogo.checkpoint.aviso.is_empty():
-		_exibir_aviso(jogo.checkpoint.aviso)
+		_exibir_aviso(jogo.checkpoint.aviso, checkpoint_disponivel)
 
-func _exibir_aviso(texto: String) -> void:
+func _exibir_aviso(texto: String, permitir_continuar := false) -> void:
 	var coluna: VBoxContainer = $VBoxContainer
 	coluna.get_node("Narrativa").hide()
 	var continuar := coluna.get_node_or_null("Continuar") as Button
-	if continuar != null:
+	if continuar != null and not permitir_continuar:
 		continuar.hide()
 	var aviso := coluna.get_node_or_null("AvisoCheckpoint") as Label
 	if aviso == null:
@@ -70,13 +72,17 @@ func _exibir_aviso(texto: String) -> void:
 		aviso.name = "AvisoCheckpoint"
 		aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		aviso.custom_minimum_size.x = 150
+		aviso.add_theme_font_size_override("font_size", 9)
 		coluna.add_child(aviso)
 	aviso.text = texto
+	if permitir_continuar:
+		return
 	if coluna.get_node_or_null("DescartarCheckpoint") == null:
 		var descartar := Button.new()
 		descartar.name = "DescartarCheckpoint"
 		descartar.text = "Reiniciar fase"
 		descartar.custom_minimum_size = Vector2(120, 48)
+		descartar.add_theme_font_size_override("font_size", 12)
 		coluna.add_child(descartar)
 		descartar.pressed.connect(func():
 			if GLOBAL.controlador_jogo.checkpoint.limpar():
