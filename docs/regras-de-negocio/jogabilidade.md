@@ -22,6 +22,8 @@ Pressione uma área livre da interface, arraste e solte para lançar a nave na d
 
 O círculo no início do gesto delimita a zona de cancelamento. Dentro dele, uma cruz indica que não há impulso válido. Voltar ao círculo antes de soltar cancela o lançamento. Para tentar novamente, solte e inicie outro gesto. Tocar nos botões da interface não lança a nave.
 
+Na primeira fase, a instrução no rodapé acompanha o gesto: indica tocar e segurar, arrastar, voltar ao círculo para cancelar e soltar para lançar. Antes da soltura informa o custo de um combustível; depois do lançamento explica que pousar não recarrega. A dica não exige uma ação específica para liberar o controle e reaparece ao reiniciar a fase.
+
 Um impulso em voo acrescenta velocidade à nave; não interrompe o movimento anterior nem oferece frenagem automática. A orientação visual da nave não restringe a direção do impulso.
 
 ## Combustível, pouso e deriva
