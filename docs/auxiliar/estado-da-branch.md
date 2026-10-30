@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Após o PR #75 (`76c4074`), a continuidade da #53 amplia os dois primeiros apoios e a Terra do Labirinto. A rota completa passa em 125 combinações; o segundo lançamento passa a exigir ±0,5° nos testes, antes ±0,25°. Suíte Windows: 2.599 verificações. O conteúdo dessa fase passa à versão 3, exigindo reinício de checkpoints anteriores, com progresso por ID preservado. Detalhes em [balanceamento](balanceamento-issue-53.md#ajuste-do-labirinto-após-pr-75). Revisão cruzada e playtest Android continuam pendentes.
+
 Continuidade sobre `1833d57` (PR #74 integrado): a #53 recentraliza as rotas de referência de Tutorial e Sol e amplia os testes para combinar desvios negativos, zero e positivos. Suíte Windows: 1.618 verificações aprovadas. Evidências e limites em [balanceamento](balanceamento-issue-53.md#continuidade-após-pr-74--rotas-recentralizadas). Labirinto e playtest por outro integrante em aparelho continuam pendentes; mapas e física preservados.
 
 | Frente | Requisito | Situação / próximo passo |

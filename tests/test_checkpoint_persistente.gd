@@ -84,7 +84,7 @@ func _executar() -> void:
 	alterado.dados_autorais = nivel.dados_autorais.duplicate(true)
 	alterado.dados_autorais.content_version += 1
 	conferir(salvo.validar(alterado).is_empty() and salvo.bloqueado, "versão incompatível é bloqueada")
-	for id in ["salto_curto", "na_diagonal", "escala_segura"]:
+	for id in ["salto_curto", "na_diagonal", "escala_segura", "curva_suave"]:
 		var fase_rebalanceada = Carregador.carregar("res://Recursos/Fases/" + id + ".json").nivel
 		var antigo := Save.new()
 		antigo.dados = {"fase": id, "content_version": 2}
