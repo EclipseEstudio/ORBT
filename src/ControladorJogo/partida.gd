@@ -6,6 +6,8 @@ signal perdida(motivo: String)
 signal proximidade_alterada(id_corpo: String, proximo: bool)
 signal reiniciada
 signal selecao_solicitada
+signal menu_solicitado
+signal proxima_solicitada
 signal checkpoint_alterado(checkpoint: Dictionary)
 var campanha_permitida := false
 

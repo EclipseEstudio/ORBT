@@ -4,7 +4,7 @@ Estas regras descrevem o fluxo implementado em 29/10/2026. A seleção e o progr
 
 ## Navegação e tentativas
 
-No computador, **Campanha** abre a seleção de fases. No Android, a primeira fase do catálogo abre diretamente, preservando o fluxo atual do protótipo.
+No menu, **Campanha** abre a seleção de fases no computador e no Android. **Continuar** aparece quando há checkpoint válido e recupera a tentativa pausada. O menu também oferece configurações e créditos.
 
 **Seleção de fases**, na interface da partida, permite retornar à campanha durante o jogo, a pausa ou após o desfecho. A tentativa anterior é descartada. A seleção oferece **Atualizar lista**, para reler o conteúdo disponível, e **Voltar ao menu**.
 
@@ -55,4 +55,4 @@ A composição, os muros e o combustível seguem o modelo. Nesta adaptação, os
 
 Os quatro critérios de progresso da issue #40 foram demonstrados em Windows em 29/10/2026, incluindo primeira vitória, repetição, bloqueio, restauração e última fase. Consulte o [registro de aceite e evidências](../auxiliar/validacao-issue-40.md) e as [verificações técnicas datadas](../tecnica/campanha.md#evidências-e-aceite-pendente).
 
-No Android, ainda é preciso validar navegação por toque, ergonomia, gravação, reabertura do aplicativo e recuperação de falhas conforme o [roteiro de exportação e aceite](../tecnica/android.md). Checkpoints de pouso, retomada de tentativa em pausa, preferências, dez fases autorais e menus completos permanecem pendentes; a entrega atual cobre a progressão da campanha.
+No Android, ainda é preciso validar navegação por toque, ergonomia, gravação, reabertura do aplicativo e recuperação de falhas conforme o [roteiro de exportação e aceite](../tecnica/android.md). A campanha de dez fases e sua revisão cruzada permanecem nas #52/#53.

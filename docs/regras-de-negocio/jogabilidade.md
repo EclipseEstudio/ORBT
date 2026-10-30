@@ -48,6 +48,8 @@ Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, tempo
 
 **Reiniciar** começa uma nova tentativa com posição, orientação, combustível, tempo, câmera e contatos iniciais. A tentativa anterior não é retomada. Conclusões e desbloqueios da campanha seguem as [regras de progressão](campanha.md).
 
+Na pausa, **Menu principal** encerra a cena atual e retorna ao menu. Após vitória, **Próxima fase** abre a sucessora, **Repetir** inicia novamente a mesma fase e **Seleção de fases** volta à campanha. Na última fase, a opção de próxima fase não é exibida. Na derrota, pode-se restaurar o checkpoint ou reiniciar.
+
 O jogo guarda o início da fase e depois substitui esse ponto a cada pouso seguro. Após uma derrota, **Voltar ao último pouso** recupera o último ponto, posição e orientação, combustível e tempo registrados, sem repetir a mira ou um impulso. Um início livre também é recuperável. Se o último pouso ocorreu sem combustível, restaurá-lo mantém a derrota; use **Reiniciar** para voltar ao começo com o saldo inicial. Ao reabrir o jogo, **Continuar** recupera o checkpoint pausado. Dados incompatíveis ou danificados geram aviso e opção para reiniciar uma fase; o progresso de campanha é independente.
 
 ## Prévia, câmera e indicadores

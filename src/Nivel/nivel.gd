@@ -8,6 +8,7 @@ const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
 var nivel_res: NivelRes
 var campanha_permitida := false
 var preferencias: RefCounted
+var proxima_fase := ""
 var partida: Node
 var camera: Camera2D
 var corpos_visuais: Dictionary = {}
@@ -34,6 +35,7 @@ func _ready() -> void:
 	var hud := InterfacePartida.new()
 	hud.partida = partida
 	hud.preferencias = preferencias
+	hud.proxima_fase = proxima_fase
 	add_child(hud)
 	queue_redraw()
 

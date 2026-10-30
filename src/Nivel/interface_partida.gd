@@ -7,6 +7,7 @@ var _indicadores: Control
 
 var partida: Node
 var preferencias: RefCounted
+var proxima_fase := ""
 var _status: Label
 var _mensagem: Label
 var _alerta: Label
@@ -15,6 +16,9 @@ var _pausa: Button
 var _explorar: Button
 var _checkpoint: Button
 var _configuracoes: Button
+var _reiniciar: Button
+var _proxima: Button
+var _menu: Button
 var _raiz: Control
 var _area_fisica := Rect2()
 var _transformacao_tela := Transform2D()
@@ -85,13 +89,17 @@ func _ready() -> void:
 	acoes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base.add_child(acoes)
 	_explorar = botao(acoes, "Explorar mapa", partida.alternar_exploracao)
-	botao(acoes, "Reiniciar", partida.reiniciar)
+	_reiniciar = botao(acoes, "Reiniciar", partida.reiniciar)
 	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
 	_checkpoint.visible = false
 	if preferencias != null:
 		_configuracoes = botao(base, "Configurações", _abrir_configuracoes)
 		_configuracoes.visible = false
 	if partida.campanha_permitida:
+		_proxima = botao(base, "Próxima fase", func(): partida.proxima_solicitada.emit.call_deferred())
+		_proxima.visible = false
+		_menu = botao(base, "Menu principal", func(): partida.menu_solicitado.emit.call_deferred())
+		_menu.visible = false
 		botao(base, "Seleção de fases", func():
 			partida.nave.entrada.cancelar()
 			partida.selecao_solicitada.emit.call_deferred())
@@ -148,7 +156,13 @@ func _process(_delta: float) -> void:
 	_pausa.disabled = partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]
 	_explorar.text = "Voltar à nave" if partida.explorando else "Explorar mapa"
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
+	_explorar.visible = partida.estado == partida.Estado.JOGANDO
+	_reiniciar.text = "Repetir" if partida.estado == partida.Estado.CONCLUIDA else "Reiniciar"
 	_checkpoint.visible = partida.estado == partida.Estado.PERDIDA
+	if _proxima != null:
+		_proxima.visible = partida.estado == partida.Estado.CONCLUIDA and not proxima_fase.is_empty()
+	if _menu != null:
+		_menu.visible = partida.estado == partida.Estado.PAUSADO
 	if _configuracoes != null:
 		_configuracoes.visible = partida.estado == partida.Estado.PAUSADO
 	if partida.estado == partida.Estado.PAUSADO:
