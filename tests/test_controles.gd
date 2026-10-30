@@ -263,7 +263,7 @@ func testar_cena_principal() -> void:
 	var entrada_menu = nave_menu.get_node("Entrada")
 	entrada_menu.impulso_solicitado.connect(func(impulso: Vector2): impulsos.append(impulso))
 	impulsos.clear()
-	var botao: Button = cena.get_node("Interface/MenuPrincipal/VBoxContainer/Button")
+	var botao: Button = cena.get_node("Interface/MenuPrincipal/Margem/Rolagem/VBoxContainer/Button")
 	var centro := botao.get_global_rect().get_center()
 	mouse(centro, true)
 	mouse(centro, false)

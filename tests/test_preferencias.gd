@@ -35,10 +35,10 @@ func _executar() -> void:
 	await process_frame
 	conferir(jogo.preferencias.musica == 1.0 and jogo.preferencias.efeitos == 1.0, "ausência usa padrão")
 	var menu = jogo.interface_atual
-	var botao: Button = menu.get_node("VBoxContainer/Configuracoes")
+	var botao: Button = menu.get_node("Margem/Rolagem/VBoxContainer/Configuracoes")
 	botao.pressed.emit()
 	var tela = menu.get_node("TelaConfiguracoes")
-	var coluna = tela.get_child(1).get_child(0)
+	var coluna = tela.find_child("musica", true, false).get_parent()
 	coluna.get_node("musica").value = 0.25
 	coluna.get_node("efeitos").value = 0.75
 	conferir(jogo.preferencias.musica == 0.25 and jogo.preferencias.efeitos == 0.75, "controles independentes do menu")
@@ -57,7 +57,7 @@ func _executar() -> void:
 	conferir(hud._configuracoes.visible and paused, "configurações disponíveis na pausa")
 	hud._configuracoes.pressed.emit()
 	var tela_pausa = hud._raiz.get_node("TelaConfiguracoes")
-	var coluna_pausa = tela_pausa.get_child(1).get_child(0)
+	var coluna_pausa = tela_pausa.find_child("musica", true, false).get_parent()
 	coluna_pausa.get_node("musica").value = 0.0
 	conferir(AudioServer.is_bus_mute(AudioServer.get_bus_index("Musica")) and not AudioServer.is_bus_mute(AudioServer.get_bus_index("Efeitos")), "silêncio de música não afeta efeitos")
 	coluna_pausa.get_node("musica").value = 0.25

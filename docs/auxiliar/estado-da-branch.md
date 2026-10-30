@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Após integrar o PR #77 aprovado (`1604781`), a continuidade das #50/#51 aplica área segura ao menu principal, configurações e créditos e acrescenta rolagem ao menu/configurações. Dez verificações novas cobrem recortes simulados, avisos longos e alcance dos controles; [capturas e limitações](validacao-areas-menus.md). Validação física Android continua pendente.
+
 Continuidade sobre `9f3187a` (PR #76 integrado): #29/#51 substituem os bitmaps de propulsão com origem não identificada por seis quadros em código. Créditos e exclusões do pacote acompanham a troca; arquivos antigos permanecem no repositório. [Origem, reprodução e capturas](arte/propulsao/README.md). Revisão visual e menus em Android continuam pendentes.
 
 Após o PR #75 (`76c4074`), a continuidade da #53 amplia os dois primeiros apoios e a Terra do Labirinto. A rota completa passa em 125 combinações; o segundo lançamento passa a exigir ±0,5° nos testes, antes ±0,25°. Suíte Windows: 2.599 verificações. O conteúdo dessa fase passa à versão 3, exigindo reinício de checkpoints anteriores, com progresso por ID preservado. Detalhes em [balanceamento](balanceamento-issue-53.md#ajuste-do-labirinto-após-pr-75). Revisão cruzada e playtest Android continuam pendentes.

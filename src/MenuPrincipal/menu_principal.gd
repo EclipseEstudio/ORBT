@@ -4,25 +4,37 @@ const Tema = preload("res://src/Visual/tema_visual.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 const TelaCreditos = preload("res://src/MenuPrincipal/tela_creditos.gd")
 const Narrativa = preload("res://src/Narrativa/narrativa.gd")
+const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 
 
 func _ready() -> void:
 	theme = Tema.criar()
+	$Margem/Rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	$Margem/Rolagem.follow_focus = true
+	get_viewport().size_changed.connect(_area_segura)
+	_area_segura()
 	var texto := Label.new()
 	texto.name = "Narrativa"
 	texto.text = Narrativa.INTRODUCAO
 	texto.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	texto.custom_minimum_size.x = 150
+	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texto.add_theme_font_size_override("font_size", 9)
-	$VBoxContainer.add_child(texto)
-	$VBoxContainer.move_child(texto, 0)
+	$Margem/Rolagem/VBoxContainer.add_child(texto)
+	$Margem/Rolagem/VBoxContainer.move_child(texto, 0)
+
+func _area_segura() -> void:
+	AreaSegura.aplicar($Margem, 8, AreaSegura.fisica())
+
+func _process(_delta: float) -> void:
+	if OS.has_feature("android"):
+		_area_segura()
 
 func configurar_checkpoint() -> void:
 	var jogo = GLOBAL.controlador_jogo
 	if jogo == null:
 		return
-	var coluna: VBoxContainer = $VBoxContainer
+	var coluna: VBoxContainer = $Margem/Rolagem/VBoxContainer
 	var configuracoes := Button.new()
 	configuracoes.name = "Configuracoes"
 	configuracoes.text = "Configurações"
@@ -61,7 +73,7 @@ func configurar_checkpoint() -> void:
 		_exibir_aviso(jogo.checkpoint.aviso, checkpoint_disponivel)
 
 func _exibir_aviso(texto: String, permitir_continuar := false) -> void:
-	var coluna: VBoxContainer = $VBoxContainer
+	var coluna: VBoxContainer = $Margem/Rolagem/VBoxContainer
 	coluna.get_node("Narrativa").hide()
 	var continuar := coluna.get_node_or_null("Continuar") as Button
 	if continuar != null and not permitir_continuar:
@@ -71,7 +83,7 @@ func _exibir_aviso(texto: String, permitir_continuar := false) -> void:
 		aviso = Label.new()
 		aviso.name = "AvisoCheckpoint"
 		aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		aviso.custom_minimum_size.x = 150
+		aviso.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		aviso.add_theme_font_size_override("font_size", 9)
 		coluna.add_child(aviso)
 	aviso.text = texto

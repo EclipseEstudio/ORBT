@@ -25,7 +25,7 @@ func _executar() -> void:
 	root.add_child(jogo)
 	await process_frame
 	var menu = jogo.interface_atual
-	var coluna = menu.get_node("VBoxContainer")
+	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
 	conferir(coluna.has_node("Configuracoes") and coluna.has_node("Creditos"), "menu oferece configurações e créditos")
 	conferir(not coluna.get_children().any(func(item): return item is Button and item.text == "Continuar"), "menu sem checkpoint não oferece Continuar")
 	coluna.get_node("Creditos").pressed.emit()
@@ -39,7 +39,7 @@ func _executar() -> void:
 	jogo.checkpoint.dados = {"fase": "teste_001", "content_version": -1}
 	jogo.mostrar_menu()
 	menu = jogo.interface_atual
-	coluna = menu.get_node("VBoxContainer")
+	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
 	conferir(not coluna.get_children().any(func(item): return item is Button and item.text == "Continuar") and coluna.has_node("AvisoCheckpoint") and coluna.has_node("DescartarCheckpoint"), "checkpoint incompatível mostra diagnóstico sem oferecer Continuar")
 	jogo.checkpoint.dados = {}
 	jogo.checkpoint.bloqueado = false
@@ -54,7 +54,7 @@ func _executar() -> void:
 	conferir(hud._menu.visible and hud._configuracoes.visible and hud._pausa.text == "Retomar", "pausa oferece menu, configurações e retomada")
 	hud._menu.pressed.emit()
 	await process_frame
-	conferir(not paused and jogo.interface_atual.has_node("VBoxContainer/Creditos") and jogo.mundo_atual != mundo, "retorno ao menu limpa mundo e pausa")
+	conferir(not paused and jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Creditos") and jogo.mundo_atual != mundo, "retorno ao menu limpa mundo e pausa")
 	conferir(not is_instance_valid(partida) or (not partida.is_inside_tree() and not partida.nave.simulacao_ativa), "simulação anterior não permanece ativa")
 	conferir(jogo.iniciar_fase("teste_001"), "reabre fase")
 	await process_frame
