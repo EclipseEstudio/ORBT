@@ -1,0 +1,85 @@
+name: APK Android para revisão
+
+on:
+  pull_request:
+    branches: [alpha]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Baixar Godot e modelos oficiais
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $base = 'https://github.com/godotengine/godot/releases/download/4.7.2-stable'
+          $arquivos = @(
+            @{ Nome = 'Godot_v4.7.2-stable_win64.exe.zip'; Hash = '731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953' },
+            @{ Nome = 'Godot_v4.7.2-stable_export_templates.tpz'; Hash = 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011' }
+          )
+          foreach ($arquivo in $arquivos) {
+            $destino = Join-Path $env:RUNNER_TEMP $arquivo.Nome
+            Invoke-WebRequest "$base/$($arquivo.Nome)" -OutFile $destino
+            if ((Get-FileHash -LiteralPath $destino -Algorithm SHA256).Hash -ne $arquivo.Hash) { throw "Checksum inválido: $($arquivo.Nome)" }
+          }
+          Expand-Archive (Join-Path $env:RUNNER_TEMP $arquivos[0].Nome) (Join-Path $env:RUNNER_TEMP 'godot')
+          $zipModelos = Join-Path $env:RUNNER_TEMP 'modelos.zip'
+          Copy-Item (Join-Path $env:RUNNER_TEMP $arquivos[1].Nome) $zipModelos
+          Expand-Archive $zipModelos (Join-Path $env:RUNNER_TEMP 'modelos')
+          $dados = Join-Path $env:APPDATA 'Godot'
+          $modelos = Join-Path $dados 'export_templates/4.7.2.stable'
+          New-Item -ItemType Directory -Force -Path $modelos | Out-Null
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'modelos/templates/*') $modelos -Recurse
+          "ORBT_GODOT=$(Join-Path $env:RUNNER_TEMP 'godot/Godot_v4.7.2-stable_win64_console.exe')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Preparar exportação Android
+        run: ./scripts/configurar-android-ci.ps1 -Java $env:JAVA_HOME -Sdk $env:ANDROID_HOME -DadosGodot (Join-Path $env:APPDATA 'Godot') -DiretorioTemporario $env:RUNNER_TEMP
+      - name: Importar projeto
+        run: |
+          & $env:ORBT_GODOT --headless --editor --path . --import
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao importar o projeto.' }
+      - name: Executar testes
+        run: ./tests/run.ps1 -Godot $env:ORBT_GODOT
+      - name: Verificar pacote exportado
+        run: ./tests/run_exportacao.ps1 -Godot $env:ORBT_GODOT
+      - name: Gerar e verificar APK
+        run: |
+          ./scripts/exportar-android.ps1 -Godot $env:ORBT_GODOT
+          & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/apksigner.bat') verify --verbose build/android/ORBT-debug.apk
+          if ($LASTEXITCODE -ne 0) { throw 'Assinatura do APK inválida.' }
+          & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/zipalign.exe') -c -P 16 4 build/android/ORBT-debug.apk
+          if ($LASTEXITCODE -ne 0) { throw 'Alinhamento do APK inválido.' }
+          @(
+            "PR: #${{ github.event.pull_request.number }}",
+            "Cabeça: ${{ github.event.pull_request.head.sha }}",
+            "Base: ${{ github.event.pull_request.base.sha }}",
+            "Revisão testada (merge): $env:GITHUB_SHA",
+            "Godot: 4.7.2.stable",
+            "SHA-256 do APK: $((Get-FileHash build/android/ORBT-debug.apk -Algorithm SHA256).Hash)"
+          ) | Set-Content -Encoding utf8 build/android/revisao.txt
+      - name: Disponibilizar APK de teste
+        uses: actions/upload-artifact@v4
+        with:
+          name: ORBT-android-debug-pr-${{ github.event.pull_request.number }}
+          path: |
+            build/android/ORBT-debug.apk
+            build/android/revisao.txt
+          if-no-files-found: error
+          retention-days: 14
