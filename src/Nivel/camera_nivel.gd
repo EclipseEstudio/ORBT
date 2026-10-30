@@ -40,6 +40,12 @@ func _ready() -> void:
 func apresentar() -> void:
 	_cancelar()
 	zoom = _zoom_voo()
+	# A recuperação é pausada antes de emitir reiniciada; não iniciar uma
+	# apresentação que só avançaria depois de o jogador retomar.
+	if partida.estado == partida.Estado.PAUSADO:
+		_abertura = 0.0
+		global_position = partida.nave.global_position
+		return
 	_destino = partida.nivel.corpos[-1].position
 	global_position = _destino
 	_abertura = 1.2
