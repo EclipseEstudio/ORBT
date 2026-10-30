@@ -1,5 +1,9 @@
 # Exportação e aceite Android
 
+## Validação parcial em 30/10/2026
+
+O APK do PR #68 foi atualizado em um Samsung SM-A556E com Android 16, usando assinatura de depuração compatível com a instalação existente. A primeira fase foi concluída com toque simulado e o checkpoint inicial foi recuperado após reabertura. Dados, hashes, capturas, limitação dos testes e uma sobreposição visual observada estão em [validação Android](../auxiliar/validacao-android-2026-10-30.md). O aceite completo em aparelho continua pendente.
+
 ## Estado em 29/10/2026
 
 Integração de código concluída pelos PRs #42–#46. O APK de 29/10 abaixo contém as integrações de corpos, campanha, arte e persistência; o de 15/10 é histórico. Instalação, toque físico, retomada, ergonomia, persistência após reabertura e desempenho no Android continuam pendentes em #4/#33/#37/#38. Os quatro critérios funcionais da #40 têm [aceite demonstrado no Windows](../auxiliar/validacao-issue-40.md). Consulte o [estado consolidado](../auxiliar/estado-da-branch.md).
