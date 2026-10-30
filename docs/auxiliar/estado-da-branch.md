@@ -1,6 +1,6 @@
 # Estado atual e continuidade do ORBT
 
-Atualizado em 29/10/2026. Fonte de acompanhamento: [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1), issues e PRs do [repositório](https://github.com/EclipseEstudio/ORBT). Esta documentação distingue implementação integrada de aceite final.
+Atualizado em 30/10/2026. Fonte de acompanhamento: [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1), issues e PRs do [repositório](https://github.com/EclipseEstudio/ORBT). Esta documentação distingue implementação integrada de aceite final.
 
 ## Base conferida
 
@@ -82,12 +82,14 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 
 ## Próximas ações para retomar
 
-1. Revisar o PR da branch `codex/issue-40-alpha` para a `alpha`, que reúne código da `main`, documentação e aceite funcional da #40. Para novo desenvolvimento, criar branch a partir da base de integração escolhida e preservar arquivos locais.
+1. Consolidar a revisão da #13: preservar o integrador compartilhado, registrar decisão, parâmetros, tolerâncias e evidências de aproximação, desvio lateral e duas fontes. A integração do PR #47 já ocorreu. A sincronização de 30/10 incorpora a correção de mira `19af5c8`, a recalibração da primeira fase e as cinco fases adaptadas; não equivale ao aceite das issues.
 2. Priorizar #4: instalar o APK integrado de 29/10 e registrar revisão, hash, modelo/Android/Godot, passos, esperado/observado e evidências. Exercitar também navegação #38 e persistência após reabertura com pelo menos duas fases autorais.
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
-5. Próxima implementação recomendada: checkpoints de pouso/fase e retomada (RF17 e parte do RF18). Antes do código, definir quando salvar checkpoint de fase, pouso sem saldo, restauração após derrota e relação com Reiniciar.
-6. Expandir campanha até dez fases com solução e revisão por outra pessoa; depois completar menus, dicas, preferências, áudio e narrativa.
+5. Próxima implementação recomendada: #48, checkpoints de pouso/fase. Definir início livre, pouso sem saldo, restauração após derrota e relação com Reiniciar. Depois seguir #49 (persistência), #50 (preferências) e #51 (menus/Continuar), preservando o progresso existente.
+6. Preservar as seis fases como entrega parcial da #52; completar quatro restantes e balancear/revisar a campanha inteira na #53. Tutorial #54, áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
+
+A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
 
 ## Backlog complementar do GDD
 
