@@ -39,6 +39,22 @@ func novo(caminho: String) -> RefCounted:
 
 
 func testar_expansao_catalogo() -> void:
+	var catalogo = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json")
+	var fases_antigas: Array = catalogo.itens.slice(0, 6)
+	var caminho_real := base + "-seis-fases"
+	var anterior := Progresso.new()
+	anterior.caminho = caminho_real
+	anterior.configurar(fases_antigas)
+	for item in fases_antigas:
+		anterior.concluir(item.id, fases_antigas)
+	var atual := Progresso.new()
+	atual.caminho = caminho_real
+	conferir(atual.carregar(), "Save de seis fases abre após expansão")
+	atual.configurar(catalogo.itens)
+	conferir(atual.concluidas.size() == 6 and atual.pode_abrir("contorno") and not atual.pode_abrir("duas_rotas"), "Expansão real preserva conclusões e libera apenas fase 7")
+	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
+		if FileAccess.file_exists(caminho_real + sufixo):
+			DirAccess.remove_absolute(caminho_real + sufixo)
 	var original: Array = [{"id": "teste_001"}]
 	for quantidade in [2, 6]:
 		var caminho := base + "-expansao-%d" % quantidade

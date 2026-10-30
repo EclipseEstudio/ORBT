@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "retorno_a_terra",
+  "name": "Retorno à Terra",
+  "order": 10,
+  "bounds": {
+    "position": [
+      -100,
+      -100
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 20,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      106.8148,
+      301.7638
+    ]
+  },
+  "camera": {
+    "zoom": 0.5,
+    "overview": {
+      "position": [
+        50,
+        50
+      ],
+      "size": [
+        500,
+        400
+      ]
+    }
+  },
+  "goal": {
+    "id": "terra",
+    "position": [
+      493.1852,
+      198.2362
+    ],
+    "mass": 0,
+    "visual_radius": 20,
+    "collision_radius": 20,
+    "capture_radius": 20,
+    "danger_radius": 0,
+    "proximity_radius": 50
+  },
+  "bodies": [
+    {
+      "id": "rocha",
+      "type": "asteroid",
+      "position": [
+        300.0,
+        250.0
+      ],
+      "mass": 0,
+      "visual_radius": 35,
+      "collision_radius": 35,
+      "capture_radius": 0,
+      "danger_radius": 35,
+      "proximity_radius": 65
+    },
+    {
+      "id": "planeta_superior",
+      "type": "planet",
+      "position": [
+        250.8244,
+        66.4741
+      ],
+      "mass": 2000,
+      "visual_radius": 20,
+      "collision_radius": 20,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 60
+    },
+    {
+      "id": "planeta_inferior",
+      "type": "planet",
+      "position": [
+        349.1756,
+        433.5259
+      ],
+      "mass": 2000,
+      "visual_radius": 20,
+      "collision_radius": 20,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 60
+    }
+  ],
+  "tutorial": "Ajuste a trajetória entre os planetas e retorne à Terra.",
+  "notes": "Combina desvio, correção em voo e duas fontes de gravidade."
+}

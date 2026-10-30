@@ -82,4 +82,4 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso, checkpoint e preferências são persistidos separadamente; progresso e checkpoint têm cópias recuperáveis.
 
-Estado atualizado em 30/10/2026: os PRs #58–#60 integraram a validação da gravidade e checkpoints. O catálogo contém seis fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, áudio e expansão para dez fases permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 30/10/2026: os PRs #58–#62 integraram gravidade, checkpoints, preferências e menus. O catálogo contém dez fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, áudio e balanceamento com revisão cruzada permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.

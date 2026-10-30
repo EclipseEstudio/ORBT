@@ -4,5 +4,9 @@
   "na_diagonal": "res://Recursos/Fases/na_diagonal.json",
   "curva_suave": "res://Recursos/Fases/curva_suave.json",
   "escala_segura": "res://Recursos/Fases/escala_segura.json",
-  "entre_asteroides": "res://Recursos/Fases/entre_asteroides.json"
+  "entre_asteroides": "res://Recursos/Fases/entre_asteroides.json",
+  "contorno": "res://Recursos/Fases/contorno.json",
+  "duas_rotas": "res://Recursos/Fases/duas_rotas.json",
+  "portas_gemeas": "res://Recursos/Fases/portas_gemeas.json",
+  "retorno_a_terra": "res://Recursos/Fases/retorno_a_terra.json"
 }

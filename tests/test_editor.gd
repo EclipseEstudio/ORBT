@@ -20,6 +20,10 @@ func conferir(condicao: bool, mensagem: String) -> void:
 
 
 func _executar() -> void:
+	var itens: Array = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json").itens
+	for item in itens:
+		var fase := Documento.new()
+		conferir(fase.abrir(item.arquivo).is_empty() and fase.validar().nivel != null and not fase.modificado(), item.id + ": abre e valida no editor sem alterações")
 	var documento := Documento.new()
 	var original := FileAccess.get_file_as_string(Documento.EXEMPLO)
 	conferir(documento.abrir(Documento.EXEMPLO).is_empty(), "Abre exemplo pelo carregador comum")

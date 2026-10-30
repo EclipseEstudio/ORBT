@@ -16,6 +16,10 @@ const ROTAS = [
 	]},
 	{"id": "escala_segura", "modelo": 4, "rochas": 59, "margem": 0.5, "etapas": [{"angulo": 11.7, "contato": "terra"}]},
 	{"id": "entre_asteroides", "modelo": 5, "rochas": 60, "margem": 1.0, "etapas": [{"angulo": 18.0, "passos": 90}, {"angulo": -50.0, "forca": 0.5, "contato": "terra"}]},
+	{"id": "contorno", "margem": 1.0, "etapas": [{"angulo": -15.0, "passos": 120}, {"angulo": 100.0, "forca": 0.8, "contato": "terra"}]},
+	{"id": "duas_rotas", "margem": 1.0, "etapas": [{"angulo": -25.0, "passos": 120}, {"angulo": 90.0, "forca": 0.8, "contato": "terra"}], "alternativa": [{"angulo": 25.0, "passos": 120}, {"angulo": -90.0, "forca": 0.8, "contato": "terra"}]},
+	{"id": "portas_gemeas", "margem": 1.0, "etapas": [{"angulo": 65.0, "passos": 120}, {"angulo": 180.0, "forca": 0.8, "contato": "terra"}], "alternativa": [{"angulo": 115.0, "passos": 120}, {"angulo": 0.0, "forca": 0.8, "contato": "terra"}]},
+	{"id": "retorno_a_terra", "margem": 1.0, "etapas": [{"angulo": -40.0, "passos": 120}, {"angulo": 75.0, "forca": 0.8, "contato": "terra"}]},
 ]
 const DELTA = 1.0 / 60.0
 var verificacoes := 0
@@ -93,7 +97,7 @@ func jogar(nivel: Node, etapas: Array, desvios: Array = [], comparar_previa := f
 
 func _executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == ROTAS.size(), "Campanha contém a fase original e cinco fases novas"):
+	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == ROTAS.size(), "Campanha contém dez fases"):
 		quit(1)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
@@ -102,7 +106,7 @@ func _executar() -> void:
 	await process_frame
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(jogo.interface_atual.cartoes.get_child_count() == ROTAS.size(), "Seleção mostra as seis fases")
+	conferir(jogo.interface_atual.cartoes.get_child_count() == ROTAS.size(), "Seleção mostra as dez fases")
 	for indice in range(ROTAS.size()):
 		var rota: Dictionary = ROTAS[indice]
 		conferir(catalogo.itens[indice].id == rota.id, rota.id + ": ordem correta no catálogo")
@@ -126,6 +130,14 @@ func _executar() -> void:
 		conferir(jogo.progresso.estado(rota.id) == "Concluída", rota.id + ": vitória registrada na campanha")
 		jogo.mostrar_selecao()
 		await process_frame
+		if rota.has("alternativa"):
+			for desvios in [[], [-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]:
+				var alternativa = CenaNivel.instantiate()
+				alternativa.nivel_res = resultado.nivel
+				root.add_child(alternativa)
+				jogar(alternativa, rota.alternativa, desvios, desvios.is_empty())
+				alternativa.queue_free()
+				await process_frame
 		var variacoes: Array = [[]]
 		for etapa in rota.etapas:
 			var seguintes: Array = []
