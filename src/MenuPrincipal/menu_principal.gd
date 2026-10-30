@@ -3,10 +3,20 @@ extends Control
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 const TelaCreditos = preload("res://src/MenuPrincipal/tela_creditos.gd")
+const Narrativa = preload("res://src/Narrativa/narrativa.gd")
 
 
 func _ready() -> void:
 	theme = Tema.criar()
+	var texto := Label.new()
+	texto.name = "Narrativa"
+	texto.text = Narrativa.INTRODUCAO
+	texto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	texto.custom_minimum_size.x = 150
+	texto.add_theme_font_size_override("font_size", 9)
+	$VBoxContainer.add_child(texto)
+	$VBoxContainer.move_child(texto, 0)
 
 func configurar_checkpoint() -> void:
 	var jogo = GLOBAL.controlador_jogo
@@ -38,6 +48,7 @@ func configurar_checkpoint() -> void:
 			add_child(tela))
 	if jogo.checkpoint_disponivel():
 		var continuar := Button.new()
+		continuar.name = "Continuar"
 		continuar.text = "Continuar"
 		continuar.custom_minimum_size = Vector2(120, 48)
 		coluna.add_child(continuar)
@@ -49,6 +60,10 @@ func configurar_checkpoint() -> void:
 
 func _exibir_aviso(texto: String) -> void:
 	var coluna: VBoxContainer = $VBoxContainer
+	coluna.get_node("Narrativa").hide()
+	var continuar := coluna.get_node_or_null("Continuar") as Button
+	if continuar != null:
+		continuar.hide()
 	var aviso := coluna.get_node_or_null("AvisoCheckpoint") as Label
 	if aviso == null:
 		aviso = Label.new()
