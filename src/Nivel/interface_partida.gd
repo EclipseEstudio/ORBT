@@ -64,7 +64,7 @@ func _ready() -> void:
 	var linha := HBoxContainer.new()
 	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	topo.add_child(linha)
-	_status = rotulo(linha, "", 10)
+	_status = rotulo(linha, "", 9)
 	_status.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var fundo_status := StyleBoxFlat.new()
 	fundo_status.bg_color = Tema.FUNDO
@@ -77,6 +77,8 @@ func _ready() -> void:
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_indicadores = Indicadores.new()
+	_indicadores.custom_minimum_size.x = 65
+	_indicadores.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	topo.add_child(_indicadores)
 	_destino = rotulo(topo, "")
 	_alerta = rotulo(topo, "", 9)
