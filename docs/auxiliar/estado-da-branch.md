@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Continuidade sobre `1833d57` (PR #74 integrado): a #53 recentraliza as rotas de referência de Tutorial e Sol e amplia os testes para combinar desvios negativos, zero e positivos. Suíte Windows: 1.618 verificações aprovadas. Evidências e limites em [balanceamento](balanceamento-issue-53.md#continuidade-após-pr-74--rotas-recentralizadas). Labirinto e playtest por outro integrante em aparelho continuam pendentes; mapas e física preservados.
+
 | Frente | Requisito | Situação / próximo passo |
 | --- | --- | --- |
 | Checkpoints e Continuar | RF17 e parte de RF18 | #48 integrada; #49 implementa persistência, diagnóstico e Continuar pausado. Aceite Android pendente; menus completos na #51 |

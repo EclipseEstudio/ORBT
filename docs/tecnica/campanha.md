@@ -47,10 +47,10 @@ Os mapas mantêm coordenadas e raios do protótipo, exceto a Terra nas fases Tut
 | ID / mapa | Rota de referência | Tempo aproximado | Saldo final |
 | --- | --- | --- | --- |
 | `teste_001` / Primeiro impulso | Impulso `(0, -80)` | 2,12 s | 4 |
-| `salto_curto` / Tutorial | 260 a −14,5° | 98 passos (1,63 s) | 2 |
+| `salto_curto` / Tutorial | 260 a −15,25° | 99 passos (1,65 s) | 2 |
 | `na_diagonal` / O Estilingue | 260 a −0,7° | 171 passos (2,85 s) | 2 |
 | `curva_suave` / O Labirinto | 260 a −40° até `apoio_1`; cerca de +10,49° até `apoio_2`; cerca de +45,19° até Terra | 3,55 s | 0 |
-| `escala_segura` / O Sol | 260 a +11,7° | 155 passos (2,58 s) | 2 |
+| `escala_segura` / O Sol | 260 a +12,45° | 156 passos (2,60 s) | 2 |
 | `entre_asteroides` / Deriva Final | 260 a +18°; após 90 passos (1,5 s), corrigir com 130 a −50° | 2,45 s | 3 |
 | `contorno` / O Contorno | 100 a −15°; após 120 passos, 80 a +100° | teste automatizado | 1 |
 | `duas_rotas` / Duas Rotas | 100 a −25° e 80 a +90° após 120 passos; alternativa: +25° e −90° | teste automatizado | 1 |

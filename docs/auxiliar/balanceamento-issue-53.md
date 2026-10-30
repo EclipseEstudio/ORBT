@@ -31,6 +31,16 @@ As três fases alteradas passam de `content_version` 2 para 3. Um checkpoint da 
 
 ## Roteiro de revisão cruzada
 
+### Continuidade após PR #74 — rotas recentralizadas
+
+Na base `1833d57`, a rota de referência do Tutorial passou de −14,5° para −15,25° e a do Sol de +11,7° para +12,45°. A varredura de 0,25° mede, respectivamente, margens negativas/positivas de 1,75°/1,5° e 1,25°/1,25°. Os tempos nominais são 99 passos (1,65 s) e 156 passos (2,60 s), com saldo 2 em ambos. As tabelas anteriores registram a medição histórica.
+
+Esta entrega altera as referências de teste e documentação; os mapas e controles do jogador permanecem iguais. A melhora é na margem simétrica comprovada das soluções de referência, sem aumentar a largura física dos corredores. As rotas antigas de ambas as fases e os desvios extras anteriores continuam cobertos.
+
+O teste agora combina desvio negativo, zero e positivo em cada etapa, incluindo combinações intermediárias antes ausentes. Tutorial exige ±1,5° e Sol ±1,25°. Uma tentativa de recentralizar também a segunda etapa do Labirinto ampliou sua margem isolada para ±0,5°, mas falhou em seis combinações da rota completa; foi descartada. O Labirinto conserva os ângulos e tolerâncias anteriores e passa nas 27 combinações de três etapas. Sua limitação de precisão permanece aberta.
+
+Godot 4.7.2/Windows: suíte completa com 1.618 verificações aprovadas, incluindo 879 de rotas; varredura das dez rotas sem falhas nominais. O PCK exportado passou em 23 verificações de recursos e 879 de rotas no desktop. Não houve playtest Android nesta continuidade. A #53 permanece aberta para revisão cruzada e avaliação da precisão exigida em aparelho.
+
 Outro integrante deve usar um APK gerado da revisão aprovada, anotar hash, versão Godot, modelo do aparelho e Android, e percorrer todas as fases em sequência. Para cada fase, registrar tentativas, impulsos e pousos, saldo, dificuldades de mira, esperado/observado e evidências; testar pelo menos as duas alternativas das fases 8/9 e as situações identificadas acima. Os ângulos do registro são do impulso: o arraste no jogo é na direção oposta. O fluxo de duas correções usa tempo de voo como orientação; a pessoa deve poder testar outras soluções legítimas sem depender de passos exatos.
 
 O resultado automatizado é evidência parcial. Revisão por outro integrante, rota prática no aparelho, equilíbrio e conclusão sem precisão excessiva continuam pendentes na #53. A comparação da composição com o GDD também continua pendente na #52.
