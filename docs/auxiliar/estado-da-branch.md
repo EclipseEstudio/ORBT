@@ -83,11 +83,11 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 ## Próximas ações para retomar
 
 1. #13 concluída pelo PR #58; manter o integrador compartilhado e o registro dos cenários ao recalibrar. A integração do PR #47 e a correção de mira `19af5c8` já ocorreram.
-2. Priorizar #4: instalar o APK integrado de 29/10 e registrar revisão, hash, modelo/Android/Godot, passos, esperado/observado e evidências. Exercitar também navegação #38 e persistência após reabertura com pelo menos duas fases autorais.
+2. Priorizar #4: a [validação parcial Android de 30/10](validacao-android-2026-10-30.md) demonstrou instalação, primeira fase e recuperação do checkpoint inicial com comandos de toque. Exercitar toque físico, navegação #38 e persistência após reabertura, incluindo checkpoint intermediário e outras fases.
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
 5. #48 integrada pelo PR #59, #49 pelo PR #60 e #50 pelo PR #61; validar persistência e preferências em aparelho. #51 implementa menus e resultados para revisão; preservar o progresso existente.
-6. #52 acrescentou quatro fases; revisar composição contra o GDD. A #53 registra [rotas, margens e ajustes parciais](balanceamento-issue-53.md); faltam playtest por outro integrante e validação em aparelho. A #54 adicionou tutorial contextual; playtest pendente. A #55 integrou áudio; escuta em aparelho pendente. A #56 propõe narrativa para revisão da equipe; pipeline #57 permanece por planejar.
+6. #52 acrescentou quatro fases; revisar composição contra o GDD. A #53 registra [rotas, margens e ajustes parciais](balanceamento-issue-53.md); faltam playtest por outro integrante e validação em aparelho. A #54 adicionou tutorial contextual; playtest pendente. A #55 integrou áudio; escuta em aparelho pendente. A #56 propõe narrativa para revisão da equipe. O pipeline #57 foi integrado no PR #68 e passou na primeira execução.
 
 A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
 
