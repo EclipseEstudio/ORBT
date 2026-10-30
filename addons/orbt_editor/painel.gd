@@ -296,7 +296,8 @@ func _restaurar() -> bool:
 		return false
 	documento.dados = dados.duplicate(true)
 	documento.caminho = sessao.get("caminho", "")
-	var salvo = JSON.parse_string(sessao.get("salvo", ""))
+	var texto_salvo = sessao.get("salvo", "")
+	var salvo = JSON.parse_string(texto_salvo) if texto_salvo is String and not texto_salvo.is_empty() else null
 	documento._salvo = JSON.stringify(salvo, "", true, true) if salvo is Dictionary else ""
 	documento.selecao = clampi(int(sessao.get("selecao", -2)), -2, dados.bodies.size() - 1)
 	return true

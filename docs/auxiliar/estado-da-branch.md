@@ -14,7 +14,7 @@ O PR #47 integrou à `alpha` as entregas dos PRs #42–#46 e a documentação, n
 | Identidade visual mínima | PR #45, `6db0abb` | Seis sprites, marcas por função, tema e indicadores; revisão das imagens adiada |
 | Progresso persistente | PR #46, `a774a82` | Conclusões/desbloqueios por ID, checksum, temporário, backup, recuperação e retentativa |
 
-O catálogo real em `Recursos/Niveis.json` contém seis fases: `teste_001` e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`: Tutorial, O Estilingue, O Labirinto, O Sol e Deriva Final. Os cinco IDs já criados foram preservados, com início livre, corredores de asteroides e visão geral para explorar. Os mapas têm corpos estáticos e rotas verificadas na Godot; órbitas e portal opcional permanecem fora desta adaptação. Saves da campanha anterior liberam a sucessora sem perder conclusões. Catálogos temporários de testes/capturas continuam separados desse conteúdo. No desktop há menu mínimo e seleção; no Android a primeira fase abre diretamente. Não há Continuar por checkpoint.
+O catálogo real em `Recursos/Niveis.json` contém seis fases: `teste_001` e cinco mapas adaptados de `dev-macb/orbt/src/levels/__init__.py`: Tutorial, O Estilingue, O Labirinto, O Sol e Deriva Final. Os cinco IDs já criados foram preservados, com início livre, corredores de asteroides e visão geral para explorar. Os mapas têm corpos estáticos e rotas verificadas na Godot; órbitas e portal opcional permanecem fora desta adaptação. Saves da campanha anterior liberam a sucessora sem perder conclusões. Catálogos temporários de testes/capturas continuam separados desse conteúdo. No Android a primeira fase abre diretamente quando não há checkpoint; quando existe checkpoint ou diagnóstico, o menu permite continuar ou escolher uma fase.
 
 ## Critério de status no Projects
 
@@ -86,7 +86,7 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 2. Priorizar #4: instalar o APK integrado de 29/10 e registrar revisão, hash, modelo/Android/Godot, passos, esperado/observado e evidências. Exercitar também navegação #38 e persistência após reabertura com pelo menos duas fases autorais.
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
-5. #48 implementa checkpoints de início e pouso em memória; [validar e revisar](validacao-issue-48.md). Depois seguir #49 (persistência), #50 (preferências) e #51 (menus/Continuar), preservando o progresso existente.
+5. #48 integrada pelo PR #59. #49 implementa persistência e Continuar pausado; revisar e validar em aparelho. Depois seguir #50 (preferências) e #51 (menus completos), preservando o progresso existente.
 6. Preservar as seis fases como entrega parcial da #52; completar quatro restantes e balancear/revisar a campanha inteira na #53. Tutorial #54, áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
 
 A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
@@ -95,7 +95,7 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 | Frente | Requisito | Situação / próximo passo |
 | --- | --- | --- |
-| Checkpoints e Continuar | RF17 e parte de RF18 | Checkpoints em memória na #48; persistência, validação de estado incompatível e Continuar pausado pertencem à #49/#51 |
+| Checkpoints e Continuar | RF17 e parte de RF18 | #48 integrada; #49 implementa persistência, diagnóstico e Continuar pausado. Aceite Android pendente; menus completos na #51 |
 | Preferências e recuperação da tentativa | RF18 | Conclusão/desbloqueio persistem; preferências e tentativa pausada ainda não |
 | Menus completos | RF19 | Menu mínimo/campanha existem; configurações/créditos e fluxo completo pendentes |
 | Dez fases autorais | RF20 | Seis fases entregues e com rotas verificadas; expandir e balancear as quatro restantes |
