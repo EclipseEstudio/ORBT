@@ -7,6 +7,7 @@ func _initialize() -> void:
 func _capturar() -> void:
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.persistir_progresso = false
+	jogo.ativar_audio = false
 	root.add_child(jogo)
 	await process_frame
 	jogo.mostrar_selecao()

@@ -24,6 +24,7 @@ func _executar() -> void:
 	var argumentos := OS.get_cmdline_user_args()
 	if argumentos.size() == 1:
 		var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+		jogo.ativar_audio = false
 		jogo.caminho_checkpoint = argumentos[0]
 		jogo.caminho_progresso = argumentos[0] + "-progresso"
 		jogo.caminho_preferencias = argumentos[0] + "-preferencias"
@@ -51,6 +52,7 @@ func _executar() -> void:
 		quit(1 if falhas else 0)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.ativar_audio = false
 	jogo.caminho_checkpoint = base
 	jogo.caminho_progresso = base + "-progresso"
 	jogo.caminho_preferencias = base + "-preferencias"

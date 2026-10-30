@@ -173,6 +173,7 @@ func _executar() -> void:
 	var caminho_catalogo := base + "-catalogo.json"
 	escrever(caminho_catalogo, JSON.stringify(catalogo))
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.ativar_audio = false
 	jogo.caminho_progresso = base + "-jogo"
 	jogo.caminho_checkpoint = base + "-checkpoint"
 	jogo.caminho_preferencias = base + "-preferencias"

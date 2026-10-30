@@ -87,7 +87,7 @@ O APK de 29/10 foi gerado da revisão `846785b`, cujo conteúdo de jogo coincide
 3. Resolver com a equipe #13/#17/#18/#37: modelo e tolerâncias, direção/intensidade, alcance/custo da prévia, tempo/deriva, contato contra origem, pouso sem combustível e contagem no pouso.
 4. Outro integrante reproduz o editor (#2/#25). Revisar arte (#3/#27–#31) quando a revisão adiada for retomada.
 5. #48 integrada pelo PR #59, #49 pelo PR #60 e #50 pelo PR #61; validar persistência e preferências em aparelho. #51 implementa menus e resultados para revisão; preservar o progresso existente.
-6. #52 acrescentou quatro fases; revisar composição contra o GDD. A #53 registra [rotas, margens e ajustes parciais](balanceamento-issue-53.md); faltam playtest por outro integrante e validação em aparelho. A #54 adiciona tutorial contextual para revisão e playtest; áudio #55, narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
+6. #52 acrescentou quatro fases; revisar composição contra o GDD. A #53 registra [rotas, margens e ajustes parciais](balanceamento-issue-53.md); faltam playtest por outro integrante e validação em aparelho. A #54 adicionou tutorial contextual; playtest pendente. A #55 integra áudio para revisão e escuta em aparelho; narrativa #56 e pipeline #57 permanecem nas tarefas próprias.
 
 A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implementação parcial e pendências de #13/#48/#49/#51/#52/#53. Os recursos locais fora do catálogo (`Recursos/Fases/fase_teste.json` e `Recursos/ModelosVisuais/`) foram preservados fora desta entrega. O APK histórico não inclui as alterações de 30/10.
 
@@ -100,7 +100,7 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 | Menus completos | RF19 | Créditos e ações de pausa/resultados na #51; revisão e validação de toque em aparelho pendentes |
 | Dez fases autorais | RF20 | Dez fases e rotas automatizadas na #52; balancear e revisar a campanha inteira na #53 |
 | Dicas contextuais | RF21 | Tutorial contextual da primeira fase implementado na #54; revisão e playtest em aparelho pendentes |
-| Música e efeitos/volumes | RF24 | Volumes separados persistidos na #50; duas músicas e efeitos pendentes na #55 |
+| Música e efeitos/volumes | RF24 | Volumes separados na #50; duas músicas e efeitos sintetizados na #55, sujeitos a revisão e escuta em aparelho |
 | Narrativa | RF25 | Integração de piloto/corporação/retorno e desfecho pendente |
 | Rotação/faixa segura/órbitas/portais/infinito | RF26–RF30 | Condicionais; não iniciar sem decisão de escopo e regras |
 
