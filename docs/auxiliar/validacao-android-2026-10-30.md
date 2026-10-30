@@ -19,3 +19,11 @@ Após esses comandos, o usuário foi convidado a testar toque parado, cancelamen
 Na captura da fase após a apresentação, o sprite e o rótulo da Terra ficam parcialmente atrás do HUD de combustível; durante o voo, o HUD também encobre parte do sprite. Isso merece revisão de legibilidade e composição no aparelho em #31/#4. A captura de recuperação foi feita durante a apresentação da câmera com a partida pausada; o enquadramento deve ser avaliado ao retomar.
 
 Continuam pendentes o registro detalhado dos gestos físicos e da ergonomia, multitouch, exploração/recentralização, suspensão com gesto ativo, reinício, derrota, último combustível, pouso e correção; também a reprodução por outro integrante, checkpoint intermediário, falha de gravação e checkpoint incompatível no Android. Estes resultados não encerram as issues #4, #49, #31 ou #54.
+
+## Ajuste parcial do contraste — issue #31
+
+Sobre a base `e91954b`, uma versão de teste com o ajuste no HUD foi instalada por atualização no mesmo aparelho, com a chave de depuração local. APK SHA-256 `d27ce1e51a74a3e6655191d0079e568d929f653768c9d106fd688d38e98001b0`; assinatura v2/v3 e alinhamento de 16 KB verificados. Os testes automatizados passaram com 1.225 verificações, incluindo 43 visuais; o pacote passou em 23 verificações.
+
+O fundo opaco acompanha apenas os textos de combustível e tempo, sem capturar toques; uma seta indica a Terra quando seu centro está atrás desse texto. Na [captura após a abertura](evidencias-android-2026-10-30/hud-status-ajustado.png), os valores estão legíveis e a maior parte do sprite da Terra aparece. Um arraste simulado iniciado sobre o status lançou a nave, consumiu uma unidade e levou à Terra; [captura durante o voo](evidencias-android-2026-10-30/hud-impulso-ajustado.png). Não houve teste de toque físico ou revisão de outros aparelhos nesta versão.
+
+O sprite e o rótulo da Terra ainda podem ficar parcialmente encobertos pelo status e pelas barras durante o movimento. O ajuste protege a leitura dos valores, mas não resolve toda a oclusão do cenário; manter essa limitação e a avaliação completa da #31 em aberto.

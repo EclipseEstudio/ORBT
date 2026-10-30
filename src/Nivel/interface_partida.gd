@@ -65,7 +65,15 @@ func _ready() -> void:
 	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	topo.add_child(linha)
 	_status = rotulo(linha, "", 10)
-	_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_status.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var fundo_status := StyleBoxFlat.new()
+	fundo_status.bg_color = Tema.FUNDO
+	fundo_status.set_content_margin_all(1)
+	_status.add_theme_stylebox_override("normal", fundo_status)
+	var espaco := Control.new()
+	espaco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	espaco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	linha.add_child(espaco)
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_indicadores = Indicadores.new()
@@ -114,6 +122,19 @@ static func area_segura_logica(area_fisica: Rect2, transformacao: Transform2D, v
 		return viewport
 	var area := (transformacao.affine_inverse() * area_fisica).intersection(viewport)
 	return area if area.has_area() else viewport
+
+
+static func direcao_alvo(na_tela: Vector2, viewport: Rect2, status: Rect2) -> String:
+	var direcao := ""
+	if na_tela.y < viewport.position.y or status.has_point(na_tela):
+		direcao += "↑"
+	elif na_tela.y > viewport.end.y:
+		direcao += "↓"
+	if na_tela.x < viewport.position.x:
+		direcao += "←"
+	elif na_tela.x > viewport.end.x:
+		direcao += "→"
+	return direcao
 
 
 func _atualizar_area_segura() -> void:
@@ -206,14 +227,5 @@ func _process(_delta: float) -> void:
 		_alerta.text += "\n" + partida.aviso_salvamento
 	var alvo: Vector2 = partida.nivel.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
-	var tamanho := get_viewport().get_visible_rect().size
-	var direcao := ""
-	if na_tela.y < 0:
-		direcao += "↑"
-	elif na_tela.y > tamanho.y:
-		direcao += "↓"
-	if na_tela.x < 0:
-		direcao += "←"
-	elif na_tela.x > tamanho.x:
-		direcao += "→"
+	var direcao := direcao_alvo(na_tela, get_viewport().get_visible_rect(), _status.get_global_rect())
 	_destino.text = "Terra %s · %d m" % [direcao, partida.nave.global_position.distance_to(alvo)]
