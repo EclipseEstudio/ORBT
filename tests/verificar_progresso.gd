@@ -22,6 +22,7 @@ func _executar() -> void:
 		quit(1)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.ativar_audio = false
 	jogo.caminho_progresso = argumentos[0]
 	jogo.caminho_checkpoint = argumentos[0] + "-checkpoint-filho"
 	jogo.caminho_preferencias = argumentos[0] + "-preferencias-filho"

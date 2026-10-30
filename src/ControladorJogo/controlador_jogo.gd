@@ -4,11 +4,14 @@ const ProgressoSessao = preload("res://src/Campanha/progresso_sessao.gd")
 const ProgressoPersistente = preload("res://src/Campanha/progresso_persistente.gd")
 const CheckpointPersistente = preload("res://src/Campanha/checkpoint_persistente.gd")
 const Preferencias = preload("res://src/Configuracoes/preferencias.gd")
+const AudioJogo = preload("res://src/Audio/audio_jogo.gd")
 @export var persistir_progresso := true
+@export var ativar_audio := true
 var caminho_progresso := "user://progresso.json"
 var caminho_checkpoint := "user://checkpoint.json"
 var caminho_preferencias := "user://preferencias.json"
 var preferencias = Preferencias.new()
+var audio: Node
 var checkpoint = CheckpointPersistente.new()
 const Selecao = preload("res://src/Campanha/selecao_fases.gd")
 var progresso := ProgressoSessao.new()
@@ -26,6 +29,10 @@ func _ready() -> void:
 	preferencias.caminho = caminho_preferencias
 	preferencias.persistir = persistir_progresso
 	preferencias.carregar()
+	audio = AudioJogo.new()
+	audio.controlador = self
+	audio.ativo = ativar_audio
+	add_child(audio)
 	if persistir_progresso:
 		var salvo := ProgressoPersistente.new()
 		salvo.caminho = caminho_progresso
@@ -61,6 +68,8 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	instancia.proxima_fase = proxima_fase(id_nivel)
 	get_tree().paused = false
 	alterar_mundo_nodo(instancia)
+	audio.vincular_partida(instancia.partida)
+	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
 			progresso.concluir(id, GLOBAL.gerendiador_de_nivel.itens)
@@ -147,6 +156,7 @@ func _liberar_abertura() -> void:
 
 func mostrar_selecao() -> void:
 	get_tree().paused = false
+	audio.trocar_musica("menu")
 	alterar_mundo_nodo(Node2D.new())
 	var gerenciador = GLOBAL.gerendiador_de_nivel
 	gerenciador.carregar_niveis()
@@ -168,6 +178,7 @@ func mostrar_selecao() -> void:
 
 func mostrar_menu() -> void:
 	get_tree().paused = false
+	audio.trocar_musica("menu")
 	alterar_mundo_nodo(Node2D.new())
 	alterar_interface("res://src/MenuPrincipal/MenuPrincipal.tscn")
 	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_checkpoint"):
@@ -206,6 +217,8 @@ func alterar_mundo(caminho: String, deletar := true, manter_rodando := false) ->
 
 
 func alterar_mundo_nodo(novo: Node2D, _deletar := true, manter_rodando := false) -> void:
+	if is_instance_valid(audio):
+		audio.parar_efeitos()
 	if is_instance_valid(mundo_atual):
 		var partida = mundo_atual.get("partida")
 		if is_instance_valid(partida):

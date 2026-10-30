@@ -27,6 +27,7 @@ func _executar() -> void:
 		quit(1 if falhas else 0)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.ativar_audio = false
 	jogo.caminho_progresso = base + "-progresso"
 	jogo.caminho_checkpoint = base + "-checkpoint"
 	jogo.caminho_preferencias = base

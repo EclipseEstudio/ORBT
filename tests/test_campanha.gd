@@ -92,6 +92,7 @@ func _executar() -> void:
 	gravar(caminho, catalogo)
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.persistir_progresso = false
+	jogo.ativar_audio = false
 	root.add_child(jogo)
 	await process_frame
 	var gerenciador = jogo.get_node("GerenciadorDeNivel")

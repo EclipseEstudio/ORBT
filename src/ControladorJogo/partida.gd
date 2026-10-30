@@ -9,6 +9,7 @@ signal selecao_solicitada
 signal menu_solicitado
 signal proxima_solicitada
 signal checkpoint_alterado(checkpoint: Dictionary)
+signal pouso_realizado
 var campanha_permitida := false
 
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
@@ -89,6 +90,7 @@ func resolver_contato(contato: Dictionary) -> void:
 			finalizar(true, "Você chegou à Terra!")
 		_:
 			nave.pousar(corpo)
+			pouso_realizado.emit()
 			_registrar_checkpoint()
 			if nave.combustivel == 0:
 				finalizar(false, "Sem combustível para decolar")

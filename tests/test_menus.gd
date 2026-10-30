@@ -21,6 +21,7 @@ func hud_de(jogo) -> CanvasLayer:
 func _executar() -> void:
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.persistir_progresso = false
+	jogo.ativar_audio = false
 	root.add_child(jogo)
 	await process_frame
 	var menu = jogo.interface_atual
@@ -87,5 +88,6 @@ func _executar() -> void:
 	conferir(partida.estado == partida.Estado.JOGANDO and partida.nave.combustivel == partida.nivel.combustivel_inicial, "repetir inicia nova tentativa")
 	conferir(jogo.progresso.estado(itens[-1].id) == "Concluída", "repetição mantém conclusão")
 	jogo.queue_free()
+	await process_frame
 	print("Menus: ", verificacoes, " verificações, ", falhas, " falhas.")
 	quit(1 if falhas else 0)

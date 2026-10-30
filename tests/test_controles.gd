@@ -255,6 +255,7 @@ func _executar() -> void:
 func testar_cena_principal() -> void:
 	var cena = load("res://src/ControladorJogo/main.tscn").instantiate()
 	cena.persistir_progresso = false
+	cena.ativar_audio = false
 	root.add_child(cena)
 	await process_frame
 	var nave_menu = cena.get_node("Mundo/Nivel/Nave")

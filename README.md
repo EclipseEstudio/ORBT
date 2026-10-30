@@ -13,6 +13,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Campa
 - Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
+- A música continua durante a pausa; efeitos de voo aguardam a retomada. Os volumes podem ser reduzidos a zero.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
 - Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O menu oferece **Continuar** para recuperar o último checkpoint salvo após reabrir o jogo.
 - Na vitória, **Próxima fase** abre a sucessora disponível; **Repetir** começa nova tentativa. Na última fase, use Repetir ou Seleção de fases. A pausa permite voltar ao menu principal.
@@ -82,4 +83,4 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso, checkpoint e preferências são persistidos separadamente; progresso e checkpoint têm cópias recuperáveis.
 
-Estado atualizado em 30/10/2026: os PRs #58–#62 integraram gravidade, checkpoints, preferências e menus. O catálogo contém dez fases, com rotas verificadas em `tests/test_fases.gd`. Aceite Android, áudio e balanceamento com revisão cruzada permanecem pendentes. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 30/10/2026: os PRs #58–#65 integraram gravidade, checkpoints, preferências, menus e tutorial. O catálogo contém dez fases, com rotas verificadas em `tests/test_fases.gd`. A integração sonora, o aceite Android e o balanceamento com revisão cruzada permanecem em revisão. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.

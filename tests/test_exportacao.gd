@@ -34,6 +34,7 @@ func _executar() -> void:
 		quit(1)
 		return
 	var jogo = principal.instantiate()
+	jogo.ativar_audio = false
 	var caminho_progresso := "user://progresso-exportacao-%d.json" % OS.get_process_id()
 	jogo.caminho_progresso = caminho_progresso
 	jogo.caminho_checkpoint = caminho_progresso + "-checkpoint"
