@@ -58,6 +58,32 @@ func _executar() -> void:
 	var partida = mundo.partida
 	partida.set_physics_process(false)
 	conferir(nave.raio == nivel.parametros_nave.radius and nave.massa == nivel.parametros_nave.mass and nave.get_node("Nave").texture == Arte.textura("ship"), "Nova nave usa os mesmos parâmetros físicos")
+	var fogo = nave.get_node("Fogo")
+	var animacao: AnimationPlayer = nave.animation_player
+	partida.reiniciar()
+	mundo.camera._process(2)
+	animacao.advance(0)
+	conferir(fogo.get("quadro") == -1, "Propulsão oculta antes de lançar")
+	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	conferir(nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80)), "Lançamento aciona propulsão de produção")
+	partida.avancar(1.0 / 60.0)
+	for indice in range(6):
+		animacao.seek(indice * 0.0835, true)
+		conferir(fogo.get("quadro") == indice, "Lançamento mostra quadro de propulsão %d" % indice)
+	var instante := animacao.current_animation_position
+	partida.pausar()
+	await process_frame
+	await process_frame
+	conferir(is_equal_approx(animacao.current_animation_position, instante), "Pausa suspende animação de propulsão")
+	partida.retomar()
+	animacao.advance(0.6)
+	animacao.advance(0)
+	conferir(fogo.get("quadro") == -1, "Propulsão apaga ao terminar o pulso")
+	animacao.play("fogo")
+	animacao.advance(0)
+	partida.reiniciar()
+	animacao.advance(0)
+	conferir(fogo.get("quadro") == -1 and nave.combustivel == nivel.combustivel_inicial, "Reinício apaga propulsão e restaura tentativa")
 	var filhos: int = mundo.get_node("Estaticos").get_child_count()
 	for indice in range(5):
 		partida.reiniciar()

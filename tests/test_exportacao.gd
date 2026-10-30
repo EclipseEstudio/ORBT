@@ -23,6 +23,9 @@ func _executar() -> void:
 	conferir(not ResourceLoader.exists("res://addons/orbt_editor/plugin.gd"), "Plugin de edição excluído da entrega")
 	conferir(not ResourceLoader.exists("res://addons/orbt_editor/teste.tscn"), "Cena de teste do editor excluída da entrega")
 	conferir(not DirAccess.dir_exists_absolute("res://docs/auxiliar/arte/fontes"), "Fontes de arte excluídas da entrega")
+	for indice in range(1, 7):
+		conferir(not ResourceLoader.exists("res://Recursos/Sprites/fogo%d.png" % indice), "Bitmap legado de propulsão %d excluído do pacote" % indice)
+	conferir(not ResourceLoader.exists("res://Recursos/Sprites/nave1.png"), "Casco legado excluído do pacote")
 	for nome in ["nave", "planeta", "satelite", "terra", "sol", "asteroide"]:
 		conferir(ResourceLoader.exists("res://Recursos/Sprites/Identidade/" + nome + ".png"), "Sprite incluído: " + nome)
 	conferir(not DirAccess.dir_exists_absolute("res://Recursos/ModelosVisuais"), "Referências autorais excluídas da entrega")
