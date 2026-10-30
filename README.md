@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gra
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em **Campanha** e escolha a fase. O fluxo Android abre diretamente a primeira fase do catálogo. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
+Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Campanha** para selecionar uma fase ou **Continuar** quando houver checkpoint válido. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
@@ -15,6 +15,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No computador, clique em
 - **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
 - Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O menu oferece **Continuar** para recuperar o último checkpoint salvo após reabrir o jogo.
+- Na vitória, **Próxima fase** abre a sucessora disponível; **Repetir** começa nova tentativa. Na última fase, use Repetir ou Seleção de fases. A pausa permite voltar ao menu principal.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A prévia termina no primeiro contato ou após três segundos.

@@ -2,6 +2,7 @@ extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
+const TelaCreditos = preload("res://src/MenuPrincipal/tela_creditos.gd")
 
 
 func _ready() -> void:
@@ -24,7 +25,18 @@ func configurar_checkpoint() -> void:
 			tela.name = "TelaConfiguracoes"
 			tela.preferencias = jogo.preferencias
 			add_child(tela))
-	if not jogo.checkpoint.dados.is_empty():
+	var creditos := Button.new()
+	creditos.name = "Creditos"
+	creditos.text = "Créditos"
+	creditos.custom_minimum_size = Vector2(120, 48)
+	creditos.add_theme_font_size_override("font_size", 12)
+	coluna.add_child(creditos)
+	creditos.pressed.connect(func():
+		if not has_node("TelaCreditos"):
+			var tela := TelaCreditos.new()
+			tela.name = "TelaCreditos"
+			add_child(tela))
+	if jogo.checkpoint_disponivel():
 		var continuar := Button.new()
 		continuar.text = "Continuar"
 		continuar.custom_minimum_size = Vector2(120, 48)

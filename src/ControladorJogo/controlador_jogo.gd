@@ -41,13 +41,6 @@ func _ready() -> void:
 	progresso.configurar(GLOBAL.gerendiador_de_nivel.itens)
 	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_checkpoint"):
 		interface_atual.configurar_checkpoint()
-	if OS.has_feature("android") and checkpoint.dados.is_empty() and checkpoint.aviso.is_empty():
-		var itens: Array = GLOBAL.gerendiador_de_nivel.itens
-		if itens.is_empty():
-			mostrar_selecao()
-		elif not iniciar_fase(itens[0].id):
-			mostrar_selecao()
-			interface_atual.falhou(erro_abertura)
 
 
 func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
@@ -65,6 +58,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	erro_abertura = ""
 	instancia.campanha_permitida = true
 	instancia.preferencias = preferencias
+	instancia.proxima_fase = proxima_fase(id_nivel)
 	get_tree().paused = false
 	alterar_mundo_nodo(instancia)
 	instancia.partida.concluida.connect(func(id: String):
@@ -74,6 +68,17 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:
 			mostrar_selecao())
+	instancia.partida.menu_solicitado.connect(func():
+		if mundo_atual == instancia:
+			mostrar_menu())
+	instancia.partida.proxima_solicitada.connect(func():
+		if mundo_atual != instancia or instancia.partida.estado != instancia.partida.Estado.CONCLUIDA:
+			return
+		var id: String = proxima_fase(instancia.nivel_res.id)
+		if id.is_empty() or not iniciar_fase(id):
+			mostrar_selecao()
+			if not id.is_empty():
+				interface_atual.falhou(erro_abertura))
 	if not recuperacao.is_empty():
 		instancia.partida._checkpoint = recuperacao.duplicate(true)
 		instancia.partida.pausar()
@@ -95,6 +100,29 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	alterar_interface_nodo(vazio)
 	_liberar_abertura.call_deferred()
 	return true
+
+
+func proxima_fase(id: String) -> String:
+	var itens: Array = GLOBAL.gerendiador_de_nivel.itens
+	for indice in range(itens.size() - 1):
+		if itens[indice].id == id:
+			return itens[indice + 1].id
+	return ""
+
+
+func checkpoint_disponivel() -> bool:
+	if checkpoint.dados.is_empty():
+		return false
+	if not checkpoint.dados.get("fase") is String:
+		checkpoint.aviso = "Checkpoint inválido. Reinicie a fase."
+		checkpoint.bloqueado = true
+		return false
+	var id: String = checkpoint.dados.fase
+	if not progresso.pode_abrir(id):
+		checkpoint.aviso = "Fase do checkpoint indisponível. Reinicie uma fase."
+		checkpoint.bloqueado = true
+		return false
+	return not checkpoint.validar(GLOBAL.gerendiador_de_nivel.obter_nivel_res(id)).is_empty()
 
 
 func continuar_checkpoint() -> bool:
