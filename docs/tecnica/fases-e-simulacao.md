@@ -49,7 +49,7 @@ Cada corpo exige:
 
 O validador rejeita arquivo ausente/malformado, versão incompatível, campos inválidos, IDs duplicados, referência inicial inválida, nave inicial fora dos limites ou dentro de um contato, Terra fora dos limites e interseção entre zonas de contato expandidas pelo raio da nave que envolvam um corpo seguro. Dois perigos podem se sobrepor para formar muros contínuos de asteroides. A resolução física tem desempate determinístico. Parâmetros de movimento, rotação e portais não são implementados nesta versão.
 
-O recurso validado mantém uma cópia dos dados autorais. Cada nave recebe uma cópia das fontes; posição, velocidade, combustível, gestos e tempo ficam no estado da tentativa. A simulação não escreve no JSON e não produz saves/checkpoints.
+O recurso validado mantém uma cópia dos dados autorais. Cada nave recebe uma cópia das fontes; posição, velocidade, combustível, gestos e tempo ficam no estado da tentativa. A simulação não escreve no JSON. O controlador mantém checkpoint em memória, sem persistência entre processos (#49).
 
 ## Modelo físico e decisão de arquitetura
 
@@ -82,6 +82,7 @@ A comparação de superfície tolera até 0,0001 unidade de arredondamento, evit
 - O temporizador é ativado e reiniciado pela confirmação do impulso. Só é decrementado fora do pouso. A deriva reutiliza o tempo restante do último lançamento, sem temporizador adicional. Cada passo é limitado ao tempo restante; contato dentro desse passo é resolvido antes do timeout.
 - A pausa cancela a entrada e congela a árvore da simulação. `Partida` e HUD continuam processando os controles de retomada. As notificações de perda de foco/suspensão acionam a pausa; o retorno de foco não altera o estado. A exploração desabilita o controle da nave sem pausar a árvore.
 - A finalização emite um único evento de conclusão ou perda e mantém o resultado estável. O reinício reconfigura a nave com os dados autorais e restaura posição, orientação, combustível, tempo, vínculos, alertas, câmera e gestos.
+- Na #48, o controlador registra fase, corpo, posição relativa (ou posição livre), orientação, combustível, tempo e ativação do temporizador no início e a cada pouso. A restauração após derrota ou pausa cancela gestos e pedidos, zera velocidade e limpa alertas; saldo zero mantém derrota. Reiniciar substitui o checkpoint pelo início. O checkpoint só vive na tentativa atual; persistência e compatibilidade de versões pertencem à #49.
 
 As condições de vitória, derrota, consumo e retomada estão centralizadas nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md), incluindo o pouso sem combustível adotado pelo protótipo.
 
