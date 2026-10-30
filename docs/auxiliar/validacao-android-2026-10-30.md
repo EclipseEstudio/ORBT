@@ -27,3 +27,11 @@ Sobre a base `e91954b`, uma versão de teste com o ajuste no HUD foi instalada p
 O fundo opaco acompanha apenas os textos de combustível e tempo, sem capturar toques; uma seta indica a Terra quando seu centro está atrás desse texto. Na [captura após a abertura](evidencias-android-2026-10-30/hud-status-ajustado.png), os valores estão legíveis e a maior parte do sprite da Terra aparece. Um arraste simulado iniciado sobre o status lançou a nave, consumiu uma unidade e levou à Terra; [captura durante o voo](evidencias-android-2026-10-30/hud-impulso-ajustado.png). Não houve teste de toque físico ou revisão de outros aparelhos nesta versão.
 
 O sprite e o rótulo da Terra ainda podem ficar parcialmente encobertos pelo status e pelas barras durante o movimento. O ajuste protege a leitura dos valores, mas não resolve toda a oclusão do cenário; manter essa limitação e a avaliação completa da #31 em aberto.
+
+## Espaço do HUD na primeira fase — issue #31
+
+Sobre a base `e94d53a`, o texto do status passou para tamanho 9 e as duas barras passaram a ocupar 65 unidades lógicas no lado esquerdo. No mesmo aparelho, após instalar uma versão com a chave de depuração local, a Terra e seu rótulo ficaram visíveis na [posição inicial](evidencias-android-2026-10-30/hud-espaco-inicio.png) e na [captura durante o primeiro impulso](evidencias-android-2026-10-30/hud-espaco-voo.png). O arraste simulado de 480 pixels para baixo chegou à Terra com combustível 4. Os valores textuais continuam exibidos, mesmo com barras menores.
+
+O APK testado tem SHA-256 `fec29ec8b6fd6f0bde2e628ac61cec4cc0dfcc7ead4061dcb6081342fc9938e6`, assinatura v2/v3 e alinhamento 16 KB verificados. O usuário confirmou que as barras menores de combustível e tempo estão legíveis no celular. A suíte contém verificações de interseção da Terra e seu rótulo com status e barras na proporção 180 × 390; elas falham no layout anterior e passam no novo. A mudança não altera câmera, física ou rota.
+
+As capturas cobrem somente os instantes registrados na primeira fase e um aparelho. Não garantem ausência de oclusão em toda a trajetória, em outras fases ou proporções; permanece necessária a revisão visual completa da #31.

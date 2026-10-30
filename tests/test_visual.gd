@@ -94,5 +94,32 @@ func _executar() -> void:
 	conferir(nivel.dados_autorais == autorais, "Cores e visuais não sobrescrevem dados autorais")
 	mundo.queue_free()
 	await process_frame
+	# Reproduz a proporção do aparelho em que a Terra ficou atrás do HUD.
+	var tela_android := SubViewport.new()
+	tela_android.size = Vector2i(180, 390)
+	root.add_child(tela_android)
+	var fase_android = load("res://src/Nivel/Nivel.tscn").instantiate()
+	fase_android.nivel_res = nivel
+	fase_android.campanha_permitida = true
+	tela_android.add_child(fase_android)
+	await process_frame
+	fase_android.partida.set_physics_process(false)
+	fase_android.camera._process(2)
+	fase_android.camera.force_update_scroll()
+	await process_frame
+	await process_frame
+	var hud_android: Node
+	for filho in fase_android.get_children():
+		if filho is CanvasLayer and filho.get("partida") != null:
+			hud_android = filho
+	var alvo: Vector2 = nivel.corpos[-1].position
+	for deslocamento in [0.0, 20.0]:
+		fase_android.camera.global_position = fase_android.get_node("Nave").global_position - Vector2(0, deslocamento)
+		fase_android.camera.force_update_scroll()
+		var centro: Vector2 = tela_android.get_canvas_transform() * alvo
+		var regiao_terra := Rect2(centro + Vector2(-14, -27), Vector2(28, 41))
+		conferir(not regiao_terra.intersects(hud_android._status.get_global_rect()) and not regiao_terra.intersects(hud_android._indicadores.get_global_rect()), "Terra e rótulo permanecem fora do status e barras na rota inicial")
+	tela_android.queue_free()
+	await process_frame
 	print("Visual: %d verificações, %d falhas." % [verificacoes, falhas])
 	quit(0 if falhas == 0 else 1)
