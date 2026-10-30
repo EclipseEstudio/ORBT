@@ -101,6 +101,24 @@ func _executar() -> void:
 	recuperado.caminho = base
 	conferir(recuperado.carregar() and not recuperado.aviso.is_empty() and not recuperado.validar(nivel).is_empty(), "arquivo danificado recupera cópia anterior")
 	conferir(recuperado.dados.corpo == "origem", "backup preserva checkpoint inicial anterior")
+	var jogo_backup = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo_backup.ativar_audio = false
+	jogo_backup.caminho_checkpoint = base
+	jogo_backup.caminho_progresso = base + "-progresso"
+	jogo_backup.caminho_preferencias = base + "-preferencias"
+	root.add_child(jogo_backup)
+	await process_frame
+	var coluna = jogo_backup.interface_atual.get_node("VBoxContainer")
+	var continuar_backup = coluna.get_node_or_null("Continuar")
+	conferir(continuar_backup != null and continuar_backup.visible and coluna.has_node("AvisoCheckpoint"), "menu oferece Continuar e mostra aviso ao recuperar cópia válida")
+	if continuar_backup != null and continuar_backup.visible:
+		continuar_backup.pressed.emit()
+		conferir(jogo_backup.mundo_atual.get("partida") != null and jogo_backup.mundo_atual.partida.estado == jogo_backup.mundo_atual.partida.Estado.PAUSADO and jogo_backup.mundo_atual.partida.nave.corpo_apoio == "origem", "cópia anterior continua pausada no checkpoint recuperado")
+	else:
+		conferir(false, "cópia anterior continua pausada no checkpoint recuperado")
+	paused = false
+	jogo_backup.queue_free()
+	await process_frame
 	conferir(recuperado.limpar() and not FileAccess.file_exists(base), "descarte explícito remove somente checkpoint")
 	var invalido := FileAccess.open(base, FileAccess.WRITE)
 	invalido.store_string("inválido")
