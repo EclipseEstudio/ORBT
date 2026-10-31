@@ -2,7 +2,7 @@
 
 ## Continuidade do roteiro em 31/10/2026
 
-Sobre a `alpha` com o PR #87 integrado, uma instalação independente **ORBT QA R87** foi testada no Samsung SM-A556E/Android 16. Cancelamento, suspensão durante mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo têm passos e capturas no [registro do roteiro](../auxiliar/validacao-roteiro-android-2026-10-31.md). Os saves principais foram preservados. O trecho com gestos físicos e o aceite global continuam pendentes; o registro distingue toque injetado, resposta manual e diagnóstico do ambiente. As seções abaixo são históricas.
+Sobre a `alpha` com o PR #87 integrado, uma instalação independente **ORBT QA R87** foi testada no Samsung SM-A556E/Android 16. Cancelamento, suspensão durante mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo têm passos e capturas no [registro do roteiro](../auxiliar/validacao-roteiro-android-2026-10-31.md). Os saves principais foram preservados. O usuário confirmou os quatro testes físicos de cancelamento com uma mão, segundo dedo, retomada durante mira e abertura em modo avião. O aceite global continua pendente; o registro distingue toque injetado, relato manual e diagnóstico do ambiente. As seções abaixo são históricas.
 
 ## Validação parcial em 30/10/2026
 

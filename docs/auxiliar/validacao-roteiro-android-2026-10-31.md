@@ -55,10 +55,19 @@ progresso.json  040f39efdd632002ae523a008e13d86c6896cabb0e9e9c881a45c9b4ecdc343f
 
 O QA ficou instalado, com [Primeiro impulso restaurado](evidencias-roteiro-android-2026-10-31/pronto-teste-manual.png), combustível 5 e tempo 30,0 s. O usuário recebeu quatro verificações físicas: cancelamento com uma mão; segundo dedo sem assumir mira/disparar; Home durante mira e retomada sem lançamento; reabrir a fase em modo avião. Nenhum comando ADB foi enviado depois dessa passagem enquanto se aguardava a resposta.
 
-**Resultado manual: aguardando resposta.** Não registrar esses quatro casos como aprovados por inferência. O manifesto QA não lista permissão de internet, mas o ensaio explícito em modo avião ainda depende da confirmação manual; a #33 permanece aberta.
+**Resultado manual confirmado pelo usuário em 31/10/2026: “Os quatro passaram”.** O relato se refere aos quatro passos enviados para o ORBT QA R87:
+
+| Teste físico | Resultado relatado |
+| --- | --- |
+| Com uma mão, mirar e voltar ao círculo | Cancelou sem gasto. |
+| Manter um dedo na mira e mover/soltar o segundo | Sem disparo extra. |
+| Home durante a mira, voltar ao QA e tocar Retomar | Sem lançamento pendente. |
+| Em modo avião, fechar/reabrir o QA e abrir a fase pela Campanha | Fase carregou. |
+
+São resultados relatados pelo usuário, sem captura ou medição adicional do agente. Nenhum comando ADB foi enviado durante esse trecho. O caso em modo avião fornece a evidência manual de carregamento offline pedida na #33; a issue permanece aberta para revisão desse aceite. O relato não é avaliação geral de ergonomia, desempenho ou aprovação de regras.
 
 ## Pendências de aceite
 
-Esta entrega avança #4 e fornece evidência parcial para #14/#16/#31/#37/#51. Permanecem a resposta aos casos físicos, correção em voo com observação do custo/tempo, teste com Sol em fase que o contenha, custo/desempenho da prévia, avaliação em outros recortes e decisões de regra ainda abertas. Multitouch injetado não foi ensaiado. A rota completa por outro integrante deve ter relato específico e versão registrada; relatos gerais anteriores não substituem os casos pendentes.
+Esta entrega avança #4 e fornece evidência para #14/#16/#31/#33/#37/#51, com os limites de cada cenário. Permanecem correção em voo com observação do custo/tempo, teste com Sol em fase que o contenha, custo/desempenho da prévia, avaliação em outros recortes e decisões de regra ainda abertas. Multitouch injetado não foi ensaiado; o caso com segundo dedo foi confirmado pelo relato físico acima. A rota completa por outro integrante deve ter relato específico e versão registrada; os quatro casos confirmados não equivalem à campanha completa nem ao playtest de jogador não autor da #54.
 
 Não houve correção de código do jogo, mudança de regra ou conteúdo, nem encerramento de issue nesta etapa. Continuidade e limites seguem a [revisão de escopo](revisao-issues-2026-10-31.md).
