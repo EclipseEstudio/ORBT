@@ -10,6 +10,7 @@ Fontes: [issues](https://github.com/EclipseEstudio/ORBT/issues), [Projects ORBT]
 - **4 encerramentos anteriores preservados:** [#13](https://github.com/EclipseEstudio/ORBT/issues/13), [#48](https://github.com/EclipseEstudio/ORBT/issues/48), [#50](https://github.com/EclipseEstudio/ORBT/issues/50), [#57](https://github.com/EclipseEstudio/ORBT/issues/57).
 - **34 issues abertas em Em Revisão**, incluindo as seis tarefas principais; não representam 34 funcionalidades novas.
 - **17 concluídas e 34 em revisão** no Projects, com responsáveis, prioridades, estimativas e escopo preservados.
+- **#51–#56 movidas de A Fazer para Em Revisão:** menus, dez fases, balanceamento, tutorial, áudio e narrativa já tinham entregas integradas. O README do Projects, ainda datado de 26/10 e recomendando implementar checkpoints/Continuar, foi substituído pelo resumo atual e vinculado a esta auditoria.
 - Descrições das 51 issues atualizadas com implementação, PRs, evidência e próximo passo concreto. A redação dos critérios originais foi preservada; os critérios das 13 encerradas foram marcados. Históricos anteriores foram identificados como históricos.
 
 O usuário confirmou expressamente a atualização das 51 descrições e os 13 encerramentos antes da aplicação. O conector não oferecia operações de Projects; a autenticação Git existente permite operações de issues, mas não de Projects. Issues foram atualizadas pela API; o quadro foi conferido/atualizado pela interface autenticada, sem ampliação de permissões.
