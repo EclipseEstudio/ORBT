@@ -49,9 +49,15 @@ func _ready() -> void:
 	voltar.custom_minimum_size.y = 36
 	voltar.add_theme_font_size_override("font_size", 10)
 	coluna.add_child(voltar)
-	voltar.pressed.connect(func(): fechada.emit(); queue_free())
+	voltar.pressed.connect(fechar)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
+
+func fechar() -> void:
+	if is_queued_for_deletion():
+		return
+	fechada.emit()
+	queue_free()
 
 func _area_segura() -> void:
 	AreaSegura.aplicar(_margem, 0, AreaSegura.fisica())

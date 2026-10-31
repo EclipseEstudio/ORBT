@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Continuidade sobre `cc449e9` (PR #80 integrado): #51 acrescenta tratamento de Voltar nativo e Escape. Telas auxiliares fecham, campanha volta ao menu e a fase pausa com gesto/pedidos cancelados; retomada é explícita. Saída nativa fica restrita ao menu principal. [Fluxo e evidências](validacao-voltar.md). Botão/gesto Android real continua pendente.
+
 Continuidade após o PR #79 (`0a70437`): #50 corrige o recuo duplicado das configurações abertas na pausa, movendo a tela para fora da raiz já recuada do HUD. Suíte: 2.646 verificações; PCK: 30 e mais 23 de áreas. O teste novo falha quatro vezes na implementação anterior e passa na corrigida. [Evidências e limites](validacao-configuracoes-pausa.md); teste físico Android continua pendente.
 
 Após o PR #78 (`bc7361e`), a #38 move cabeçalho e avisos da seleção para a mesma rolagem dos cartões, mantendo ações no rodapé. A suíte passou com 2.633 verificações; 30 de exportação e 12 de layout também passaram contra o PCK no desktop. [Evidências e limites](validacao-campanha-layout.md). Toque, recortes reais e ergonomia da campanha em Android continuam pendentes.
