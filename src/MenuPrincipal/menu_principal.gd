@@ -69,6 +69,16 @@ func configurar_checkpoint() -> void:
 		continuar.pressed.connect(func():
 			if not jogo.continuar_checkpoint():
 				_exibir_aviso(jogo.checkpoint.aviso))
+	if jogo.checkpoint.salvamento_pendente():
+		var tentar := Button.new()
+		tentar.name = "TentarSalvarCheckpoint"
+		tentar.text = "Salvar último pouso"
+		tentar.custom_minimum_size = Vector2(120, 48)
+		tentar.add_theme_font_size_override("font_size", 12)
+		coluna.add_child(tentar)
+		tentar.pressed.connect(func():
+			jogo.tentar_salvar_checkpoint()
+			jogo.mostrar_menu.call_deferred())
 	if not jogo.checkpoint.aviso.is_empty():
 		_exibir_aviso(jogo.checkpoint.aviso, checkpoint_disponivel)
 

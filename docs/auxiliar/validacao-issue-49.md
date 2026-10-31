@@ -1,5 +1,7 @@
 # Validação da persistência de checkpoint — issue #49
 
+Após o PR #83 (`9f79864`), um pouso não gravado fica pendente em memória e pode ser salvo novamente pelo menu. Continuar só volta a ser oferecido depois da gravação, evitando a restauração silenciosa de uma cópia antiga. [Testes de falha/recuperação e capturas](validacao-retentar-checkpoint.md). A pendência é do processo atual; a nova retentativa ainda precisa de validação Android.
+
 Execução em 30/10/2026, Windows, Godot 4.7.2, base `f02ea60` com alterações deste PR. `tests/run.ps1` aprovou 878 verificações, incluindo 13 verificações de persistência de checkpoint e uma segunda execução de processo com mais cinco verificações. `tests/run_exportacao.ps1` exportou o PCK e aprovou 23 verificações em desktop. Não é teste em Android nem APK instalável.
 
 | Cenário | Esperado e observado |
