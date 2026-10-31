@@ -1,3 +1,5 @@
+> Substituído pela [revisão de 31/10/2026](revisao-issues-2026-10-31.md). Este registro é histórico; não executar suas recomendações de implementação como pendências atuais.
+
 # Revisão das issues — 30/10/2026
 
 Escopo e critérios de aceite preservados. Nenhuma issue é encerrada por esta sincronização. A próxima implementação é #48, após consolidar a revisão da #13. Validação Android permanece na #4.

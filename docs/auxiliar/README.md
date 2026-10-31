@@ -10,6 +10,7 @@ Manuais de uso, materiais de apoio e registros do projeto. Consulte o [índice g
 ## Acompanhamento e evidências
 
 - [Estado atual e continuidade](estado-da-branch.md): entregas, issues e pendências.
+- [Revisão das tarefas e Projects em 31/10](revisao-issues-2026-10-31.md): escopo preservado, critérios demonstrados e pendências individuais.
 - [Histórico de implementação](historico-implementacao.md): registros datados das entregas anteriores.
 - [Aceite da issue 40](validacao-issue-40.md): reprodução, resultados e limites da validação.
 - [Direção da Terra encoberta pela interface](validacao-indicador-terra.md): regressão de sobreposição com controles e área segura (#31).
