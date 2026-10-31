@@ -53,8 +53,12 @@ jobs:
         run: ./scripts/configurar-android-ci.ps1 -Java $env:JAVA_HOME -Sdk $env:ANDROID_HOME -DadosGodot (Join-Path $env:APPDATA 'Godot') -DiretorioTemporario $env:RUNNER_TEMP
       - name: Importar projeto
         run: |
-          & $env:ORBT_GODOT --headless --editor --path . --import
-          if ($LASTEXITCODE -ne 0) { throw 'Falha ao importar o projeto.' }
+          $orbtSaida = & $env:ORBT_GODOT --headless --editor --path . --import 2>&1
+          $orbtCodigo = $LASTEXITCODE
+          $orbtSaida | Write-Output
+          if ($orbtCodigo -ne 0 -or ($orbtSaida -match 'SCRIPT ERROR:|ERROR:')) {
+            throw 'Falha ao importar o projeto.'
+          }
       - name: Executar testes
         run: ./tests/run.ps1 -Godot $env:ORBT_GODOT
       - name: Verificar pacote exportado
