@@ -46,7 +46,7 @@ func apresentar() -> void:
 		_abertura = 0.0
 		global_position = partida.nave.global_position
 		return
-	_destino = partida.nivel.corpos[-1].position
+	_destino = partida.nave.corpos[-1].position
 	global_position = _destino
 	_abertura = 1.2
 	partida.nave.controle_permitido = false

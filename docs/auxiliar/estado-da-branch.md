@@ -2,6 +2,10 @@
 
 Atualizado em **31/10/2026**, após a revisão das [issues](https://github.com/EclipseEstudio/ORBT/issues), dos PRs integrados até **#86** e do [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1). Base de código: `alpha` em `487b68e`. Esta página substitui as contagens e recomendações anteriores; o detalhamento está na [auditoria de 31/10](revisao-issues-2026-10-31.md).
 
+## Ampliação autorizada em 31/10/2026
+
+Após o PR #89, o usuário priorizou funcionalidades e escolheu incluir órbitas e corpos móveis. A implementação e seus limites estão em [Órbitas e corpos móveis](../tecnica/orbitas.md). A validação de aceite Android foi adiada. A restrição histórica abaixo sobre órbitas condicionais é substituída por esta decisão somente para órbitas circulares de centro fixo; os demais itens continuam condicionais.
+
 ## Situação reconciliada
 
 | Situação | Quantidade | Significado |

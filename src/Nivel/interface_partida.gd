@@ -253,7 +253,7 @@ func _process(_delta: float) -> void:
 	_alerta.text = "  ".join(avisos)
 	if not partida.aviso_salvamento.is_empty():
 		_alerta.text += "\n" + partida.aviso_salvamento
-	var alvo: Vector2 = partida.nivel.corpos[-1].position
+	var alvo: Vector2 = partida.nave.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
 	var regioes_topo: Array[Rect2] = []
 	for controle in [_status, _indicadores, _pausa, _destino, _alerta]:

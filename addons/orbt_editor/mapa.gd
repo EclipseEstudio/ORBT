@@ -47,6 +47,9 @@ func _draw() -> void:
 		var corpo: Dictionary = corpos[i]
 		var indice := i if i < dados.bodies.size() else -1
 		var posicao := tela(Vector2(corpo.position[0], corpo.position[1]))
+		if corpo.get("orbit") is Dictionary and Carregador.vetor(corpo.orbit.get("center")):
+			var centro_orbita := tela(Vector2(corpo.orbit.center[0], corpo.orbit.center[1]))
+			draw_arc(centro_orbita, centro_orbita.distance_to(posicao), 0, TAU, 96, Color(0.4, 0.8, 1.0, 0.5), 1.0, true)
 		for campo in regioes:
 			if regioes[campo] and corpo[campo] > 0:
 				draw_arc(posicao, maxf(1, corpo[campo] * escala), 0, TAU, 64, CORES[campo], 1.5, true)

@@ -1,8 +1,33 @@
 @tool
 class_name SimulacaoVoo extends RefCounted
-## Integrador compartilhado pelo voo e pela prévia. Corpos estáticos.
+## Integrador compartilhado pelo voo e pela prévia. Órbitas circulares prescritas.
 
 const TOLERANCIA_SUPERFICIE := 0.0001
+
+static func posicao_corpo(corpo: Dictionary, tempo: float) -> Vector2:
+	if not corpo.has("orbit"):
+		return corpo.position
+	var centro := Vector2(corpo.orbit.center[0], corpo.orbit.center[1])
+	var inicial: Vector2 = corpo.get("_posicao_inicial", corpo.position)
+	var omega: float = TAU / corpo.orbit.period_seconds * (1.0 if corpo.orbit.get("clockwise", true) else -1.0)
+	return centro + (inicial - centro).rotated(fposmod(tempo, corpo.orbit.period_seconds) * omega)
+
+
+static func velocidade_corpo(corpo: Dictionary, tempo: float) -> Vector2:
+	if not corpo.has("orbit"):
+		return Vector2.ZERO
+	var centro := Vector2(corpo.orbit.center[0], corpo.orbit.center[1])
+	var radial := posicao_corpo(corpo, tempo) - centro
+	var omega: float = TAU / corpo.orbit.period_seconds * (1.0 if corpo.orbit.get("clockwise", true) else -1.0)
+	return Vector2(-radial.y, radial.x) * omega
+
+
+static func atualizar_corpos(corpos: Array, tempo: float) -> void:
+	for corpo in corpos:
+		if corpo.has("orbit"):
+			if not corpo.has("_posicao_inicial"):
+				corpo["_posicao_inicial"] = corpo.position
+			corpo.position = posicao_corpo(corpo, tempo)
 
 static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> Vector2:
 	var resultado := Vector2.ZERO
@@ -43,9 +68,13 @@ static func dentro_limites(ponto: Vector2, limites: Rect2) -> bool:
 	return ponto.x >= limites.position.x and ponto.y >= limites.position.y and ponto.x <= limites.end.x and ponto.y <= limites.end.y
 
 
-static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "") -> Dictionary:
+static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", tempo := 0.0) -> Dictionary:
 	var nova_velocidade := velocidade + aceleracao(posicao, corpos, fisica) * delta
 	var fim := posicao + nova_velocidade * delta
+	return varrer(posicao, fim, nova_velocidade, delta, corpos, limites, raio_nave, origem, tempo)
+
+
+static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, delta: float, corpos: Array, limites: Rect2, raio_nave: float, origem := "", tempo := 0.0) -> Dictionary:
 	var contato: Dictionary = {}
 	var primeiro := INF
 	var prioridade := 99
@@ -54,14 +83,18 @@ static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: A
 		# A proteção vale só para saída externa do apoio de origem.
 		if corpo.id == origem and corpo.type in ["planet", "satellite"]:
 			# Normalizar e reposicionar no pouso pode arredondar para dentro da superfície.
-			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao) >= 0.0:
+			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao - (posicao_corpo(corpo, tempo + delta) - corpo.position)) >= 0.0:
 				continue
-		var t := intersecao_circulo(posicao, fim, corpo.position, raio_contato(corpo) + raio_nave)
+		var centro_atual := posicao_corpo(corpo, tempo)
+		var centro_seguinte := posicao_corpo(corpo, tempo + delta)
+		var t := intersecao_circulo(posicao - centro_atual, fim - centro_seguinte, Vector2.ZERO, raio_contato(corpo) + raio_nave)
 		var p := 0 if corpo.type in ["sun", "asteroid"] else (1 if corpo.type == "earth" else 2)
 		if t < primeiro - 0.000001 or (is_finite(t) and absf(t - primeiro) <= 0.000001 and p < prioridade):
 			primeiro = t
 			prioridade = p
-			contato = {"body": corpo, "kind": "body", "fraction": t}
+			var corpo_contato: Dictionary = corpo.duplicate(true)
+			corpo_contato.position = centro_seguinte
+			contato = {"body": corpo_contato, "kind": "body", "fraction": t}
 	if not dentro_limites(fim, limites):
 		var t := 0.0
 		if dentro_limites(posicao, limites):
@@ -77,10 +110,13 @@ static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: A
 	return {"position": posicao.lerp(fim, primeiro) if not contato.is_empty() else fim, "velocity": nova_velocidade, "contact": contato}
 
 
-static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0) -> PackedVector2Array:
+static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0, tempo := 0.0) -> PackedVector2Array:
+	if corpos.any(func(corpo: Dictionary): return corpo.has("orbit")):
+		corpos = corpos.duplicate(true)
 	var pontos := PackedVector2Array([posicao])
 	for indice in range(passos):
-		var proximo := passo(posicao, velocidade, delta, corpos, fisica, limites, raio_nave, origem)
+		atualizar_corpos(corpos, tempo + indice * delta)
+		var proximo := passo(posicao, velocidade, delta, corpos, fisica, limites, raio_nave, origem, tempo + indice * delta)
 		posicao = proximo.position
 		velocidade = proximo.velocity
 		if indice % 3 == 2 or not proximo.contact.is_empty() or indice == passos - 1:

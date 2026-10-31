@@ -231,6 +231,18 @@ func _mostrar_propriedades() -> void:
 				_campo([chave], "", chave)
 	else:
 		var trilha: Array = ["goal"] if documento.selecao == -1 else ["bodies", documento.selecao]
+		var orbita := CheckBox.new()
+		orbita.text = "Movimento orbital"
+		orbita.button_pressed = documento.objeto(documento.selecao).has("orbit")
+		orbita.toggled.connect(func(ativo: bool):
+			var corpo: Dictionary = documento.objeto(documento.selecao)
+			if ativo:
+				corpo["orbit"] = {"center": [corpo.position[0] - 60, corpo.position[1]], "period_seconds": 20.0, "clockwise": true}
+			else:
+				corpo.erase("orbit")
+			documento.alterado.emit()
+			_mostrar_propriedades())
+		_propriedades.add_child(orbita)
 		for chave in documento.objeto(documento.selecao):
 			if documento.selecao == -1 and chave == "type":
 				continue
@@ -266,6 +278,11 @@ func _campo(trilha: Array, valor: Variant, nome_campo: String) -> void:
 		numero.editable = nome_campo != "schema_version"
 		numero.value_changed.connect(func(novo: float): documento.editar(trilha, novo))
 		_propriedades.add_child(numero)
+	elif valor is bool:
+		var caixa := CheckBox.new()
+		caixa.button_pressed = valor
+		caixa.toggled.connect(func(novo: bool): documento.editar(trilha, novo))
+		_propriedades.add_child(caixa)
 	elif valor is String:
 		var entrada := LineEdit.new()
 		entrada.text = valor

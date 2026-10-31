@@ -112,6 +112,12 @@ static func validar(dados: Variant) -> Dictionary:
 			erros.append(prefixo + ".type: tipo inválido")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
+		if corpo.has("orbit"):
+			var orbita = corpo.orbit
+			if not orbita is Dictionary or not vetor(orbita.get("center")) or not numero(orbita.get("period_seconds"), 1.0, 86400):
+				erros.append(prefixo + ".orbit: center [x, y] e period_seconds entre 1 e 86400 obrigatórios")
+			elif (orbita.has("clockwise") and not orbita.clockwise is bool) or (vetor(corpo.get("position")) and Vector2(corpo.position[0], corpo.position[1]).distance_to(Vector2(orbita.center[0], orbita.center[1])) < 0.01):
+				erros.append(prefixo + ".orbit: sentido booleano e raio maior ou igual a 0,01 obrigatórios")
 		if corpo.has("show_proximity") and not corpo.show_proximity is bool:
 			erros.append(prefixo + ".show_proximity: esperado booleano")
 		for campo in ["visual_radius", "collision_radius", "capture_radius", "danger_radius", "proximity_radius", "mass"]:
@@ -130,6 +136,8 @@ static func validar(dados: Variant) -> Dictionary:
 		if corpo.proximity_radius < Fisica.raio_contato(corpo):
 			erros.append(prefixo + ".proximity_radius: deve cobrir contato")
 		corpo.position = Vector2(corpo.position[0], corpo.position[1])
+		if corpo.has("orbit"):
+			corpo["_posicao_inicial"] = corpo.position
 		normalizados.append(corpo)
 	if not erros.is_empty():
 		return {"nivel": null, "erros": erros}

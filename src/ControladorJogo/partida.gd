@@ -106,6 +106,7 @@ func _registrar_checkpoint() -> void:
 		"combustivel": nave.combustivel,
 		"tempo": tempo_restante,
 		"temporizador_ativo": temporizador_ativo,
+		"tempo_simulacao": nave.tempo_simulacao,
 	}
 	checkpoint_alterado.emit(_checkpoint.duplicate(true))
 
@@ -113,7 +114,12 @@ func _registrar_checkpoint() -> void:
 func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	if estado not in [Estado.PERDIDA, Estado.PAUSADO] or _checkpoint.is_empty() or _checkpoint.fase != nivel.id:
 		return false
-	var corpo: Dictionary = nivel.obter_corpo(_checkpoint.corpo) if not _checkpoint.corpo.is_empty() else {}
+	nave.tempo_simulacao = _checkpoint.get("tempo_simulacao", 0.0)
+	nave.Fisica.atualizar_corpos(nave.corpos, nave.tempo_simulacao)
+	var corpo: Dictionary = {}
+	for candidato in nave.corpos:
+		if candidato.id == _checkpoint.corpo:
+			corpo = candidato
 	if not _checkpoint.corpo.is_empty() and corpo.is_empty():
 		return false
 	get_tree().paused = false
