@@ -24,6 +24,9 @@ var _menu: Button
 var _raiz: Control
 var _area_fisica := Rect2()
 var _transformacao_tela := Transform2D()
+var _topo: VBoxContainer
+var _conteudo_rodape: VBoxContainer
+var _rolagem_rodape: ScrollContainer
 
 
 func rotulo(pai: Control, texto: String, tamanho := 10) -> Label:
@@ -56,6 +59,7 @@ func _ready() -> void:
 	add_child(raiz)
 	raiz.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var topo := VBoxContainer.new()
+	_topo = topo
 	topo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	raiz.add_child(topo)
 	topo.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
@@ -84,15 +88,21 @@ func _ready() -> void:
 	_destino = rotulo(topo, "")
 	_alerta = rotulo(topo, "", 9)
 	_alerta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_rolagem_rodape = ScrollContainer.new()
+	_rolagem_rodape.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_rolagem_rodape.follow_focus = true
+	raiz.add_child(_rolagem_rodape)
+	_rolagem_rodape.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_rolagem_rodape.offset_left = 6
+	_rolagem_rodape.offset_right = -6
+	_rolagem_rodape.offset_bottom = -6
 	var base := VBoxContainer.new()
+	_conteudo_rodape = base
 	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	raiz.add_child(base)
-	base.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	base.offset_left = 6
-	base.offset_right = -6
-	base.offset_top = -104 if partida.campanha_permitida else -74
-	base.offset_bottom = -6
-	base.minimum_size_changed.connect(func(): base.offset_top = -base.get_combined_minimum_size().y - 6)
+	base.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_rolagem_rodape.add_child(base)
+	base.minimum_size_changed.connect(_ajustar_rodape)
+	_raiz.resized.connect(_ajustar_rodape)
 	_mensagem = rotulo(base, "", 9)
 	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_mensagem.custom_minimum_size.y = 36
@@ -115,9 +125,21 @@ func _ready() -> void:
 		botao(base, "Seleção de fases", func():
 			partida.nave.entrada.cancelar()
 			partida.selecao_solicitada.emit.call_deferred())
-	base.set_deferred("offset_top", -base.get_combined_minimum_size().y - 6)
+	_ajustar_rodape.call_deferred()
 	get_viewport().size_changed.connect(_atualizar_area_segura)
 	_atualizar_area_segura()
+
+
+func _ajustar_rodape() -> void:
+	if not is_instance_valid(_conteudo_rodape):
+		return
+	var jogando: bool = partida.estado == partida.Estado.JOGANDO
+	_rolagem_rodape.mouse_filter = Control.MOUSE_FILTER_IGNORE if jogando else Control.MOUSE_FILTER_STOP
+	var altura := _conteudo_rodape.get_combined_minimum_size().y
+	if not jogando:
+		var disponivel := maxf(28, _raiz.size.y - _topo.get_rect().end.y - 12)
+		altura = minf(altura, disponivel)
+	_rolagem_rodape.offset_top = -altura - 6
 
 
 static func area_segura_logica(area_fisica: Rect2, transformacao: Transform2D, viewport: Rect2) -> Rect2:
@@ -231,3 +253,4 @@ func _process(_delta: float) -> void:
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
 	var direcao := direcao_alvo(na_tela, get_viewport().get_visible_rect(), _status.get_global_rect())
 	_destino.text = "Terra %s · %d m" % [direcao, partida.nave.global_position.distance_to(alvo)]
+	_ajustar_rodape()
