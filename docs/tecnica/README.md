@@ -10,3 +10,5 @@ Contratos, decisões de implementação e procedimentos para desenvolver e expor
 O comportamento esperado pelo jogador fica nas [regras de negócio](../regras-de-negocio/README.md). O [manual do editor](../auxiliar/guia-editor-de-fases.md) e os registros de execução ficam na documentação auxiliar. Todos os comandos são executados a partir da raiz do repositório.
 
 - [Órbitas e corpos móveis](orbitas.md): configuração, editor, pouso, decolagem e persistência.
+
+- [Rotação e faixa segura de pouso](rotacao-e-pouso.md): superfície móvel, decolagem e setor angular opcional.

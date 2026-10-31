@@ -112,6 +112,14 @@ static func validar(dados: Variant) -> Dictionary:
 			erros.append(prefixo + ".type: tipo inválido")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
+		if corpo.has("rotation"):
+			var giro = corpo.rotation
+			if not giro is Dictionary or not numero(giro.get("degrees_per_second"), -360, 360) or not numero(giro.get("initial_degrees", 0.0), -360, 360):
+				erros.append(prefixo + ".rotation: degrees_per_second e initial_degrees entre -360 e 360")
+		if corpo.has("landing_zone"):
+			var setor = corpo.landing_zone
+			if corpo.get("type") not in ["planet", "satellite"] or not setor is Dictionary or not numero(setor.get("center_degrees"), -360, 360) or not numero(setor.get("half_width_degrees"), 0.01, 180):
+				erros.append(prefixo + ".landing_zone: apenas apoios; center_degrees entre -360 e 360, half_width_degrees entre 0,01 e 180")
 		if corpo.has("orbit"):
 			var orbita = corpo.orbit
 			if not orbita is Dictionary or not vetor(orbita.get("center")) or not numero(orbita.get("period_seconds"), 1.0, 86400):
