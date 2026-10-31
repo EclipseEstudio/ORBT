@@ -95,10 +95,14 @@ func _executar() -> void:
 				hud = filho
 	var tela := Rect2(0, 0, 180, 390)
 	var topo := Rect2(4, 3, 172, 75)
-	conferir(HUD.direcao_alvo(Vector2(90, 35), tela, topo) == "↑", "Alvo encoberto pelo HUD tem indicação para cima")
-	conferir(HUD.direcao_alvo(Vector2(90, 100), tela, topo) == "", "Alvo visível fora do HUD não recebe seta")
-	conferir(HUD.direcao_alvo(Vector2(-10, -5), tela, topo) == "↑←", "Alvo fora da tela mantém indicação diagonal")
-	conferir(HUD.direcao_alvo(Vector2(90, 400), tela, topo) == "↓", "Alvo abaixo da tela mantém indicação")
+	conferir(HUD.direcao_alvo(Vector2(90, 35), tela, [topo]) == "↑", "Alvo encoberto pelo HUD tem indicação para cima")
+	conferir(HUD.direcao_alvo(Vector2(90, 100), tela, [topo]) == "", "Alvo visível fora do HUD não recebe seta")
+	conferir(HUD.direcao_alvo(Vector2(-10, -5), tela, [topo]) == "↑←", "Alvo fora da tela mantém indicação diagonal")
+	conferir(HUD.direcao_alvo(Vector2(90, 400), tela, [topo]) == "↓", "Alvo abaixo da tela mantém indicação")
+	conferir(HUD.direcao_alvo(Vector2(90, 390), tela, []) == "↓" and HUD.direcao_alvo(Vector2(180, 100), tela, []) == "→", "Limites inferior e direito já ficam fora da área visível")
+	var area_segura := Rect2(5, 8, 170, 370)
+	conferir(HUD.direcao_alvo(Vector2(2, 6), area_segura, []) == "↑←" and HUD.direcao_alvo(Vector2(177, 380), area_segura, []) == "↓→", "Direção respeita recuos físicos da área segura")
+	conferir(HUD.direcao_alvo(Vector2(90, 20), tela, [Rect2(6, 5, 65, 50), Rect2(120, 5, 54, 30)], Rect2(6, 300, 168, 84)) == "", "Espaço livre entre os controles não cria seta indevida")
 	conferir(hud._status.mouse_filter == Control.MOUSE_FILTER_IGNORE and hud._status.get_theme_stylebox("normal").bg_color.a == 1.0, "Fundo do status preserva contraste sem capturar gestos")
 	for estado in ["jogando", "pausado", "concluida"]:
 		partida.reiniciar()
@@ -145,6 +149,21 @@ func _executar() -> void:
 		var centro: Vector2 = tela_android.get_canvas_transform() * alvo
 		var regiao_terra := Rect2(centro + Vector2(-14, -27), Vector2(28, 41))
 		conferir(not regiao_terra.intersects(hud_android._status.get_global_rect()) and not regiao_terra.intersects(hud_android._indicadores.get_global_rect()), "Terra e rótulo permanecem fora do status e barras na rota inicial")
+	# A câmera pode colocar o destino atrás de controles ao explorar o mapa.
+	for controle in [hud_android._pausa, hud_android._indicadores]:
+		var ponto: Vector2 = controle.get_global_rect().get_center()
+		fase_android.camera.global_position = alvo - (ponto - Vector2(tela_android.size) / 2) / fase_android.camera.zoom
+		fase_android.camera.force_update_scroll()
+		hud_android._process(0)
+		conferir(hud_android._destino.text.contains("↑"), "Destino encoberto por controle superior mantém direção")
+	fase_android.partida.pausar()
+	await process_frame
+	await process_frame
+	var ponto_rodape: Vector2 = hud_android._reiniciar.get_global_rect().get_center()
+	fase_android.camera.global_position = alvo - (ponto_rodape - Vector2(tela_android.size) / 2) / fase_android.camera.zoom
+	fase_android.camera.force_update_scroll()
+	hud_android._process(0)
+	conferir(hud_android._destino.text.contains("↓"), "Destino encoberto pelo painel de pausa mantém direção")
 	tela_android.queue_free()
 	await process_frame
 	print("Visual: %d verificações, %d falhas." % [verificacoes, falhas])
