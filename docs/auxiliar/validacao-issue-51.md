@@ -1,5 +1,7 @@
 # Validação dos menus e resultados — issue #51
 
+Após o PR #80 (`cc449e9`), Voltar nativo e Escape passam a navegar pelas telas auxiliares/campanha e pausar a fase. Retomar continua explícito; saída nativa ocorre somente no menu principal. [Fluxo, testes e capturas](validacao-voltar.md). Notificação nativa foi injetada em desktop; validação física Android permanece pendente.
+
 Após integração do PR #77 (`1604781`): menu principal, configurações e créditos passam a respeitar a área segura. Menu e configurações permitem rolagem quando o conteúdo não cabe, incluindo diagnósticos longos. [Evidências e limites](validacao-areas-menus.md); toque e recortes reais Android permanecem pendentes.
 
 Continuidade após PR #76, base `9f3187a`: a propulsão legada foi substituída por seis quadros desenhados em código para ORBT. Créditos descrevem a nova origem e o preset exclui os bitmaps antigos. [Registro e capturas](arte/propulsao/README.md). A origem histórica dos arquivos antigos não foi determinada; a distribuição atual deixa de depender deles. Validação de menus e apresentação em Android continua pendente.

@@ -17,6 +17,7 @@ const Selecao = preload("res://src/Campanha/selecao_fases.gd")
 var progresso := ProgressoSessao.new()
 var erro_abertura := ""
 var _abrindo := false
+var _voltar_pendente := false
 
 @onready var mundo: Node = $Mundo
 @onready var interface: Control = $Interface
@@ -25,6 +26,10 @@ var interface_atual: Control
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Receber Voltar durante a pausa sem fazer o mundo herdar PROCESS_MODE_ALWAYS.
+	mundo.process_mode = Node.PROCESS_MODE_PAUSABLE
+	interface.process_mode = Node.PROCESS_MODE_PAUSABLE
 	GLOBAL.controlador_jogo = self
 	preferencias.caminho = caminho_preferencias
 	preferencias.persistir = persistir_progresso
@@ -48,6 +53,53 @@ func _ready() -> void:
 	progresso.configurar(GLOBAL.gerendiador_de_nivel.itens)
 	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_checkpoint"):
 		interface_atual.configurar_checkpoint()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_node_ready():
+		solicitar_voltar(true)
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		get_viewport().set_input_as_handled()
+		solicitar_voltar()
+
+
+func solicitar_voltar(nativo := false) -> void:
+	if _voltar_pendente or _abrindo:
+		return
+	_voltar_pendente = true
+	_executar_voltar.call_deferred(nativo)
+
+
+func _executar_voltar(nativo: bool) -> void:
+	_liberar_voltar()
+	# Fechar somente a tela sobreposta; a pausa permanece como estava.
+	for nome in ["TelaConfiguracoes", "TelaCreditos"]:
+		var tela := find_child(nome, true, false)
+		if tela != null and not tela.is_queued_for_deletion():
+			tela.fechar()
+			return
+	if is_instance_valid(interface_atual) and interface_atual is Selecao:
+		mostrar_menu()
+		return
+	if is_instance_valid(mundo_atual) and mundo_atual.get("partida") != null:
+		var partida = mundo_atual.partida
+		if partida.estado in [partida.Estado.JOGANDO, partida.Estado.PAUSADO]:
+			partida.pausar()
+		else:
+			mostrar_selecao()
+		return
+	# Preservar a saída nativa apenas quando já estiver no menu principal.
+	if nativo:
+		get_tree().quit()
+
+
+func _liberar_voltar() -> void:
+	# Não atravessar duas telas por notificações repetidas no mesmo quadro.
+	await get_tree().process_frame
+	_voltar_pendente = false
 
 
 func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:

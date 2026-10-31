@@ -41,9 +41,12 @@ func _ready() -> void:
 	voltar.text = "Voltar"
 	voltar.custom_minimum_size.y = 36
 	coluna.add_child(voltar)
-	voltar.pressed.connect(queue_free)
+	voltar.pressed.connect(fechar)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
+
+func fechar() -> void:
+	queue_free()
 
 func _area_segura() -> void:
 	AreaSegura.aplicar(_margem, 0, AreaSegura.fisica())
