@@ -4,6 +4,24 @@ class_name SimulacaoVoo extends RefCounted
 
 const TOLERANCIA_SUPERFICIE := 0.0001
 
+static func rotacao_corpo(corpo: Dictionary, tempo: float) -> float:
+	var giro: Dictionary = corpo.get("rotation", {})
+	return deg_to_rad(fposmod(float(giro.get("initial_degrees", 0.0)) + tempo * float(giro.get("degrees_per_second", 0.0)), 360.0))
+
+
+static func velocidade_superficie(corpo: Dictionary, relativo: Vector2) -> Vector2:
+	var omega := deg_to_rad(float(corpo.get("rotation", {}).get("degrees_per_second", 0.0)))
+	return Vector2(-relativo.y, relativo.x) * omega
+
+
+static func pouso_seguro(corpo: Dictionary, relativo: Vector2, tempo: float) -> bool:
+	if not corpo.has("landing_zone"):
+		return true
+	var setor: Dictionary = corpo.landing_zone
+	var centro := rotacao_corpo(corpo, tempo) + deg_to_rad(setor.center_degrees)
+	return absf(angle_difference(centro, relativo.angle())) <= deg_to_rad(setor.half_width_degrees) + 0.000001
+
+
 static func posicao_corpo(corpo: Dictionary, tempo: float) -> Vector2:
 	if not corpo.has("orbit"):
 		return corpo.position
@@ -94,7 +112,8 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 			prioridade = p
 			var corpo_contato: Dictionary = corpo.duplicate(true)
 			corpo_contato.position = centro_seguinte
-			contato = {"body": corpo_contato, "kind": "body", "fraction": t}
+			var relativo_contato := (posicao - centro_atual).lerp(fim - centro_seguinte, t)
+			contato = {"body": corpo_contato, "kind": "body", "fraction": t, "safe_landing": pouso_seguro(corpo, relativo_contato, tempo + delta * t)}
 	if not dentro_limites(fim, limites):
 		var t := 0.0
 		if dentro_limites(posicao, limites):

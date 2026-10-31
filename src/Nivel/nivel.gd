@@ -45,7 +45,12 @@ func _process(_delta: float) -> void:
 		return
 	for dados in partida.nave.corpos:
 		if corpos_visuais.has(dados.id):
-			corpos_visuais[dados.id].position = dados.position
+			var visual: Node2D = corpos_visuais[dados.id]
+			visual.position = dados.position
+			var giro: float = partida.nave.Fisica.rotacao_corpo(dados, partida.nave.tempo_simulacao)
+			visual.sprite.rotation = giro
+			visual.marcas.dados["_rotation"] = giro
+			visual.marcas.queue_redraw()
 
 
 func _ao_alerta(id_corpo: String, ativo: bool) -> void:

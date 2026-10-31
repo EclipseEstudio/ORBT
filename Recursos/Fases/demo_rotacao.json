@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "demo_rotacao",
+  "name": "Pouso na faixa segura",
+  "order": 11,
+  "bounds": {
+    "position": [
+      -180,
+      -200
+    ],
+    "size": [
+      540,
+      800
+    ]
+  },
+  "initial_fuel": 5,
+  "flight_timeout": 30,
+  "physics": {
+    "gravity_constant": 2,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 8,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 80
+  },
+  "start": {
+    "body_id": "origem",
+    "angle_degrees": -90
+  },
+  "goal": {
+    "id": "terra",
+    "position": [
+      90,
+      60
+    ],
+    "mass": 0,
+    "visual_radius": 14,
+    "collision_radius": 14,
+    "capture_radius": 16,
+    "danger_radius": 0,
+    "proximity_radius": 45
+  },
+  "bodies": [
+    {
+      "id": "origem",
+      "type": "planet",
+      "position": [
+        90,
+        250
+      ],
+      "mass": 24000,
+      "visual_radius": 20,
+      "collision_radius": 20,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 110,
+      "orbit": {
+        "center": [
+          30,
+          250
+        ],
+        "period_seconds": 12,
+        "clockwise": true
+      },
+      "rotation": {
+        "degrees_per_second": 30,
+        "initial_degrees": 0
+      },
+      "landing_zone": {
+        "center_degrees": -90,
+        "half_width_degrees": 45
+      }
+    },
+    {
+      "id": "apoio",
+      "type": "satellite",
+      "position": [
+        210,
+        140
+      ],
+      "mass": 30000,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 16,
+      "danger_radius": 0,
+      "proximity_radius": 40,
+      "orbit": {
+        "center": [
+          210,
+          200
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      },
+      "rotation": {
+        "degrees_per_second": -20,
+        "initial_degrees": 0
+      },
+      "landing_zone": {
+        "center_degrees": -90,
+        "half_width_degrees": 60
+      }
+    },
+    {
+      "id": "asteroide",
+      "type": "asteroid",
+      "position": [
+        -40,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 0,
+      "danger_radius": 12,
+      "proximity_radius": 40,
+      "orbit": {
+        "center": [
+          -40,
+          160
+        ],
+        "period_seconds": 16,
+        "clockwise": true
+      }
+    }
+  ],
+  "tutorial": "Espere o apoio se mover e lance. A nave herda a velocidade orbital; observe a prévia.",
+  "notes": "Demonstração de rotação e faixa angular de pouso. Abra no editor. Faixas verdes indicam pouso permitido. Campanha preservada."
+}

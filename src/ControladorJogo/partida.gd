@@ -83,6 +83,9 @@ func resolver_contato(contato: Dictionary) -> void:
 		finalizar(false, "Fora dos limites")
 		return
 	var corpo: Dictionary = contato.body
+	if not contato.get("safe_landing", true):
+		finalizar(false, "Pouso fora da faixa segura")
+		return
 	match corpo.type:
 		"sun", "asteroid":
 			finalizar(false, "Colisão com perigo")

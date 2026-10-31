@@ -50,6 +50,12 @@ func _draw() -> void:
 		if corpo.get("orbit") is Dictionary and Carregador.vetor(corpo.orbit.get("center")):
 			var centro_orbita := tela(Vector2(corpo.orbit.center[0], corpo.orbit.center[1]))
 			draw_arc(centro_orbita, centro_orbita.distance_to(posicao), 0, TAU, 96, Color(0.4, 0.8, 1.0, 0.5), 1.0, true)
+		if corpo.get("landing_zone") is Dictionary and Carregador.numero(corpo.landing_zone.get("center_degrees"), -360, 360) and Carregador.numero(corpo.landing_zone.get("half_width_degrees"), 0.01, 180):
+			var giro := 0.0
+			if corpo.get("rotation") is Dictionary and Carregador.numero(corpo.rotation.get("initial_degrees", 0), -360, 360):
+				giro = float(corpo.rotation.get("initial_degrees", 0))
+			var setor: Dictionary = corpo.landing_zone
+			draw_arc(posicao, (corpo.collision_radius + 3) * escala, deg_to_rad(setor.center_degrees + giro - setor.half_width_degrees), deg_to_rad(setor.center_degrees + giro + setor.half_width_degrees), 48, Color.LIME_GREEN, 3, true)
 		for campo in regioes:
 			if regioes[campo] and corpo[campo] > 0:
 				draw_arc(posicao, maxf(1, corpo[campo] * escala), 0, TAU, 64, CORES[campo], 1.5, true)

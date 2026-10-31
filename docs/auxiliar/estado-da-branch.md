@@ -6,6 +6,8 @@ Atualizado em **31/10/2026**, após a revisão das [issues](https://github.com/E
 
 Após o PR #89, o usuário priorizou funcionalidades e escolheu incluir órbitas e corpos móveis. A implementação e seus limites estão em [Órbitas e corpos móveis](../tecnica/orbitas.md). A validação de aceite Android foi adiada. A restrição histórica abaixo sobre órbitas condicionais é substituída por esta decisão somente para órbitas circulares de centro fixo; os demais itens continuam condicionais.
 
+Após a integração das órbitas no PR #91, a continuidade autorizada inclui [rotação e pouso por faixa angular](../tecnica/rotacao-e-pouso.md), opcionais por corpo. Portais e demais funcionalidades permanecem condicionais. Os testes de aceite continuam adiados.
+
 ## Situação reconciliada
 
 | Situação | Quantidade | Significado |

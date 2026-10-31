@@ -134,8 +134,11 @@ func avancar(delta: float) -> Dictionary:
 	if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
 		var destino := global_position
 		for corpo in corpos:
-			if corpo.id == corpo_apoio and corpo.has("orbit"):
+			if corpo.id == corpo_apoio and (corpo.has("orbit") or corpo.has("rotation")):
+				var giro := Fisica.rotacao_corpo(corpo, tempo_simulacao + delta) - Fisica.rotacao_corpo(corpo, tempo_simulacao)
+				posicao_relativa = posicao_relativa.rotated(giro)
 				destino = Fisica.posicao_corpo(corpo, tempo_simulacao + delta) + posicao_relativa
+				global_rotation = posicao_relativa.angle() + PI / 2.0
 		var outros := corpos.filter(func(corpo: Dictionary): return corpo.id != corpo_apoio)
 		var transporte := Fisica.varrer(global_position, destino, Vector2.ZERO, delta, outros, limites, raio, "", tempo_simulacao)
 		tempo_simulacao += delta
@@ -179,7 +182,7 @@ func parar() -> void:
 func velocidade_apoio() -> Vector2:
 	for corpo in corpos:
 		if corpo.id == corpo_apoio:
-			return Fisica.velocidade_corpo(corpo, tempo_simulacao)
+			return Fisica.velocidade_corpo(corpo, tempo_simulacao) + Fisica.velocidade_superficie(corpo, posicao_relativa)
 	return Vector2.ZERO
 
 

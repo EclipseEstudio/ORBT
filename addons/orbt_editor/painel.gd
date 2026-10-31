@@ -243,6 +243,21 @@ func _mostrar_propriedades() -> void:
 			documento.alterado.emit()
 			_mostrar_propriedades())
 		_propriedades.add_child(orbita)
+		for campo in ["rotation", "landing_zone"]:
+			if campo == "landing_zone" and documento.objeto(documento.selecao).get("type", "earth") not in ["planet", "satellite"]:
+				continue
+			var opcao := CheckBox.new()
+			opcao.text = "Rotação do corpo" if campo == "rotation" else "Faixa segura de pouso"
+			opcao.button_pressed = documento.objeto(documento.selecao).has(campo)
+			opcao.toggled.connect(func(ativo: bool):
+				var corpo: Dictionary = documento.objeto(documento.selecao)
+				if ativo:
+					corpo[campo] = {"degrees_per_second": 30.0, "initial_degrees": 0.0} if campo == "rotation" else {"center_degrees": -90.0, "half_width_degrees": 45.0}
+				else:
+					corpo.erase(campo)
+				documento.alterado.emit()
+				_mostrar_propriedades())
+			_propriedades.add_child(opcao)
 		for chave in documento.objeto(documento.selecao):
 			if documento.selecao == -1 and chave == "type":
 				continue

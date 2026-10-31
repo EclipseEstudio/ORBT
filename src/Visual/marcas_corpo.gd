@@ -33,6 +33,11 @@ func _draw() -> void:
 	else:
 		traco(Vector2(-3, 0), Vector2(3, 0))
 		traco(Vector2(0, -3), Vector2(0, 3))
+	if dados.has("landing_zone"):
+		var setor: Dictionary = dados.landing_zone
+		var centro: float = dados.get("_rotation", 0.0) + deg_to_rad(setor.center_degrees)
+		var abertura := deg_to_rad(float(setor.half_width_degrees))
+		draw_arc(Vector2.ZERO, dados.collision_radius + 3, centro - abertura, centro + abertura, 48, Color.LIME_GREEN, 3, true)
 	if proximo or dados.get("show_proximity", false):
 		for indice in range(16):
 			var inicio := indice * TAU / 16
