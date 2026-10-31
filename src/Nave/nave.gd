@@ -24,6 +24,7 @@ var corpo_apoio := ""
 var posicao_relativa := Vector2.ZERO
 var origem_decolagem := ""
 var corpos: Array = []
+var tempo_simulacao := 0.0
 var fisica: Dictionary = {"gravity_constant": 1.0, "softening": 8.0}
 var limites := Rect2(-100000, -100000, 200000, 200000)
 var simulacao_automatica := true
@@ -44,6 +45,7 @@ func _ready() -> void:
 func configurar(nivel: NivelRes) -> void:
 	cancelar_pedidos()
 	corpos = nivel.corpos.duplicate(true)
+	tempo_simulacao = 0.0
 	fisica = nivel.fisica.duplicate(true)
 	limites = nivel.limites
 	massa = nivel.parametros_nave.mass
@@ -110,7 +112,7 @@ func aplicar_pedidos() -> void:
 		if not entrada.pode_controlar() or combustivel <= 0:
 			break
 		if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
-			velocidade = Vector2.ZERO
+			velocidade = velocidade_apoio()
 			origem_decolagem = corpo_apoio
 			corpo_apoio = ""
 			posicao_relativa = Vector2.ZERO
@@ -130,8 +132,21 @@ func avancar(delta: float) -> Dictionary:
 	aplicar_pedidos()
 	_atualizar_orientacao(delta)
 	if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
-		return {}
-	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem)
+		var destino := global_position
+		for corpo in corpos:
+			if corpo.id == corpo_apoio and corpo.has("orbit"):
+				destino = Fisica.posicao_corpo(corpo, tempo_simulacao + delta) + posicao_relativa
+		var outros := corpos.filter(func(corpo: Dictionary): return corpo.id != corpo_apoio)
+		var transporte := Fisica.varrer(global_position, destino, Vector2.ZERO, delta, outros, limites, raio, "", tempo_simulacao)
+		tempo_simulacao += delta
+		Fisica.atualizar_corpos(corpos, tempo_simulacao)
+		global_position = transporte.position
+		if not transporte.contact.is_empty():
+			contato_detectado.emit(transporte.contact)
+		return transporte.contact
+	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem, tempo_simulacao)
+	tempo_simulacao += delta
+	Fisica.atualizar_corpos(corpos, tempo_simulacao)
 	global_position = resultado.position
 	velocidade = resultado.velocity
 	if not resultado.contact.is_empty():
@@ -161,13 +176,20 @@ func parar() -> void:
 	animation_player.play("default")
 
 
+func velocidade_apoio() -> Vector2:
+	for corpo in corpos:
+		if corpo.id == corpo_apoio:
+			return Fisica.velocidade_corpo(corpo, tempo_simulacao)
+	return Vector2.ZERO
+
+
 func prever_trajetoria() -> PackedVector2Array:
 	var impulso: Vector2 = entrada.gesto.obter_impulso()
 	if not entrada.pode_controlar() or impulso.is_zero_approx():
 		return PackedVector2Array()
-	var velocidade_inicial := Vector2.ZERO if condicao in [Condicao.POUSADA, Condicao.PRONTA] else velocidade
+	var velocidade_inicial := velocidade_apoio() if condicao in [Condicao.POUSADA, Condicao.PRONTA] else velocidade
 	var origem := corpo_apoio if condicao == Condicao.POUSADA else origem_decolagem
-	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second)
+	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second, tempo_simulacao)
 
 
 func _atualizar_orientacao(delta: float) -> void:

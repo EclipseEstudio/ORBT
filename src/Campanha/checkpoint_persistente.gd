@@ -34,6 +34,7 @@ func validar(nivel: NivelRes) -> Dictionary:
 	if valido:
 		valido = float(combustivel) == floorf(float(combustivel))
 	valido = valido and _numero(dados.get("tempo"), 0, nivel.tempo_voo)
+	valido = valido and _numero(dados.get("tempo_simulacao", 0.0), 0, 1.0e12)
 	if not valido:
 		aviso = "Checkpoint inválido. Reinicie a fase."
 		bloqueado = true
@@ -43,7 +44,7 @@ func validar(nivel: NivelRes) -> Dictionary:
 	copia.posicao_relativa = Vector2(copia.posicao_relativa[0], copia.posicao_relativa[1])
 	if not corpo.is_empty():
 		valido = absf(copia.posicao_relativa.length() - (corpo.collision_radius + nivel.parametros_nave.radius)) < 0.01
-		valido = valido and copia.posicao.distance_to(corpo.position + copia.posicao_relativa) < 0.01
+		valido = valido and copia.posicao.distance_to(preload("res://src/Nave/simulacao_voo.gd").posicao_corpo(corpo, copia.get("tempo_simulacao", 0.0)) + copia.posicao_relativa) < 0.01
 	else:
 		valido = nivel.inicio.has("position") and copia.posicao.is_equal_approx(nivel.obter_posicao_inicial()) and copia.posicao_relativa.is_zero_approx()
 	if not valido:

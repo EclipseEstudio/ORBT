@@ -40,6 +40,14 @@ func _ready() -> void:
 	queue_redraw()
 
 
+func _process(_delta: float) -> void:
+	if not is_instance_valid(partida):
+		return
+	for dados in partida.nave.corpos:
+		if corpos_visuais.has(dados.id):
+			corpos_visuais[dados.id].position = dados.position
+
+
 func _ao_alerta(id_corpo: String, ativo: bool) -> void:
 	if corpos_visuais.has(id_corpo):
 		corpos_visuais[id_corpo].proximo = ativo
