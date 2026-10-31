@@ -6,6 +6,8 @@ var aviso := ""
 var bloqueado := false
 var _ultimo := ""
 var dados: Dictionary = {}
+var _pendente: Dictionary = {}
+var _versao_pendente := 0
 
 func _numero(valor, minimo: float, maximo: float) -> bool:
 	return (valor is int or valor is float) and is_finite(float(valor)) and valor >= minimo and valor <= maximo
@@ -68,6 +70,9 @@ func _ler(arquivo: String) -> Dictionary:
 	return {"estado": "valido", "dados": envelope.checkpoint, "texto": texto}
 
 func carregar() -> bool:
+	# Não substituir um pouso ainda não gravado por uma cópia antiga do disco.
+	if not _pendente.is_empty():
+		return false
 	dados = {}
 	aviso = ""
 	bloqueado = false
@@ -102,6 +107,8 @@ func _gravar(arquivo: String, texto: String) -> bool:
 func salvar(checkpoint: Dictionary, versao: int) -> bool:
 	if bloqueado:
 		return false
+	_pendente = checkpoint.duplicate(true)
+	_versao_pendente = versao
 	var copia := checkpoint.duplicate(true)
 	for campo in ["posicao", "posicao_relativa"]:
 		var v: Vector2 = copia[campo]
@@ -122,9 +129,20 @@ func salvar(checkpoint: Dictionary, versao: int) -> bool:
 	_ultimo = texto
 	dados = copia
 	aviso = ""
+	_pendente.clear()
 	return true
 
+func salvamento_pendente() -> bool:
+	return not bloqueado and not _pendente.is_empty()
+
+func tentar_salvar() -> bool:
+	if not salvamento_pendente():
+		return false
+	return salvar(_pendente, _versao_pendente)
+
 func limpar() -> bool:
+	# Vitória ou descarte explícito não devem ressuscitar um pouso pendente.
+	_pendente.clear()
 	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 		if FileAccess.file_exists(caminho + sufixo) and DirAccess.remove_absolute(caminho + sufixo) != OK:
 			aviso = "Não foi possível descartar o checkpoint."

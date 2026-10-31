@@ -172,6 +172,8 @@ func proxima_fase(id: String) -> String:
 
 
 func checkpoint_disponivel() -> bool:
+	if checkpoint.salvamento_pendente():
+		return false
 	if checkpoint.dados.is_empty():
 		return false
 	if not checkpoint.dados.get("fase") is String:
@@ -186,7 +188,15 @@ func checkpoint_disponivel() -> bool:
 	return not checkpoint.validar(GLOBAL.gerendiador_de_nivel.obter_nivel_res(id)).is_empty()
 
 
+func tentar_salvar_checkpoint() -> bool:
+	if not persistir_progresso:
+		return false
+	return checkpoint.tentar_salvar()
+
+
 func continuar_checkpoint() -> bool:
+	if checkpoint.salvamento_pendente():
+		return false
 	if checkpoint.dados.is_empty() or not checkpoint.dados.get("fase") is String:
 		checkpoint.aviso = "Checkpoint inválido. Reinicie a fase."
 		return false
