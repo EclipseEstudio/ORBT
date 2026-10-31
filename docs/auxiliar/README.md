@@ -12,6 +12,7 @@ Manuais de uso, materiais de apoio e registros do projeto. Consulte o [índice g
 - [Estado atual e continuidade](estado-da-branch.md): entregas, issues e pendências.
 - [Histórico de implementação](historico-implementacao.md): registros datados das entregas anteriores.
 - [Aceite da issue 40](validacao-issue-40.md): reprodução, resultados e limites da validação.
+- [Direção da Terra encoberta pela interface](validacao-indicador-terra.md): regressão de sobreposição com controles e área segura (#31).
 - [Saída resumida da execução de 29/10/2026](evidencias/issue-40-2026-10-29.txt).
 - [Plano temporário da issue 4](plano-temporario-issue-4.md): registro histórico substituído; não usar como plano atual.
 

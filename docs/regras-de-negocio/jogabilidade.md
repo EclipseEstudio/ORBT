@@ -60,6 +60,8 @@ Enquanto a mira está fora da zona de cancelamento, a prévia mostra a trajetór
 
 A câmera apresenta a Terra no início e depois volta à nave para habilitar a mira. O painel da partida informa combustível, tempo, direção e distância da Terra, proximidade de corpos e causa do desfecho. Os controles permitem pausar, explorar, recentralizar, reiniciar e retornar à seleção de fases.
 
+O texto de distância indica a direção quando o centro da Terra sai da área segura ou fica encoberto pelos controles superiores ou pelo painel inferior. Sobreposição com o topo indica para cima; com o painel inferior, para baixo. A indicação orienta a busca pelo destino no mapa e não prevê uma rota de voo.
+
 ## Aceite e limites do protótipo
 
 Ainda precisam de aceite da equipe e calibração no Android: direção livre oposta ao arraste, curva e valores de impulso, gravidade, contato contra a origem, pouso seguro sem combustível e suspensão da contagem no pouso. A prévia, os gestos, a pausa e a legibilidade também dependem de teste no aparelho.

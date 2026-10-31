@@ -146,15 +146,19 @@ static func area_segura_logica(area_fisica: Rect2, transformacao: Transform2D, v
 	return AreaSeguraMenu.logica(area_fisica, transformacao, viewport)
 
 
-static func direcao_alvo(na_tela: Vector2, viewport: Rect2, status: Rect2) -> String:
+static func direcao_alvo(na_tela: Vector2, viewport: Rect2, topo: Array[Rect2], rodape := Rect2()) -> String:
 	var direcao := ""
-	if na_tela.y < viewport.position.y or status.has_point(na_tela):
+	if na_tela.y < viewport.position.y:
 		direcao += "↑"
-	elif na_tela.y > viewport.end.y:
+	elif na_tela.y >= viewport.end.y:
+		direcao += "↓"
+	elif topo.any(func(regiao: Rect2): return regiao.has_point(na_tela)):
+		direcao += "↑"
+	elif rodape.has_point(na_tela):
 		direcao += "↓"
 	if na_tela.x < viewport.position.x:
 		direcao += "←"
-	elif na_tela.x > viewport.end.x:
+	elif na_tela.x >= viewport.end.x:
 		direcao += "→"
 	return direcao
 
@@ -251,6 +255,12 @@ func _process(_delta: float) -> void:
 		_alerta.text += "\n" + partida.aviso_salvamento
 	var alvo: Vector2 = partida.nivel.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
-	var direcao := direcao_alvo(na_tela, get_viewport().get_visible_rect(), _status.get_global_rect())
+	var regioes_topo: Array[Rect2] = []
+	for controle in [_status, _indicadores, _pausa, _destino, _alerta]:
+		if controle.is_visible_in_tree() and not (controle is Label and controle.text.is_empty()):
+			regioes_topo.append(controle.get_global_rect())
+	var area := _raiz.get_global_rect()
+	var rodape := _rolagem_rodape.get_global_rect().intersection(area)
+	var direcao := direcao_alvo(na_tela, area, regioes_topo, rodape)
 	_destino.text = "Terra %s · %d m" % [direcao, partida.nave.global_position.distance_to(alvo)]
 	_ajustar_rodape()
