@@ -1,5 +1,7 @@
 # Validação dos menus e resultados — issue #51
 
+Após o PR #82 (`8f7f63f`), o rodapé de pausa/resultados permite rolagem vertical e fica limitado ao espaço abaixo do status, dentro da área segura. Durante o jogo, as dicas continuam permitindo toque/arraste. [Cenários e capturas](validacao-rolagem-resultados.md); teste físico Android permanece pendente.
+
 Após o PR #80 (`cc449e9`), Voltar nativo e Escape passam a navegar pelas telas auxiliares/campanha e pausar a fase. Retomar continua explícito; saída nativa ocorre somente no menu principal. [Fluxo, testes e capturas](validacao-voltar.md). Notificação nativa foi injetada em desktop; validação física Android permanece pendente.
 
 Após integração do PR #77 (`1604781`): menu principal, configurações e créditos passam a respeitar a área segura. Menu e configurações permitem rolagem quando o conteúdo não cabe, incluindo diagnósticos longos. [Evidências e limites](validacao-areas-menus.md); toque e recortes reais Android permanecem pendentes.

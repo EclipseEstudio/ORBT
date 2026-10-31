@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Após o PR #82 (`8f7f63f`), a continuidade da #51 limita a altura do rodapé de pausa/resultados ao espaço abaixo do status e permite alcançar mensagens/ações por rolagem. O jogo mantém gestos sobre o texto das dicas. [Cenários e capturas](validacao-rolagem-resultados.md). Nenhum aparelho Android estava conectado; validação física continua pendente.
+
 Após o PR #81 (`0f4e241`), #50 acrescenta retentativa explícita de gravação das preferências. A tela distingue valores da sessão de valores salvos e preserva a pendência ao fechar/reabrir no mesmo processo. Suíte: 2.678 verificações; PCK: 30 gerais e 14 de retentativa. [Evidências e limites](validacao-retentar-preferencias.md). Armazenamento e toque físico Android continuam pendentes.
 
 Continuidade sobre `cc449e9` (PR #80 integrado): #51 acrescenta tratamento de Voltar nativo e Escape. Telas auxiliares fecham, campanha volta ao menu e a fase pausa com gesto/pedidos cancelados; retomada é explícita. Saída nativa fica restrita ao menu principal. [Fluxo e evidências](validacao-voltar.md). Botão/gesto Android real continua pendente.
