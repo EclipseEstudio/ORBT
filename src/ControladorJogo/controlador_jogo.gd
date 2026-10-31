@@ -109,7 +109,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 		erro_abertura = "Fase bloqueada ou indisponível."
 		return false
 	_abrindo = true
-	var instancia := GLOBAL.gerendiador_de_nivel.obter_nivel_instancia(id_nivel)
+	var instancia: Node2D = GLOBAL.gerendiador_de_nivel.obter_nivel_instancia(id_nivel)
 	if instancia == null:
 		erro_abertura = "Não foi possível abrir a fase.\n" + "\n".join(GLOBAL.gerendiador_de_nivel.erros)
 		_abrindo = false
