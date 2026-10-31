@@ -38,7 +38,7 @@ func _ready() -> void:
 	var ferramentas := HFlowContainer.new()
 	add_child(ferramentas)
 	var tipo := OptionButton.new()
-	for texto in ["planet", "satellite", "sun", "asteroid"]:
+	for texto in ["planet", "satellite", "sun", "asteroid", "portal"]:
 		tipo.add_item(texto)
 	ferramentas.add_child(tipo)
 	_botao(ferramentas, "Inserir corpo", func():
@@ -233,6 +233,7 @@ func _mostrar_propriedades() -> void:
 		var trilha: Array = ["goal"] if documento.selecao == -1 else ["bodies", documento.selecao]
 		var orbita := CheckBox.new()
 		orbita.text = "Movimento orbital"
+		orbita.disabled = documento.objeto(documento.selecao).get("type") == "portal"
 		orbita.button_pressed = documento.objeto(documento.selecao).has("orbit")
 		orbita.toggled.connect(func(ativo: bool):
 			var corpo: Dictionary = documento.objeto(documento.selecao)
@@ -244,6 +245,8 @@ func _mostrar_propriedades() -> void:
 			_mostrar_propriedades())
 		_propriedades.add_child(orbita)
 		for campo in ["rotation", "landing_zone"]:
+			if documento.objeto(documento.selecao).get("type") == "portal":
+				continue
 			if campo == "landing_zone" and documento.objeto(documento.selecao).get("type", "earth") not in ["planet", "satellite"]:
 				continue
 			var opcao := CheckBox.new()
@@ -278,7 +281,7 @@ func _campo(trilha: Array, valor: Variant, nome_campo: String) -> void:
 	_propriedades.add_child(rotulo)
 	if nome_campo == "type":
 		var opcao := OptionButton.new()
-		for tipo in ["planet", "satellite", "sun", "asteroid"]:
+		for tipo in ["planet", "satellite", "sun", "asteroid", "portal"]:
 			opcao.add_item(tipo)
 			if tipo == valor:
 				opcao.selected = opcao.item_count - 1

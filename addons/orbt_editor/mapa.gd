@@ -59,6 +59,8 @@ func _draw() -> void:
 		for campo in regioes:
 			if regioes[campo] and corpo[campo] > 0:
 				draw_arc(posicao, maxf(1, corpo[campo] * escala), 0, TAU, 64, CORES[campo], 1.5, true)
+		if corpo.get("type") == "portal" and Carregador.numero(corpo.get("exit_degrees"), -360, 360):
+			draw_line(posicao, posicao + Vector2.RIGHT.rotated(deg_to_rad(corpo.exit_degrees)) * maxf(12, corpo.collision_radius * escala), Color.CYAN, 2, true)
 		var nome: String = ("Terra · " if indice == -1 else "") + corpo.id
 		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 		if documento.selecao == indice:

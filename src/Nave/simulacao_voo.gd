@@ -52,7 +52,7 @@ static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> V
 	var epsilon: float = fisica.get("softening", 8.0)
 	var constante: float = fisica.get("gravity_constant", 1.0)
 	for corpo in corpos:
-		if corpo.type in ["asteroid", "earth"] or corpo.mass <= 0.0:
+		if corpo.type in ["asteroid", "earth", "portal"] or corpo.mass <= 0.0:
 			continue
 		var r: Vector2 = corpo.position - posicao
 		resultado += constante * corpo.mass * r / pow(r.length_squared() + epsilon * epsilon, 1.5)
@@ -62,6 +62,8 @@ static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> V
 static func raio_contato(corpo: Dictionary) -> float:
 	if corpo.type in ["sun", "asteroid"]:
 		return corpo.danger_radius
+	if corpo.type == "portal":
+		return corpo.collision_radius
 	return maxf(corpo.collision_radius, corpo.capture_radius)
 
 
@@ -126,7 +128,14 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 		if t <= primeiro:
 			primeiro = t
 			contato = {"kind": "bounds", "fraction": t}
-	return {"position": posicao.lerp(fim, primeiro) if not contato.is_empty() else fim, "velocity": nova_velocidade, "contact": contato}
+	var ponto := posicao.lerp(fim, primeiro) if not contato.is_empty() else fim
+	if contato.get("body", {}).get("type") == "portal":
+		for destino in corpos:
+			if destino.id == contato.body.target_id and destino.type == "portal":
+				var direcao := Vector2.RIGHT.rotated(deg_to_rad(destino.exit_degrees))
+				var saida: Vector2 = destino.position + direcao * (raio_contato(destino) + raio_nave + 0.01)
+				return {"position": saida, "velocity": direcao * nova_velocidade.length(), "contact": {}, "teleported": true, "entry_position": ponto}
+	return {"position": ponto, "velocity": nova_velocidade, "contact": contato}
 
 
 static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0, tempo := 0.0) -> PackedVector2Array:
@@ -138,6 +147,11 @@ static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica:
 		var proximo := passo(posicao, velocidade, delta, corpos, fisica, limites, raio_nave, origem, tempo + indice * delta)
 		posicao = proximo.position
 		velocidade = proximo.velocity
+		if proximo.get("teleported", false):
+			origem = ""
+			pontos.append(proximo.entry_position)
+			pontos.append(Vector2(INF, INF))
+			pontos.append(posicao)
 		if indice % 3 == 2 or not proximo.contact.is_empty() or indice == passos - 1:
 			pontos.append(posicao)
 		if not proximo.contact.is_empty():

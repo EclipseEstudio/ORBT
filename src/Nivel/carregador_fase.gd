@@ -108,10 +108,15 @@ static func validar(dados: Variant) -> Dictionary:
 		else:
 			ids[corpo.id] = true
 			prefixo += " (" + corpo.id + ")"
-		if not corpo.get("type") in ["planet", "satellite", "sun", "asteroid", "earth"] or (indice < dados.bodies.size() and corpo.get("type") == "earth"):
+		if not corpo.get("type") in ["planet", "satellite", "sun", "asteroid", "earth", "portal"] or (indice < dados.bodies.size() and corpo.get("type") == "earth"):
 			erros.append(prefixo + ".type: tipo inválido")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
+		if corpo.get("type") == "portal":
+			if not texto(corpo.get("target_id")) or not numero(corpo.get("exit_degrees"), -360, 360) or corpo.has("orbit") or corpo.has("rotation"):
+				erros.append(prefixo + ": portal estático exige target_id e exit_degrees entre -360 e 360")
+			if corpo.get("mass") != 0 or corpo.get("danger_radius") != 0 or corpo.get("capture_radius") != 0:
+				erros.append(prefixo + ": portal exige massa, perigo e captura zero")
 		if corpo.has("rotation"):
 			var giro = corpo.rotation
 			if not giro is Dictionary or not numero(giro.get("degrees_per_second"), -360, 360) or not numero(giro.get("initial_degrees", 0.0), -360, 360):
@@ -139,7 +144,7 @@ static func validar(dados: Variant) -> Dictionary:
 		if corpo.type in ["sun", "asteroid"]:
 			if corpo.danger_radius < corpo.collision_radius or corpo.capture_radius != 0:
 				erros.append(prefixo + ": perigo deve cobrir colisão e não ter captura")
-		elif corpo.danger_radius != 0 or corpo.capture_radius < corpo.collision_radius:
+		elif corpo.type != "portal" and (corpo.danger_radius != 0 or corpo.capture_radius < corpo.collision_radius):
 			erros.append(prefixo + ": corpo seguro exige captura >= colisão e perigo zero")
 		if corpo.proximity_radius < Fisica.raio_contato(corpo):
 			erros.append(prefixo + ".proximity_radius: deve cobrir contato")
@@ -147,6 +152,26 @@ static func validar(dados: Variant) -> Dictionary:
 		if corpo.has("orbit"):
 			corpo["_posicao_inicial"] = corpo.position
 		normalizados.append(corpo)
+	if not erros.is_empty():
+		return {"nivel": null, "erros": erros}
+	for portal in normalizados:
+		if portal.type != "portal":
+			continue
+		var destino: Dictionary = {}
+		for candidato in normalizados:
+			if candidato.id == portal.target_id:
+				destino = candidato
+		if destino.is_empty() or destino.type != "portal" or destino.id == portal.id or destino.get("target_id") != portal.id:
+			erros.append(portal.id + ".target_id: exige outro portal com ligação recíproca")
+			continue
+		var direcao := Vector2.RIGHT.rotated(deg_to_rad(destino.exit_degrees))
+		var saida: Vector2 = destino.position + direcao * (destino.collision_radius + nave.radius + 0.01)
+		var area := Rect2(Vector2(bounds.position[0], bounds.position[1]), Vector2(bounds["size"][0], bounds["size"][1]))
+		if not Fisica.dentro_limites(destino.position, area) or not Fisica.dentro_limites(saida, area):
+			erros.append(destino.id + ": portal/saída fora dos limites")
+		for corpo in normalizados:
+			if corpo.id != destino.id and saida.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + nave.radius:
+				erros.append(destino.id + ": saída sobreposta a " + corpo.id)
 	if not erros.is_empty():
 		return {"nivel": null, "erros": erros}
 	var nivel := Nivel.new()

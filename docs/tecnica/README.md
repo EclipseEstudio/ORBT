@@ -12,3 +12,5 @@ O comportamento esperado pelo jogador fica nas [regras de negócio](../regras-de
 - [Órbitas e corpos móveis](orbitas.md): configuração, editor, pouso, decolagem e persistência.
 
 - [Rotação e faixa segura de pouso](rotacao-e-pouso.md): superfície móvel, decolagem e setor angular opcional.
+
+- [Portais pareados](portais.md): configuração, editor, direção de saída e prévia após travessia.
