@@ -56,7 +56,7 @@ func _executar() -> void:
 	hud._process(0)
 	conferir(hud._configuracoes.visible and paused, "configurações disponíveis na pausa")
 	hud._configuracoes.pressed.emit()
-	var tela_pausa = hud._raiz.get_node("TelaConfiguracoes")
+	var tela_pausa = hud.get_node("TelaConfiguracoes")
 	var coluna_pausa = tela_pausa.find_child("musica", true, false).get_parent()
 	coluna_pausa.get_node("musica").value = 0.0
 	conferir(AudioServer.is_bus_mute(AudioServer.get_bus_index("Musica")) and not AudioServer.is_bus_mute(AudioServer.get_bus_index("Efeitos")), "silêncio de música não afeta efeitos")

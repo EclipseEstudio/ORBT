@@ -68,6 +68,41 @@ func _executar() -> void:
 	viewport.size = Vector2i(180, 390)
 	await acomodar()
 	conferir(Rect2(0, 0, 180, 390).encloses(voltar.get_global_rect()), "Créditos se adaptam ao redimensionamento")
+	creditos.free()
+	conferir(jogo.iniciar_fase("teste_001"), "Abre fase para verificar configurações na pausa")
+	await acomodar()
+	var partida = jogo.mundo_atual.partida
+	var hud: CanvasLayer
+	for filho in jogo.mundo_atual.get_children():
+		if filho is CanvasLayer and filho.has_method("_abrir_configuracoes"):
+			hud = filho
+	partida.set_physics_process(false)
+	partida.pausar()
+	var saldo: int = partida.nave.combustivel
+	for altura in [240, 390]:
+		viewport.size = Vector2i(180, altura)
+		await acomodar()
+		var recorte := Rect2(8, 16, 164, altura - 32)
+		var recorte_fisico: Rect2 = viewport.get_screen_transform() * recorte
+		Area.aplicar(hud._raiz, 0, recorte_fisico)
+		hud._abrir_configuracoes()
+		var tela_pausa = hud.find_child("TelaConfiguracoes", true, false)
+		Area.aplicar(tela_pausa._margem, 0, recorte_fisico)
+		await acomodar()
+		conferir(tela_pausa.get_global_rect().is_equal_approx(Rect2(0, 0, 180, altura)), "Fundo da configuração em pausa cobre viewport inteiro: %d" % altura)
+		conferir(tela_pausa._margem.get_global_rect().is_equal_approx(recorte), "Área segura aplicada uma única vez na pausa: %d" % altura)
+		var quantidade := hud.get_child_count()
+		hud._abrir_configuracoes()
+		conferir(hud.get_child_count() == quantidade, "Abrir configurações novamente não duplica a tela")
+		var retorno: Button = tela_pausa.find_child("Voltar", true, false)
+		tela_pausa._margem.get_child(0).ensure_control_visible(retorno)
+		await acomodar()
+		conferir(recorte.encloses(retorno.get_global_rect()), "Voltar da configuração pausada cabe na área segura")
+		retorno.pressed.emit()
+		await acomodar()
+		conferir(paused and partida.estado == partida.Estado.PAUSADO and partida.nave.combustivel == saldo, "Fechar configurações preserva pausa e combustível")
+		conferir(hud._raiz.get_global_rect().is_equal_approx(recorte), "Fechar configurações mantém área segura do HUD")
+	paused = false
 	suporte.queue_free()
 	await process_frame
 	print("Áreas dos menus: %d verificações, %d falhas." % [verificacoes, falhas])
