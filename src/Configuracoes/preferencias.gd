@@ -6,6 +6,7 @@ var persistir := true
 var musica := 1.0
 var efeitos := 1.0
 var aviso := ""
+var _pendente := false
 
 func _volume_valido(valor) -> bool:
 	return (valor is float or valor is int) and is_finite(float(valor)) and valor >= 0 and valor <= 1
@@ -14,6 +15,7 @@ func carregar() -> void:
 	musica = 1.0
 	efeitos = 1.0
 	aviso = ""
+	_pendente = false
 	if persistir and FileAccess.file_exists(caminho):
 		var parser := JSON.new()
 		var texto := FileAccess.get_file_as_string(caminho)
@@ -51,7 +53,10 @@ func alterar(campo: String, valor: float) -> bool:
 
 func salvar() -> bool:
 	if not persistir:
+		_pendente = false
+		aviso = ""
 		return true
+	_pendente = true
 	var texto := JSON.stringify({"schema_version": 1, "musica": musica, "efeitos": efeitos})
 	var arquivo := FileAccess.open(caminho + ".tmp", FileAccess.WRITE)
 	if arquivo == null:
@@ -65,4 +70,8 @@ func salvar() -> bool:
 		aviso = "Não foi possível salvar as configurações."
 		return false
 	aviso = ""
+	_pendente = false
 	return true
+
+func salvamento_pendente() -> bool:
+	return _pendente

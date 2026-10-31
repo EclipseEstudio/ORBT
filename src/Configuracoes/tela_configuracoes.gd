@@ -6,6 +6,7 @@ signal fechada
 var preferencias: RefCounted
 var _aviso: Label
 var _margem: MarginContainer
+var _tentar_salvar: Button
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -43,6 +44,16 @@ func _ready() -> void:
 	_aviso.add_theme_font_size_override("font_size", 9)
 	_aviso.text = preferencias.aviso
 	coluna.add_child(_aviso)
+	_tentar_salvar = Button.new()
+	_tentar_salvar.name = "TentarSalvar"
+	_tentar_salvar.text = "Tentar salvar novamente"
+	_tentar_salvar.custom_minimum_size.y = 36
+	_tentar_salvar.add_theme_font_size_override("font_size", 10)
+	coluna.add_child(_tentar_salvar)
+	_tentar_salvar.pressed.connect(func():
+		preferencias.salvar()
+		_atualizar_aviso())
+	_atualizar_aviso()
 	var voltar := Button.new()
 	voltar.name = "Voltar"
 	voltar.text = "Voltar"
@@ -58,6 +69,12 @@ func fechar() -> void:
 		return
 	fechada.emit()
 	queue_free()
+
+func _atualizar_aviso() -> void:
+	_aviso.text = preferencias.aviso
+	if preferencias.salvamento_pendente():
+		_aviso.text += "\nOs volumes valem nesta sessão, mas ainda não foram salvos."
+	_tentar_salvar.visible = preferencias.salvamento_pendente()
 
 func _area_segura() -> void:
 	AreaSegura.aplicar(_margem, 0, AreaSegura.fisica())
@@ -82,4 +99,4 @@ func _criar_volume(coluna: VBoxContainer, titulo: String, campo: String, valor: 
 	seletor.value_changed.connect(func(novo: float):
 		preferencias.alterar(campo, novo)
 		rotulo.text = "%s: %d%%" % [titulo, roundi(novo * 100)]
-		_aviso.text = preferencias.aviso)
+		_atualizar_aviso())
