@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "demo_portais",
+  "name": "Travessia por portais",
+  "order": 11,
+  "bounds": {
+    "position": [
+      -100,
+      -100
+    ],
+    "size": [
+      500,
+      300
+    ]
+  },
+  "initial_fuel": 5,
+  "flight_timeout": 30,
+  "physics": {
+    "gravity_constant": 0,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 8,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 80
+  },
+  "start": {
+    "position": [
+      0,
+      0
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "position": [
+      300,
+      0
+    ],
+    "mass": 0,
+    "visual_radius": 14,
+    "collision_radius": 14,
+    "capture_radius": 16,
+    "danger_radius": 0,
+    "proximity_radius": 45
+  },
+  "bodies": [
+    {
+      "id": "portal_a",
+      "type": "portal",
+      "position": [
+        60,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 40,
+      "target_id": "portal_b",
+      "exit_degrees": 180
+    },
+    {
+      "id": "portal_b",
+      "type": "portal",
+      "position": [
+        200,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 40,
+      "target_id": "portal_a",
+      "exit_degrees": 0
+    }
+  ],
+  "tutorial": "Arraste para a esquerda e solte. A prévia mostra o salto entre portais.",
+  "notes": "Demonstração fora da campanha. Um impulso máximo para a direita atravessa o par e chega à Terra."
+}

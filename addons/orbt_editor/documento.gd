@@ -106,7 +106,7 @@ func selecionar(indice: int) -> void:
 
 
 func inserir(tipo: String, posicao: Vector2) -> void:
-	if tipo not in ["planet", "satellite", "sun", "asteroid"]:
+	if tipo not in ["planet", "satellite", "sun", "asteroid", "portal"]:
 		return
 	var numero := 1
 	var ids: Array = [dados.goal.id]
@@ -119,6 +119,12 @@ func inserir(tipo: String, posicao: Vector2) -> void:
 		"position": [posicao.x, posicao.y], "mass": 0 if tipo == "asteroid" else 500,
 		"visual_radius": 12, "collision_radius": 12, "capture_radius": 0 if perigoso else 16,
 		"danger_radius": 12 if perigoso else 0, "proximity_radius": 40})
+	if tipo == "portal":
+		var portal: Dictionary = dados.bodies[-1]
+		portal.mass = 0
+		portal.capture_radius = 0
+		portal["target_id"] = ""
+		portal["exit_degrees"] = 0.0
 	selecao = dados.bodies.size() - 1
 	alterado.emit()
 
@@ -146,9 +152,22 @@ func editar(trilha: Array, valor: Variant) -> void:
 		alvo = alvo[chave]
 	var chave: Variant = trilha[-1]
 	if chave == "id" and trilha.size() == 3 and trilha[0] == "bodies":
-		if dados.start.body_id == alvo.id:
+		if dados.start.get("body_id") == alvo.id:
 			dados.start.body_id = valor
+		for corpo in dados.bodies:
+			if corpo.get("target_id") == alvo.id:
+				corpo.target_id = valor
 	alvo[chave] = valor
+	if chave == "type" and valor == "portal":
+		alvo.mass = 0
+		alvo.capture_radius = 0
+		alvo.danger_radius = 0
+		alvo["target_id"] = alvo.get("target_id", "")
+		alvo["exit_degrees"] = alvo.get("exit_degrees", 0.0)
+		alvo.erase("orbit")
+		alvo.erase("rotation")
+		alvo.erase("landing_zone")
+		selecao_alterada.emit()
 	alterado.emit()
 
 

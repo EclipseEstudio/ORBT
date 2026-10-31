@@ -139,7 +139,7 @@ func avancar(delta: float) -> Dictionary:
 				posicao_relativa = posicao_relativa.rotated(giro)
 				destino = Fisica.posicao_corpo(corpo, tempo_simulacao + delta) + posicao_relativa
 				global_rotation = posicao_relativa.angle() + PI / 2.0
-		var outros := corpos.filter(func(corpo: Dictionary): return corpo.id != corpo_apoio)
+		var outros := corpos.filter(func(corpo: Dictionary): return corpo.id != corpo_apoio and corpo.type != "portal")
 		var transporte := Fisica.varrer(global_position, destino, Vector2.ZERO, delta, outros, limites, raio, "", tempo_simulacao)
 		tempo_simulacao += delta
 		Fisica.atualizar_corpos(corpos, tempo_simulacao)
@@ -150,6 +150,8 @@ func avancar(delta: float) -> Dictionary:
 	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem, tempo_simulacao)
 	tempo_simulacao += delta
 	Fisica.atualizar_corpos(corpos, tempo_simulacao)
+	if resultado.get("teleported", false):
+		origem_decolagem = ""
 	global_position = resultado.position
 	velocidade = resultado.velocity
 	if not resultado.contact.is_empty():

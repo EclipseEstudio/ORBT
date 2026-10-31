@@ -8,6 +8,8 @@ Após o PR #89, o usuário priorizou funcionalidades e escolheu incluir órbitas
 
 Após a integração das órbitas no PR #91, a continuidade autorizada inclui [rotação e pouso por faixa angular](../tecnica/rotacao-e-pouso.md), opcionais por corpo. Portais e demais funcionalidades permanecem condicionais. Os testes de aceite continuam adiados.
 
+Após o PR #93 integrado, a continuidade autorizada inclui [portais pareados estáticos](../tecnica/portais.md), com demonstração separada da campanha. Isso substitui a condição histórica sobre portais apenas nesse escopo. Aceite Android adiado.
+
 ## Situação reconciliada
 
 | Situação | Quantidade | Significado |

@@ -36,6 +36,8 @@ func _draw() -> void:
 		draw_line(origem - Vector2(-3, 3), origem + Vector2(-3, 3), cor, 1)
 	var transformacao: Transform2D = nave.get_canvas_transform()
 	for indice in range(1, pontos.size()):
+		if not pontos[indice-1].is_finite() or not pontos[indice].is_finite():
+			continue
 		draw_line(transformacao * pontos[indice - 1], transformacao * pontos[indice], Color("0b1423"), 3)
 		draw_line(transformacao * pontos[indice - 1], transformacao * pontos[indice], Color("b8f5e2"), 1)
 	if pontos.size() > 1:
