@@ -93,6 +93,8 @@ A [revisão das issues de 30/10](revisao-issues-2026-10-30.md) detalha implement
 
 ## Backlog complementar do GDD
 
+Após o PR #81 (`0f4e241`), #50 acrescenta retentativa explícita de gravação das preferências. A tela distingue valores da sessão de valores salvos e preserva a pendência ao fechar/reabrir no mesmo processo. Suíte: 2.678 verificações; PCK: 30 gerais e 14 de retentativa. [Evidências e limites](validacao-retentar-preferencias.md). Armazenamento e toque físico Android continuam pendentes.
+
 Continuidade sobre `cc449e9` (PR #80 integrado): #51 acrescenta tratamento de Voltar nativo e Escape. Telas auxiliares fecham, campanha volta ao menu e a fase pausa com gesto/pedidos cancelados; retomada é explícita. Saída nativa fica restrita ao menu principal. [Fluxo e evidências](validacao-voltar.md). Botão/gesto Android real continua pendente.
 
 Continuidade após o PR #79 (`0a70437`): #50 corrige o recuo duplicado das configurações abertas na pausa, movendo a tela para fora da raiz já recuada do HUD. Suíte: 2.646 verificações; PCK: 30 e mais 23 de áreas. O teste novo falha quatro vezes na implementação anterior e passa na corrigida. [Evidências e limites](validacao-configuracoes-pausa.md); teste físico Android continua pendente.

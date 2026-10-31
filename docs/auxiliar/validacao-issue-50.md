@@ -1,5 +1,7 @@
 # Validação de configurações — issue #50
 
+Após o PR #81 (`0f4e241`), a tela oferece Tentar salvar novamente quando a gravação falha. Volumes seguem aplicados na sessão, e fechar/reabrir a tela mantém a pendência no mesmo processo. [Falha, recuperação e limites](validacao-retentar-preferencias.md). A validação de armazenamento e toque no Android continua pendente.
+
 Após o PR #79 (`0a70437`), foi corrigida a aplicação duplicada da área segura ao abrir configurações na pausa. O fundo passa a cobrir o viewport; a margem interna corresponde a um único recuo. [Teste antes/depois e capturas](validacao-configuracoes-pausa.md). A validação em aparelho Android permanece pendente.
 
 Continuidade após PR #77: configurações passam a respeitar área segura e permitem rolagem vertical em telas curtas. Volumes e retorno são alcançáveis com recortes simulados; preferências e pausa mantêm seus testes. [Evidências e limites](validacao-areas-menus.md). Validação com recortes reais e toque Android permanece pendente.
