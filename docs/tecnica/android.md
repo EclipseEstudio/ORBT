@@ -2,6 +2,8 @@
 
 ## Continuidade do roteiro em 31/10/2026
 
+Depois do PR #88, a instalação independente **ORBT QA Prévia**, instrumentada somente na cópia de teste, mediu a chamada da prévia e registrou uma correção em voo no Samsung SM-A556E/Android 16: soma de velocidade, uma cobrança e reinício do tempo em 30 s. [Dados brutos, percentis, instrumentação e limites](../auxiliar/validacao-previa-correcao-android.md). O teste não altera produção nem conclui aceite geral de desempenho.
+
 Sobre a `alpha` com o PR #87 integrado, uma instalação independente **ORBT QA R87** foi testada no Samsung SM-A556E/Android 16. Cancelamento, suspensão durante mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo têm passos e capturas no [registro do roteiro](../auxiliar/validacao-roteiro-android-2026-10-31.md). Os saves principais foram preservados. O usuário confirmou os quatro testes físicos de cancelamento com uma mão, segundo dedo, retomada durante mira e abertura em modo avião. O aceite global continua pendente; o registro distingue toque injetado, relato manual e diagnóstico do ambiente. As seções abaixo são históricas.
 
 ## Validação parcial em 30/10/2026

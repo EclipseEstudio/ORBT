@@ -12,6 +12,7 @@ Manuais de uso, materiais de apoio e registros do projeto. Consulte o [índice g
 - [Estado atual e continuidade](estado-da-branch.md): entregas, issues e pendências.
 - [Revisão das tarefas e Projects em 31/10](revisao-issues-2026-10-31.md): escopo preservado, critérios demonstrados e pendências individuais.
 - [Continuidade do roteiro Android após #87](validacao-roteiro-android-2026-10-31.md): cancelamento, suspensão, exploração, saldo e desfechos na instalação QA.
+- [Correção em voo e custo da prévia no Android](validacao-previa-correcao-android.md): medição QA, dados brutos e limites de aceite (#4/#18).
 - [Histórico de implementação](historico-implementacao.md): registros datados das entregas anteriores.
 - [Aceite da issue 40](validacao-issue-40.md): reprodução, resultados e limites da validação.
 - [Direção da Terra encoberta pela interface](validacao-indicador-terra.md): regressão de sobreposição com controles e área segura (#31).

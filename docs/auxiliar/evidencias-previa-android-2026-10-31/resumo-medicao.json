@@ -1,0 +1,36 @@
+[
+  {
+    "arquivo": "previa-qa-0.json",
+    "fase": "teste_001",
+    "amostras": 300,
+    "condicoes": [
+      0
+    ],
+    "media_us": 4424.85,
+    "p50_us": 4457,
+    "p95_us": 4910,
+    "max_us": 6574.0,
+    "pontos_min": 44.0,
+    "pontos_max": 44.0,
+    "fps_engine_min": 111.0,
+    "fps_engine_max": 120.0,
+    "intervalo_p95_us": 17722
+  },
+  {
+    "arquivo": "previa-qa-1.json",
+    "fase": "teste_001",
+    "amostras": 300,
+    "condicoes": [
+      1
+    ],
+    "media_us": 5239.5,
+    "p50_us": 5278,
+    "p95_us": 5930,
+    "max_us": 8174.0,
+    "pontos_min": 61.0,
+    "pontos_max": 61.0,
+    "fps_engine_min": 111.0,
+    "fps_engine_max": 118.0,
+    "intervalo_p95_us": 23963
+  }
+]

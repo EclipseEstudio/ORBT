@@ -1,0 +1,42 @@
+extends SceneTree
+
+func _initialize() -> void:
+	_executar.call_deferred()
+
+func _executar() -> void:
+	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
+	jogo.persistir_progresso = false
+	jogo.ativar_audio = false
+	root.add_child(jogo)
+	await process_frame
+	jogo.iniciar_fase("teste_001")
+	await process_frame
+	var nivel = jogo.mundo_atual
+	nivel.partida.set_physics_process(false)
+	nivel.camera._process(2)
+	var nave = nivel.get_node("Nave")
+	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	var mira = nave.get_node("Indicadores/Mira")
+	nave.entrada.gesto.iniciar(0, Vector2(90, 140))
+	nave.entrada.gesto.mover(0, Vector2(90, 220))
+	var posicao: Vector2 = nave.global_position
+	for i in range(360):
+		mira._physics_process(1.0 / 60)
+	var medicao: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("user://previa-qa-0.json"))
+	if medicao.amostras.size() != 300 or nave.combustivel != 5 or nave.global_position != posicao:
+		push_error("Coleta QA alterou estado ou não gravou 300 amostras")
+		quit(1)
+		return
+	nave.entrada.cancelar()
+	nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80))
+	nivel.partida.avancar(1.0 / 60)
+	var antes: Vector2 = nave.velocidade
+	nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(10, 0))
+	nivel.partida.avancar(0)
+	var registro: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("user://impulso-qa-%d.json" % nave._ultimo_pedido))
+	if registro.saldo_antes != 4 or registro.saldo_depois != 3 or registro.tempo_depois != 30 or not nave.velocidade.is_equal_approx(antes + Vector2(10, 0)):
+		push_error("Registro QA da correção diverge do estado físico")
+		quit(1)
+		return
+	print("Coleta QA: 300 amostras e registro de correção verificados localmente; não é medição Android.")
+	quit()

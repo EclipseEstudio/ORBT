@@ -41,6 +41,8 @@ A propulsão de origem não identificada foi substituída na produção no PR #7
 
 ## Evidência e limites
 
+Após o PR #88, uma cópia QA instrumentada da `alpha` `f500161` confirmou soma de velocidade, combustível 4 → 3 e tempo reiniciado em 30 s em uma correção no Android. A prévia teve dois lotes de 300 amostras após aquecimento: medianas 4,457 ms pousada e 5,278 ms em voo; P95 4,910/5,930 ms. [Método, dados e limites](validacao-previa-correcao-android.md). A duração é da chamada, não do quadro inteiro; não há aceite geral de desempenho ou alteração de produção. A revisão de #4/#18 permanece aberta.
+
 Após o PR #87, a continuidade da #4 executou no Samsung SM-A556E/Android 16, em instalação QA independente, cancelamento, suspensão com mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo. [Passos, capturas e limites](validacao-roteiro-android-2026-10-31.md). Os hashes dos saves principais permaneceram iguais. O usuário confirmou os quatro testes físicos: cancelamento com uma mão, segundo dedo sem disparo extra, Home durante mira com retomada sem lançamento e abertura da fase em modo avião. São resultados relatados, sem captura adicional do agente. Nenhuma issue foi encerrada nesta etapa e não houve implementação nova.
 
 A auditoria executou **2.747 verificações das suítes**, sem falhas, em Godot 4.7.2/Windows. A cópia limpa importou sem erros e o ciclo do plugin passou em dois processos separados, 11 verificações em cada. A primeira execução no workspace teve mensagens de UID do cache local e não foi usada como evidência de execução limpa.
