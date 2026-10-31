@@ -41,6 +41,8 @@ A propulsão de origem não identificada foi substituída na produção no PR #7
 
 ## Evidência e limites
 
+Após o PR #87, a continuidade da #4 executou no Samsung SM-A556E/Android 16, em instalação QA independente, cancelamento, suspensão com mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo. [Passos, capturas e limites](validacao-roteiro-android-2026-10-31.md). Os hashes dos saves principais permaneceram iguais. O trecho manual aguarda resposta; nenhuma issue foi encerrada nesta etapa e não houve implementação nova.
+
 A auditoria executou **2.747 verificações das suítes**, sem falhas, em Godot 4.7.2/Windows. A cópia limpa importou sem erros e o ciclo do plugin passou em dois processos separados, 11 verificações em cada. A primeira execução no workspace teve mensagens de UID do cache local e não foi usada como evidência de execução limpa.
 
 No Samsung SM-A556E/Android 16 há [testes de 30/10](validacao-android-2026-10-30.md) e [teste breve de 31/10](validacao-android-2026-10-31.md): início, impulso/vitória, pouso intermediário, recuperação, corrupção/incompatibilidade, interrupção instrumentada da escrita, Configurações e Voltar. O usuário relatou que o jogo funciona; isso não detalha todos os cenários físicos ainda abertos. A mudança do indicador da Terra no PR #86 tem testes/capturas Windows e aguarda aparelho.

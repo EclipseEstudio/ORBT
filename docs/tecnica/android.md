@@ -1,5 +1,9 @@
 # Exportação e aceite Android
 
+## Continuidade do roteiro em 31/10/2026
+
+Sobre a `alpha` com o PR #87 integrado, uma instalação independente **ORBT QA R87** foi testada no Samsung SM-A556E/Android 16. Cancelamento, suspensão durante mira/voo, exploração/recentralização, contato contra origem, último combustível com vitória e derrotas por limite/asteroide/tempo têm passos e capturas no [registro do roteiro](../auxiliar/validacao-roteiro-android-2026-10-31.md). Os saves principais foram preservados. O trecho com gestos físicos e o aceite global continuam pendentes; o registro distingue toque injetado, resposta manual e diagnóstico do ambiente. As seções abaixo são históricas.
+
 ## Validação parcial em 30/10/2026
 
 O APK do PR #68 foi atualizado em um Samsung SM-A556E com Android 16, usando assinatura de depuração compatível com a instalação existente. A primeira fase foi concluída com toque simulado e o checkpoint inicial foi recuperado após reabertura. Dados, hashes, capturas, limitação dos testes e uma sobreposição visual observada estão em [validação Android](../auxiliar/validacao-android-2026-10-30.md). O aceite completo em aparelho continua pendente.
