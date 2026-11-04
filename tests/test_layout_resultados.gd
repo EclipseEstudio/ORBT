@@ -78,9 +78,9 @@ func _executar() -> void:
 	var toque := InputEventScreenTouch.new()
 	toque.index = 7
 	toque.pressed = true
-	toque.position = hud._mensagem.get_global_rect().get_center()
+	toque.position = hud._mensagem.get_global_rect().get_center() if hud._mensagem.is_visible_in_tree() else hud._raiz.get_global_rect().get_center()
 	viewport.push_input(toque, true)
-	conferir(nave.entrada.gesto.contato_ativo == 7, "Tutorial durante jogo continua permitindo iniciar gesto sobre o texto")
+	conferir(nave.entrada.gesto.contato_ativo == 7, "Centro livre ou tutorial visível permite iniciar gesto durante o jogo")
 	toque = InputEventScreenTouch.new()
 	toque.index = 7
 	toque.canceled = true

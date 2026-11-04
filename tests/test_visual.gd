@@ -113,7 +113,7 @@ func _executar() -> void:
 		await process_frame
 		await process_frame
 		var botoes: Array = hud._raiz.find_children("*", "Button", true, false)
-		conferir(botoes.all(func(botao: Button): return root.get_visible_rect().encloses(botao.get_global_rect())), "HUD mantém botões dentro da tela: " + estado)
+		conferir(botoes.filter(func(botao: Button): return botao.is_visible_in_tree()).all(func(botao: Button): return root.get_visible_rect().encloses(botao.get_global_rect())), "HUD mantém botões visíveis dentro da tela: " + estado)
 	partida.reiniciar()
 	mundo.camera._process(2)
 	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)

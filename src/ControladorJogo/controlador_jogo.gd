@@ -51,8 +51,8 @@ func _ready() -> void:
 		mundo_atual = mundo.get_child(0)
 	interface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	progresso.configurar(GLOBAL.gerendiador_de_nivel.itens)
-	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_checkpoint"):
-		interface_atual.configurar_checkpoint()
+	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_acoes"):
+		interface_atual.configurar_acoes()
 
 
 func _notification(what: int) -> void:
@@ -221,9 +221,11 @@ func mostrar_selecao() -> void:
 	audio.trocar_musica("menu")
 	alterar_mundo_nodo(Node2D.new())
 	var gerenciador = GLOBAL.gerendiador_de_nivel
+	# Reabrir a seleção sempre relê o catálogo e reconcilia o progresso.
 	gerenciador.carregar_niveis()
 	progresso.configurar(gerenciador.itens)
 	var tela := Selecao.new()
+	tela.controlador = self
 	tela.itens = gerenciador.itens
 	tela.erros = gerenciador.erros.duplicate()
 	tela.progresso = progresso
@@ -231,10 +233,6 @@ func mostrar_selecao() -> void:
 		if interface_atual == tela and not iniciar_fase(id):
 			tela.falhou(erro_abertura))
 	tela.voltar.connect(mostrar_menu)
-	tela.recarregar.connect(func():
-		gerenciador.carregar_niveis()
-		progresso.configurar(gerenciador.itens)
-		tela.atualizar(gerenciador.itens, gerenciador.erros))
 	alterar_interface_nodo(tela)
 
 
@@ -243,8 +241,8 @@ func mostrar_menu() -> void:
 	audio.trocar_musica("menu")
 	alterar_mundo_nodo(Node2D.new())
 	alterar_interface("res://src/MenuPrincipal/MenuPrincipal.tscn")
-	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_checkpoint"):
-		interface_atual.configurar_checkpoint()
+	if is_instance_valid(interface_atual) and interface_atual.has_method("configurar_acoes"):
+		interface_atual.configurar_acoes()
 
 
 func alterar_interface(caminho: String, deletar := true, manter_rodando := false) -> void:

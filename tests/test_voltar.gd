@@ -37,7 +37,7 @@ func _executar() -> void:
 	conferir(not quit_on_go_back, "Saída automática por Voltar desativada no projeto")
 	var menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	coluna.get_node("Creditos").pressed.emit()
+	coluna.get_node("Acoes/Creditos").pressed.emit()
 	escape(true)
 	await acomodar()
 	conferir(menu.has_node("TelaCreditos"), "Repetição de Escape não atravessa telas")
@@ -45,7 +45,7 @@ func _executar() -> void:
 	jogo.notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 	await acomodar()
 	conferir(not menu.has_node("TelaCreditos") and jogo.interface_atual == menu, "Voltar nativo repetido fecha apenas créditos")
-	coluna.get_node("Configuracoes").pressed.emit()
+	coluna.get_node("Acoes/Configuracoes").pressed.emit()
 	var tela = menu.get_node("TelaConfiguracoes")
 	tela.find_child("musica", true, false).value = 0.25
 	var fechamentos: Array = []
@@ -58,7 +58,7 @@ func _executar() -> void:
 	await acomodar()
 	jogo.notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 	await acomodar()
-	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Button"), "Voltar da campanha abre menu principal")
+	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Acoes/Button"), "Voltar da campanha abre menu principal")
 	conferir(jogo.iniciar_fase("teste_001"), "Abre fase para testar Voltar")
 	await acomodar()
 	var nivel = jogo.mundo_atual
