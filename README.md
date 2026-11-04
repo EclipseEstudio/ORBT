@@ -1,6 +1,6 @@
 # ORBT
 
-Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gravidade, prévia de trajetória e ciclo de partida.
+Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gravidade, guia de direção e ciclo de partida.
 
 ## Jogar
 
@@ -19,7 +19,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar
 - Na vitória, **Próxima fase** abre a sucessora disponível; **Repetir** começa nova tentativa. Na última fase, use Repetir ou Seleção de fases. A pausa permite voltar ao menu principal.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
-Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A prévia termina no primeiro contato ou após três segundos.
+Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A mira mostra uma linha reta de 60 pixels lógicos, independente da força e do zoom, indicando a direção do impulso. Ela não prevê gravidade ou colisões. A nave aponta para a mira e, durante o voo, para a direção da velocidade.
 
 ## Testes
 

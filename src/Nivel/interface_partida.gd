@@ -326,7 +326,7 @@ func _process(delta: float) -> void:
 		_mensagem.text = "Arraste para corrigir."
 	else:
 		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
-		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Prévia estimada."
+		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Linha indica direção."
 	var jogando: bool = partida.estado == partida.Estado.JOGANDO
 	_mensagem.visible = not jogando or _ajuda_restante > 0
 	_mensagem.modulate.a = clampf(_ajuda_restante / 0.4, 0, 1) if jogando else 1.0
