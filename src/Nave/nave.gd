@@ -1,5 +1,5 @@
 extends Node2D
-## Estado físico da nave. A mesma simulação discreta alimenta o voo e a prévia.
+## Estado físico da nave. A mira usa apenas uma guia de direção, sem simulação.
 
 signal impulso_aplicado(gesto_id: int)
 signal contato_detectado(contato: Dictionary)
@@ -9,6 +9,7 @@ signal condicao_alterada
 enum Condicao { POUSADA, EM_VOO, A_DERIVA, PRONTA }
 const Fisica = preload("res://src/Nave/simulacao_voo.gd")
 const Arte = preload("res://src/Visual/arte_pixel.gd")
+const COMPRIMENTO_GUIA := 60.0 # Pixels lógicos, independente da força e do zoom.
 
 @onready var rcs_direito: GPUParticles2D = $RCSDireito
 @onready var rcs_esquerdo: GPUParticles2D = $RCSEsquerdo
@@ -130,7 +131,6 @@ func avancar(delta: float) -> Dictionary:
 	if not simulacao_ativa or get_tree().paused:
 		return {}
 	aplicar_pedidos()
-	_atualizar_orientacao(delta)
 	if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
 		var destino := global_position
 		for corpo in corpos:
@@ -144,6 +144,7 @@ func avancar(delta: float) -> Dictionary:
 		tempo_simulacao += delta
 		Fisica.atualizar_corpos(corpos, tempo_simulacao)
 		global_position = transporte.position
+		_atualizar_orientacao(delta)
 		if not transporte.contact.is_empty():
 			contato_detectado.emit(transporte.contact)
 		return transporte.contact
@@ -154,6 +155,7 @@ func avancar(delta: float) -> Dictionary:
 		origem_decolagem = ""
 	global_position = resultado.position
 	velocidade = resultado.velocity
+	_atualizar_orientacao(delta)
 	if not resultado.contact.is_empty():
 		contato_detectado.emit(resultado.contact)
 	return resultado.contact
@@ -188,6 +190,15 @@ func velocidade_apoio() -> Vector2:
 	return Vector2.ZERO
 
 
+func obter_guia_mira() -> PackedVector2Array:
+	var impulso: Vector2 = entrada.gesto.obter_impulso()
+	if not entrada.pode_controlar() or impulso.is_zero_approx():
+		return PackedVector2Array()
+	var deslocamento := get_canvas_transform().affine_inverse().basis_xform(impulso.normalized() * COMPRIMENTO_GUIA)
+	return PackedVector2Array([global_position, global_position + deslocamento])
+
+
+## Simulação completa para ferramentas e testes; não é usada pela mira durante o jogo.
 func prever_trajetoria() -> PackedVector2Array:
 	var impulso: Vector2 = entrada.gesto.obter_impulso()
 	if not entrada.pode_controlar() or impulso.is_zero_approx():
@@ -197,16 +208,17 @@ func prever_trajetoria() -> PackedVector2Array:
 	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second, tempo_simulacao)
 
 
-func _atualizar_orientacao(delta: float) -> void:
+func _atualizar_orientacao(_delta: float) -> void:
 	var direcao: Vector2 = entrada.gesto.obter_impulso()
 	rcs_direito.emitting = false
 	rcs_esquerdo.emitting = false
-	if direcao.is_zero_approx() or condicao == Condicao.POUSADA:
+	if direcao.is_zero_approx() or not entrada.pode_controlar():
+		direcao = velocidade
+		if condicao == Condicao.POUSADA:
+			direcao = posicao_relativa
+	if direcao.is_zero_approx():
 		return
-	var angulo := Vector2.UP.rotated(global_rotation).angle_to(direcao)
-	rcs_esquerdo.emitting = angulo > 0.05
-	rcs_direito.emitting = angulo < -0.05
-	global_rotation = rotate_toward(global_rotation, direcao.angle() + PI / 2.0, 5.0 * delta)
+	global_rotation = direcao.angle() + PI / 2.0
 
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

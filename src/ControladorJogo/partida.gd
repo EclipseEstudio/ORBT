@@ -60,6 +60,9 @@ func avancar(delta: float) -> void:
 	if estado != Estado.JOGANDO or not is_instance_valid(nave) or get_tree().paused:
 		return
 	nave.aplicar_pedidos()
+	if nave.combustivel <= 0 or nave.condicao == nave.Condicao.A_DERIVA:
+		finalizar(false, "Combustível esgotado" if nave.combustivel <= 0 else "Nave à deriva")
+		return
 	var passo := minf(delta, tempo_restante) if temporizador_ativo else delta
 	nave.avancar(passo)
 	if estado != Estado.JOGANDO:

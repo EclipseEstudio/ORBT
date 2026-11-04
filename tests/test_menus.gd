@@ -31,8 +31,7 @@ func _executar() -> void:
 	coluna.get_node("Acoes/Creditos").pressed.emit()
 	conferir(menu.has_node("TelaCreditos"), "abre créditos")
 	var creditos = menu.get_node("TelaCreditos")
-	conferir(creditos.find_child("Texto", true, false).text.contains("Godot") and creditos.find_child("Texto", true, false).text.contains("ImageGen"), "créditos mostram origem e licença")
-	conferir(creditos.find_child("Texto", true, false).text.contains("desenhado em código para ORBT") and not creditos.find_child("Texto", true, false).text.contains("Propulsão legada"), "Créditos identificam o efeito de propulsão atual")
+	conferir(creditos.find_child("Texto", true, false).text == "Miguel Alves Cordeiro Braz\n\nRubensAugustoMM", "Créditos mostram apenas participantes")
 	creditos.find_child("Voltar", true, false).pressed.emit()
 	await process_frame
 	conferir(not menu.has_node("TelaCreditos"), "volta dos créditos ao menu")

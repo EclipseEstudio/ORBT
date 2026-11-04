@@ -18,7 +18,7 @@ func _physics_process(_delta: float) -> void:
 	if not nave.entrada.pode_controlar() or nave.entrada.gesto.contato_ativo == -1:
 		limpar()
 		return
-	pontos = nave.prever_trajetoria()
+	pontos = nave.obter_guia_mira()
 	queue_redraw()
 
 

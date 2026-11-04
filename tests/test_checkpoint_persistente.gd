@@ -31,10 +31,7 @@ func _executar() -> void:
 		root.add_child(jogo)
 		await process_frame
 		jogo.mostrar_selecao()
-		var botao: Button
-		for item in jogo.interface_atual._checkpoint_controles.get_children():
-			if item is Button and item.text == "Continuar":
-				botao = item
+		var botao: Button = jogo.interface_atual._continuar
 		conferir(botao != null, "menu oferece Continuar")
 		if botao != null:
 			botao.pressed.emit()
@@ -111,7 +108,14 @@ func _executar() -> void:
 	await process_frame
 	jogo_backup.mostrar_selecao()
 	var coluna = jogo_backup.interface_atual._checkpoint_controles
-	var continuar_backup = coluna.get_node_or_null("Continuar")
+	var continuar_backup = jogo_backup.interface_atual._continuar
+	await process_frame
+	for altura in [240, 320, 390]:
+		root.size.y = altura
+		for i in 4:
+			await process_frame
+		var tela = jogo_backup.interface_atual
+		conferir(tela.get_global_rect().encloses(continuar_backup.get_global_rect()) and continuar_backup.get_global_rect().position.y >= tela.rolagem.get_global_rect().end.y, "Continuar permanece abaixo da lista em altura %d" % altura)
 	conferir(continuar_backup != null and continuar_backup.visible and coluna.has_node("AvisoCheckpoint"), "menu oferece Continuar e mostra aviso ao recuperar cópia válida")
 	if continuar_backup != null and continuar_backup.visible:
 		continuar_backup.pressed.emit()

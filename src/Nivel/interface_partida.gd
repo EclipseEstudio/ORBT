@@ -11,6 +11,7 @@ const DURACAO_AJUDA := 6.0
 var _ajuda_restante := DURACAO_AJUDA
 var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
+var _dialogo_derrota: Control
 var _indicadores: Control
 var _tempo: Label
 
@@ -23,6 +24,7 @@ var _alerta: Label
 var _destino: Label
 var _pausa: Button
 var _explorar: Button
+var _zoom_controles: HBoxContainer
 var _checkpoint: Button
 var _configuracoes: Button
 var _reiniciar: Button
@@ -90,6 +92,9 @@ func _ready() -> void:
 	espaco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	espaco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	linha.add_child(espaco)
+	_explorar = botao(linha, "Explorar mapa", partida.alternar_exploracao)
+	Icones.aplicar(_explorar, "mapa", "Explorar mapa")
+	_explorar.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	Icones.aplicar(_pausa, "pausa", "Pausar")
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -132,8 +137,12 @@ func _ready() -> void:
 	var acoes := HBoxContainer.new()
 	acoes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base.add_child(acoes)
-	_explorar = botao(acoes, "Explorar mapa", partida.alternar_exploracao)
-	Icones.aplicar(_explorar, "mapa", "Explorar mapa")
+	_zoom_controles = HBoxContainer.new()
+	acoes.add_child(_zoom_controles)
+	for fator in [0.8, 1.25]:
+		var controle := botao(_zoom_controles, "−" if fator < 1 else "+", func(): get_parent().camera.aplicar_zoom(fator))
+		controle.accessibility_name = "Diminuir zoom" if fator < 1 else "Aumentar zoom"
+		controle.custom_minimum_size.x = 32
 	_reiniciar = botao(acoes, "Reiniciar", partida.reiniciar)
 	Icones.aplicar(_reiniciar, "reiniciar", "Reiniciar")
 	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
@@ -146,10 +155,6 @@ func _ready() -> void:
 		_proxima.visible = false
 		_menu = botao(base, "Menu principal", func(): partida.menu_solicitado.emit.call_deferred())
 		_menu.visible = false
-		var selecao := botao(acoes, "Seleção de fases", func():
-			partida.nave.entrada.cancelar()
-			partida.selecao_solicitada.emit.call_deferred())
-		Icones.aplicar(selecao, "fases", "Seleção de fases")
 	_ajustar_rodape.call_deferred()
 	get_viewport().size_changed.connect(_atualizar_area_segura)
 	_atualizar_area_segura()
@@ -171,6 +176,16 @@ func _ready() -> void:
 	_dialogo_conclusao.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
 	add_child(_dialogo_conclusao)
 	_dialogo_conclusao.hide()
+	_dialogo_derrota = DialogoPausa.new()
+	_dialogo_derrota.name = "DialogoDerrota"
+	_dialogo_derrota.titulo = "FIM DE JOGO"
+	_dialogo_derrota.texto_primario = "Último pouso"
+	_dialogo_derrota.texto_secundario = "Repetir"
+	_dialogo_derrota.continuar.connect(partida.restaurar_checkpoint)
+	_dialogo_derrota.resetar.connect(partida.reiniciar)
+	_dialogo_derrota.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
+	add_child(_dialogo_derrota)
+	_dialogo_derrota.hide()
 
 func _icone_status(pai: Control, nome: String) -> void:
 	var icone := TextureRect.new()
@@ -264,7 +279,13 @@ func _dica_tutorial() -> String:
 func _process(delta: float) -> void:
 	var pausado: bool = partida.estado == partida.Estado.PAUSADO
 	var concluida: bool = partida.estado == partida.Estado.CONCLUIDA
-	_raiz.visible = not pausado and not concluida
+	var perdida: bool = partida.estado == partida.Estado.PERDIDA
+	_raiz.visible = not pausado and not concluida and not perdida
+	if perdida and not _dialogo_derrota.visible:
+		_dialogo_derrota.exibir_motivo(partida.motivo)
+		_dialogo_derrota.abrir()
+	elif not perdida:
+		_dialogo_derrota.hide()
 	if concluida and not _dialogo_conclusao.visible:
 		_dialogo_conclusao.abrir()
 	elif not concluida:
@@ -296,6 +317,8 @@ func _process(delta: float) -> void:
 	_pausa.accessibility_name = _pausa.tooltip_text
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
 	_explorar.visible = partida.estado == partida.Estado.JOGANDO
+	_reiniciar.visible = partida.estado == partida.Estado.PERDIDA
+	_zoom_controles.visible = partida.explorando and partida.estado == partida.Estado.JOGANDO
 	_reiniciar.text = "" if partida.estado == partida.Estado.JOGANDO else ("Repetir" if partida.estado == partida.Estado.CONCLUIDA else "Reiniciar")
 	_checkpoint.visible = partida.estado == partida.Estado.PERDIDA
 	if _proxima != null:
@@ -313,14 +336,14 @@ func _process(delta: float) -> void:
 	elif partida.explorando:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:
-		_mensagem.text = "À deriva. Ainda é possível chegar à Terra."
+		_mensagem.text = "Combustível esgotado."
 	elif partida.nivel.id == "teste_001":
 		_mensagem.text = _dica_tutorial()
 	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:
 		_mensagem.text = "Arraste para corrigir."
 	else:
 		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
-		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Prévia estimada."
+		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Linha indica direção."
 	var jogando: bool = partida.estado == partida.Estado.JOGANDO
 	_mensagem.visible = not jogando or _ajuda_restante > 0
 	_mensagem.modulate.a = clampf(_ajuda_restante / 0.4, 0, 1) if jogando else 1.0
@@ -337,7 +360,7 @@ func _process(delta: float) -> void:
 	var alvo: Vector2 = partida.nave.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
 	var regioes_topo: Array[Rect2] = []
-	for controle in [_status, _tempo, _indicadores, _pausa, _destino, _alerta]:
+	for controle in [_status, _tempo, _indicadores, _explorar, _pausa, _destino, _alerta]:
 		if controle.is_visible_in_tree() and not (controle is Label and controle.text.is_empty()):
 			regioes_topo.append(controle.get_global_rect())
 	var area := _raiz.get_global_rect()

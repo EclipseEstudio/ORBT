@@ -53,7 +53,7 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	await acomodar()
 	var coluna = jogo.interface_atual._checkpoint_controles
-	conferir(coluna.has_node("TentarSalvarCheckpoint") and not coluna.has_node("Continuar"), "Menu oferece retentativa sem Continuar antigo")
+	conferir(coluna.has_node("TentarSalvarCheckpoint") and jogo.interface_atual._continuar == null, "Menu oferece retentativa sem Continuar antigo")
 	coluna.get_node("TentarSalvarCheckpoint").pressed.emit()
 	await acomodar()
 	conferir(jogo.checkpoint.salvamento_pendente() and jogo.interface_atual._checkpoint_controles.has_node("TentarSalvarCheckpoint") and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém retentativa e arquivo válido")
@@ -61,13 +61,13 @@ func _executar() -> void:
 	jogo.interface_atual._checkpoint_controles.get_node("TentarSalvarCheckpoint").pressed.emit()
 	await acomodar()
 	coluna = jogo.interface_atual._checkpoint_controles
-	conferir(not jogo.checkpoint.salvamento_pendente() and coluna.has_node("Continuar") and not coluna.has_node("TentarSalvarCheckpoint"), "Sucesso oferece Continuar e remove retentativa")
+	conferir(not jogo.checkpoint.salvamento_pendente() and jogo.interface_atual._continuar != null and not coluna.has_node("TentarSalvarCheckpoint"), "Sucesso oferece Continuar e remove retentativa")
 	var salvo := Save.new()
 	salvo.caminho = base
 	conferir(salvo.carregar() and salvo.dados.corpo == "apoio" and salvo.dados.combustivel == 3 and is_equal_approx(salvo.dados.tempo, 12.5), "Nova instância lê último pouso gravado de verdade")
 	conferir(FileAccess.get_file_as_string(base + ".bak") == anterior, "Retentativa mantém checkpoint anterior como cópia")
 	conferir(not FileAccess.file_exists(base + "-progresso") and not FileAccess.file_exists(base + "-preferencias"), "Retentativa não grava progresso nem preferências")
-	coluna.get_node("Continuar").pressed.emit()
+	jogo.interface_atual._continuar.pressed.emit()
 	await acomodar()
 	partida = jogo.mundo_atual.partida
 	conferir(paused and partida.estado == partida.Estado.PAUSADO and partida.nave.corpo_apoio == "apoio" and partida.nave.combustivel == 3 and is_equal_approx(partida.tempo_restante, 12.5), "Continuar restaura pouso recuperado com partida pausada")

@@ -9,8 +9,8 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	theme = Tema.criar()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var fundo := ColorRect.new()
-	fundo.color = Color("0b1423")
+	var fundo := preload("res://src/Visual/fundo_menu.gd").new()
+	fundo.mostrar_planeta = false
 	add_child(fundo)
 	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var margem := MarginContainer.new()
@@ -22,7 +22,8 @@ func _ready() -> void:
 	var coluna := VBoxContainer.new()
 	margem.add_child(coluna)
 	var titulo := Label.new()
-	titulo.text = "Créditos"
+	titulo.text = "CRÉDITOS"
+	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titulo.add_theme_font_size_override("font_size", 14)
 	coluna.add_child(titulo)
 	var rolagem := ScrollContainer.new()
@@ -34,12 +35,16 @@ func _ready() -> void:
 	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	texto.add_theme_font_size_override("font_size", 10)
-	texto.text = "ORBT\nEclipse Estudio\n\nColaboradores do repositório\nMiguel Alves Cordeiro Braz\nRubensAugustoMM\n\nMotor\nGodot Engine — licença MIT\n\nArte\nSprites de identidade gerados com OpenAI ImageGen. Nenhuma licença pública adicional declarada.\n\nÁudio\nTrilhas e efeitos sintetizados para ORBT, sem amostras de terceiros. Licença pública não declarada.\n\nPropulsão\nEfeito em pixel art desenhado em código para ORBT, sem imagens de terceiros. Licença pública não declarada.\n\nFases\nCinco mapas adaptados do protótipo dev-macb/orbt."
+	texto.text = "Miguel Alves Cordeiro Braz\n\nRubensAugustoMM"
+	texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	rolagem.add_child(texto)
 	var voltar := Button.new()
 	voltar.name = "Voltar"
 	voltar.text = "Voltar"
 	voltar.custom_minimum_size.y = 36
+	voltar.add_theme_font_size_override("font_size", 10)
 	coluna.add_child(voltar)
 	voltar.pressed.connect(fechar)
 	get_viewport().size_changed.connect(_area_segura)

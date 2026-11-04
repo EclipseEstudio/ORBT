@@ -43,7 +43,7 @@ func _executar() -> void:
 	selecao._exibir_aviso("Checkpoint inválido. Reinicie a fase para continuar.")
 	await process_frame
 	await process_frame
-	conferir(not selecao._checkpoint_controles.get_node("Continuar").visible and selecao._checkpoint_controles.has_node("DescartarCheckpoint"), "diagnóstico e reinício ficam na seleção de fases")
+	conferir(not selecao._continuar.visible and selecao._checkpoint_controles.has_node("DescartarCheckpoint"), "diagnóstico e reinício ficam na seleção de fases")
 	jogo.checkpoint.dados = {}
 	conferir(jogo.iniciar_fase("teste_001"), "primeira fase abre")
 	await process_frame

@@ -22,6 +22,9 @@ func _capturar() -> void:
 	if splash != null:
 		splash.free()
 	await salvar("menu")
+	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos").pressed.emit()
+	await salvar("creditos")
+	jogo.interface_atual.get_node("TelaCreditos").free()
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	jogo.progresso.concluir(itens[0].id, itens)
 	jogo.progresso.concluir(itens[1].id, itens)
@@ -40,8 +43,16 @@ func _capturar() -> void:
 		if filho is CanvasLayer and filho.has_method("_alternar_pausa"):
 			filho._process(6.1)
 	await salvar("gameplay-livre")
+	jogo.mundo_atual.partida.alternar_exploracao()
+	jogo.mundo_atual.camera.aplicar_zoom(1.25)
+	await salvar("exploracao")
+	jogo.mundo_atual.partida.alternar_exploracao()
 	jogo.mundo_atual.partida.finalizar(true, "Chegada à Terra")
 	await salvar("conclusao")
+	jogo.mundo_atual.partida.reiniciar()
+	jogo.mundo_atual.partida.nave.combustivel = 0
+	jogo.mundo_atual.partida.avancar(0)
+	await salvar("fim-de-jogo")
 	jogo.checkpoint.dados = {"fase": "teste_001", "content_version": -1}
 	jogo.mostrar_menu()
 	await salvar("menu-checkpoint")

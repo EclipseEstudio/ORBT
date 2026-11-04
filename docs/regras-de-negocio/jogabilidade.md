@@ -8,7 +8,7 @@ O objetivo de cada fase é levar a nave até a Terra. A nave pode começar pousa
 
 | Elemento | Regra no jogo |
 | --- | --- |
-| Terra | Chegar à sua região de captura conclui a tentativa, mesmo sem combustível restante. |
+| Terra | Chegar à sua região de captura durante uma tentativa ativa conclui a fase. |
 | Planeta ou satélite | Permite pousar e lançar novamente enquanto houver combustível. O pouso não reabastece. |
 | Sol ou asteroide | Entrar na região de perigo causa derrota. |
 | Limites da fase | Sair do mundo com o centro da nave causa derrota; permanecer exatamente na borda ainda é permitido. |
@@ -29,14 +29,14 @@ Um impulso em voo acrescenta velocidade à nave; não interrompe o movimento ant
 ## Combustível, pouso e deriva
 
 - Cada impulso aceito consome uma unidade de combustível, independentemente de sua intensidade. Cancelar a mira não consome combustível. Pedidos ainda não aplicados são descartados sem cobrança ao pausar ou bloquear o controle.
-- O último impulso é executado normalmente. Com saldo zero, a nave continua voando sob gravidade, em deriva, e não pode receber novos impulsos. Ainda é possível chegar à Terra e vencer.
+- Esgotar o combustível encerra a tentativa imediatamente, inclusive ao gastar a última unidade em um impulso. A nave não continua voando com saldo zero. Entrar em estado de deriva também encerra a tentativa.
 - Pousar em um apoio seguro zera a velocidade e preserva a posição relativa ao corpo. O combustível restante não é recarregado.
 - **Regra do protótipo:** pousar em apoio seguro com saldo zero causa derrota por falta de combustível para decolar.
-- Lançar em direção ao corpo de origem pode causar contato imediato e novo pouso. O impulso aceito continua sendo cobrado; se ele esgotar o combustível, aplica-se a mesma regra de derrota no apoio seguro.
+- Lançar em direção ao corpo de origem pode causar contato imediato e novo pouso. O impulso aceito continua sendo cobrado; se ele esgotar o combustível, a derrota ocorre antes de continuar a simulação.
 
 ## Tempo, pausa e exploração
 
-Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O tempo diminui durante o voo e a deriva. Ficar pousado suspende a contagem até a próxima decolagem. Observar o mapa ou cancelar a mira não reinicia o tempo. Um contato alcançado dentro do tempo restante é resolvido antes do esgotamento do tempo.
+Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O tempo diminui durante o voo. Ficar pousado suspende a contagem até a próxima decolagem. Observar o mapa ou cancelar a mira não reinicia o tempo. Um contato alcançado dentro do tempo restante é resolvido antes do esgotamento do tempo. Combustível esgotado ou deriva encerram a tentativa antes desse passo.
 
 **Pausar** cancela a mira e suspende a tentativa. Perder o foco ou suspender o aplicativo também pausa. Voltar ao aplicativo mantém a pausa até o jogador escolher **Retomar**.
 
@@ -46,7 +46,7 @@ Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O 
 
 ## Vitória, derrota e reinício
 
-Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, tempo esgotado ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez e apresenta a causa do resultado.
+Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, tempo esgotado, combustível esgotado, deriva ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez. O diálogo de fim de jogo mostra o motivo e oferece Último pouso, Repetir e Voltar ao menu; motivos longos têm rolagem.
 
 **Reiniciar** começa uma nova tentativa com posição, orientação, combustível, tempo, câmera e contatos iniciais. A tentativa anterior não é retomada. Conclusões e desbloqueios da campanha seguem as [regras de progressão](campanha.md).
 
