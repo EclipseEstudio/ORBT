@@ -74,7 +74,7 @@ func _executar() -> void:
 	tela.atualizar(resultado.itens, [])
 	conferir(tela.cartoes.get_child_count() == 2, "Atualização não duplica cartões")
 	var botao: Button = tela.cartoes.get_child(0).get_child(2)
-	conferir(botao.text == "Repetir" and botao.custom_minimum_size.y == 48, "Concluída disponível para repetição com alvo de toque")
+	conferir(botao.get_meta("estado") == "Concluída" and botao.icon != null and botao.custom_minimum_size.y == 48, "Concluída tem ícone de estado e alvo de toque para repetição")
 	tela.atualizar([], [])
 	conferir(tela.mensagem.text.contains("Nenhuma fase"), "Catálogo vazio mantém navegação")
 	tela.atualizar([], ["Catálogo inválido"])
@@ -141,7 +141,7 @@ func _executar() -> void:
 	gravar(arquivo_a, a)
 	conferir(not jogo.iniciar_fase("a") and jogo.interface_atual is Control and jogo.erro_abertura.contains("schema_version"), "Erro físico usa carregador comum e preserva navegação")
 	jogo.mostrar_menu()
-	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Button"), "Erro permite voltar ao menu")
+	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Acoes/Button"), "Erro permite voltar ao menu")
 	jogo.queue_free()
 	await process_frame
 	for arquivo in arquivos:

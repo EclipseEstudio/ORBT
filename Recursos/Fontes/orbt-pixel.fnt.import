@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://clk8e61u2cw6v"
+path="res://.godot/imported/orbt-pixel.fnt-680592a65197c87c47bea4880480134d.fontdata"
+
+[deps]
+
+source_file="res://Recursos/Fontes/orbt-pixel.fnt"
+dest_files=["res://.godot/imported/orbt-pixel.fnt-680592a65197c87c47bea4880480134d.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

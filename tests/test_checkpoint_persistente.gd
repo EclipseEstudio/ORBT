@@ -30,8 +30,9 @@ func _executar() -> void:
 		jogo.caminho_preferencias = argumentos[0] + "-preferencias"
 		root.add_child(jogo)
 		await process_frame
+		jogo.mostrar_selecao()
 		var botao: Button
-		for item in jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer").get_children():
+		for item in jogo.interface_atual._checkpoint_controles.get_children():
 			if item is Button and item.text == "Continuar":
 				botao = item
 		conferir(botao != null, "menu oferece Continuar")
@@ -108,7 +109,8 @@ func _executar() -> void:
 	jogo_backup.caminho_preferencias = base + "-preferencias"
 	root.add_child(jogo_backup)
 	await process_frame
-	var coluna = jogo_backup.interface_atual.get_node("Margem/Rolagem/VBoxContainer")
+	jogo_backup.mostrar_selecao()
+	var coluna = jogo_backup.interface_atual._checkpoint_controles
 	var continuar_backup = coluna.get_node_or_null("Continuar")
 	conferir(continuar_backup != null and continuar_backup.visible and coluna.has_node("AvisoCheckpoint"), "menu oferece Continuar e mostra aviso ao recuperar cópia válida")
 	if continuar_backup != null and continuar_backup.visible:

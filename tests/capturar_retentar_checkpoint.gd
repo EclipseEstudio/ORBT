@@ -35,21 +35,21 @@ func _capturar() -> void:
 	partida.temporizador_ativo = true
 	partida.nave.global_position = apoio.position + Vector2.LEFT * 30
 	partida.resolver_contato({"kind": "body", "body": apoio})
-	jogo.mostrar_menu()
+	jogo.mostrar_selecao()
 	await process_frame
 	var menu = jogo.interface_atual
-	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	menu.get_node("Margem/Rolagem").ensure_control_visible(coluna.get_node("DescartarCheckpoint"))
+	var coluna = menu._checkpoint_controles
+	menu.rolagem.ensure_control_visible(coluna.get_node("DescartarCheckpoint"))
 	await salvar("pendente")
 	jogo.checkpoint.falhar = false
 	coluna.get_node("TentarSalvarCheckpoint").pressed.emit()
 	await process_frame
 	await process_frame
 	menu = jogo.interface_atual
-	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
+	coluna = menu._checkpoint_controles
 	for i in range(5):
 		await process_frame
-	menu.get_node("Margem/Rolagem").ensure_control_visible(coluna.get_node("Continuar"))
+	menu.rolagem.ensure_control_visible(coluna.get_node("Continuar"))
 	await salvar("salvo")
 	coluna.get_node("Continuar").pressed.emit()
 	await salvar("continuar")

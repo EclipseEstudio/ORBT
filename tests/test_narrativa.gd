@@ -28,20 +28,22 @@ func _executar() -> void:
 	await process_frame
 	var menu = jogo.interface_atual
 	var intro: Label = menu.get_node("Margem/Rolagem/VBoxContainer/Narrativa")
-	conferir(intro.text == Narrativa.INTRODUCAO and intro.text.contains("veterana") and intro.text.contains("Terra"), "menu apresenta piloto e retorno")
+	conferir(intro.tooltip_text == Narrativa.INTRODUCAO and intro.text.is_empty() and not intro.visible, "menu exibe somente o título e conserva narrativa na descrição")
 	conferir(intro.mouse_filter == Control.MOUSE_FILTER_IGNORE, "introdução não intercepta toques")
-	conferir(root.get_visible_rect().encloses(intro.get_global_rect()) and not intro.get_global_rect().intersects(menu.get_node("Margem/Rolagem/VBoxContainer/Button").get_global_rect()), "introdução e botão cabem sem sobreposição")
+	conferir(root.get_visible_rect().encloses(intro.get_global_rect()) and not intro.get_global_rect().intersects(menu.get_node("Margem/Rolagem/VBoxContainer/Acoes/Button").get_global_rect()), "introdução e botão cabem sem sobreposição")
 	jogo.checkpoint.dados = {"fase": "teste_001", "content_version": 2, "corpo": "origem", "posicao": [90, 222], "posicao_relativa": [0, -28], "orientacao": 0, "combustivel": 5, "tempo": 30, "temporizador_ativo": false}
 	jogo.mostrar_menu()
 	await process_frame
 	await process_frame
 	menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(coluna.has_node("Continuar") and coluna.get_children().all(func(item): return not item is Control or not item.visible or root.get_visible_rect().encloses(item.get_global_rect())), "menu com checkpoint válido cabe na tela")
-	menu._exibir_aviso("Checkpoint inválido. Reinicie a fase para continuar.")
+	conferir(menu.find_children("*", "Button", true, false).size() == 3 and not coluna.has_node("Continuar"), "menu com checkpoint continua tendo somente três ações")
+	jogo.mostrar_selecao()
+	var selecao: Control = jogo.interface_atual
+	selecao._exibir_aviso("Checkpoint inválido. Reinicie a fase para continuar.")
 	await process_frame
 	await process_frame
-	conferir(not coluna.get_node("Narrativa").visible and not coluna.get_node("Continuar").visible and coluna.get_children().all(func(item): return not item is Control or not item.visible or root.get_visible_rect().encloses(item.get_global_rect())), "diagnóstico mantém ações acessíveis na tela")
+	conferir(not selecao._checkpoint_controles.get_node("Continuar").visible and selecao._checkpoint_controles.has_node("DescartarCheckpoint"), "diagnóstico e reinício ficam na seleção de fases")
 	jogo.checkpoint.dados = {}
 	conferir(jogo.iniciar_fase("teste_001"), "primeira fase abre")
 	await process_frame

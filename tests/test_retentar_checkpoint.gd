@@ -50,17 +50,17 @@ func _executar() -> void:
 	conferir(jogo.checkpoint.salvamento_pendente() and FileAccess.get_file_as_string(base) == anterior, "Falha no pouso conserva pendência e arquivo anterior")
 	conferir(not jogo.checkpoint.carregar() and jogo.checkpoint.salvamento_pendente(), "Recarregar não apaga pouso pendente")
 	conferir(not jogo.continuar_checkpoint(), "Não restaura cópia antiga enquanto há pouso pendente")
-	jogo.mostrar_menu()
+	jogo.mostrar_selecao()
 	await acomodar()
-	var coluna = jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer")
+	var coluna = jogo.interface_atual._checkpoint_controles
 	conferir(coluna.has_node("TentarSalvarCheckpoint") and not coluna.has_node("Continuar"), "Menu oferece retentativa sem Continuar antigo")
 	coluna.get_node("TentarSalvarCheckpoint").pressed.emit()
 	await acomodar()
-	conferir(jogo.checkpoint.salvamento_pendente() and jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/TentarSalvarCheckpoint") and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém retentativa e arquivo válido")
+	conferir(jogo.checkpoint.salvamento_pendente() and jogo.interface_atual._checkpoint_controles.has_node("TentarSalvarCheckpoint") and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém retentativa e arquivo válido")
 	jogo.checkpoint.falhar = false
-	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/TentarSalvarCheckpoint").pressed.emit()
+	jogo.interface_atual._checkpoint_controles.get_node("TentarSalvarCheckpoint").pressed.emit()
 	await acomodar()
-	coluna = jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer")
+	coluna = jogo.interface_atual._checkpoint_controles
 	conferir(not jogo.checkpoint.salvamento_pendente() and coluna.has_node("Continuar") and not coluna.has_node("TentarSalvarCheckpoint"), "Sucesso oferece Continuar e remove retentativa")
 	var salvo := Save.new()
 	salvo.caminho = base

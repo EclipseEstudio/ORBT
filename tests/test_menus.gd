@@ -26,9 +26,9 @@ func _executar() -> void:
 	await process_frame
 	var menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(coluna.has_node("Configuracoes") and coluna.has_node("Creditos"), "menu oferece configurações e créditos")
+	conferir(coluna.has_node("Acoes/Configuracoes") and coluna.has_node("Acoes/Creditos"), "menu oferece configurações e créditos")
 	conferir(not coluna.get_children().any(func(item): return item is Button and item.text == "Continuar"), "menu sem checkpoint não oferece Continuar")
-	coluna.get_node("Creditos").pressed.emit()
+	coluna.get_node("Acoes/Creditos").pressed.emit()
 	conferir(menu.has_node("TelaCreditos"), "abre créditos")
 	var creditos = menu.get_node("TelaCreditos")
 	conferir(creditos.find_child("Texto", true, false).text.contains("Godot") and creditos.find_child("Texto", true, false).text.contains("ImageGen"), "créditos mostram origem e licença")
@@ -40,7 +40,14 @@ func _executar() -> void:
 	jogo.mostrar_menu()
 	menu = jogo.interface_atual
 	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(not coluna.get_children().any(func(item): return item is Button and item.text == "Continuar") and coluna.has_node("AvisoCheckpoint") and coluna.has_node("DescartarCheckpoint"), "checkpoint incompatível mostra diagnóstico sem oferecer Continuar")
+	conferir(menu.find_children("*", "Button", true, false).size() == 3, "checkpoint incompatível não acrescenta ações ao menu principal")
+	jogo.mostrar_selecao()
+	var recuperacao: VBoxContainer = jogo.interface_atual._checkpoint_controles
+	conferir(not recuperacao.has_node("Continuar") and recuperacao.has_node("AvisoCheckpoint") and recuperacao.has_node("DescartarCheckpoint"), "checkpoint incompatível oferece reinício na seleção de fases")
+	recuperacao.get_node("DescartarCheckpoint").pressed.emit()
+	await process_frame
+	await process_frame
+	conferir(jogo.checkpoint.dados.is_empty() and jogo.interface_atual.get_script() == preload("res://src/Campanha/selecao_fases.gd") and not jogo.interface_atual._checkpoint_controles.has_node("DescartarCheckpoint"), "Reiniciar fase descarta checkpoint incompatível e mantém seleção navegável")
 	jogo.checkpoint.dados = {}
 	jogo.checkpoint.bloqueado = false
 	jogo.checkpoint.aviso = ""
@@ -51,10 +58,10 @@ func _executar() -> void:
 	var hud = hud_de(jogo)
 	partida.pausar()
 	hud._process(0)
-	conferir(hud._menu.visible and hud._configuracoes.visible and hud._pausa.text == "Retomar", "pausa oferece menu, configurações e retomada")
-	hud._menu.pressed.emit()
+	conferir(hud._dialogo_pausa.visible and not hud._raiz.visible and hud._dialogo_pausa.find_children("*", "Button", true, false).size() == 3, "pausa mostra diálogo modal com três ações")
+	hud._dialogo_pausa._menu.pressed.emit()
 	await process_frame
-	conferir(not paused and jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Creditos") and jogo.mundo_atual != mundo, "retorno ao menu limpa mundo e pausa")
+	conferir(not paused and jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos") and jogo.mundo_atual != mundo, "retorno ao menu limpa mundo e pausa")
 	conferir(not is_instance_valid(partida) or (not partida.is_inside_tree() and not partida.nave.simulacao_ativa), "simulação anterior não permanece ativa")
 	conferir(jogo.iniciar_fase("teste_001"), "reabre fase")
 	await process_frame
@@ -69,7 +76,8 @@ func _executar() -> void:
 	hud._process(0)
 	conferir(hud._proxima.visible and hud._reiniciar.text == "Repetir", "vitória oferece próxima fase e repetição")
 	var anterior = jogo.mundo_atual
-	hud._proxima.pressed.emit()
+	conferir(hud._dialogo_conclusao.visible and not hud._raiz.visible, "vitória abre diálogo semelhante à pausa")
+	hud._dialogo_conclusao._continuar.pressed.emit()
 	await process_frame
 	await process_frame
 	conferir(jogo.mundo_atual != anterior and jogo.mundo_atual.nivel_res.id == "salto_curto", "próxima fase abre após vitória")
@@ -85,7 +93,8 @@ func _executar() -> void:
 	partida.finalizar(true, "última")
 	hud._process(0)
 	conferir(not hud._proxima.visible and hud._reiniciar.text == "Repetir", "última fase não oferece próxima")
-	hud._reiniciar.pressed.emit()
+	conferir(not hud._dialogo_conclusao._continuar.visible, "última fase não oferece próxima no diálogo")
+	hud._dialogo_conclusao._resetar.pressed.emit()
 	conferir(partida.estado == partida.Estado.JOGANDO and partida.nave.combustivel == partida.nivel.combustivel_inicial, "repetir inicia nova tentativa")
 	conferir(jogo.progresso.estado(itens[-1].id) == "Concluída", "repetição mantém conclusão")
 	jogo.queue_free()

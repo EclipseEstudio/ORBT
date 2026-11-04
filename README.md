@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gra
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Campanha** para selecionar uma fase ou **Continuar** quando houver checkpoint válido. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
+Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar** para abrir a seleção de fases. Nessa tela, escolha uma fase ou **Continuar** quando houver checkpoint válido. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.

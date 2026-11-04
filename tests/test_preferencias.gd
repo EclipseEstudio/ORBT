@@ -35,7 +35,7 @@ func _executar() -> void:
 	await process_frame
 	conferir(jogo.preferencias.musica == 1.0 and jogo.preferencias.efeitos == 1.0, "ausência usa padrão")
 	var menu = jogo.interface_atual
-	var botao: Button = menu.get_node("Margem/Rolagem/VBoxContainer/Configuracoes")
+	var botao: Button = menu.get_node("Margem/Rolagem/VBoxContainer/Acoes/Configuracoes")
 	botao.pressed.emit()
 	var tela = menu.get_node("TelaConfiguracoes")
 	var coluna = tela.find_child("musica", true, false).get_parent()
