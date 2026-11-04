@@ -156,14 +156,14 @@ func _executar() -> void:
 		fase_android.camera.force_update_scroll()
 		hud_android._process(0)
 		conferir(hud_android._destino.text.contains("↑"), "Destino encoberto por controle superior mantém direção")
-	fase_android.partida.pausar()
+	fase_android.partida.alternar_exploracao()
 	await process_frame
 	await process_frame
-	var ponto_rodape: Vector2 = hud_android._reiniciar.get_global_rect().get_center()
+	var ponto_rodape: Vector2 = hud_android._zoom_controles.get_global_rect().get_center()
 	fase_android.camera.global_position = alvo - (ponto_rodape - Vector2(tela_android.size) / 2) / fase_android.camera.zoom
 	fase_android.camera.force_update_scroll()
 	hud_android._process(0)
-	conferir(hud_android._destino.text.contains("↓"), "Destino encoberto pelo painel de pausa mantém direção")
+	conferir(hud_android._destino.text.contains("↓"), "Destino encoberto pelos controles de zoom mantém direção")
 	tela_android.queue_free()
 	await process_frame
 	print("Visual: %d verificações, %d falhas." % [verificacoes, falhas])

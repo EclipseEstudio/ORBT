@@ -23,6 +23,7 @@ var _alerta: Label
 var _destino: Label
 var _pausa: Button
 var _explorar: Button
+var _zoom_controles: HBoxContainer
 var _checkpoint: Button
 var _configuracoes: Button
 var _reiniciar: Button
@@ -90,6 +91,9 @@ func _ready() -> void:
 	espaco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	espaco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	linha.add_child(espaco)
+	_explorar = botao(linha, "Explorar mapa", partida.alternar_exploracao)
+	Icones.aplicar(_explorar, "mapa", "Explorar mapa")
+	_explorar.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	Icones.aplicar(_pausa, "pausa", "Pausar")
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -132,8 +136,12 @@ func _ready() -> void:
 	var acoes := HBoxContainer.new()
 	acoes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base.add_child(acoes)
-	_explorar = botao(acoes, "Explorar mapa", partida.alternar_exploracao)
-	Icones.aplicar(_explorar, "mapa", "Explorar mapa")
+	_zoom_controles = HBoxContainer.new()
+	acoes.add_child(_zoom_controles)
+	for fator in [0.8, 1.25]:
+		var controle := botao(_zoom_controles, "−" if fator < 1 else "+", func(): get_parent().camera.aplicar_zoom(fator))
+		controle.accessibility_name = "Diminuir zoom" if fator < 1 else "Aumentar zoom"
+		controle.custom_minimum_size.x = 32
 	_reiniciar = botao(acoes, "Reiniciar", partida.reiniciar)
 	Icones.aplicar(_reiniciar, "reiniciar", "Reiniciar")
 	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
@@ -146,10 +154,6 @@ func _ready() -> void:
 		_proxima.visible = false
 		_menu = botao(base, "Menu principal", func(): partida.menu_solicitado.emit.call_deferred())
 		_menu.visible = false
-		var selecao := botao(acoes, "Seleção de fases", func():
-			partida.nave.entrada.cancelar()
-			partida.selecao_solicitada.emit.call_deferred())
-		Icones.aplicar(selecao, "fases", "Seleção de fases")
 	_ajustar_rodape.call_deferred()
 	get_viewport().size_changed.connect(_atualizar_area_segura)
 	_atualizar_area_segura()
@@ -296,6 +300,8 @@ func _process(delta: float) -> void:
 	_pausa.accessibility_name = _pausa.tooltip_text
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
 	_explorar.visible = partida.estado == partida.Estado.JOGANDO
+	_reiniciar.visible = partida.estado == partida.Estado.PERDIDA
+	_zoom_controles.visible = partida.explorando and partida.estado == partida.Estado.JOGANDO
 	_reiniciar.text = "" if partida.estado == partida.Estado.JOGANDO else ("Repetir" if partida.estado == partida.Estado.CONCLUIDA else "Reiniciar")
 	_checkpoint.visible = partida.estado == partida.Estado.PERDIDA
 	if _proxima != null:
@@ -337,7 +343,7 @@ func _process(delta: float) -> void:
 	var alvo: Vector2 = partida.nave.corpos[-1].position
 	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
 	var regioes_topo: Array[Rect2] = []
-	for controle in [_status, _tempo, _indicadores, _pausa, _destino, _alerta]:
+	for controle in [_status, _tempo, _indicadores, _explorar, _pausa, _destino, _alerta]:
 		if controle.is_visible_in_tree() and not (controle is Label and controle.text.is_empty()):
 			regioes_topo.append(controle.get_global_rect())
 	var area := _raiz.get_global_rect()

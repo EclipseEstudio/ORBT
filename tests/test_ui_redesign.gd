@@ -63,6 +63,37 @@ func _executar() -> void:
 		if filho is CanvasLayer and filho.has_method("_alternar_pausa"):
 			hud = filho
 	conferir(hud._pausa.text.is_empty() and hud._pausa.icon != null, "Pausa usa apenas ícone durante o jogo")
+	conferir(hud._explorar.get_parent() == hud._pausa.get_parent() and hud._explorar.get_index() + 1 == hud._pausa.get_index(), "Explorar fica imediatamente à esquerda de Pausa")
+	conferir(not hud._reiniciar.is_visible_in_tree() and not hud._raiz.find_children("*", "Button", true, false).any(func(b): return b.accessibility_name == "Seleção de fases"), "Durante a fase não há atalhos para reiniciar ou selecionar fases")
+	var camera: Camera2D = jogo.mundo_atual.camera
+	camera._process(2.0)
+	var zoom_voo := camera.zoom
+	camera.aplicar_zoom(2.0)
+	conferir(camera.zoom == zoom_voo, "Zoom de voo não responde aos controles de exploração")
+	hud._explorar.pressed.emit()
+	hud._process(0)
+	var zoom_mapa := camera.zoom
+	hud._zoom_controles.get_child(1).pressed.emit()
+	conferir(camera.zoom.x > zoom_mapa.x and hud._zoom_controles.visible, "Exploração oferece botão para aproximar")
+	camera.aplicar_zoom(10000)
+	conferir(camera.zoom == Vector2(4, 4), "Zoom máximo permanece limitado")
+	camera.aplicar_zoom(0.00001)
+	conferir(camera.zoom == Vector2(0.05, 0.05), "Zoom mínimo permanece limitado")
+	var combustivel_antes: int = jogo.mundo_atual.partida.nave.combustivel
+	for indice in 2:
+		var toque := InputEventScreenTouch.new()
+		toque.index = indice
+		toque.pressed = true
+		toque.position = Vector2(40 + indice * 40, 160)
+		camera._unhandled_input(toque)
+	var pinca := InputEventScreenDrag.new()
+	pinca.index = 1
+	pinca.position = Vector2(120, 160)
+	camera._unhandled_input(pinca)
+	conferir(camera.zoom.x > 0.05 and jogo.mundo_atual.partida.nave.combustivel == combustivel_antes, "Pinça amplia o mapa sem lançar a nave")
+	hud._explorar.pressed.emit()
+	hud._process(0)
+	conferir(camera.zoom == zoom_voo and camera._toques.is_empty() and not hud._zoom_controles.visible, "Voltar à nave restaura zoom de voo e limpa os toques")
 	conferir(hud._mensagem.visible and hud._mensagem.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Ajuda inicial aparece sem capturar gestos")
 	hud._process(6.1)
 	conferir(not hud._mensagem.visible, "Ajuda desaparece após seis segundos")

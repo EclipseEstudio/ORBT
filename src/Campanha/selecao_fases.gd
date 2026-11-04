@@ -19,6 +19,8 @@ var _nota: Label
 var _tentar_salvar: Button
 var controlador: Node
 var _checkpoint_controles: VBoxContainer
+var _continuar: Button
+var _rodape: VBoxContainer
 var rolagem: ScrollContainer
 
 
@@ -67,6 +69,8 @@ func _ready() -> void:
 		_nota.text = progresso.descricao()
 		_tentar_salvar.visible = progresso.salvamento_pendente()
 		_mostrar_controle(_nota), 40)
+	_rodape = VBoxContainer.new()
+	coluna.add_child(_rodape)
 	atualizar(itens, erros)
 	configurar_checkpoint()
 	get_viewport().size_changed.connect(_area_segura)
@@ -174,11 +178,12 @@ func configurar_checkpoint() -> void:
 	var checkpoint_disponivel: bool = jogo.checkpoint_disponivel()
 	if checkpoint_disponivel:
 		var continuar := Button.new()
+		_continuar = continuar
 		continuar.name = "Continuar"
 		continuar.text = "Continuar"
 		continuar.custom_minimum_size = Vector2(120, 48)
 		continuar.add_theme_font_size_override("font_size", 12)
-		coluna.add_child(continuar)
+		_rodape.add_child(continuar)
 		continuar.pressed.connect(func():
 			if not jogo.continuar_checkpoint():
 				_exibir_aviso(jogo.checkpoint.aviso))
@@ -197,7 +202,7 @@ func configurar_checkpoint() -> void:
 
 func _exibir_aviso(texto: String, permitir_continuar := false) -> void:
 	var coluna: VBoxContainer = _checkpoint_controles
-	var continuar := coluna.get_node_or_null("Continuar") as Button
+	var continuar := _continuar
 	if continuar != null and not permitir_continuar:
 		continuar.hide()
 	var aviso := coluna.get_node_or_null("AvisoCheckpoint") as Label

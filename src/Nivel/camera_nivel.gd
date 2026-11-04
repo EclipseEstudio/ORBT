@@ -2,6 +2,7 @@ extends Camera2D
 
 var partida: Node
 var _contato := -1
+var _toques: Dictionary[int, Vector2] = {}
 var _ultima_posicao := Vector2.ZERO
 var _abertura := 0.0
 var _destino := Vector2.ZERO
@@ -66,7 +67,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch or event is InputEventScreenDrag:
-		if _contato != -1 and event.index == _contato:
+		if _toques.has(event.index):
 			if event is InputEventScreenTouch and event.canceled:
 				_encerrar_arraste()
 				return
@@ -79,7 +80,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	_eventos_aguardando_interface.erase(event.get_instance_id())
 	if not partida.explorando or partida.estado != partida.Estado.JOGANDO or _abertura > 0:
 		return
-	if event is InputEventScreenTouch:
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+		aplicar_zoom(1.15 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.15)
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMagnifyGesture:
+		aplicar_zoom(event.factor)
+		get_viewport().set_input_as_handled()
+	elif event is InputEventScreenTouch:
+		if event.pressed and not event.canceled and _toques.size() < 2:
+			_toques[event.index] = event.position
+		elif not event.pressed or event.canceled:
+			_toques.erase(event.index)
 		if event.canceled or not event.pressed:
 			if event.index == _contato:
 				_encerrar_arraste()
@@ -87,7 +98,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			_contato = event.index
 			_ultima_posicao = event.position
 		get_viewport().set_input_as_handled()
+	elif event is InputEventScreenDrag and _toques.has(event.index) and _toques.size() == 2:
+		var pontos := _toques.values()
+		var distancia: float = pontos[0].distance_to(pontos[1])
+		_toques[event.index] = event.position
+		pontos = _toques.values()
+		if distancia > 1.0:
+			aplicar_zoom(pontos[0].distance_to(pontos[1]) / distancia)
+		_ultima_posicao = _toques.get(_contato, event.position)
+		get_viewport().set_input_as_handled()
 	elif event is InputEventScreenDrag and event.index == _contato:
+		_toques[event.index] = event.position
 		global_position -= (event.position - _ultima_posicao) / zoom
 		_ultima_posicao = event.position
 		get_viewport().set_input_as_handled()
@@ -104,6 +125,7 @@ func _cancelar() -> void:
 
 func _encerrar_arraste() -> void:
 	_contato = -1
+	_toques.clear()
 	_ultima_posicao = Vector2.ZERO
 	_eventos_aguardando_interface.clear()
 
@@ -122,3 +144,9 @@ func _cancelar_evento_consumido(evento_id: int) -> void:
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_WINDOW_FOCUS_OUT, NOTIFICATION_EXIT_TREE]:
 		_encerrar_arraste()
+
+
+func aplicar_zoom(fator: float) -> void:
+	if not partida.explorando or partida.estado != partida.Estado.JOGANDO or not is_finite(fator) or fator <= 0:
+		return
+	zoom = Vector2.ONE * clampf(zoom.x * fator, 0.05, 4.0)

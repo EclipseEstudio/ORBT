@@ -12,9 +12,11 @@ config_version=5
 
 config/name="ORBT"
 config/version="0.3"
-config/quit_on_go_back=false
 run/main_scene="uid://jrr7wucsctnn"
+config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "Mobile")
+boot_splash/bg_color=Color(0.02745, 0.0549, 0.1294, 1)
+boot_splash/show_image=false
 config/icon="res://Recursos/Sprites/icon.svg"
 
 [autoload]
