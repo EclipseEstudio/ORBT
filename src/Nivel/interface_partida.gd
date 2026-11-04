@@ -11,6 +11,7 @@ const DURACAO_AJUDA := 6.0
 var _ajuda_restante := DURACAO_AJUDA
 var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
+var _dialogo_derrota: Control
 var _indicadores: Control
 var _tempo: Label
 
@@ -175,6 +176,16 @@ func _ready() -> void:
 	_dialogo_conclusao.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
 	add_child(_dialogo_conclusao)
 	_dialogo_conclusao.hide()
+	_dialogo_derrota = DialogoPausa.new()
+	_dialogo_derrota.name = "DialogoDerrota"
+	_dialogo_derrota.titulo = "FIM DE JOGO"
+	_dialogo_derrota.texto_primario = "Último pouso"
+	_dialogo_derrota.texto_secundario = "Repetir"
+	_dialogo_derrota.continuar.connect(partida.restaurar_checkpoint)
+	_dialogo_derrota.resetar.connect(partida.reiniciar)
+	_dialogo_derrota.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
+	add_child(_dialogo_derrota)
+	_dialogo_derrota.hide()
 
 func _icone_status(pai: Control, nome: String) -> void:
 	var icone := TextureRect.new()
@@ -268,7 +279,13 @@ func _dica_tutorial() -> String:
 func _process(delta: float) -> void:
 	var pausado: bool = partida.estado == partida.Estado.PAUSADO
 	var concluida: bool = partida.estado == partida.Estado.CONCLUIDA
-	_raiz.visible = not pausado and not concluida
+	var perdida: bool = partida.estado == partida.Estado.PERDIDA
+	_raiz.visible = not pausado and not concluida and not perdida
+	if perdida and not _dialogo_derrota.visible:
+		_dialogo_derrota.exibir_motivo(partida.motivo)
+		_dialogo_derrota.abrir()
+	elif not perdida:
+		_dialogo_derrota.hide()
 	if concluida and not _dialogo_conclusao.visible:
 		_dialogo_conclusao.abrir()
 	elif not concluida:
@@ -319,7 +336,7 @@ func _process(delta: float) -> void:
 	elif partida.explorando:
 		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
 	elif partida.nave.combustivel == 0:
-		_mensagem.text = "À deriva. Ainda é possível chegar à Terra."
+		_mensagem.text = "Combustível esgotado."
 	elif partida.nivel.id == "teste_001":
 		_mensagem.text = _dica_tutorial()
 	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:

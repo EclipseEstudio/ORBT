@@ -49,6 +49,10 @@ func _capturar() -> void:
 	jogo.mundo_atual.partida.alternar_exploracao()
 	jogo.mundo_atual.partida.finalizar(true, "Chegada à Terra")
 	await salvar("conclusao")
+	jogo.mundo_atual.partida.reiniciar()
+	jogo.mundo_atual.partida.nave.combustivel = 0
+	jogo.mundo_atual.partida.avancar(0)
+	await salvar("fim-de-jogo")
 	jogo.checkpoint.dados = {"fase": "teste_001", "content_version": -1}
 	jogo.mostrar_menu()
 	await salvar("menu-checkpoint")

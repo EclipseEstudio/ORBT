@@ -249,18 +249,12 @@ func _executar() -> void:
 	partida.reiniciar()
 	lancar(nave, Vector2(0, -80))
 	partida.avancar(1.0 / 60)
-	conferir(nave.combustivel == 0 and nave.condicao == nave.Condicao.A_DERIVA and partida.estado == partida.Estado.JOGANDO, "Último impulso mantém deriva ativa")
+	conferir(nave.combustivel == 0 and partida.estado == partida.Estado.PERDIDA and partida.motivo == "Combustível esgotado", "Último combustível encerra a tentativa imediatamente")
 	conferir(not nave.solicitar_impulso(2, Vector2(0, -80)), "Saldo zero bloqueia impulso")
-	var velocidade_deriva: Vector2 = nave.velocidade
-	for passo in range(180):
-		partida.avancar(1.0 / 60)
-		if passo == 59:
-			conferir(nave.condicao == nave.Condicao.A_DERIVA and nave.velocidade.x > velocidade_deriva.x + 1.0, "Gravidade acelera a nave lateralmente mesmo sem combustível")
-	conferir(vitorias == 2 and partida.estado == partida.Estado.CONCLUIDA, "Último combustível pode vencer")
-	partida.reiniciar()
-	lancar(nave, Vector2(0, 40))
-	partida.avancar(1.0 / 60)
-	conferir(partida.estado == partida.Estado.PERDIDA and partida.motivo == "Sem combustível para decolar", "Contato seguro sem saldo encerra com causa")
+	var posicao_derrota: Vector2 = nave.global_position
+	var derrotas_antes: int = derrotas
+	partida.avancar(3)
+	conferir(nave.global_position == posicao_derrota and derrotas == derrotas_antes and vitorias == 1, "Fim por combustível impede voo e eventos repetidos")
 	partida.nivel = nivel
 	partida.reiniciar()
 	lancar(nave, Vector2(0, -80))

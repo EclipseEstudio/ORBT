@@ -14,6 +14,8 @@ var titulo := "PAUSA"
 var texto_primario := "Continuar"
 var texto_secundario := "Resetar"
 var mostrar_primario := true
+var _motivo: Label
+var _rolagem_motivo: ScrollContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -51,6 +53,18 @@ func _ready() -> void:
 	rotulo_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rotulo_titulo.add_theme_font_size_override("font_size", 14)
 	coluna.add_child(rotulo_titulo)
+	_rolagem_motivo = ScrollContainer.new()
+	_rolagem_motivo.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_rolagem_motivo.custom_minimum_size.y = 36
+	coluna.add_child(_rolagem_motivo)
+	_motivo = Label.new()
+	_motivo.name = "Motivo"
+	_motivo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_motivo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_motivo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_motivo.add_theme_font_size_override("font_size", 10)
+	_rolagem_motivo.add_child(_motivo)
+	_rolagem_motivo.hide()
 	_continuar = _botao(coluna, texto_primario, "jogar", func(): continuar.emit())
 	_continuar.visible = mostrar_primario
 	Tema.destacar(_continuar)
@@ -76,6 +90,11 @@ func abrir() -> void:
 		_continuar.grab_focus()
 	else:
 		_resetar.grab_focus()
+
+func exibir_motivo(texto: String) -> void:
+	_motivo.text = texto
+	_rolagem_motivo.visible = not texto.is_empty()
+	_rolagem_motivo.scroll_vertical = 0
 
 func _area_segura() -> void:
 	var fisica := AreaSegura.fisica()

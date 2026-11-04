@@ -17,3 +17,5 @@ As áreas seguras continuam sendo calculadas pelas rotinas existentes. Os testes
 Validação visual no desktop não substitui revisão de recortes, contraste e ergonomia no Android.
 
 Explorar oferece zoom por pinça com dois dedos, roda do mouse e botões +/−. Os limites são 0,05× e 4×; voltar à nave restaura o zoom de voo. Créditos usam o fundo estrelado e mostram apenas os nomes dos participantes.
+
+O diálogo FIM DE JOGO é exibido para toda derrota, incluindo combustível esgotado ou deriva. Mostra a causa exata registrada pela partida e permite recuperar o último pouso, repetir ou voltar ao menu. O motivo tem rolagem vertical para textos longos.

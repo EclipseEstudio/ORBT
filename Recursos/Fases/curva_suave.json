@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "curva_suave",
   "name": "O Labirinto",
   "order": 4,
@@ -15,7 +15,7 @@
       1000
     ]
   },
-  "initial_fuel": 3,
+  "initial_fuel": 4,
   "flight_timeout": 30,
   "physics": {
     "gravity_constant": 500,
