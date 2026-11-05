@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "primeiro_pouso",
+  "name": "Primeiro pouso",
+  "order": 4,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      70,
+      350
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      0,
+      130
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [
+    {
+      "id": "apoio",
+      "type": "satellite",
+      "position": [
+        230,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 24,
+      "collision_radius": 24,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 59
+    },
+    {
+      "id": "barreira",
+      "type": "asteroid",
+      "position": [
+        52,
+        220
+      ],
+      "mass": 0,
+      "visual_radius": 32,
+      "collision_radius": 32,
+      "capture_radius": 0,
+      "danger_radius": 32,
+      "proximity_radius": 67
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -60,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Pouse na lua à direita e decole para a Terra. O pouso permite mudar a direção.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        100.528,
+        330.92
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        127.24,
+        314.225
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        68.696,
+        139.41
+      ],
+      "radius": 7
+    }
+  ]
+}

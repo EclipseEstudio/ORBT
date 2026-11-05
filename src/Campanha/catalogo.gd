@@ -28,7 +28,8 @@ static func carregar(caminho: String) -> Dictionary:
 		if str(id).strip_edges().is_empty() or dados.get("id") != id or not dados.get("name") is String or dados.name.strip_edges().is_empty() or not (ordem is int or ordem is float) or not is_finite(float(ordem)) or ordem < 1 or ordem > 1000000 or ordem != floorf(ordem):
 			erros.append("%s: ID, nome ou ordem inválidos" % id)
 			continue
-		itens.append({"id": id, "nome": dados.name, "ordem": int(ordem), "arquivo": arquivo})
+		var estrelas: int = dados.stars.size() if dados.get("stars") is Array else 0
+		itens.append({"id": id, "nome": dados.name, "ordem": int(ordem), "arquivo": arquivo, "estrelas": estrelas})
 	itens.sort_custom(func(a: Dictionary, b: Dictionary): return a.id < b.id if a.ordem == b.ordem else a.ordem < b.ordem)
 	# Falha fechada: um catálogo parcial não muda silenciosamente a progressão.
 	return {"itens": itens if erros.is_empty() else [], "erros": erros}

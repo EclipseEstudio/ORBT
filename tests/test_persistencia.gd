@@ -51,7 +51,7 @@ func testar_expansao_catalogo() -> void:
 	atual.caminho = caminho_real
 	conferir(atual.carregar(), "Save de seis fases abre após expansão")
 	atual.configurar(catalogo.itens)
-	conferir(atual.concluidas.size() == 6 and atual.pode_abrir("contorno") and not atual.pode_abrir("duas_rotas"), "Expansão real preserva conclusões e libera apenas fase 7")
+	conferir(atual.concluidas.size() == 6 and atual.pode_abrir(catalogo.itens[6].id) and not atual.pode_abrir(catalogo.itens[7].id), "Expansão real preserva conclusões e libera apenas fase 7")
 	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 		if FileAccess.file_exists(caminho_real + sufixo):
 			DirAccess.remove_absolute(caminho_real + sufixo)
@@ -134,7 +134,7 @@ func _executar() -> void:
 	escrever(base, JSON.stringify(danificado))
 	progresso = novo(base)
 	conferir(not progresso.concluidas.has("desconhecido") and progresso.aviso.contains("recuperado"), "Checksum impede usar payload alterado")
-	var futuro := "{\"schema_version\": 2}"
+	var futuro := "{\"schema_version\": 3}"
 	escrever(base, futuro)
 	progresso = novo(base)
 	conferir(progresso.aviso.contains("incompatível") and not progresso.salvar() and FileAccess.get_file_as_string(base) == futuro, "Versão futura não é sobrescrita nem rebaixada pelo backup")

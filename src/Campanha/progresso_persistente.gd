@@ -7,6 +7,7 @@ var aviso := ""
 var _ultimo_valido := ""
 var _bloqueado := false
 var _sujo := false
+var _agrupando := false
 
 
 func descricao() -> String:
@@ -41,7 +42,7 @@ func _ler(arquivo: String) -> Dictionary:
 	var versao = dados.get("schema_version")
 	if not (versao is int or versao is float) or not is_finite(float(versao)) or versao != floorf(versao):
 		return {"estado": "invalido"}
-	if versao != 1:
+	if versao != 1 and versao != 2:
 		return {"estado": "incompativel"}
 	var numero = dados.get("geracao")
 	if not (numero is float or numero is int) or not is_finite(numero) or numero < 1 or numero > 1000000000 or numero != floorf(numero):
@@ -57,7 +58,17 @@ func _ler(arquivo: String) -> Dictionary:
 	for id in dados.concluidas:
 		if id not in dados.liberadas:
 			return {"estado": "invalido"}
-	var conteudo := {"schema_version": 1, "geracao": int(numero), "concluidas": dados.concluidas, "liberadas": dados.liberadas}
+	var conteudo := {"schema_version": int(versao), "geracao": int(numero), "concluidas": dados.concluidas, "liberadas": dados.liberadas}
+	if versao == 2:
+		if not dados.get("melhores_estrelas") is Dictionary or dados.melhores_estrelas.size() > 10000:
+			return {"estado": "invalido"}
+		var recordes: Dictionary = {}
+		for id in dados.melhores_estrelas:
+			var quantidade = dados.melhores_estrelas[id]
+			if id not in dados.concluidas or not (quantidade is int or quantidade is float) or not is_finite(float(quantidade)) or quantidade != floorf(quantidade) or quantidade < 1 or quantidade > 256:
+				return {"estado": "invalido"}
+			recordes[id] = int(quantidade)
+		conteudo["melhores_estrelas"] = recordes
 	if dados.get("checksum") != JSON.stringify(conteudo, "", true).sha256_text():
 		return {"estado": "invalido"}
 	return {"estado": "valido", "dados": conteudo, "texto": texto}
@@ -83,15 +94,22 @@ func carregar() -> bool:
 		return false
 	concluidas.clear()
 	liberadas.clear()
+	melhores_estrelas.clear()
 	for id in escolhido.dados.concluidas:
 		concluidas[id] = true
 	for id in escolhido.dados.liberadas:
 		liberadas[id] = true
+	for id in escolhido.dados.get("melhores_estrelas", {}):
+		melhores_estrelas[id] = int(escolhido.dados.melhores_estrelas[id])
 	geracao = escolhido.dados.geracao
 	_ultimo_valido = escolhido.texto
 	if principal.estado != "valido":
 		aviso = "Progresso recuperado da última cópia válida."
 	alterado.emit()
+	# Migrar apenas depois de verificar o checksum antigo; a cópia mantém o legado.
+	if escolhido.dados.schema_version == 1:
+		_sujo = true
+		salvar()
 	return true
 
 
@@ -99,6 +117,25 @@ func concluir(id: String, itens: Array) -> bool:
 	var mudou := super.concluir(id, itens)
 	if mudou or _sujo:
 		_sujo = true
+		if not _agrupando:
+			salvar()
+	return mudou
+
+
+func registrar_estrelas(id: String, quantidade: int) -> bool:
+	var mudou := super.registrar_estrelas(id, quantidade)
+	if mudou or _sujo:
+		_sujo = true
+		if not _agrupando:
+			salvar()
+	return mudou
+
+
+func concluir_com_estrelas(id: String, itens: Array, quantidade: int) -> bool:
+	_agrupando = true
+	var mudou := super.concluir_com_estrelas(id, itens, quantidade)
+	_agrupando = false
+	if _sujo:
 		salvar()
 	return mudou
 
@@ -121,7 +158,7 @@ func salvar() -> bool:
 	var abertas: Array = liberadas.keys()
 	completas.sort()
 	abertas.sort()
-	var dados := {"schema_version": 1, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas}
+	var dados := {"schema_version": 2, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas, "melhores_estrelas": melhores_estrelas.duplicate()}
 	dados["checksum"] = JSON.stringify(dados, "", true).sha256_text()
 	var texto := JSON.stringify(dados, "\t") + "\n"
 	aviso = "Não foi possível salvar. O progresso novo vale só nesta sessão."

@@ -26,16 +26,24 @@ func executar_rota(recurso: NivelRes, etapas: Array, indice_alterado := -1, desv
 	var resultado := false
 	for indice in range(etapas.size()):
 		var etapa: Dictionary = etapas[indice]
-		var angulo: float = etapa.get("angulo", 0.0)
-		if etapa.has("radial"):
-			var apoio: Dictionary = recurso.obter_corpo(etapa.radial)
-			angulo = rad_to_deg((nave.global_position - apoio.position).angle()) * etapa.fator + etapa.correcao
-		elif etapa.has("alvo"):
-			var alvo: Dictionary = recurso.obter_corpo(etapa.alvo)
-			angulo = rad_to_deg((alvo.position - nave.global_position).angle()) + etapa.correcao
-		angulo += desvio if indice == indice_alterado else 0.0
-		var forca: float = etapa.get("forca", 1.0)
-		var impulso: Vector2 = Vector2.RIGHT.rotated(deg_to_rad(angulo)) * nave.entrada.impulso_maximo * forca
+		for passo in range(int(etapa.get("espera", 0))):
+			partida.avancar(DELTA)
+		var ajuste := desvio if indice == indice_alterado else 0.0
+		var impulso: Vector2
+		if etapa.has("alvo") or etapa.has("ponto"):
+			var alvo: Vector2
+			if etapa.has("ponto"):
+				alvo = Vector2(etapa.ponto[0], etapa.ponto[1])
+			else:
+				for corpo in nave.corpos:
+					if corpo.id == etapa.alvo:
+						alvo = corpo.position
+			var desejada: Vector2 = (alvo - nave.global_position).normalized().rotated(deg_to_rad(float(etapa.get("correcao", 0.0)) + ajuste)) * float(etapa.get("velocidade", 90.0))
+			var atual: Vector2 = nave.velocidade_apoio() if nave.condicao in [nave.Condicao.POUSADA, nave.Condicao.PRONTA] else nave.velocidade
+			impulso = desejada - atual
+		else:
+			impulso = Vector2.RIGHT.rotated(deg_to_rad(float(etapa.angulo) + ajuste)) * nave.entrada.impulso_maximo * float(etapa.get("forca", 1.0))
+		var angulo := rad_to_deg(impulso.angle())
 		if not nave.solicitar_impulso(nave._ultimo_pedido + 1, impulso):
 			break
 		var passos := 0
@@ -54,8 +62,9 @@ func executar_rota(recurso: NivelRes, etapas: Array, indice_alterado := -1, desv
 		if indice == etapas.size() - 1 and partida.estado == partida.Estado.CONCLUIDA:
 			resultado = true
 	var motivo: String = partida.motivo
+	var estrelas: int = partida.estrelas_coletadas.size()
 	nivel.free()
-	return {"venceu": resultado, "etapas": registros, "motivo": motivo}
+	return {"venceu": resultado, "etapas": registros, "motivo": motivo, "estrelas": estrelas}
 
 func _executar() -> void:
 	var falhas := 0
@@ -65,9 +74,10 @@ func _executar() -> void:
 			falhas += 1
 			continue
 		var nominal := executar_rota(recurso, rota.etapas)
-		if not nominal.venceu:
+		var coleta := executar_rota(recurso, rota.coleta)
+		if not nominal.venceu or not coleta.venceu or nominal.estrelas != 2 or coleta.estrelas != 3:
 			falhas += 1
-			print("FALHA nominal: ", rota.id, " ", nominal)
+			print("FALHA nominal: ", rota.id, " ", nominal, " coleta: ", coleta)
 			continue
 		var margens: Array = []
 		for indice in range(rota.etapas.size()):
@@ -84,8 +94,6 @@ func _executar() -> void:
 					ultima = desvio
 				lados.append(ultima)
 			margens.append(lados)
-			if rota.id in ["salto_curto", "na_diagonal", "curva_suave", "escala_segura"]:
-				print("Limite ", rota.id, " etapa ", indice + 1, ": ", JSON.stringify(falhas_lado))
-		print(JSON.stringify({"id": rota.id, "etapas": nominal.etapas, "margens_graus": margens, "passo": PASSO_GRAUS, "limite": LIMITE_GRAUS}))
+		print(JSON.stringify({"id": rota.id, "etapas": nominal.etapas, "etapas_coleta": coleta.etapas, "estrelas": nominal.estrelas, "estrelas_coleta": coleta.estrelas, "margens_graus": margens, "passo": PASSO_GRAUS, "limite": LIMITE_GRAUS}))
 	print("Medição: ", Rotas.ROTAS.size(), " rotas, ", falhas, " falhas nominais.")
 	quit(1 if falhas else 0)

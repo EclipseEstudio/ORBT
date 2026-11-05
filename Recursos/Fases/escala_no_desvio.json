@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "escala_no_desvio",
+  "name": "Escala no desvio",
+  "order": 7,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      70,
+      380
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      70,
+      60
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [
+    {
+      "id": "apoio",
+      "type": "satellite",
+      "position": [
+        300,
+        285
+      ],
+      "mass": 0,
+      "visual_radius": 24,
+      "collision_radius": 24,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 59
+    },
+    {
+      "id": "barreira",
+      "type": "asteroid",
+      "position": [
+        75,
+        220
+      ],
+      "mass": 0,
+      "visual_radius": 43,
+      "collision_radius": 43,
+      "capture_radius": 0,
+      "danger_radius": 43,
+      "proximity_radius": 78
+    },
+    {
+      "id": "teto",
+      "type": "asteroid",
+      "position": [
+        350,
+        140
+      ],
+      "mass": 0,
+      "visual_radius": 25,
+      "collision_radius": 25,
+      "capture_radius": 0,
+      "danger_radius": 25,
+      "proximity_radius": 60
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Contorne a barreira pelo apoio. Guarde combustível para decolar e, se quiser, buscar a estrela afastada.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        115.751,
+        361.103
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        155.956,
+        344.496
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        143.677,
+        99.911
+      ],
+      "radius": 7
+    }
+  ]
+}

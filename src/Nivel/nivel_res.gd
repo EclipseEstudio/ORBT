@@ -12,6 +12,7 @@ var fisica: Dictionary = {}
 var parametros_nave: Dictionary = {}
 var inicio: Dictionary = {}
 var corpos: Array = []
+var estrelas: Array = []
 var dados_autorais: Dictionary = {}
 
 

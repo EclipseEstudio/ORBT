@@ -54,6 +54,10 @@ O mapa é um desenho de dados estáticos. Ele não executa a gravidade, não des
 
 O ID é gerado como `planet_1`, `satellite_1`, `sun_1` ou `asteroid_1`, usando o primeiro número livre para aquele tipo. O modelo inicial preenche os raios e propriedades essenciais para o tipo selecionado, mas esses valores ainda precisam ser ajustados à intenção da fase. Corpos perigosos começam com zona fatal e sem captura; apoios começam com captura e sem zona fatal.
 
+### Estrelas opcionais
+
+Use **Inserir estrela** para criar um coletável no centro do mapa. A estrela pode ser selecionada na lista ou no mapa, arrastada, duplicada e excluída. Nas propriedades, ajuste `id`, `position` e `radius`. Desfazer/refazer, rascunho, salvamento e teste preservam as estrelas. A validação impede IDs repetidos e posições inválidas. A campanha usa três por fase; o contrato permite até 256. As estrelas não são corpos físicos e a coleta só vale quando a nave alcança a Terra.
+
 ### Excluir corpos
 
 1. Selecione um corpo na lista ou no mapa.

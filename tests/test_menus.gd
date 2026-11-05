@@ -81,7 +81,7 @@ func _executar() -> void:
 	hud._dialogo_conclusao._continuar.pressed.emit()
 	await process_frame
 	await process_frame
-	conferir(jogo.mundo_atual != anterior and jogo.mundo_atual.nivel_res.id == "salto_curto", "próxima fase abre após vitória")
+	conferir(jogo.mundo_atual != anterior and jogo.mundo_atual.nivel_res.id == jogo.get_node("GerenciadorDeNivel").itens[1].id, "próxima fase abre após vitória seguindo a ordem da campanha")
 	conferir(jogo.progresso.estado("teste_001") == "Concluída" and (not is_instance_valid(anterior) or not anterior.is_inside_tree()), "progresso preservado e fase anterior removida")
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	for item in itens:

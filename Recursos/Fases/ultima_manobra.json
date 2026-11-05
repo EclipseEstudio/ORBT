@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "ultima_manobra",
+  "name": "Última manobra",
+  "order": 20,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 6,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      60,
+      430
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      550,
+      100
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [
+    {
+      "id": "apoio_1",
+      "type": "satellite",
+      "position": [
+        310,
+        340
+      ],
+      "mass": 0,
+      "visual_radius": 23,
+      "collision_radius": 23,
+      "capture_radius": 23,
+      "danger_radius": 0,
+      "proximity_radius": 58,
+      "orbit": {
+        "center": [
+          310,
+          265
+        ],
+        "period_seconds": 32,
+        "clockwise": true
+      }
+    },
+    {
+      "id": "apoio_2",
+      "type": "satellite",
+      "position": [
+        130,
+        180
+      ],
+      "mass": 0,
+      "visual_radius": 20,
+      "collision_radius": 20,
+      "capture_radius": 20,
+      "danger_radius": 0,
+      "proximity_radius": 55
+    },
+    {
+      "id": "central",
+      "type": "asteroid",
+      "position": [
+        250,
+        240
+      ],
+      "mass": 0,
+      "visual_radius": 35,
+      "collision_radius": 35,
+      "capture_radius": 0,
+      "danger_radius": 35,
+      "proximity_radius": 70
+    },
+    {
+      "id": "inferior",
+      "type": "asteroid",
+      "position": [
+        150,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 28,
+      "collision_radius": 28,
+      "capture_radius": 0,
+      "danger_radius": 28,
+      "proximity_radius": 63
+    },
+    {
+      "id": "alto",
+      "type": "asteroid",
+      "position": [
+        330,
+        30
+      ],
+      "mass": 0,
+      "visual_radius": 24,
+      "collision_radius": 24,
+      "capture_radius": 0,
+      "danger_radius": 24,
+      "proximity_radius": 59
+    },
+    {
+      "id": "ultima",
+      "type": "asteroid",
+      "position": [
+        410,
+        140
+      ],
+      "mass": 0,
+      "visual_radius": 24,
+      "collision_radius": 24,
+      "capture_radius": 0,
+      "danger_radius": 24,
+      "proximity_radius": 59
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Combine órbita, pousos e correção em voo. Volte à Terra para confirmar as estrelas desta última viagem.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        102.294,
+        410.278
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        141.568,
+        391.964
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        490.751,
+        131.999
+      ],
+      "radius": 7
+    }
+  ]
+}

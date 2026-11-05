@@ -1,6 +1,6 @@
 # Plano: fundo do menu e estrelas coletáveis
 
-Estado em 05/11/2026: somente planejamento. O usuário confirmou estrelas coletáveis durante o voo. Este documento propõe regras para a implementação futura; nenhuma das duas funcionalidades foi implementada nesta etapa.
+Registro do planejamento original. Em 05/11/2026, as estrelas foram implementadas na campanha de 20 fases: consulte as [regras atuais](../regras-de-negocio/campanha.md) e o [contrato de coleta](estrelas-coletaveis.md). As propostas abaixo ficam como histórico; não representam pendências atuais das estrelas. O fundo do menu é um trabalho separado.
 
 ## Fundo do menu principal
 

@@ -16,6 +16,7 @@ var _ocupada := false
 var _segura := Rect2()
 var _transformacao := Transform2D()
 var _nota: Label
+var _colecao: Label
 var _tentar_salvar: Button
 var controlador: Node
 var _checkpoint_controles: VBoxContainer
@@ -43,6 +44,20 @@ func _ready() -> void:
 	voltar_menu.name = "Voltar"
 	Icones.aplicar(voltar_menu, "voltar", "Voltar ao menu")
 	_rotulo(cabecalho, "FASES", 8)
+	var estrela := TextureRect.new()
+	estrela.texture = Icones.obter("estrela")
+	estrela.custom_minimum_size = Vector2(10, 12)
+	estrela.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	estrela.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	estrela.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	estrela.modulate = Color("ffc845")
+	cabecalho.add_child(estrela)
+	_colecao = _rotulo(cabecalho, "", 8)
+	_colecao.name = "Colecao"
+	_colecao.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_colecao.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_colecao.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_colecao.modulate = Color("ffc845")
 	rolagem = ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -107,7 +122,13 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		cartoes.remove_child(filho)
 		filho.queue_free()
 	mensagem.text = "\n".join(erros) if not erros.is_empty() else ("Nenhuma fase cadastrada." if itens.is_empty() else "")
+	var total := 0
+	var obtidas := 0
 	for item in itens:
+		var quantidade: int = item.get("estrelas", 0)
+		var recorde: int = mini(quantidade, progresso.melhor_estrelas(item.id))
+		total += quantidade
+		obtidas += recorde
 		var cartao := VBoxContainer.new()
 		cartao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cartao.add_theme_constant_override("separation", 3)
@@ -122,7 +143,10 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		botao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		botao.disabled = not progresso.pode_abrir(item.id)
 		var icone := "cadeado" if botao.disabled else ("concluida" if estado == "Concluída" else "jogar")
-		Icones.aplicar(botao, icone, "%02d - %s - %s" % [item.ordem, item.nome, estado], false)
+		var descricao := "%02d - %s - %s" % [item.ordem, item.nome, estado]
+		if quantidade > 0:
+			descricao += " - Estrelas: %d/%d" % [recorde, quantidade]
+		Icones.aplicar(botao, icone, descricao, false)
 		botao.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		botao.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 		botao.set_meta("estado", estado)
@@ -131,6 +155,30 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		botao.add_theme_font_size_override("font_size", 8)
 		if not botao.disabled:
 			Tema.destacar(botao, Color("ffc845") if estado == "Concluída" else Tema.DESTAQUE)
+		if quantidade > 0:
+			var colecao := HBoxContainer.new()
+			colecao.name = "Estrelas"
+			colecao.alignment = BoxContainer.ALIGNMENT_CENTER
+			colecao.add_theme_constant_override("separation", 1)
+			colecao.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			colecao.tooltip_text = "Melhor coleta ao chegar à Terra: %d/%d" % [recorde, quantidade]
+			cartao.add_child(colecao)
+			for indice in range(quantidade if quantidade <= 3 else 1):
+				var pequena := TextureRect.new()
+				pequena.texture = Icones.obter("estrela")
+				pequena.custom_minimum_size = Vector2(7, 7)
+				pequena.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				pequena.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				pequena.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				pequena.modulate = Color("ffc845") if indice < recorde else Color("45516b")
+				colecao.add_child(pequena)
+			if quantidade > 3:
+				var contagem := _rotulo(colecao, str(recorde), 6)
+				contagem.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+				contagem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_colecao.text = "%d/%d" % [obtidas, total]
+	_colecao.accessibility_name = "Coleção de estrelas: %d de %d" % [obtidas, total]
+	_colecao.tooltip_text = "Melhor coleta de cada fase. Só vale ao chegar à Terra."
 
 
 func escolher(id: String) -> void:

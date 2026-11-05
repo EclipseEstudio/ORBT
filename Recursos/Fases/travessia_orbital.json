@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "travessia_orbital",
+  "name": "Travessia orbital",
+  "order": 16,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      60,
+      380
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      60,
+      60
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [
+    {
+      "id": "apoio",
+      "type": "satellite",
+      "position": [
+        320,
+        295
+      ],
+      "mass": 0,
+      "visual_radius": 24,
+      "collision_radius": 24,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 59,
+      "orbit": {
+        "center": [
+          320,
+          220
+        ],
+        "period_seconds": 28,
+        "clockwise": true
+      }
+    },
+    {
+      "id": "barreira",
+      "type": "asteroid",
+      "position": [
+        65,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 45,
+      "collision_radius": 45,
+      "capture_radius": 0,
+      "danger_radius": 45,
+      "proximity_radius": 80
+    },
+    {
+      "id": "alto",
+      "type": "asteroid",
+      "position": [
+        315,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 22,
+      "collision_radius": 22,
+      "capture_radius": 0,
+      "danger_radius": 22,
+      "proximity_radius": 57
+    },
+    {
+      "id": "externa",
+      "type": "asteroid",
+      "position": [
+        430,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 26,
+      "collision_radius": 26,
+      "capture_radius": 0,
+      "danger_radius": 26,
+      "proximity_radius": 61
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Intercepte o apoio orbital sem tocar as rochas. A saída exige compensar o movimento da lua.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        104.155,
+        360.341
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        143.742,
+        342.716
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        132.135,
+        99.153
+      ],
+      "radius": 7
+    }
+  ]
+}

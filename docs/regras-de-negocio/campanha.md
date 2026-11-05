@@ -1,64 +1,61 @@
-# Regras da campanha e progressão
+# Regras da campanha e estrelas
 
-Estas regras descrevem o fluxo implementado em 29/10/2026. A seleção e o progresso persistente têm evidências em Windows; o aceite integrado Android permanece pendente. Os contratos de arquivos, serviços e recuperação estão na [documentação técnica da campanha](../tecnica/campanha.md).
+Atualizado em 05/11/2026. A campanha tem 20 fases e 60 estrelas opcionais. O objetivo de cada fase é chegar à Terra. A coleta oferece um segundo desafio para quem quiser repetir e melhorar o resultado.
 
-## Navegação e tentativas
+## Progressão
 
-No menu, **Campanha** abre a seleção de fases no computador e no Android. **Continuar** aparece quando há checkpoint válido e recupera a tentativa pausada. O menu também oferece configurações e créditos.
+As primeiras fases ensinam mira e força com trajetos curtos e espaço para errar. As seguintes introduzem pouso e decolagem, dois impulsos no mesmo voo, gravidade e órbitas. O trecho final combina essas ações com obstáculos, passagens menores e planejamento de combustível.
 
-A proposta de narrativa apresenta Lia, piloto veterana da Corporação Horizonte, transportando suprimentos médicos para a Terra, seu lar. A chegada exibe uma mensagem sobre a carga; ao concluir a última fase, uma mensagem encerra a missão com a entrega dos suprimentos. Esses textos e nomes aguardam aprovação da equipe na #56.
+A primeira fase está disponível desde o início. Chegar à Terra conclui a fase e libera a seguinte, mesmo sem nenhuma estrela. Fases concluídas podem ser repetidas. Perder, reiniciar ou abandonar não conclui a fase nem confirma a coleta.
 
-**Seleção de fases**, na interface da partida, permite retornar à campanha durante o jogo, a pausa ou após o desfecho. A tentativa anterior é descartada. A seleção oferece **Atualizar lista**, para reler o conteúdo disponível, e **Voltar ao menu**.
+O menu **Jogar** abre a grade de fases. Cada cartão mostra número, estado e recorde de estrelas; a descrição acessível conserva o nome da fase. A coleção no cabeçalho soma os melhores resultados das fases do catálogo atual.
 
-Escolher uma fase começa uma tentativa com posição, combustível, tempo, contatos e câmera iniciais. Repetir uma fase não recupera o voo anterior; **Continuar** recupera o checkpoint salvo.
-
-## Acesso, conclusão e repetição
-
-Cada fase apresenta ordem, nome e um dos seguintes estados:
-
-| Estado | Acesso e comportamento |
-| --- | --- |
-| Bloqueada | Não pode ser aberta. |
-| Disponível | Pode ser escolhida para começar uma tentativa. |
-| Concluída | Pode ser jogada novamente pela ação **Repetir**. |
-
-A primeira fase da lista é liberada. Vencer conclui a fase e libera a seguinte uma única vez. Repetir uma fase concluída não duplica a liberação, e concluir a última não cria outra fase. Perder ou abandonar uma tentativa não conclui a fase.
-
-Quando uma atualização acrescenta fases depois de uma já concluída, a próxima é liberada ao carregar ou atualizar o catálogo, preservando o progresso anterior. As fases seguintes continuam bloqueadas até as próximas vitórias.
-
-As conquistas pertencem à identidade estável da fase. Alterar seu nome, sua ordem ou seu conteúdo mantendo essa identidade não apaga conclusões e desbloqueios. O jogador só pode abrir fases presentes no catálogo atual e liberadas ou concluídas.
-
-Se o catálogo estiver vazio, a seleção informa o estado vazio e permite voltar. Arquivos inválidos impedem apresentar uma campanha parcial; a seleção mostra o diagnóstico. Uma fase com conteúdo inválido também não inicia uma partida incompleta. Após corrigir os arquivos, **Atualizar lista** permite tentar novamente.
-
-## Salvamento e recuperação
-
-Conclusões e desbloqueios são salvos neste aparelho. Fechar completamente e reabrir o jogo restaura esse progresso quando o arquivo salvo é válido. O salvamento da campanha não guarda posição da nave, combustível ou tempo de uma tentativa em andamento.
-
-Se houver falha de gravação, a vitória permanece válida na sessão atual. A interface avisa que o progresso não foi salvo e oferece **Tentar salvar novamente** quando a retentativa é possível. Enquanto o salvamento não tiver sucesso, fechar o aplicativo pode perder essa alteração.
-
-Quando o arquivo principal está inválido, o jogo pode recuperar a última cópia válida. Essa recuperação pode perder a alteração mais recente que não chegou à cópia recuperada. Quando os arquivos disponíveis são inválidos ou usam uma versão incompatível, eles são preservados; o jogo avisa e usa progresso temporário para a sessão, sem sobrescrever automaticamente os arquivos existentes.
-
-## Conteúdo entregue e aceite pendente
-
-O catálogo contém dez fases: a original, cinco mapas baseados no protótipo Python `dev-macb/orbt` e quatro mapas novos. Os mapas adaptados começam com a nave parada no espaço e três unidades de combustível, exceto **Deriva Final**, que começa com cinco. Os novos também começam em posição livre, com três unidades, ou quatro no retorno final. A gravidade e o tempo de voo passam a atuar após o primeiro impulso. A dica aparece enquanto a nave aguarda o lançamento ou está pousada.
-
-| Ordem | Fase | Proposta |
+| Fase | Nome | Desafio principal |
 | --- | --- | --- |
-| 1 | Primeiro impulso | Rota inicial até a Terra com gravidade. |
-| 2 | Tutorial | Contornar ou pousar no satélite central e alcançar a Terra à direita. |
-| 3 | O Estilingue | Cruzar o corredor entre dois planetas e um satélite. |
-| 4 | O Labirinto | Usar os satélites para atravessar os muros de asteroides. |
-| 5 | O Sol | Contornar a estrela e passar pelos portões rochosos. |
-| 6 | Deriva Final | Cruzar o campo dos dois sóis e corrigir o voo até a Terra. |
-| 7 | O Contorno | Desviar de uma rocha e corrigir a direção. |
-| 8 | Duas Rotas | Escolher contorno superior ou inferior. |
-| 9 | Portas Gêmeas | Escolher uma passagem lateral ao redor de duas rochas. |
-| 10 | Retorno à Terra | Combinar correção em voo e atração de dois planetas. |
+| 1 | Primeiro impulso | Aprender a lançar até a Terra. |
+| 2 | Mira aberta | Mirar na diagonal e conhecer as estrelas opcionais. |
+| 3 | Passagem larga | Cruzar uma abertura entre rochas. |
+| 4 | Primeiro pouso | Pousar e decolar em outra direção. |
+| 5 | Segundo impulso | Corrigir a trajetória durante o voo. |
+| 6 | De lua em lua | Encadear dois pousos. |
+| 7 | Escala no desvio | Usar um apoio para contornar uma barreira. |
+| 8 | Corredor de retorno | Combinar desvio e correção em voo. |
+| 9 | Curva gravitacional | Aproveitar a atração de uma lua. |
+| 10 | Rasante solar | Usar a gravidade sem tocar no Sol. |
+| 11 | Lua em movimento | Interceptar um apoio em órbita. |
+| 12 | Janela orbital | Escolher quando decolar do planeta em movimento. |
+| 13 | O Contorno | Contornar um obstáculo e voltar à rota. |
+| 14 | Duas Rotas | Escolher uma passagem entre perigos. |
+| 15 | Pouso de precisão | Alcançar as faixas seguras dos apoios. |
+| 16 | Travessia orbital | Pousar em movimento entre obstáculos. |
+| 17 | Arco entre rochas | Combinar atração gravitacional e passagem estreita. |
+| 18 | Três escalas | Planejar três pousos e suas decolagens. |
+| 19 | Cinturão em movimento | Desviar de rochas fixas e orbitais. |
+| 20 | Última manobra | Combinar órbita, pousos e correção em voo. |
 
-**Explorar mapa** mostra a visão geral dos mapas maiores; **Voltar à nave** restaura o enquadramento de voo e o controle de lançamento. Os círculos dos planetas e sóis indicam proximidade e permanecem visíveis nesses mapas. O contato fatal com o Sol ocorre na superfície da estrela; seu anel maior é um aviso.
+## Estrelas e repetição
 
-Nos cinco mapas adaptados, composição, muros e combustível seguem o modelo. Os corpos permanecem parados; órbitas e o portal opcional do protótipo não estão implementados. As quatro fases novas reutilizam perigos, correção e gravidade já conhecidos: a sétima é mais simples depois dos mapas densos; a oitava oferece duas rotas, a nona prolonga o obstáculo e a décima combina desvio com fontes gravitacionais. Dificuldade e legibilidade ainda precisam de playtest na #53.
+- Cada fase da campanha tem três estrelas. Nenhuma é necessária para vencer ou desbloquear a próxima fase.
+- A nave coleta ao passar pela estrela, que desaparece com um brilho curto. Cada estrela conta uma vez na tentativa.
+- Coletar não fornece combustível nem oxigênio. A rota mais curta pode gastar poucos impulsos; desviar para coletar pode exigir correções, outros pousos ou mais tempo de voo.
+- A contagem durante o voo é provisória. Só a chegada à Terra confirma o resultado.
+- O jogo guarda o maior número de estrelas obtido numa única conclusão da fase. Uma repetição pior conserva o recorde. Resultados de tentativas diferentes não são somados.
+- A coleção equivale à soma dos recordes: no máximo 60 estrelas nesta campanha. Não há compra ou gasto de estrelas nesta implementação.
 
-Os quatro critérios de progresso da issue #40 foram demonstrados em Windows em 29/10/2026, incluindo primeira vitória, repetição, bloqueio, restauração e última fase. Consulte o [registro de aceite e evidências](../auxiliar/validacao-issue-40.md) e as [verificações técnicas datadas](../tecnica/campanha.md#evidências-e-aceite-pendente).
+Exemplo: chegar à Terra com duas estrelas salva 2/3. Perder depois de recolher três mantém 2/3. Vencer novamente com uma também mantém 2/3. Chegar com três melhora para 3/3.
 
-No Android, ainda é preciso validar navegação por toque, ergonomia, gravação, reabertura do aplicativo e recuperação de falhas conforme o [roteiro de exportação e aceite](../tecnica/android.md). A campanha de dez fases e sua revisão cruzada permanecem nas #52/#53.
+## Tentativa, pausa e último pouso
+
+Uma tentativa nova restaura posição, combustível, oxigênio, câmera e todas as estrelas. Pausar preserva a coleta. Explorar o mapa mantém o estado da tentativa e o oxigênio continua diminuindo durante o voo.
+
+**Último pouso**, após derrota, restaura os recursos e as estrelas que estavam coletadas naquele checkpoint. Estrelas recolhidas depois desse pouso voltam ao mapa. O início também é um checkpoint válido. Checkpoints antigos sem informação de estrelas usam coleta vazia.
+
+Na conclusão, o diálogo mostra a coleta da tentativa e o melhor resultado. **Repetir** inicia uma nova tentativa; **Próxima fase** abre a sucessora, quando houver.
+
+## Salvamento e compatibilidade
+
+Conclusões, desbloqueios e recordes são salvos neste aparelho. O progresso anterior é preservado ao atualizar o formato de salvamento. Fases removidas do catálogo mantêm seus dados no arquivo, mas não entram no total da coleção apresentada.
+
+Se houver falha de gravação, o resultado vale na sessão e a interface oferece a retentativa de salvamento. Um arquivo principal inválido pode ser recuperado da última cópia válida. Versões desconhecidas são preservadas, sem sobrescrita automática.
+
+Os testes de rotas e de coleta usam a simulação do jogo. O ajuste de dificuldade por jogadores e a validação de toque e desempenho no Android continuam necessários para o aceite no aparelho.

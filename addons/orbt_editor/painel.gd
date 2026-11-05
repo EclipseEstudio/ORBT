@@ -34,7 +34,7 @@ func _ready() -> void:
 	_botao(barra, "Salvar como…", func(): _salvar.popup_centered_ratio(0.7))
 	_desfazer = _botao(barra, "Desfazer", documento.desfazer)
 	_refazer = _botao(barra, "Refazer", documento.refazer)
-	_duplicar = _botao(barra, "Duplicar corpo", documento.duplicar)
+	_duplicar = _botao(barra, "Duplicar selecionado", documento.duplicar)
 	_botao(barra, "Validar", _validar)
 	_jogar = _botao(barra, "Testar fase", func(): testar_solicitado.emit())
 	_titulo = Label.new()
@@ -50,9 +50,12 @@ func _ready() -> void:
 	_botao(ferramentas, "Inserir corpo", func():
 		documento.inserir(tipo.get_item_text(tipo.selected), mapa.centro)
 		_mostrar_propriedades())
+	_botao(ferramentas, "Inserir estrela", func(): documento.inserir_estrela(mapa.centro))
 	_botao(ferramentas, "Excluir selecionado…", func():
-		if documento.selecao >= 0:
-			_exclusao.dialog_text = "Excluir %s? Se for o apoio inicial, será preciso corrigir start.body_id antes de salvar ou testar." % documento.objeto(documento.selecao).id
+		if documento.selecao >= 0 or documento.selecao <= -3:
+			_exclusao.dialog_text = "Excluir %s?" % documento.objeto(documento.selecao).id
+			if documento.selecao >= 0:
+				_exclusao.dialog_text += " Se for o apoio inicial, será preciso corrigir start.body_id antes de salvar ou testar."
 			_exclusao.popup_centered())
 	_botao(ferramentas, "Enquadrar mapa", func(): mapa.enquadrar())
 	var dica := Label.new()
@@ -68,7 +71,8 @@ func _ready() -> void:
 	_lista.custom_minimum_size.y = 140
 	lateral.add_child(_lista)
 	_lista.item_selected.connect(func(indice: int):
-		documento.selecionar(indice - 2))
+		var primeiro: int = documento.dados.bodies.size() + 2
+		documento.selecionar(-3 - (indice - primeiro) if indice >= primeiro else indice - 2))
 	var rolagem := ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	lateral.add_child(rolagem)
@@ -116,7 +120,7 @@ func _ready() -> void:
 		_continuar())
 	add_child(_confirmacao)
 	_exclusao = ConfirmationDialog.new()
-	_exclusao.title = "Excluir corpo"
+	_exclusao.title = "Excluir selecionado"
 	_exclusao.confirmed.connect(func():
 		documento.excluir()
 		_mostrar_propriedades())
@@ -199,14 +203,17 @@ func _atualizar() -> void:
 		return
 	_desfazer.disabled = not documento.pode_desfazer()
 	_refazer.disabled = not documento.pode_refazer()
-	_duplicar.disabled = documento.selecao < 0
+	_duplicar.disabled = documento.selecao in [-2, -1]
 	_titulo.text = ("● " if documento.modificado() else "") + (documento.caminho if not documento.caminho.is_empty() else "Nova fase")
 	_lista.clear()
 	_lista.add_item("Fase · " + str(documento.dados.get("name", "")))
 	_lista.add_item("Terra · " + str(documento.dados.goal.id))
 	for corpo in documento.dados.bodies:
 		_lista.add_item(str(corpo.id) + " · " + str(corpo.type))
-	_lista.select(documento.selecao + 2)
+	for estrela in documento.dados.get("stars", []):
+		_lista.add_item(str(estrela.id) + " · estrela opcional")
+	var indice_lista: int = documento.dados.bodies.size() + 2 + (-3 - documento.selecao) if documento.selecao <= -3 else documento.selecao + 2
+	_lista.select(indice_lista)
 	mapa.queue_redraw()
 	_validar()
 	guardar_rascunho()
@@ -239,6 +246,9 @@ func _mostrar_propriedades() -> void:
 				_campo([chave], 5, chave)
 			elif chave in ["tutorial", "notes"]:
 				_campo([chave], "", chave)
+	elif documento.selecao <= -3:
+		for chave in documento.objeto(documento.selecao):
+			_campo(["stars", -3 - documento.selecao, chave], documento.objeto(documento.selecao)[chave], chave)
 	else:
 		var trilha: Array = ["goal"] if documento.selecao == -1 else ["bodies", documento.selecao]
 		var orbita := CheckBox.new()
@@ -339,10 +349,17 @@ func _restaurar() -> bool:
 			return false
 	if not dados.get("bodies") is Array:
 		return false
+	# Rascunhos podem ter geometria inválida, mas as estrelas precisam ser editáveis.
+	var estrelas = dados.get("stars", [])
+	if not estrelas is Array or estrelas.size() > 256:
+		return false
+	for estrela in estrelas:
+		if not estrela is Dictionary or not estrela.get("id") is String or not CarregadorFase.vetor(estrela.get("position")) or not CarregadorFase.numero(estrela.get("radius"), -1000000):
+			return false
 	documento.dados = dados.duplicate(true)
 	documento.caminho = sessao.get("caminho", "")
 	var texto_salvo = sessao.get("salvo", "")
 	var salvo = JSON.parse_string(texto_salvo) if texto_salvo is String and not texto_salvo.is_empty() else null
 	documento._salvo = JSON.stringify(salvo, "", true, true) if salvo is Dictionary else ""
-	documento.selecao = clampi(int(sessao.get("selecao", -2)), -2, dados.bodies.size() - 1)
+	documento.selecao = documento.selecao_valida(int(sessao.get("selecao", -2)))
 	return true

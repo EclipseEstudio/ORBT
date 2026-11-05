@@ -99,7 +99,7 @@ func _executar() -> void:
 	gerenciador.caminho = caminho
 	jogo.progresso = Progresso.new()
 	jogo.mostrar_selecao()
-	conferir(gerenciador.itens.all(func(item: Dictionary): return item.keys().size() == 4 and not item.has("corpos")), "Listagem usa somente metadados de campanha")
+	conferir(gerenciador.itens.all(func(item: Dictionary): return item.keys().size() == 5 and item.has("estrelas") and not item.has("corpos")), "Listagem usa somente metadados de campanha e quantidade de estrelas")
 	var mundo_antes: Node = jogo.mundo_atual
 	gerenciador.erros.append("sentinela")
 	conferir(not jogo.iniciar_fase("b") and jogo.mundo_atual == mundo_antes and gerenciador.erros.has("sentinela"), "Bloqueio direto impede até carregar JSON")
