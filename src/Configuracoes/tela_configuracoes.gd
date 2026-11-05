@@ -2,19 +2,22 @@ extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
+const Fundo = preload("res://src/Visual/fundo_menu.gd")
+const Icones = preload("res://src/Visual/icones_ui.gd")
 signal fechada
 var preferencias: RefCounted
 var _aviso: Label
 var _margem: MarginContainer
 var _tentar_salvar: Button
+var rolagem: ScrollContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	theme = Tema.criar()
-	var fundo := ColorRect.new()
-	fundo.color = Color("0b1423")
+	var fundo := Fundo.new()
+	fundo.name = "Fundo"
 	add_child(fundo)
 	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var margem := MarginContainer.new()
@@ -22,45 +25,59 @@ func _ready() -> void:
 	add_child(margem)
 	margem.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
-		margem.add_theme_constant_override(lado, 12)
+		margem.add_theme_constant_override(lado, 8)
+	var estrutura := VBoxContainer.new()
+	margem.add_child(estrutura)
+	var cabecalho := HBoxContainer.new()
+	cabecalho.name = "Cabecalho"
+	estrutura.add_child(cabecalho)
+	var voltar := Button.new()
+	voltar.name = "Voltar"
+	Icones.aplicar(voltar, "voltar", "Voltar")
+	voltar.pressed.connect(fechar)
+	cabecalho.add_child(voltar)
+	var titulo := Label.new()
+	titulo.text = "CONFIGURAÇÕES"
+	titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	titulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titulo.add_theme_font_size_override("font_size", 8)
+	cabecalho.add_child(titulo)
 	var coluna := VBoxContainer.new()
-	coluna.alignment = BoxContainer.ALIGNMENT_CENTER
+	coluna.alignment = BoxContainer.ALIGNMENT_BEGIN
 	coluna.add_theme_constant_override("separation", 8)
-	var rolagem := ScrollContainer.new()
+	rolagem = ScrollContainer.new()
+	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rolagem.follow_focus = true
-	margem.add_child(rolagem)
-	coluna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	coluna.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	rolagem.add_child(coluna)
-	var titulo := Label.new()
-	titulo.text = "Configurações"
-	titulo.add_theme_font_size_override("font_size", 14)
-	coluna.add_child(titulo)
+	estrutura.add_child(rolagem)
+	var centro := VBoxContainer.new()
+	centro.alignment = BoxContainer.ALIGNMENT_CENTER
+	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	centro.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rolagem.add_child(centro)
+	var painel := PanelContainer.new()
+	painel.name = "Painel"
+	painel.add_theme_stylebox_override("panel", Tema.painel())
+	centro.add_child(painel)
+	painel.add_child(coluna)
 	_criar_volume(coluna, "Música", "musica", preferencias.musica)
 	_criar_volume(coluna, "Efeitos", "efeitos", preferencias.efeitos)
 	_aviso = Label.new()
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_aviso.add_theme_font_size_override("font_size", 9)
+	_aviso.name = "aviso"
+	_aviso.add_theme_font_size_override("font_size", 8)
 	_aviso.text = preferencias.aviso
 	coluna.add_child(_aviso)
 	_tentar_salvar = Button.new()
 	_tentar_salvar.name = "TentarSalvar"
-	_tentar_salvar.text = "Tentar salvar novamente"
+	_tentar_salvar.text = "Tentar salvar\nnovamente"
 	_tentar_salvar.custom_minimum_size.y = 36
-	_tentar_salvar.add_theme_font_size_override("font_size", 10)
+	_tentar_salvar.add_theme_font_size_override("font_size", 8)
 	coluna.add_child(_tentar_salvar)
 	_tentar_salvar.pressed.connect(func():
 		preferencias.salvar()
 		_atualizar_aviso())
 	_atualizar_aviso()
-	var voltar := Button.new()
-	voltar.name = "Voltar"
-	voltar.text = "Voltar"
-	voltar.custom_minimum_size.y = 36
-	voltar.add_theme_font_size_override("font_size", 10)
-	coluna.add_child(voltar)
-	voltar.pressed.connect(fechar)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
 
@@ -85,7 +102,7 @@ func _process(_delta: float) -> void:
 
 func _criar_volume(coluna: VBoxContainer, titulo: String, campo: String, valor: float) -> void:
 	var rotulo := Label.new()
-	rotulo.add_theme_font_size_override("font_size", 10)
+	rotulo.add_theme_font_size_override("font_size", 8)
 	coluna.add_child(rotulo)
 	var seletor := HSlider.new()
 	seletor.name = campo

@@ -82,6 +82,7 @@ func _gui_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			navegando = event.pressed
 		elif event.button_index == MOUSE_BUTTON_LEFT:
+			documento.terminar_grupo()
 			arrastando = false
 			if event.pressed:
 				var escolhido := -2
@@ -96,6 +97,8 @@ func _gui_input(event: InputEvent) -> void:
 						_deslocamento = posicao - mundo(event.position)
 				documento.selecionar(escolhido)
 				arrastando = escolhido != -2
+				if arrastando:
+					documento.iniciar_grupo()
 		accept_event()
 	elif event is InputEventMouseMotion:
 		if navegando:
@@ -107,5 +110,7 @@ func _gui_input(event: InputEvent) -> void:
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_VISIBILITY_CHANGED, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
+		if documento != null:
+			documento.terminar_grupo()
 		arrastando = false
 		navegando = false

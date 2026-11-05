@@ -19,8 +19,6 @@ var _nota: Label
 var _tentar_salvar: Button
 var controlador: Node
 var _checkpoint_controles: VBoxContainer
-var _continuar: Button
-var _rodape: VBoxContainer
 var rolagem: ScrollContainer
 
 
@@ -44,7 +42,7 @@ func _ready() -> void:
 	voltar_menu.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	voltar_menu.name = "Voltar"
 	Icones.aplicar(voltar_menu, "voltar", "Voltar ao menu")
-	_rotulo(cabecalho, "FASES", 16)
+	_rotulo(cabecalho, "FASES", 8)
 	rolagem = ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -53,24 +51,22 @@ func _ready() -> void:
 	var conteudo := VBoxContainer.new()
 	conteudo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rolagem.add_child(conteudo)
-	_nota = _rotulo(conteudo, progresso.descricao() if progresso != null else "", 9)
-	mensagem = _rotulo(conteudo, "", 10)
+	_nota = _rotulo(conteudo, progresso.descricao() if progresso != null else "", 8)
+	mensagem = _rotulo(conteudo, "", 8)
 	_checkpoint_controles = VBoxContainer.new()
 	_checkpoint_controles.name = "Checkpoint"
 	conteudo.add_child(_checkpoint_controles)
 	cartoes = GridContainer.new()
-	cartoes.columns = 4
-	cartoes.add_theme_constant_override("h_separation", 4)
+	cartoes.columns = 5
+	cartoes.add_theme_constant_override("h_separation", 2)
 	cartoes.add_theme_constant_override("v_separation", 6)
 	cartoes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	conteudo.add_child(cartoes)
-	_tentar_salvar = _botao(coluna, "Tentar salvar novamente", func():
+	_tentar_salvar = _botao(coluna, "Tentar salvar\nnovamente", func():
 		progresso.salvar()
 		_nota.text = progresso.descricao()
 		_tentar_salvar.visible = progresso.salvamento_pendente()
 		_mostrar_controle(_nota), 40)
-	_rodape = VBoxContainer.new()
-	coluna.add_child(_rodape)
 	atualizar(itens, erros)
 	configurar_checkpoint()
 	get_viewport().size_changed.connect(_area_segura)
@@ -91,7 +87,7 @@ func _botao(pai: Node, texto: String, acao: Callable, altura: int) -> Button:
 	var botao := Button.new()
 	botao.text = texto
 	botao.custom_minimum_size.y = altura
-	botao.add_theme_font_size_override("font_size", 11)
+	botao.add_theme_font_size_override("font_size", 8)
 	botao.pressed.connect(acao)
 	pai.add_child(botao)
 	return botao
@@ -116,20 +112,23 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		cartao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cartao.add_theme_constant_override("separation", 3)
 		cartoes.add_child(cartao)
-		var nome := _rotulo(cartao, item.nome, 9)
+		var nome := _rotulo(cartao, item.nome, 8)
 		nome.hide()
 		var estado: String = progresso.estado(item.id)
-		var rotulo_estado := _rotulo(cartao, estado, 9)
+		var rotulo_estado := _rotulo(cartao, estado, 8)
 		rotulo_estado.hide()
-		var botao := _botao(cartao, "%02d" % item.ordem, func(): escolher(item.id), 48)
+		var botao := _botao(cartao, "%02d" % item.ordem, func(): escolher(item.id), 40)
+		botao.custom_minimum_size.x = 28
 		botao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		botao.disabled = not progresso.pode_abrir(item.id)
 		var icone := "cadeado" if botao.disabled else ("concluida" if estado == "Concluída" else "jogar")
-		Icones.aplicar(botao, icone, "%02d · %s · %s" % [item.ordem, item.nome, estado], false)
+		Icones.aplicar(botao, icone, "%02d - %s - %s" % [item.ordem, item.nome, estado], false)
+		botao.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		botao.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 		botao.set_meta("estado", estado)
 		botao.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		botao.add_theme_constant_override("h_separation", 2)
-		botao.add_theme_font_size_override("font_size", 10)
+		botao.add_theme_font_size_override("font_size", 8)
 		if not botao.disabled:
 			Tema.destacar(botao, Color("ffc845") if estado == "Concluída" else Tema.DESTAQUE)
 
@@ -141,7 +140,7 @@ func escolher(id: String) -> void:
 		mensagem.text = "Fase bloqueada ou indisponível."
 		return
 	_ocupada = true
-	mensagem.text = "Abrindo fase…"
+	mensagem.text = "Abrindo fase..."
 	# Esperar a GUI encerrar o toque antes de instalar o novo mundo.
 	fase_escolhida.emit.call_deferred(id)
 
@@ -175,53 +174,40 @@ func configurar_checkpoint() -> void:
 	if not is_instance_valid(jogo):
 		return
 	var coluna := _checkpoint_controles
-	var checkpoint_disponivel: bool = jogo.checkpoint_disponivel()
-	if checkpoint_disponivel:
-		var continuar := Button.new()
-		_continuar = continuar
-		continuar.name = "Continuar"
-		continuar.text = "Continuar"
-		continuar.custom_minimum_size = Vector2(120, 48)
-		continuar.add_theme_font_size_override("font_size", 12)
-		_rodape.add_child(continuar)
-		continuar.pressed.connect(func():
-			if not jogo.continuar_checkpoint():
-				_exibir_aviso(jogo.checkpoint.aviso))
+	# Validar o conteúdo para preservar os avisos, mesmo sem ação de retomada.
+	jogo.checkpoint_disponivel()
 	if jogo.checkpoint.salvamento_pendente():
 		var tentar := Button.new()
 		tentar.name = "TentarSalvarCheckpoint"
 		tentar.text = "Salvar último pouso"
 		tentar.custom_minimum_size = Vector2(120, 48)
-		tentar.add_theme_font_size_override("font_size", 12)
+		tentar.add_theme_font_size_override("font_size", 8)
 		coluna.add_child(tentar)
 		tentar.pressed.connect(func():
 			jogo.tentar_salvar_checkpoint()
 			jogo.mostrar_selecao.call_deferred())
 	if not jogo.checkpoint.aviso.is_empty():
-		_exibir_aviso(jogo.checkpoint.aviso, checkpoint_disponivel)
+		_exibir_aviso(jogo.checkpoint.aviso)
+	elif not jogo.checkpoint.dados.is_empty():
+		_exibir_aviso("Último pouso salvo.")
 
-func _exibir_aviso(texto: String, permitir_continuar := false) -> void:
+func _exibir_aviso(texto: String) -> void:
 	var coluna: VBoxContainer = _checkpoint_controles
-	var continuar := _continuar
-	if continuar != null and not permitir_continuar:
-		continuar.hide()
 	var aviso := coluna.get_node_or_null("AvisoCheckpoint") as Label
 	if aviso == null:
 		aviso = Label.new()
 		aviso.name = "AvisoCheckpoint"
 		aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		aviso.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		aviso.add_theme_font_size_override("font_size", 9)
+		aviso.add_theme_font_size_override("font_size", 8)
 		coluna.add_child(aviso)
 	aviso.text = texto
-	if permitir_continuar:
-		return
 	if coluna.get_node_or_null("DescartarCheckpoint") == null:
 		var descartar := Button.new()
 		descartar.name = "DescartarCheckpoint"
-		descartar.text = "Reiniciar fase"
+		descartar.text = "Descartar\ncheckpoint"
 		descartar.custom_minimum_size = Vector2(120, 48)
-		descartar.add_theme_font_size_override("font_size", 12)
+		descartar.add_theme_font_size_override("font_size", 8)
 		coluna.add_child(descartar)
 		descartar.pressed.connect(func():
 			if controlador.checkpoint.limpar():

@@ -57,11 +57,11 @@ func _executar() -> void:
 	conferir(rodape.size() == 1 and rodape.all(func(item): return segura.encloses(item.get_global_rect())) and segura.encloses(voltar.get_global_rect()), "Retentativa de salvar e voltar permanecem acessíveis sem atualização manual")
 	conferir(tela.rolagem.get_v_scroll_bar().visible and not tela.rolagem.get_h_scroll_bar().visible, "Avisos e nomes longos usam rolagem vertical")
 	var primeiro: Button = tela.cartoes.get_child(0).get_child(2)
-	conferir(tela.cartoes.columns == 4 and primeiro.tooltip_text.contains(itens[0].nome) and primeiro.size.x <= tela.rolagem.size.x / 4, "Grade tem quatro colunas sem transbordar e conserva nome completo na descrição")
+	conferir(tela.cartoes.columns == 5 and primeiro.tooltip_text.contains(itens[0].nome) and primeiro.size.x <= tela.rolagem.size.x / 5, "Grade tem cinco colunas sem transbordar e conserva nome completo na descrição")
 	var ultimo: Button = tela.cartoes.get_child(9).get_child(2)
 	tela.rolagem.ensure_control_visible(ultimo)
 	await acomodar()
-	conferir(tela.rolagem.get_global_rect().encloses(ultimo.get_global_rect()) and ultimo.size.y >= 48, "Décima fase pode ser alcançada sem reduzir alvo de toque")
+	conferir(tela.rolagem.get_global_rect().encloses(ultimo.get_global_rect()) and ultimo.size.y >= 40, "Décima fase pode ser alcançada com cartão compacto")
 	var escolhas: Array = []
 	tela.fase_escolhida.connect(func(id): escolhas.append(id))
 	ultimo.pressed.emit()

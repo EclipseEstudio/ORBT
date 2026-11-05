@@ -59,11 +59,11 @@ func _physics_process(delta: float) -> void:
 func avancar(delta: float) -> void:
 	if estado != Estado.JOGANDO or not is_instance_valid(nave) or get_tree().paused:
 		return
-	nave.aplicar_pedidos()
-	if nave.combustivel <= 0 or nave.condicao == nave.Condicao.A_DERIVA:
-		finalizar(false, "Combustível esgotado" if nave.combustivel <= 0 else "Nave à deriva")
-		return
-	var passo := minf(delta, tempo_restante) if temporizador_ativo else delta
+	# A nave aplica a fila uma única vez, no início de avancar().
+	# Um impulso pendente renova o oxigênio antes de limitar o passo.
+	var tem_impulso: bool = nave.tem_impulso_pendente()
+	var oxigenio_disponivel := nivel.tempo_voo if tem_impulso else tempo_restante
+	var passo := minf(delta, oxigenio_disponivel) if temporizador_ativo or tem_impulso else delta
 	nave.avancar(passo)
 	if estado != Estado.JOGANDO:
 		return
@@ -71,7 +71,7 @@ func avancar(delta: float) -> void:
 	if temporizador_ativo and nave.condicao != nave.Condicao.POUSADA:
 		tempo_restante = maxf(0, tempo_restante - passo)
 		if tempo_restante <= 0:
-			finalizar(false, "Tempo esgotado")
+			finalizar(false, "Oxigênio esgotado")
 
 
 func _ao_impulso(_gesto_id: int) -> void:
@@ -195,9 +195,6 @@ func retomar() -> void:
 	nave.controle_permitido = true
 	get_tree().paused = false
 	nave.atualizar_entrada()
-	if nave.combustivel == 0:
-		finalizar(false, "Sem combustível para decolar")
-		return
 	estado_alterado.emit()
 
 

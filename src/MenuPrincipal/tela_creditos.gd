@@ -2,6 +2,7 @@ extends Control
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
+const Icones = preload("res://src/Visual/icones_ui.gd")
 var _margem: MarginContainer
 
 func _ready() -> void:
@@ -18,14 +19,23 @@ func _ready() -> void:
 	add_child(margem)
 	margem.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
-		margem.add_theme_constant_override(lado, 12)
+		margem.add_theme_constant_override(lado, 8)
 	var coluna := VBoxContainer.new()
 	margem.add_child(coluna)
+	var cabecalho := HBoxContainer.new()
+	cabecalho.name = "Cabecalho"
+	coluna.add_child(cabecalho)
+	var voltar := Button.new()
+	voltar.name = "Voltar"
+	Icones.aplicar(voltar, "voltar", "Voltar")
+	voltar.pressed.connect(fechar)
+	cabecalho.add_child(voltar)
 	var titulo := Label.new()
 	titulo.text = "CRÉDITOS"
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	titulo.add_theme_font_size_override("font_size", 14)
-	coluna.add_child(titulo)
+	titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	titulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titulo.add_theme_font_size_override("font_size", 8)
+	cabecalho.add_child(titulo)
 	var rolagem := ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -34,19 +44,12 @@ func _ready() -> void:
 	texto.name = "Texto"
 	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	texto.add_theme_font_size_override("font_size", 10)
+	texto.add_theme_font_size_override("font_size", 8)
 	texto.text = "Miguel Alves Cordeiro Braz\n\nRubensAugustoMM"
 	texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	rolagem.add_child(texto)
-	var voltar := Button.new()
-	voltar.name = "Voltar"
-	voltar.text = "Voltar"
-	voltar.custom_minimum_size.y = 36
-	voltar.add_theme_font_size_override("font_size", 10)
-	coluna.add_child(voltar)
-	voltar.pressed.connect(fechar)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
 

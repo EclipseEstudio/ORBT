@@ -34,7 +34,7 @@ func _capturar() -> void:
 	tela.find_child("musica", true, false).value = 0.25
 	tela.find_child("efeitos", true, false).value = 0.75
 	await process_frame
-	tela._margem.get_child(0).ensure_control_visible(tela.find_child("Voltar", true, false))
+	tela.rolagem.ensure_control_visible(tela._tentar_salvar)
 	await salvar("falha-retentativa")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(base + "/ausente"))
 	tela._tentar_salvar.pressed.emit()

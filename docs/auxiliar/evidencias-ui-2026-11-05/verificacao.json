@@ -1,0 +1,157 @@
+[
+  {
+    "Teste": "test_areas_menus.gd",
+    "Falhou": false,
+    "Resumo": "Áreas dos menus: 23 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_audio.gd",
+    "Falhou": false,
+    "Resumo": "Áudio: 21 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_campanha_layout.gd",
+    "Falhou": false,
+    "Resumo": "Layout da campanha: 12 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_campanha.gd",
+    "Falhou": false,
+    "Resumo": "Campanha: 31 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_checkpoint_persistente.gd",
+    "Falhou": false,
+    "Resumo": "Checkpoint persistente: 21 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_checkpoints.gd",
+    "Falhou": false,
+    "Resumo": "Checkpoints: 16 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_controles.gd",
+    "Falhou": false,
+    "Resumo": "Controles: 69 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_editor.gd",
+    "Falhou": false,
+    "Resumo": "Editor: 51 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_fases.gd",
+    "Falhou": false,
+    "Resumo": "Fases: 1859 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_fim_de_jogo.gd",
+    "Falhou": false,
+    "Resumo": "Fim de jogo: 35 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_gravidade_issue_13.gd",
+    "Falhou": false,
+    "Resumo": "Gravidade #13: 189 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_hud_voo.gd",
+    "Falhou": false,
+    "Resumo": "HUD e voo: 53 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_inicio_livre.gd",
+    "Falhou": false,
+    "Resumo": "Início livre: 40 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_layout_resultados.gd",
+    "Falhou": false,
+    "Resumo": "Layout dos resultados: 29 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_menus.gd",
+    "Falhou": false,
+    "Resumo": "Menus: 25 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_mira_leve.gd",
+    "Falhou": false,
+    "Resumo": "Mira leve: 21 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_narrativa.gd",
+    "Falhou": false,
+    "Resumo": "Narrativa: 14 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_orbitas.gd",
+    "Falhou": false,
+    "Resumo": "Órbitas: 20 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_partida.gd",
+    "Falhou": false,
+    "Resumo": "Partida: 157 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_persistencia.gd",
+    "Falhou": false,
+    "Resumo": "Reabertura: 9 verificações, 0 falhas. | Persistência: 45 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_portais.gd",
+    "Falhou": false,
+    "Resumo": "Portais: 22 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_preferencias.gd",
+    "Falhou": false,
+    "Resumo": "Preferências: 12 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_retentar_checkpoint.gd",
+    "Falhou": false,
+    "Resumo": "Retentativa de checkpoint: 17 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_retentar_preferencias.gd",
+    "Falhou": false,
+    "Resumo": "Retentativa de preferências: 14 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_rotacao.gd",
+    "Falhou": false,
+    "Resumo": "Rotação: 24 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_tutorial.gd",
+    "Falhou": false,
+    "Resumo": "Tutorial: 10 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_ui_redesign.gd",
+    "Falhou": false,
+    "Resumo": "Redesign UI: 46 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_visual.gd",
+    "Falhou": false,
+    "Resumo": "Visual: 57 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_voltar.gd",
+    "Falhou": false,
+    "Resumo": "Voltar: 18 verificações, 0 falhas."
+  },
+  {
+    "Teste": "test_exportacao.gd (PCK isolado)",
+    "Falhou": false,
+    "Resumo": "Exportação: 31 verificações, 0 falhas."
+  },
+  {
+    "Teste": "tests/run_editor_plugin.ps1 (editor real)",
+    "Falhou": false,
+    "Resumo": "Plugin: 11 verificações, 0 falhas."
+  }
+]

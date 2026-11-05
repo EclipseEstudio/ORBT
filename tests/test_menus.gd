@@ -43,6 +43,7 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	var recuperacao: VBoxContainer = jogo.interface_atual._checkpoint_controles
 	conferir(not recuperacao.has_node("Continuar") and recuperacao.has_node("AvisoCheckpoint") and recuperacao.has_node("DescartarCheckpoint"), "checkpoint incompatível oferece reinício na seleção de fases")
+	conferir(recuperacao.get_node("AvisoCheckpoint").text.contains("incompatível") and jogo.checkpoint.bloqueado, "Seleção valida checkpoint e preserva diagnóstico de versão")
 	recuperacao.get_node("DescartarCheckpoint").pressed.emit()
 	await process_frame
 	await process_frame

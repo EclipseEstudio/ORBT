@@ -49,10 +49,9 @@ func _capturar() -> void:
 	coluna = menu._checkpoint_controles
 	for i in range(5):
 		await process_frame
-	menu.rolagem.ensure_control_visible(coluna.get_node("Continuar"))
+	menu.rolagem.ensure_control_visible(coluna.get_node("DescartarCheckpoint"))
 	await salvar("salvo")
-	coluna.get_node("Continuar").pressed.emit()
-	await salvar("continuar")
+
 	paused = false
 	for prefixo in [base, base + "-progresso", base + "-preferencias"]:
 		for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:

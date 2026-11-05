@@ -14,6 +14,7 @@ var _acoes: HBoxContainer
 func _ready() -> void:
 	theme = Tema.criar()
 	var fundo := Fundo.new()
+	fundo.name = "Fundo"
 	add_child(fundo)
 	move_child(fundo, 0)
 	$Margem/Rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -34,6 +35,12 @@ func _ready() -> void:
 	$Margem/Rolagem/VBoxContainer.move_child(texto, 0)
 	var coluna: VBoxContainer = $Margem/Rolagem/VBoxContainer
 	coluna.alignment = BoxContainer.ALIGNMENT_BEGIN
+	var espaco_superior := Control.new()
+	espaco_superior.name = "EspacoSuperior"
+	espaco_superior.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	espaco_superior.custom_minimum_size.y = 16
+	coluna.add_child(espaco_superior)
+	coluna.move_child(espaco_superior, 0)
 	var titulo := Label.new()
 	titulo.name = "Titulo"
 	titulo.text = "ORBT"
@@ -43,7 +50,7 @@ func _ready() -> void:
 	titulo.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	titulo.add_theme_color_override("font_color", Tema.DESTAQUE)
 	coluna.add_child(titulo)
-	coluna.move_child(titulo, 0)
+	coluna.move_child(titulo, 1)
 	var espaco := Control.new()
 	espaco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	espaco.custom_minimum_size.y = 80
@@ -57,7 +64,8 @@ func _ready() -> void:
 	var jogar: Button = coluna.get_node("Button")
 	jogar.reparent(_acoes)
 	jogar.text = "Jogar"
-	jogar.custom_minimum_size = Vector2(76, 42)
+	jogar.custom_minimum_size = Vector2(76, 32)
+	jogar.add_theme_font_size_override("font_size", 8)
 	jogar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Icones.aplicar(jogar, "jogar", "Jogar: escolher fase", false)
 	Tema.destacar(jogar)
@@ -86,6 +94,7 @@ func configurar_acoes() -> void:
 	_acoes.add_child(configuracoes)
 	configuracoes.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	Icones.aplicar(configuracoes, "config", "Configurações")
+	configuracoes.custom_minimum_size = Vector2(32, 32)
 	configuracoes.pressed.connect(func():
 		if not has_node("TelaConfiguracoes"):
 			var tela := TelaConfiguracoes.new()
@@ -100,6 +109,7 @@ func configurar_acoes() -> void:
 	_acoes.add_child(creditos)
 	creditos.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	Icones.aplicar(creditos, "info", "Créditos")
+	creditos.custom_minimum_size = Vector2(32, 32)
 	creditos.pressed.connect(func():
 		if not has_node("TelaCreditos"):
 			var tela := TelaCreditos.new()

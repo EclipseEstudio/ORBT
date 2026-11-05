@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0b1e">
+    <meta name="description" content="Um lançamento. Muitas possibilidades. Conheça ORBT, um puzzle espacial em pixel art para Android, e participe do teste aberto.">
+    <meta name="referrer" content="no-referrer">
+    <title>ORBT · Seu próximo destino está em órbita</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%230a0b1e'/%3E%3Crect x='2' y='2' width='4' height='4' fill='%23f4a259'/%3E%3Crect x='6' y='1' width='1' height='1' fill='%237ae7e0'/%3E%3C/svg%3E">
+    <style>
+/* ==========================================================================
+   ORBT – estilos da landing page (mobile first)
+   ========================================================================== */
+
+:root {
+    --fundo: #0a0b1e;
+    --cartao: rgba(23, 24, 54, 0.88);
+    --texto: #f5f1e8;
+    --texto-suave: #b4b3d6;
+    --planeta: #f4a259;
+    --nave: #7ae7e0;
+    --linha: rgba(169, 168, 207, 0.25);
+    --pixel: 4px; /* unidade das bordas e sombras em "degraus" */
+    color-scheme: dark;
+}
+
+/* Base ------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--fundo);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    /* respeita o notch e as barras do celular */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+    color: var(--texto);
+    font: 400 1rem/1.6 ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: var(--nave);
+}
+
+:focus-visible {
+    outline: var(--pixel) solid var(--planeta);
+    outline-offset: 3px;
+}
+
+/* Fundo estrelado -------------------------------------------------------- */
+
+#estrelas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    height: 100lvh; /* evita redimensionar quando a barra do navegador some */
+    background: var(--fundo);
+    image-rendering: pixelated;
+}
+
+/* Layout ----------------------------------------------------------------- */
+
+main,
+.rodape {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+/* Apresentação ----------------------------------------------------------- */
+
+.apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(3.5rem, 22vw, 8rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-shadow: var(--pixel) var(--pixel) 0 var(--planeta);
+}
+
+.lema {
+    margin: 0.75rem 0 1rem;
+    color: var(--planeta);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.descricao {
+    max-width: 30rem;
+    margin: 0 0 2rem;
+    color: var(--texto-suave);
+}
+
+.botao {
+    display: block;
+    width: 100%;
+    max-width: 20rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--nave);
+    box-shadow: var(--pixel) var(--pixel) 0 var(--planeta),
+                calc(var(--pixel) * 2) calc(var(--pixel) * 2) 0 #000;
+    color: #07182a;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.botao:active {
+    transform: translate(var(--pixel), var(--pixel));
+    box-shadow: none;
+}
+
+.detalhes {
+    margin: 1.25rem 0 0;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+/* Cartões ---------------------------------------------------------------- */
+
+.cartao {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background: var(--cartao);
+    box-shadow: 0 0 0 var(--pixel) rgba(122, 231, 224, 0.15);
+}
+
+.cartao-cabecalho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+ol,
+ul {
+    margin: 0.75rem 0;
+    padding-left: 1.25rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+.texto-pequeno {
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+.codigo-hash {
+    display: block;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.35);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+/* Atualizações (recolhidas por padrão) ----------------------------------- */
+
+details {
+    border-top: 2px solid var(--linha);
+}
+
+details:last-of-type {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--linha);
+}
+
+summary {
+    padding: 0.9rem 0; /* área de toque confortável no celular */
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Rodapé ----------------------------------------------------------------- */
+
+.rodape {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    text-align: center;
+}
+
+.rodape a {
+    display: inline-block;
+    padding: 0.5rem;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.rodape a:hover {
+    text-decoration: underline;
+}
+
+/* Telas maiores ---------------------------------------------------------- */
+
+@media (min-width: 40rem) {
+    .botao {
+        width: auto;
+        max-width: none;
+        padding: 1.1rem 2.75rem;
+    }
+}
+
+/* Mouse: efeitos de hover só onde existe hover de verdade */
+
+@media (hover: hover) {
+    a:hover {
+        color: var(--planeta);
+    }
+
+    .botao {
+        transition: transform 0.08s steps(2);
+    }
+
+    .botao:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--planeta);
+        color: #07182a;
+    }
+
+    summary:hover {
+        color: var(--nave);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .botao {
+        transition: none;
+    }
+}
+
+body { isolation: isolate; }
+[hidden] { display: none !important; }
+.apresentacao { min-height: auto; padding: 2rem 0 1rem; }
+.selo { margin: 0 0 1.25rem; color: var(--texto-suave); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+.selo::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: .6rem; background: var(--nave); box-shadow: 0 0 12px #7ae7e055; }
+.orbita { width: min(100%, 17rem); height: auto; margin: 1rem 0; overflow: visible; }
+.lema { max-width: 23rem; font-size: 1.1rem; margin: .25rem 0 .5rem; }
+.descricao { margin-bottom: 1.75rem; font-size: .85rem; }
+.botao { width: 100%; max-width: 23rem; min-height: 68px; padding: 1.15rem 1rem; border: 2px solid #bcfff7; font-size: 1.4rem; box-shadow: 5px 5px 0 var(--planeta), 0 0 32px #7ae7e020; }
+.detalhes { margin-top: 1rem; max-width: 28rem; font-size: .75rem; overflow-wrap: anywhere; }
+.ajuda { max-width: 28rem; margin: 0 auto; border-color: var(--linha); color: var(--texto-suave); font-size: .85rem; }
+.ajuda > summary { text-align: center; font-weight: 400; min-height: 44px; }
+.ajuda ol { padding-left: 1.5rem; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.5rem; margin-top: .75rem; }
+.links a { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; }
+.rodape { padding-top: .5rem; padding-bottom: 1.5rem; }
+@media (min-width: 40rem) { .apresentacao { padding-top: 3rem; } }
+    </style>
+</head>
+<body>
+    <canvas id="estrelas" aria-hidden="true"></canvas>
+    <main>
+        <section class="apresentacao" aria-labelledby="titulo">
+            <p class="selo">Teste aberto para Android</p>
+            <h1 id="titulo">ORBT</h1>
+            <svg class="orbita" viewBox="0 0 336 128" fill="none" aria-hidden="true">
+                <ellipse cx="178" cy="66" rx="126" ry="38" transform="rotate(-18 178 66)" stroke="#4b4f8f" stroke-dasharray="3 7"/>
+                <g shape-rendering="crispEdges">
+                    <path d="M225 25h32v8h16v16h8v32h-8v16h-16v8h-32v-8h-16V81h-8V49h8V33h16z" fill="#f4a259"/>
+                    <path d="M225 25h16v8h-16v16h-8v32h8v16h16v8h-16v-8h-16V81h-8V49h8V33h16z" fill="#bd6c4e"/>
+                    <path d="M249 41h16v8h-16zm-16 24h16v8h-16zm24 16h8v8h-8z" fill="#df8a53"/>
+                    <path d="M59 59h8v-8h8v-8h8v8h8v8h8v24H83v-8h-8v8H59z" fill="#7ae7e0"/>
+                    <path d="M75 51h8v16h-8z" fill="#f5f1e8"/>
+                    <path d="M67 83h8v16h-8zm16 0h8v12h-8z" fill="#f4a259"/>
+                    <path d="M155 21h4v4h-4zm-16 75h4v4h-4zM299 15h4v4h-4zM25 99h4v4h-4z" fill="#f5f1e8"/>
+                </g>
+            </svg>
+            <p class="lema">Um lançamento.<br>Muitas possibilidades.</p>
+            <p class="descricao">Um puzzle espacial em pixel art.</p>
+            <a id="download" class="botao" href="https://github.com/EclipseEstudio/ORBT/releases" aria-describedby="versao">Ver downloads ↓</a>
+            <p id="versao" class="detalhes" role="status">Android · Versão de teste</p>
+        </section>
+
+        <details id="instalacao" class="ajuda">
+            <summary>Como instalar?</summary>
+            <ol>
+                <li>Baixe e abra o APK no Android.</li>
+                <li>Se solicitado, permita <strong>instalar apps desta fonte</strong>.</li>
+                <li>Toque em <strong>Instalar</strong>. Depois, desative essa permissão.</li>
+            </ol>
+            <p class="texto-pequeno">Jogo em desenvolvimento. Não disponível para iPhone.</p>
+            <details id="integridade" hidden>
+                <summary>Verificar integridade do arquivo</summary>
+                <p class="texto-pequeno">SHA-256 informado pelo GitHub para este APK. Compare com o hash do arquivo baixado:</p>
+                <code id="hash" class="codigo-hash"></code>
+            </details>
+        </details>
+        <nav class="links" aria-label="Mais sobre o jogo">
+            <a href="https://github.com/EclipseEstudio/ORBT/issues/new">Enviar feedback ↗</a>
+            <a href="https://github.com/EclipseEstudio/ORBT/releases">Versões ↗</a>
+        </nav>
+    </main>
+    <footer class="rodape">
+        <a href="https://github.com/EclipseEstudio/ORBT">ORBT / Eclipse Estúdio ↗</a>
+    </footer>
+    <script>
+"use strict";
+
+/*
+ * Fundo estrelado animado.
+ * Três camadas com parallax, desenhadas em baixa resolução (efeito pixel art).
+ * Sem dependências e sem requisições externas.
+ * Respeita "reduzir movimento" e pausa quando a aba está oculta.
+ */
+(function () {
+    const tela = document.getElementById("estrelas");
+    if (!tela || !tela.getContext) {
+        return;
+    }
+    const contexto = tela.getContext("2d");
+    if (!contexto) return;
+
+    const ESCALA = 3; // cada pixel do canvas vira 3x3 na tela
+    const COR_FUNDO = "#0a0b1e";
+    const COR_BRILHO = "#7ae7e0";
+
+    // densidade = estrelas por pixel; velocidade em pixels por segundo
+    const CAMADAS = [
+        { densidade: 0.0016, velocidade: 3, cor: "#4b4f8f", tamanho: 1 },
+        { densidade: 0.0009, velocidade: 8, cor: "#a9a8cf", tamanho: 1 },
+        { densidade: 0.0004, velocidade: 16, cor: "#f5f1e8", tamanho: 2 }
+    ];
+
+    const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    let largura = 0;
+    let altura = 0;
+    let estrelas = [];
+    let ultimoQuadro = 0;
+    let idAnimacao = 0;
+
+    function sortearPosicaoY() {
+        return Math.floor(Math.random() * altura);
+    }
+
+    function criarEstrelas() {
+        largura = Math.ceil(window.innerWidth / ESCALA);
+        altura = Math.ceil(window.innerHeight / ESCALA);
+        tela.width = largura;
+        tela.height = altura;
+        estrelas = [];
+
+        CAMADAS.forEach(function (camada, indice) {
+            const quantidade = Math.round(largura * altura * camada.densidade);
+            for (let i = 0; i < quantidade; i++) {
+                estrelas.push({
+                    x: Math.random() * largura,
+                    y: sortearPosicaoY(),
+                    camada: indice,
+                    fase: Math.random() * 6
+                });
+            }
+        });
+        desenhar(0);
+    }
+
+    function desenhar(delta) {
+        contexto.fillStyle = COR_FUNDO;
+        contexto.fillRect(0, 0, largura, altura);
+
+        estrelas.forEach(function (estrela) {
+            const camada = CAMADAS[estrela.camada];
+
+            estrela.x -= camada.velocidade * delta;
+            if (estrela.x < -2) {
+                estrela.x = largura + 1;
+                estrela.y = sortearPosicaoY();
+            }
+            estrela.fase += delta;
+
+            // só as estrelas maiores piscam
+            const brilhando = camada.tamanho === 2 && Math.sin(estrela.fase * 2) > 0.7;
+            contexto.fillStyle = brilhando ? COR_BRILHO : camada.cor;
+            contexto.fillRect(Math.floor(estrela.x), estrela.y, camada.tamanho, camada.tamanho);
+        });
+    }
+
+    function quadro(agora) {
+        const delta = Math.min((agora - ultimoQuadro) / 1000, 0.1);
+        ultimoQuadro = agora;
+        desenhar(delta);
+        idAnimacao = requestAnimationFrame(quadro);
+    }
+
+    function iniciar() {
+        if (idAnimacao || reduzirMovimento.matches || document.hidden) {
+            return;
+        }
+        ultimoQuadro = performance.now();
+        idAnimacao = requestAnimationFrame(quadro);
+    }
+
+    function parar() {
+        cancelAnimationFrame(idAnimacao);
+        idAnimacao = 0;
+    }
+
+    // No celular, o "resize" dispara quando a barra do navegador some ou aparece.
+    // Só recria as estrelas se a largura mudou ou se a altura mudou bastante.
+    window.addEventListener("resize", function () {
+        const larguraNova = Math.ceil(window.innerWidth / ESCALA);
+        const alturaNova = Math.ceil(window.innerHeight / ESCALA);
+        const mudouMuito = Math.abs(alturaNova - altura) > altura * 0.25;
+        if (larguraNova !== largura || mudouMuito) {
+            criarEstrelas();
+        }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            parar();
+        } else {
+            iniciar();
+        }
+    });
+
+    reduzirMovimento.addEventListener("change", function () {
+        parar();
+        if (reduzirMovimento.matches) {
+            desenhar(0);
+        } else {
+            iniciar();
+        }
+    });
+
+    criarEstrelas();
+    iniciar();
+})();
+    </script>
+    <script>
+"use strict";
+
+// A lista inclui prereleases: o teste aberto não precisa ser marcado como estável.
+(async function carregarDownload() {
+    const versao = document.getElementById("versao");
+    const botao = document.getElementById("download");
+    const controle = new AbortController();
+    const limite = setTimeout(() => controle.abort(), 8000);
+    try {
+        const resposta = await fetch("https://api.github.com/repos/EclipseEstudio/ORBT/releases?per_page=100", {
+            headers: { Accept: "application/vnd.github+json" },
+            signal: controle.signal,
+            credentials: "omit"
+        });
+        if (!resposta.ok) throw new Error("Consulta indisponível");
+        const releases = await resposta.json();
+        if (!Array.isArray(releases)) throw new Error("Resposta inválida");
+        const publicadas = releases.filter(release => !release.draft && release.published_at)
+            .sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
+        // Ignora releases sem APK e uploads ainda incompletos.
+        const release = publicadas.find(item => item.assets.some(apkValido));
+        if (!release) {
+            botao.textContent = "Acompanhar lançamento ↗";
+            versao.textContent = "O primeiro APK de teste ainda não foi publicado. Volte em breve!";
+            return;
+        }
+        const apks = release.assets.filter(apkValido);
+        // Prefere o nome do exportador atual; aceita nomes novos sem editar o HTML.
+        const apk = apks.find(asset => /^(orbt|orbt-debug|orbt-universal)\.apk$/i.test(asset.name)) || apks[0];
+        botao.href = apk.browser_download_url;
+        botao.textContent = "Baixar APK ↓";
+        const tamanho = (apk.size / 1024 / 1024).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+        versao.textContent = `Android · ${tamanho} MB`;
+        versao.title = release.tag_name;
+        if (/^sha256:[a-f0-9]{64}$/i.test(apk.digest || "")) {
+            document.getElementById("hash").textContent = apk.digest.slice(7);
+            document.getElementById("integridade").hidden = false;
+        }
+    } catch {
+        // O link original funciona sem JS, sem rede ou com limite da API excedido.
+        versao.textContent = "Não foi possível consultar o APK agora. Veja os downloads no GitHub.";
+    } finally {
+        clearTimeout(limite);
+    }
+
+    function apkValido(asset) {
+        return asset.state === "uploaded" && /\.apk$/i.test(asset.name) && asset.size > 0
+            && typeof asset.browser_download_url === "string"
+            && asset.browser_download_url.startsWith("https://github.com/EclipseEstudio/ORBT/releases/download/");
+    }
+})();
+    </script>
+</body>
+</html>

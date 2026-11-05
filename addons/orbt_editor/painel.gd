@@ -19,6 +19,9 @@ var _pendente: Callable
 var _confirmacao: ConfirmationDialog
 var _exclusao: ConfirmationDialog
 var _jogar: Button
+var _desfazer: Button
+var _refazer: Button
+var _duplicar: Button
 
 
 func _ready() -> void:
@@ -29,6 +32,9 @@ func _ready() -> void:
 	_botao(barra, "Abrir…", func(): _solicitar(func(): _abrir.popup_centered_ratio(0.7)))
 	_botao(barra, "Salvar", _pedir_salvar)
 	_botao(barra, "Salvar como…", func(): _salvar.popup_centered_ratio(0.7))
+	_desfazer = _botao(barra, "Desfazer", documento.desfazer)
+	_refazer = _botao(barra, "Refazer", documento.refazer)
+	_duplicar = _botao(barra, "Duplicar corpo", documento.duplicar)
 	_botao(barra, "Validar", _validar)
 	_jogar = _botao(barra, "Testar fase", func(): testar_solicitado.emit())
 	_titulo = Label.new()
@@ -120,6 +126,7 @@ func _ready() -> void:
 	documento.selecao_alterada.connect(_mostrar_propriedades)
 	if not persistir_sessao or not _restaurar():
 		documento.abrir(Documento.EXEMPLO)
+	documento.limpar_historico()
 	_atualizar()
 	_mostrar_propriedades()
 	mapa.enquadrar.call_deferred()
@@ -190,6 +197,9 @@ func _gravar(arquivo: String) -> void:
 func _atualizar() -> void:
 	if not is_instance_valid(_lista):
 		return
+	_desfazer.disabled = not documento.pode_desfazer()
+	_refazer.disabled = not documento.pode_refazer()
+	_duplicar.disabled = documento.selecao < 0
 	_titulo.text = ("● " if documento.modificado() else "") + (documento.caminho if not documento.caminho.is_empty() else "Nova fase")
 	_lista.clear()
 	_lista.add_item("Fase · " + str(documento.dados.get("name", "")))
