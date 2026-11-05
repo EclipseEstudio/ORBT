@@ -499,7 +499,7 @@ body { isolation: isolate; }
         botao.href = apk.browser_download_url;
         botao.textContent = "Baixar APK ↓";
         const tamanho = (apk.size / 1024 / 1024).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-        versao.textContent = `Android · ${tamanho} MB`;
+        versao.textContent = `Android · ${release.name || release.tag_name} · ${tamanho} MB`;
         versao.title = release.tag_name;
         if (/^sha256:[a-f0-9]{64}$/i.test(apk.digest || "")) {
             document.getElementById("hash").textContent = apk.digest.slice(7);
