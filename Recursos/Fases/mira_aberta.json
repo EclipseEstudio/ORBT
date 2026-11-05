@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "mira_aberta",
+  "name": "Mira aberta",
+  "order": 2,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 3,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      60,
+      340
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      280,
+      140
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "As estrelas são opcionais e só valem ao chegar à Terra. Vá direto ou use mais impulsos para buscar a estrela afastada.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        104.396,
+        299.64
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        144.353,
+        263.315
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        244.904,
+        212.332
+      ],
+      "radius": 7
+    }
+  ]
+}

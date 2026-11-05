@@ -117,6 +117,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	erro_abertura = ""
 	instancia.campanha_permitida = true
 	instancia.preferencias = preferencias
+	instancia.progresso = progresso
 	instancia.proxima_fase = proxima_fase(id_nivel)
 	get_tree().paused = false
 	alterar_mundo_nodo(instancia)
@@ -128,7 +129,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
-			progresso.concluir(id, GLOBAL.gerendiador_de_nivel.itens)
+			progresso.concluir_com_estrelas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.estrelas_coletadas.size())
 			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:

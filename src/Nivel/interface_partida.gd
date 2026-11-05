@@ -16,11 +16,14 @@ var _dialogo_conclusao: Control
 var _dialogo_derrota: Control
 var _indicadores: Control
 var _fase: Label
+var _estrelas: Label
+var _icone_estrelas: TextureRect
 var _bussola: Control
 var _base_status: VBoxContainer
 
 var partida: Node
 var preferencias: RefCounted
+var progresso: RefCounted
 var proxima_fase := ""
 var _status: Label
 var _mensagem: Label
@@ -114,6 +117,14 @@ func _ready() -> void:
 	_base_status.add_child(combustivel)
 	_icone_status(combustivel, "combustivel")
 	_status = rotulo(combustivel, "", 8)
+	_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_icone_estrelas = TextureRect.new()
+	icones_configurar(_icone_estrelas, "estrela")
+	_icone_estrelas.modulate = Color("ffc845")
+	combustivel.add_child(_icone_estrelas)
+	_estrelas = rotulo(combustivel, "", 8)
+	_estrelas.name = "Estrelas"
+	_estrelas.modulate = Color("ffc845")
 	var fundo_status := StyleBoxFlat.new()
 	fundo_status.bg_color = Tema.FUNDO
 	fundo_status.set_content_margin_all(1)
@@ -280,11 +291,25 @@ func _process(delta: float) -> void:
 	var perdida: bool = partida.estado == partida.Estado.PERDIDA
 	_raiz.visible = not pausado and not concluida and not perdida
 	if perdida and not _dialogo_derrota.visible:
-		_dialogo_derrota.exibir_motivo(partida.motivo)
+		var motivo: String = partida.motivo
+		if not partida.estrelas_coletadas.is_empty():
+			motivo += "\nEstrelas não confirmadas."
+		if not partida.aviso_salvamento.is_empty():
+			motivo += "\n" + partida.aviso_salvamento
+		_dialogo_derrota.exibir_motivo(motivo)
 		_dialogo_derrota.abrir()
 	elif not perdida:
 		_dialogo_derrota.hide()
 	if concluida and not _dialogo_conclusao.visible:
+		var quantidade: int = partida.nivel.estrelas.size()
+		var resultado := ""
+		if quantidade > 0:
+			var coletadas: int = partida.estrelas_coletadas.size()
+			var recorde: int = maxi(coletadas, progresso.melhor_estrelas(partida.nivel.id)) if progresso != null else coletadas
+			resultado = "Estrelas: %d/%d\nMelhor: %d/%d" % [coletadas, quantidade, recorde, quantidade]
+		if not partida.aviso_salvamento.is_empty():
+			resultado = partida.aviso_salvamento + "\n" + resultado
+		_dialogo_conclusao.exibir_motivo(resultado)
 		_dialogo_conclusao.abrir()
 	elif not concluida:
 		_dialogo_conclusao.hide()
@@ -303,6 +328,11 @@ func _process(delta: float) -> void:
 		_atualizar_area_segura()
 	_status.text = str(partida.nave.combustivel)
 	_status.tooltip_text = "Combustível: %d" % partida.nave.combustivel
+	_estrelas.text = "%d/%d" % [partida.estrelas_coletadas.size(), partida.nivel.estrelas.size()]
+	_estrelas.tooltip_text = "Estrelas opcionais. Só valem ao chegar à Terra."
+	_estrelas.accessibility_name = "Estrelas coletadas: " + _estrelas.text + ". Só valem ao chegar à Terra."
+	_estrelas.visible = not partida.nivel.estrelas.is_empty()
+	_icone_estrelas.visible = _estrelas.visible
 	_indicadores.tempo = partida.tempo_restante
 	_indicadores.duracao = partida.nivel.tempo_voo
 	_indicadores.tooltip_text = "Oxigênio: %.1f s" % partida.tempo_restante

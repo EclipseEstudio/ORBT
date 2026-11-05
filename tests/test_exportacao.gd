@@ -19,6 +19,11 @@ func conferir(condicao: bool, mensagem: String) -> void:
 func _executar() -> void:
 	conferir(FileAccess.file_exists("res://Recursos/Niveis.json"), "Catálogo incluído no pacote")
 	conferir(FileAccess.file_exists("res://Recursos/Fases/teste_001.json"), "JSON da fase incluído no pacote")
+	var catalogo: Dictionary = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json")
+	conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 20, "Pacote inclui campanha de vinte fases")
+	for item in catalogo.itens:
+		var resultado: Dictionary = load("res://src/Nivel/carregador_fase.gd").carregar(item.arquivo)
+		conferir(resultado.nivel != null and resultado.nivel.estrelas.size() == 3, item.id + ": fase e três estrelas válidas no pacote")
 	conferir(not ResourceLoader.exists("res://tests/test_controles.gd"), "Testes excluídos da entrega")
 	conferir(not ResourceLoader.exists("res://addons/orbt_editor/plugin.gd"), "Plugin de edição excluído da entrega")
 	conferir(not ResourceLoader.exists("res://addons/orbt_editor/teste.tscn"), "Cena de teste do editor excluída da entrega")
@@ -63,6 +68,7 @@ func _executar() -> void:
 	for passo in range(180):
 		partida.avancar(1.0 / 60)
 	conferir(partida.estado == partida.Estado.CONCLUIDA and nave.combustivel == 4, "Rota exportada chega à Terra com uma cobrança")
+	conferir(partida.estrelas_coletadas.size() == 2 and jogo.progresso.melhor_estrelas("teste_001") == 2, "Rota econômica exportada confirma duas estrelas")
 	jogo.mostrar_selecao()
 	await process_frame
 	conferir(jogo.interface_atual.cartoes.get_child_count() == jogo.get_node("GerenciadorDeNivel").itens.size(), "Campanha lista todas as fases no pacote isolado")
@@ -70,6 +76,7 @@ func _executar() -> void:
 	var restaurado = jogo.progresso.get_script().new()
 	restaurado.caminho = caminho_progresso
 	conferir(restaurado.carregar() and restaurado.estado("teste_001") == "Concluída", "Pacote exportado grava e restaura progresso real")
+	conferir(restaurado.melhor_estrelas("teste_001") == 2, "Estrelas confirmadas persistem no pacote exportado")
 	conferir(jogo.iniciar_fase("teste_001") and jogo.mundo_atual.get_node("Nave").combustivel == 5, "Repetição exportada restaura combustível")
 	jogo.queue_free()
 	await process_frame

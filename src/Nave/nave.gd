@@ -6,6 +6,7 @@ signal contato_detectado(contato: Dictionary)
 signal combustivel_alterado(saldo: int)
 signal condicao_alterada
 signal trajeto_interrompido
+signal trecho_percorrido(inicio: Vector2, fim: Vector2)
 
 enum Condicao { POUSADA, EM_VOO, A_DERIVA, PRONTA }
 const Fisica = preload("res://src/Nave/simulacao_voo.gd")
@@ -151,6 +152,8 @@ func avancar(delta: float) -> Dictionary:
 		Fisica.atualizar_corpos(corpos, tempo_simulacao)
 		global_position = transporte.position
 		_atualizar_orientacao(delta)
+		if condicao == Condicao.POUSADA:
+			_emitir_trechos(transporte)
 		if not transporte.contact.is_empty():
 			contato_detectado.emit(transporte.contact)
 		return transporte.contact
@@ -163,9 +166,16 @@ func avancar(delta: float) -> Dictionary:
 	global_position = resultado.position
 	velocidade = resultado.velocity
 	_atualizar_orientacao(delta)
+	_emitir_trechos(resultado)
 	if not resultado.contact.is_empty():
 		contato_detectado.emit(resultado.contact)
 	return resultado.contact
+
+
+func _emitir_trechos(resultado: Dictionary) -> void:
+	# A coleta ocorre antes do contato que encerra o passo (inclusive a Terra).
+	for trecho in resultado.get("segments", []):
+		trecho_percorrido.emit(trecho[0], trecho[1])
 
 
 func pousar(corpo: Dictionary) -> void:

@@ -1,20 +1,20 @@
 # Campanha — catálogo, carregamento e persistência
 
-Atualizado em 29/10/2026. Seleção #5/#38–#41 integrada pelo PR #44 em `fcd576b`; progresso persistente da #40 integrado pelo PR #46 em `a774a82`, incluindo a identidade visual do PR #45. Os quatro critérios da #40 foram demonstrados no Windows, com [evidências e reprodução](../auxiliar/validacao-issue-40.md). Godot 4.7.2, retrato, coordenadas lógicas do projeto. Revisão das imagens continua adiada; aceite integrado Android de #4/#38 permanece pendente. Estado e continuidade: [estado-da-branch.md](../auxiliar/estado-da-branch.md).
+Atualizado em 05/11/2026: campanha de 20 fases, três estrelas opcionais por fase e progresso no esquema 2. O [contrato de estrelas](estrelas-coletaveis.md) detalha simulação, checkpoints, recordes e migração. Godot 4.7.2, retrato, coordenadas lógicas do projeto. O aceite integrado Android permanece pendente. As seções históricas abaixo registram a campanha anterior.
 
 Os fluxos de navegação, bloqueio, conclusão e repetição estão nas [regras da campanha](../regras-de-negocio/campanha.md). Esta página registra seus contratos e detalhes de implementação.
 
 ## Apresentação da seleção
 
-Os nomes quebram linha e a lista rola para acomodar dez ou mais itens. Os botões de escolha têm 48 unidades lógicas de altura; a ergonomia real ainda precisa ser testada no telefone. A interface aplica a transformação da área segura e se atualiza após redimensionamento/alterações das margens do Android. Rótulos e ações de cada estado seguem as [regras de acesso às fases](../regras-de-negocio/campanha.md#acesso-conclusão-e-repetição).
+Uma grade de cinco colunas apresenta os números, estados e recordes das fases. Os botões têm 40 unidades lógicas de altura e conservam o nome na descrição acessível. A lista permite rolagem vertical; o cabeçalho apresenta a coleção de estrelas. A interface respeita a área segura e o redimensionamento. A ergonomia real ainda precisa ser testada no telefone.
 
-O catálogo real contém dez fases: `teste_001`, `salto_curto`, `na_diagonal`, `curva_suave`, `escala_segura`, `entre_asteroides`, `contorno`, `duas_rotas`, `portas_gemeas` e `retorno_a_terra`. Capturas com dados temporários continuam separadas do catálogo real.
+O catálogo real contém 20 fases progressivas: fundamentos, pousos e impulsos, gravidade e órbitas, obstáculos e combinações finais. As fases do protótipo preservadas fora do catálogo continuam disponíveis como referências e fixtures de teste.
 
 ## Catálogo e carregamento
 
 Mantém-se o contrato `Recursos/Niveis.json`: objeto que associa ID estável a caminho `res://Recursos/Fases/*.json`. Nome e ordem vêm dos metadados do arquivo de fase. Ordenação por `order`, com desempate pelo ID. Renomear/reordenar não muda a identidade do progresso. Um arquivo referenciado mais de uma vez, caminho inválido, ausência, erro JSON ou metadados inconsistentes invalida a lista inteira com diagnóstico; o carregador não retorna uma campanha parcial.
 
-`src/Campanha/catalogo.gd` lê JSON para extrair somente ID, nome, ordem e arquivo. Não constrói recursos físicos ou simulações de todas as fases. Ao escolher, `GerenciadorDeNivel` relê o arquivo escolhido e usa `CarregadorFase`, inclusive para versões, geometria e referências. Arquivos podem ter metadados válidos e regras físicas inválidas: nesse caso, a abertura falha com diagnóstico sem instalar mundo parcial. A atualização relê os arquivos, permitindo nova tentativa após a correção autoral.
+`src/Campanha/catalogo.gd` lê JSON para extrair ID, nome, ordem, arquivo e quantidade de estrelas. Não constrói recursos físicos ou simulações de todas as fases. Ao escolher, `GerenciadorDeNivel` relê o arquivo escolhido e usa `CarregadorFase`, inclusive para versões, geometria e referências. Arquivos podem ter metadados válidos e regras físicas inválidas: nesse caso, a abertura falha com diagnóstico sem instalar mundo parcial.
 
 A autorização é conferida no controlador antes de chamar o carregador, além do bloqueio na interface. Pedidos repetidos são bloqueados enquanto a escolha está em processamento. O toque termina na GUI antes de instalar a nave. Trocas/retornos cancelam a entrada, param a nave e liberam o mundo anterior. Uma tentativa nova recebe posição, combustível, tempo, contatos e câmera iniciais; repetição não recupera estado de voo.
 
@@ -22,7 +22,7 @@ A autorização é conferida no controlador antes de chamar o carregador, além 
 
 `src/Campanha/progresso_persistente.gd` usa o mesmo contrato da base em memória `progresso_sessao.gd`. Conclusões e liberações são conjuntos identificados pelo ID estável da fase. A transição de conclusão é idempotente; a configuração libera o primeiro item do catálogo e reconcilia a sucessora de cada fase já concluída. Isso permite expandir uma campanha sem bloquear quem concluiu a antiga última fase. A reconciliação de um save válido é gravada com o mesmo mecanismo de backup e retentativa; a primeira configuração sem save continua sem gravar. A conclusão libera o seguinte quando ele existe. O comportamento percebido pelo jogador está nas [regras de progressão](../regras-de-negocio/campanha.md#acesso-conclusão-e-repetição).
 
-O serviço grava `user://progresso.json`, separado dos JSONs autorais. Formato v1: `schema_version`, `geracao`, arrays de IDs `concluidas`/`liberadas` e checksum SHA-256 do conteúdo canônico. Valida versão, tipos, IDs únicos, referências entre os conjuntos e integridade. IDs ausentes do catálogo atual são preservados no save; o controlador só abre IDs presentes no catálogo e autorizados. Alterar o conteúdo de uma fase não apaga conquistas do mesmo ID.
+O serviço grava `user://progresso.json`, separado dos JSONs autorais. O formato v2 contém `schema_version`, `geracao`, arrays de IDs `concluidas`/`liberadas`, dicionário `melhores_estrelas` e checksum SHA-256 do conteúdo canônico. Migra o formato v1 após validar sua integridade. IDs ausentes do catálogo atual são preservados no save; o controlador só abre IDs presentes no catálogo e autorizados. Alterar o conteúdo de uma fase não apaga conquistas do mesmo ID.
 
 A gravação escreve e relê `.tmp`, preserva o último save válido em `.bak` por `.bak.tmp`, e então substitui o principal. Temporário interrompido não é adotado. Principal inválido recupera o backup válido; uma nova vitória pode voltar a gravar. Versão incompatível ou ambos os arquivos inválidos são preservados, sem sobrescrita automática; o serviço mantém uma sessão temporária e fornece o aviso ao controlador. Em falha de disco, os conjuntos atualizados permanecem em memória e o serviço informa o salvamento pendente e a possibilidade de retentativa. Recuperação por backup pode perder a última alteração que não chegou a ser gravada. Avisos e ações correspondentes estão nas [regras de salvamento](../regras-de-negocio/campanha.md#salvamento-e-recuperação).
 
@@ -34,7 +34,9 @@ A #56 centraliza os textos propostos em `src/Narrativa/narrativa.gd`: introduç�
 
 As preferências da #50 usam `user://preferencias.json`, separadas do progresso e do checkpoint, com `schema_version`, `musica` e `efeitos` entre 0 e 1. Valores ausentes, inválidos ou incompatíveis usam padrão 1; falha de gravação informa o jogador e mantém a escolha na sessão. A gravação usa arquivo temporário antes da substituição. Os canais Godot `Musica` e `Efeitos` são criados se necessário e enviados a `Master`, com volume linear convertido para dB e canal silenciado em zero. A #55 direciona os reprodutores aos canais correspondentes; consulte [validação do áudio](../auxiliar/validacao-issue-55.md).
 
-## Fases autorais e rotas de referência
+## Histórico: dez fases anteriores e rotas de referência
+
+Esta seção descreve o catálogo anterior à reestruturação de 05/11/2026. As rotas atuais estão em `tests/test_fases.gd`; os dados abaixo conservam o registro da adaptação do protótipo.
 
 As cinco fases adicionais usam `NIVEL_1` até `NIVEL_5` de `dev-macb/orbt/src/levels/__init__.py` como modelo. Os IDs e arquivos já cadastrados foram preservados para manter o progresso. `scripts/importar_fases_modelo.py` converte os dados por AST restrita, sem importar nem executar o projeto externo; as linhas de rochas mantêm o mesmo jitter determinístico. Para reproduzir, passe o caminho do `__init__.py` ao script.
 

@@ -2,7 +2,7 @@
 
 ## Identidade de distribuição
 
-O ORBT distribuído mantém `com.eclipseestudio.orbt`, o certificado permanente registrado em `scripts/assinatura-android.json` e um `version/code` crescente. A primeira versão permanente publicada é 0.3.2 / código 5. O candidato local em validação é 0.3.3 / código 6, ainda sem publicação. Atualizações Android precisam preservar a identidade e a assinatura; versões inferiores são bloqueadas pelo sistema. Referências: [assinatura de aplicativos](https://developer.android.com/studio/publish/app-signing) e [versionamento Android](https://developer.android.com/studio/publish/versioning).
+O ORBT distribuído mantém `com.eclipseestudio.orbt`, o certificado permanente registrado em `scripts/assinatura-android.json` e um `version/code` crescente. A primeira versão permanente publicada é 0.3.2 / código 5; a publicação anterior à campanha de 20 fases é 0.3.3 / código 6. A campanha com estrelas prepara a versão 0.4.0 / código 7. Atualizações Android precisam preservar a identidade e a assinatura; versões inferiores são bloqueadas pelo sistema. Referências: [assinatura de aplicativos](https://developer.android.com/studio/publish/app-signing) e [versionamento Android](https://developer.android.com/studio/publish/versioning).
 
 Os APKs de 0.3.1 e anteriores foram assinados por chaves temporárias de cada execução. Essas chaves não podem ser recuperadas a partir de um APK. A primeira versão com a assinatura permanente pode exigir desinstalar a instalação antiga, apagando seus dados. Esse limite é da migração histórica; não existe atualização compatível sem a chave antiga. O processo não tenta contornar a assinatura nem desinstala automaticamente.
 

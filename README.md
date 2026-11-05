@@ -1,6 +1,6 @@
 # ORBT
 
-Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gravidade, guia de direção e ciclo de partida.
+Puzzle espacial em Godot 4.7.2, com 20 fases progressivas, estrelas opcionais, pouso, impulsos, combustível, gravidade e órbitas.
 
 ## Jogar
 
@@ -9,8 +9,9 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
 - Cada impulso custa uma unidade. Correções em voo somam velocidade.
+- Cada fase tem três estrelas opcionais. A coleta só é confirmada ao chegar à Terra; o melhor total por fase compõe uma coleção de até 60 estrelas. Repetir permite melhorar o recorde.
 - **Explorar mapa** muda o arraste para a câmera; **Voltar à nave** restaura a mira.
-- Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
+- Nas fases maiores, **Explorar mapa** abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
 - **Vibração** ativa ou desativa os pulsos de lançamento, pouso e resultado. **Dicas** mostra ou oculta a ajuda durante a partida; avisos e diálogos continuam disponíveis. As escolhas são salvas junto aos volumes, incluindo a migração das preferências antigas.
@@ -25,7 +26,7 @@ Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pix
 
 A linha entre o toque e o dedo cresce de 1 a 3 pixels e muda de ciano até vermelho conforme a força. Em voo e à deriva, a nave deixa um rastro curto de 2 pixels. A câmera começa perto da nave e afasta suavemente conforme a força do arraste, retornando ao enquadramento próximo ao soltar ou cancelar. Explorar mantém os controles manuais e, ao voltar à nave, recupera o enquadramento anterior. O topo da partida mostra somente o número da fase.
 
-Os créditos incluem Miguel Alves, Rubens Augusto, Gustavo Costa e Cesar Caus, com WMDG e Godot no rodapé. O fundo mais detalhado e as estrelas coletáveis estão apenas [planejados](docs/tecnica/plano-fundo-e-estrelas.md).
+Os créditos incluem Miguel Alves, Rubens Augusto, Gustavo Costa e Cesar Caus, com WMDG e Godot no rodapé. As [regras de estrelas e repetição](docs/regras-de-negocio/campanha.md) descrevem coleta, confirmação, recordes e restauração do último pouso.
 
 ## Testes
 
@@ -91,4 +92,4 @@ Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, 
 
 O catálogo `Recursos/Niveis.json` aponta para arquivos independentes em `Recursos/Fases/`. Jogo e plugin compartilham o carregador e a validação. Progresso, checkpoint e preferências são persistidos separadamente; progresso e checkpoint têm cópias recuperáveis.
 
-Estado atualizado em 30/10/2026: os PRs #58–#65 integraram gravidade, checkpoints, preferências, menus e tutorial. O catálogo contém dez fases, com rotas verificadas em `tests/test_fases.gd`. A integração sonora, o aceite Android e o balanceamento com revisão cruzada permanecem em revisão. Acompanhe o [Projects ORBT](https://github.com/orgs/EclipseEstudio/projects/1) e a matriz de continuidade na documentação.
+Estado atualizado em 05/11/2026: o catálogo contém 20 fases com dificuldade progressiva e três estrelas opcionais por fase. As rotas de conclusão e coleta são verificadas em `tests/test_fases.gd`; coleta, checkpoints, persistência, editor e interface têm suítes específicas. O aceite no Android e o balanceamento com jogadores permanecem pendentes.

@@ -1,37 +1,119 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "teste_001",
   "name": "Primeiro impulso",
   "order": 1,
-  "bounds": {"position": [-180, -200], "size": [540, 800]},
+  "bounds": {
+    "position": [
+      -180,
+      -200
+    ],
+    "size": [
+      540,
+      800
+    ]
+  },
   "initial_fuel": 5,
   "flight_timeout": 30,
-  "physics": {"gravity_constant": 2, "softening": 8},
-  "ship": {"radius": 8, "mass": 1, "dead_zone": 10, "max_drag": 80, "max_impulse": 80},
-  "start": {"body_id": "origem", "angle_degrees": -90},
+  "physics": {
+    "gravity_constant": 2,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 8,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 80
+  },
+  "start": {
+    "body_id": "origem",
+    "angle_degrees": -90
+  },
   "goal": {
-    "id": "terra", "position": [90, 60], "mass": 0,
-    "visual_radius": 14, "collision_radius": 14, "capture_radius": 16,
-    "danger_radius": 0, "proximity_radius": 45
+    "id": "terra",
+    "position": [
+      90,
+      60
+    ],
+    "mass": 0,
+    "visual_radius": 14,
+    "collision_radius": 14,
+    "capture_radius": 16,
+    "danger_radius": 0,
+    "proximity_radius": 45
   },
   "bodies": [
     {
-      "id": "origem", "type": "planet", "position": [90, 250], "mass": 24000,
-      "visual_radius": 20, "collision_radius": 20, "capture_radius": 24,
-      "danger_radius": 0, "proximity_radius": 110
+      "id": "origem",
+      "type": "planet",
+      "position": [
+        90,
+        250
+      ],
+      "mass": 24000,
+      "visual_radius": 20,
+      "collision_radius": 20,
+      "capture_radius": 24,
+      "danger_radius": 0,
+      "proximity_radius": 110
     },
     {
-      "id": "apoio", "type": "satellite", "position": [210, 140], "mass": 30000,
-      "visual_radius": 12, "collision_radius": 12, "capture_radius": 16,
-      "danger_radius": 0, "proximity_radius": 40
+      "id": "apoio",
+      "type": "satellite",
+      "position": [
+        210,
+        140
+      ],
+      "mass": 30000,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 16,
+      "danger_radius": 0,
+      "proximity_radius": 40
     },
     {
-      "id": "asteroide", "type": "asteroid", "position": [-40, 100], "mass": 0,
-      "visual_radius": 12, "collision_radius": 12, "capture_radius": 0,
-      "danger_radius": 12, "proximity_radius": 40
+      "id": "asteroide",
+      "type": "asteroid",
+      "position": [
+        -40,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 12,
+      "collision_radius": 12,
+      "capture_radius": 0,
+      "danger_radius": 12,
+      "proximity_radius": 40
     }
   ],
   "tutorial": "Arraste para baixo e solte para voar em direção à Terra.",
-  "notes": "Protótipo: um arraste vertical de 80 unidades resolve a fase com um impulso. Validar ergonomia no Android."
+  "notes": "Protótipo: um arraste vertical de 80 unidades resolve a fase com um impulso. Validar ergonomia no Android.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        90.32,
+        187.021
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        91.204,
+        159.313
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        122.863,
+        101.571
+      ],
+      "radius": 7
+    }
+  ]
 }

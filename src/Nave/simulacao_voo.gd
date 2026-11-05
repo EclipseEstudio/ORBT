@@ -134,8 +134,9 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 			if destino.id == contato.body.target_id and destino.type == "portal":
 				var direcao := Vector2.RIGHT.rotated(deg_to_rad(destino.exit_degrees))
 				var saida: Vector2 = destino.position + direcao * (raio_contato(destino) + raio_nave + 0.01)
-				return {"position": saida, "velocity": direcao * nova_velocidade.length(), "contact": {}, "teleported": true, "entry_position": ponto}
-	return {"position": ponto, "velocity": nova_velocidade, "contact": contato}
+				# O salto não é um trecho percorrido: apenas a aproximação da entrada.
+				return {"position": saida, "velocity": direcao * nova_velocidade.length(), "contact": {}, "teleported": true, "entry_position": ponto, "segments": [PackedVector2Array([posicao, ponto])]}
+	return {"position": ponto, "velocity": nova_velocidade, "contact": contato, "segments": [PackedVector2Array([posicao, ponto])]}
 
 
 static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0, tempo := 0.0) -> PackedVector2Array:

@@ -10,6 +10,7 @@ signal menu_solicitado
 signal proxima_solicitada
 signal checkpoint_alterado(checkpoint: Dictionary)
 signal pouso_realizado
+signal estrela_coletada(id: String)
 var campanha_permitida := false
 
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
@@ -20,6 +21,7 @@ var tempo_restante := 0.0
 var temporizador_ativo := false
 var explorando := false
 var proximos: Dictionary = {}
+var estrelas_coletadas: Dictionary = {}
 var nivel: NivelRes
 var nave: Node2D
 var _checkpoint: Dictionary = {}
@@ -35,6 +37,7 @@ func iniciar(dados: NivelRes, nave_atual: Node2D) -> void:
 	nave.simulacao_automatica = false
 	nave.impulso_aplicado.connect(_ao_impulso)
 	nave.contato_detectado.connect(resolver_contato)
+	nave.trecho_percorrido.connect(_coletar_trecho)
 	reiniciar()
 
 
@@ -45,6 +48,7 @@ func reiniciar() -> void:
 	explorando = false
 	tempo_restante = nivel.tempo_voo
 	temporizador_ativo = false
+	estrelas_coletadas.clear()
 	_limpar_proximidade()
 	nave.configurar(nivel)
 	_registrar_checkpoint()
@@ -75,6 +79,22 @@ func avancar(delta: float) -> void:
 
 func _ao_impulso(_gesto_id: int) -> void:
 	temporizador_ativo = true
+
+
+func _coletar_trecho(inicio: Vector2, fim: Vector2) -> void:
+	if estado != Estado.JOGANDO or get_tree().paused:
+		return
+	var encontradas: Array = []
+	for estrela in nivel.estrelas:
+		if estrelas_coletadas.has(estrela.id):
+			continue
+		var fracao: float = nave.Fisica.intersecao_circulo(inicio, fim, estrela.position, estrela.radius + nave.raio)
+		if is_finite(fracao):
+			encontradas.append({"id": estrela.id, "fracao": fracao})
+	encontradas.sort_custom(func(a: Dictionary, b: Dictionary): return a.fracao < b.fracao)
+	for estrela in encontradas:
+		estrelas_coletadas[estrela.id] = true
+		estrela_coletada.emit(estrela.id)
 
 
 func resolver_contato(contato: Dictionary) -> void:
@@ -111,6 +131,7 @@ func _registrar_checkpoint() -> void:
 		"tempo": tempo_restante,
 		"temporizador_ativo": temporizador_ativo,
 		"tempo_simulacao": nave.tempo_simulacao,
+		"estrelas_coletadas": estrelas_coletadas.keys(),
 	}
 	checkpoint_alterado.emit(_checkpoint.duplicate(true))
 
@@ -145,6 +166,9 @@ func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	nave.condicao = nave.Condicao.POUSADA if not corpo.is_empty() else nave.Condicao.PRONTA
 	tempo_restante = _checkpoint.tempo
 	temporizador_ativo = _checkpoint.temporizador_ativo
+	estrelas_coletadas.clear()
+	for id in _checkpoint.get("estrelas_coletadas", []):
+		estrelas_coletadas[id] = true
 	nave.animation_player.play("default")
 	nave.combustivel_alterado.emit(nave.combustivel)
 	nave.condicao_alterada.emit()

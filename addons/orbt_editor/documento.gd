@@ -8,7 +8,7 @@ const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const EXEMPLO = "res://Recursos/Fases/teste_001.json"
 var dados: Dictionary = {}
 var caminho := ""
-var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo.
+var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo; -3 - índice da estrela.
 var _salvo := ""
 var _historico: Array[Dictionary] = []
 var _indice_historico := -1
@@ -80,7 +80,7 @@ func refazer() -> bool:
 func _restaurar_estado(indice: int) -> void:
 	_indice_historico = indice
 	dados = _historico[indice].dados.duplicate(true)
-	selecao = clampi(_historico[indice].selecao, -2, dados.bodies.size() - 1)
+	selecao = selecao_valida(_historico[indice].selecao)
 	_reproduzindo = true
 	alterado.emit()
 	selecao_alterada.emit()
@@ -91,6 +91,8 @@ func _id_copia(id_original: String) -> String:
 	var ids: Array = [dados.goal.id]
 	for corpo in dados.bodies:
 		ids.append(corpo.id)
+	for estrela in dados.get("stars", []):
+		ids.append(estrela.id)
 	var numero := 1
 	while (id_original + "_copia_%d" % numero) in ids:
 		numero += 1
@@ -98,6 +100,19 @@ func _id_copia(id_original: String) -> String:
 
 
 func duplicar(deslocamento := Vector2(40, 40)) -> bool:
+	if selecao <= -3:
+		var estrela := objeto(selecao)
+		if estrela.is_empty() or not deslocamento.is_finite():
+			return false
+		terminar_grupo()
+		var copia: Dictionary = estrela.duplicate(true)
+		copia.id = _id_copia(estrela.id)
+		copia.position = [estrela.position[0] + deslocamento.x, estrela.position[1] + deslocamento.y]
+		dados.stars.append(copia)
+		selecao = -3 - (dados.stars.size() - 1)
+		alterado.emit()
+		selecao_alterada.emit()
+		return true
 	if selecao < 0 or selecao >= dados.bodies.size() or not deslocamento.is_finite():
 		return false
 	terminar_grupo()
@@ -210,11 +225,35 @@ func salvar(arquivo: String) -> Array[String]:
 
 
 func objeto(indice: int) -> Dictionary:
+	if indice <= -3:
+		var estrelas: Array = dados.get("stars", [])
+		var indice_estrela := -3 - indice
+		return estrelas[indice_estrela] if indice_estrela < estrelas.size() else {}
 	if indice == -1:
 		return dados.get("goal", {})
 	if indice >= 0 and indice < dados.get("bodies", []).size():
 		return dados.bodies[indice]
 	return {}
+
+
+func selecao_valida(indice: int) -> int:
+	return indice if indice == -2 or not objeto(indice).is_empty() else -2
+
+
+func inserir_estrela(posicao: Vector2) -> void:
+	if not posicao.is_finite():
+		return
+	terminar_grupo()
+	if not dados.has("stars"):
+		dados["stars"] = []
+	var numero := 1
+	var ids: Array = dados.stars.map(func(estrela: Dictionary): return estrela.id)
+	while "estrela_%d" % numero in ids:
+		numero += 1
+	dados.stars.append({"id": "estrela_%d" % numero, "position": [posicao.x, posicao.y], "radius": 7.0})
+	selecao = -3 - (dados.stars.size() - 1)
+	alterado.emit()
+	selecao_alterada.emit()
 
 
 func selecionar(indice: int) -> void:
@@ -256,6 +295,12 @@ func mover(indice: int, posicao: Vector2) -> void:
 
 
 func excluir() -> void:
+	if selecao <= -3 and not objeto(selecao).is_empty():
+		dados.stars.remove_at(-3 - selecao)
+		selecao = -2
+		alterado.emit()
+		selecao_alterada.emit()
+		return
 	if selecao < 0 or selecao >= dados.bodies.size():
 		return
 	# Referência ao apoio é preservada para que o carregador mostre o erro.

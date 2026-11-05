@@ -35,11 +35,21 @@ func validar(nivel: NivelRes) -> Dictionary:
 		valido = float(combustivel) == floorf(float(combustivel))
 	valido = valido and _numero(dados.get("tempo"), 0, nivel.tempo_voo)
 	valido = valido and _numero(dados.get("tempo_simulacao", 0.0), 0, 1.0e12)
+	# Checkpoints anteriores às estrelas são retomados com coleta vazia.
+	var coletadas = dados.get("estrelas_coletadas", [])
+	valido = valido and coletadas is Array
+	if coletadas is Array:
+		var ids: Dictionary = {}
+		for id in coletadas:
+			if not id is String or ids.has(id) or not nivel.estrelas.any(func(estrela: Dictionary): return estrela.id == id):
+				valido = false
+			ids[id] = true
 	if not valido:
 		aviso = "Checkpoint inválido. Reinicie a fase."
 		bloqueado = true
 		return {}
 	var copia := dados.duplicate(true)
+	copia["estrelas_coletadas"] = coletadas.duplicate()
 	copia.posicao = Vector2(copia.posicao[0], copia.posicao[1])
 	copia.posicao_relativa = Vector2(copia.posicao_relativa[0], copia.posicao_relativa[1])
 	if not corpo.is_empty():

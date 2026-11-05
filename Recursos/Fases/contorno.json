@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "contorno",
   "name": "O Contorno",
-  "order": 7,
+  "order": 13,
   "bounds": {
     "position": [
       -100,
@@ -14,7 +14,7 @@
       700
     ]
   },
-  "initial_fuel": 3,
+  "initial_fuel": 4,
   "flight_timeout": 20,
   "physics": {
     "gravity_constant": 1,
@@ -64,8 +64,8 @@
       "id": "rocha_central",
       "type": "asteroid",
       "position": [
-        300.0,
-        250.0
+        300,
+        250
       ],
       "mass": 0,
       "visual_radius": 30,
@@ -76,5 +76,31 @@
     }
   ],
   "tutorial": "Desvie da rocha e corrija o voo em direção à Terra.",
-  "notes": "Contorno de um perigo com correção em voo."
+  "notes": "Contorno de um perigo com correção em voo.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        146.505,
+        203.624
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        185.142,
+        193.271
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        429.909,
+        280.95
+      ],
+      "radius": 7
+    }
+  ]
 }

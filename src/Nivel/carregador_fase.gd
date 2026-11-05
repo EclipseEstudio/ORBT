@@ -186,6 +186,7 @@ static func validar(dados: Variant) -> Dictionary:
 	nivel.inicio = inicio.duplicate(true)
 	nivel.corpos = normalizados
 	nivel.dados_autorais = dados.duplicate(true)
+	_validar_estrelas(dados.get("stars", []), nivel, erros)
 	if not Fisica.dentro_limites(normalizados[-1].position, nivel.limites):
 		erros.append("goal.position: Terra fora dos limites")
 	var apoio := nivel.obter_corpo(inicio.get("body_id", ""))
@@ -210,3 +211,36 @@ static func validar(dados: Variant) -> Dictionary:
 	if not erros.is_empty():
 		return {"nivel": null, "erros": erros}
 	return {"nivel": nivel, "erros": erros}
+
+
+static func _validar_estrelas(dados: Variant, nivel: NivelRes, erros: Array[String]) -> void:
+	if not dados is Array or dados.size() > 256:
+		erros.append("stars: lista opcional com até 256 estrelas")
+		return
+	var ids: Dictionary = {}
+	for indice in range(dados.size()):
+		var estrela = dados[indice]
+		var prefixo := "stars[%d]" % indice
+		if not estrela is Dictionary:
+			erros.append(prefixo + ": objeto obrigatório")
+			continue
+		if not texto(estrela.get("id")) or estrela.id.length() > 256 or ids.has(estrela.get("id")):
+			erros.append(prefixo + ".id: ausente ou duplicado")
+			continue
+		ids[estrela.id] = true
+		if not vetor(estrela.get("position")) or not numero(estrela.get("radius"), 0.01, 1000):
+			erros.append(prefixo + ": position [x, y] e radius positivo até 1000 obrigatórios")
+			continue
+		var posicao := Vector2(estrela.position[0], estrela.position[1])
+		var raio := float(estrela.radius)
+		if not Fisica.dentro_limites(posicao - Vector2.ONE * raio, nivel.limites) or not Fisica.dentro_limites(posicao + Vector2.ONE * raio, nivel.limites):
+			erros.append(prefixo + ": estrela fora dos limites")
+		for corpo in nivel.corpos:
+			if posicao.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + raio:
+				erros.append(prefixo + ": sobreposta ao corpo " + corpo.id)
+			if corpo.type == "portal":
+				var direcao := Vector2.RIGHT.rotated(deg_to_rad(corpo.exit_degrees))
+				var saida: Vector2 = corpo.position + direcao * (corpo.collision_radius + nivel.parametros_nave.radius + 0.01)
+				if posicao.distance_to(saida) <= raio + nivel.parametros_nave.radius:
+					erros.append(prefixo + ": sobreposta à saída do portal " + corpo.id)
+		nivel.estrelas.append({"id": estrela.id, "position": posicao, "radius": raio})

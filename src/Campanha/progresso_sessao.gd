@@ -4,6 +4,7 @@ extends RefCounted
 signal alterado
 var concluidas: Dictionary = {}
 var liberadas: Dictionary = {}
+var melhores_estrelas: Dictionary = {}
 
 
 func descricao() -> String:
@@ -35,6 +36,34 @@ func estado(id: String) -> String:
 
 func pode_abrir(id: String) -> bool:
 	return liberadas.has(id) or concluidas.has(id)
+
+
+func melhor_estrelas(id: String) -> int:
+	return int(melhores_estrelas.get(id, 0))
+
+
+func total_estrelas() -> int:
+	var total := 0
+	for quantidade in melhores_estrelas.values():
+		total += int(quantidade)
+	return total
+
+
+func registrar_estrelas(id: String, quantidade: int) -> bool:
+	# Só uma conclusão autoriza confirmar o recurso; repetir melhora o recorde.
+	if not concluidas.has(id) or quantidade <= melhor_estrelas(id) or quantidade > 256:
+		return false
+	melhores_estrelas[id] = quantidade
+	alterado.emit()
+	return true
+
+
+func concluir_com_estrelas(id: String, itens: Array, quantidade: int) -> bool:
+	if not itens.any(func(item: Dictionary): return item.id == id) or not pode_abrir(id):
+		return false
+	var concluiu := concluir(id, itens)
+	var melhorou := registrar_estrelas(id, quantidade)
+	return concluiu or melhorou
 
 
 func concluir(id: String, itens: Array) -> bool:

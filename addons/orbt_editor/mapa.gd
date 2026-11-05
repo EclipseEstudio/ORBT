@@ -65,6 +65,18 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 		if documento.selecao == indice:
 			draw_rect(Rect2(posicao - Vector2.ONE * 7, Vector2.ONE * 14), Color.YELLOW, false, 2)
+	var estrelas: Array = dados.get("stars", [])
+	for indice in range(estrelas.size()):
+		var estrela: Dictionary = estrelas[indice]
+		var posicao := tela(Vector2(estrela.position[0], estrela.position[1]))
+		var pontos := PackedVector2Array()
+		for ponta in range(10):
+			pontos.append(posicao + Vector2.UP.rotated(ponta * PI / 5.0) * (9.0 if ponta % 2 == 0 else 4.0))
+		draw_colored_polygon(pontos, Color("ffc845"))
+		draw_arc(posicao, maxf(2, estrela.radius * escala), 0, TAU, 32, Color("ffc84588"), 1)
+		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), estrela.id, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("ffc845"))
+		if documento.selecao == -3 - indice:
+			draw_rect(Rect2(posicao - Vector2.ONE * 11, Vector2.ONE * 22), Color.YELLOW, false, 2)
 	var validacao := Carregador.validar(dados)
 	if validacao.nivel != null:
 		var inicio := tela(validacao.nivel.obter_posicao_inicial())
@@ -93,6 +105,14 @@ func _gui_input(event: InputEvent) -> void:
 					var d := tela(posicao).distance_to(event.position)
 					if d <= maxf(12, corpo.visual_radius * escala) and d < distancia:
 						escolhido = indice
+						distancia = d
+						_deslocamento = posicao - mundo(event.position)
+				for indice in range(documento.dados.get("stars", []).size()):
+					var estrela: Dictionary = documento.dados.stars[indice]
+					var posicao := Vector2(estrela.position[0], estrela.position[1])
+					var d := tela(posicao).distance_to(event.position)
+					if d <= maxf(12, estrela.radius * escala) and d < distancia:
+						escolhido = -3 - indice
 						distancia = d
 						_deslocamento = posicao - mundo(event.position)
 				documento.selecionar(escolhido)

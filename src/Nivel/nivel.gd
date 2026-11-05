@@ -5,10 +5,12 @@ const Partida = preload("res://src/ControladorJogo/partida.gd")
 const CameraNivel = preload("res://src/Nivel/camera_nivel.gd")
 const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
 const RastroNave = preload("res://src/Nave/rastro_nave.gd")
+const EstrelasColetaveis = preload("res://src/Visual/estrelas_coletaveis.gd")
 
 var nivel_res: NivelRes
 var campanha_permitida := false
 var preferencias: RefCounted
+var progresso: RefCounted
 var proxima_fase := ""
 var partida: Node
 var camera: Camera2D
@@ -30,6 +32,9 @@ func _ready() -> void:
 	add_child(partida)
 	partida.proximidade_alterada.connect(_ao_alerta)
 	partida.iniciar(nivel_res, $Nave)
+	var estrelas := EstrelasColetaveis.new()
+	estrelas.partida = partida
+	add_child(estrelas)
 	camera = CameraNivel.new()
 	camera.partida = partida
 	add_child(camera)
@@ -40,6 +45,7 @@ func _ready() -> void:
 	var hud := InterfacePartida.new()
 	hud.partida = partida
 	hud.preferencias = preferencias
+	hud.progresso = progresso
 	hud.proxima_fase = proxima_fase
 	add_child(hud)
 	queue_redraw()

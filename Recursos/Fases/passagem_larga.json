@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "passagem_larga",
+  "name": "Passagem larga",
+  "order": 3,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 3,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "position": [
+      60,
+      330
+    ]
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      320,
+      100
+    ],
+    "mass": 0,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57
+  },
+  "bodies": [
+    {
+      "id": "alto",
+      "type": "asteroid",
+      "position": [
+        190,
+        155
+      ],
+      "mass": 0,
+      "visual_radius": 22,
+      "collision_radius": 22,
+      "capture_radius": 0,
+      "danger_radius": 22,
+      "proximity_radius": 57
+    },
+    {
+      "id": "baixo",
+      "type": "asteroid",
+      "position": [
+        190,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 26,
+      "collision_radius": 26,
+      "capture_radius": 0,
+      "danger_radius": 26,
+      "proximity_radius": 61
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Encontre a passagem entre as rochas. Escolha a direção antes de lançar.",
+  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        112.804,
+        283.289
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        161.115,
+        240.553
+      ],
+      "radius": 7
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        275.687,
+        179.294
+      ],
+      "radius": 7
+    }
+  ]
+}
