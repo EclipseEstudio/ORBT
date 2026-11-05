@@ -121,6 +121,10 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	get_tree().paused = false
 	alterar_mundo_nodo(instancia)
 	audio.vincular_partida(instancia.partida)
+	instancia.partida.nave.impulso_aplicado.connect(func(_id: int): preferencias.vibrar(25))
+	instancia.partida.pouso_realizado.connect(func(): preferencias.vibrar(40))
+	instancia.partida.concluida.connect(func(_id: String): preferencias.vibrar(60))
+	instancia.partida.perdida.connect(func(_motivo: String): preferencias.vibrar(90))
 	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:

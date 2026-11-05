@@ -5,6 +5,7 @@ signal impulso_aplicado(gesto_id: int)
 signal contato_detectado(contato: Dictionary)
 signal combustivel_alterado(saldo: int)
 signal condicao_alterada
+signal trajeto_interrompido
 
 enum Condicao { POUSADA, EM_VOO, A_DERIVA, PRONTA }
 const Fisica = preload("res://src/Nave/simulacao_voo.gd")
@@ -44,6 +45,7 @@ func _ready() -> void:
 
 
 func configurar(nivel: NivelRes) -> void:
+	trajeto_interrompido.emit()
 	cancelar_pedidos()
 	corpos = nivel.corpos.duplicate(true)
 	tempo_simulacao = 0.0
@@ -157,6 +159,7 @@ func avancar(delta: float) -> Dictionary:
 	Fisica.atualizar_corpos(corpos, tempo_simulacao)
 	if resultado.get("teleported", false):
 		origem_decolagem = ""
+		trajeto_interrompido.emit()
 	global_position = resultado.position
 	velocidade = resultado.velocity
 	_atualizar_orientacao(delta)
@@ -180,6 +183,7 @@ func pousar(corpo: Dictionary) -> void:
 
 
 func parar() -> void:
+	trajeto_interrompido.emit()
 	simulacao_ativa = false
 	velocidade = Vector2.ZERO
 	entrada.cancelar()

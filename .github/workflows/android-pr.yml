@@ -50,7 +50,14 @@ jobs:
           Copy-Item (Join-Path $env:RUNNER_TEMP 'modelos/templates/*') $modelos -Recurse
           "ORBT_GODOT=$(Join-Path $env:RUNNER_TEMP 'godot/Godot_v4.7.2-stable_win64_console.exe')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Preparar exportação Android
-        run: ./scripts/configurar-android-ci.ps1 -Java $env:JAVA_HOME -Sdk $env:ANDROID_HOME -DadosGodot (Join-Path $env:APPDATA 'Godot') -DiretorioTemporario $env:RUNNER_TEMP
+        env:
+          ORBT_ANDROID_KEYSTORE_BASE64: ${{ secrets.ORBT_ANDROID_KEYSTORE_BASE64 }}
+          ORBT_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ORBT_ANDROID_KEYSTORE_PASSWORD }}
+          ORBT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.ORBT_ANDROID_KEYSTORE_ALIAS }}
+          ORBT_PREVIA_EXTERNA: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+        run: |
+          $previa = $env:ORBT_PREVIA_EXTERNA -eq 'true'
+          ./scripts/configurar-android-ci.ps1 -Java $env:JAVA_HOME -Sdk $env:ANDROID_HOME -DadosGodot (Join-Path $env:APPDATA 'Godot') -DiretorioTemporario $env:RUNNER_TEMP -ChaveTemporaria:$previa -PacotePrevia 'com.eclipseestudio.orbt.previa.p${{ github.event.pull_request.number }}'
       - name: Importar projeto
         run: |
           $orbtSaida = & $env:ORBT_GODOT --headless --editor --path . --import 2>&1
@@ -64,12 +71,16 @@ jobs:
       - name: Verificar pacote exportado
         run: ./tests/run_exportacao.ps1 -Godot $env:ORBT_GODOT
       - name: Gerar e verificar APK
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           ./scripts/exportar-android.ps1 -Godot $env:ORBT_GODOT
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/apksigner.bat') verify --verbose build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Assinatura do APK inválida.' }
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/zipalign.exe') -c -P 16 4 build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Alinhamento do APK inválido.' }
+          $previa = '${{ github.event.pull_request.head.repo.full_name != github.repository }}' -eq 'true'
+          ./scripts/verificar-atualizacao-android.ps1 -Apk build/android/ORBT-debug.apk -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa -CompararPublicada:(-not $previa) -Saida build/android/atualizacao.json
           @(
             "PR: #${{ github.event.pull_request.number }}",
             "Cabeça: ${{ github.event.pull_request.head.sha }}",
@@ -85,5 +96,6 @@ jobs:
           path: |
             build/android/ORBT-debug.apk
             build/android/revisao.txt
+            build/android/atualizacao.json
           if-no-files-found: error
           retention-days: 14

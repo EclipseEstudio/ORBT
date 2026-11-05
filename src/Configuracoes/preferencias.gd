@@ -5,6 +5,8 @@ var caminho := "user://preferencias.json"
 var persistir := true
 var musica := 1.0
 var efeitos := 1.0
+var vibracao := true
+var dicas := true
 var aviso := ""
 var _pendente := false
 
@@ -14,6 +16,8 @@ func _volume_valido(valor) -> bool:
 func carregar() -> void:
 	musica = 1.0
 	efeitos = 1.0
+	vibracao = true
+	dicas = true
 	aviso = ""
 	_pendente = false
 	if persistir and FileAccess.file_exists(caminho):
@@ -23,11 +27,16 @@ func carregar() -> void:
 			aviso = "Preferências inválidas; usando valores padrão."
 		else:
 			var dados: Dictionary = parser.data
-			if dados.get("schema_version") != 1 or not _volume_valido(dados.get("musica")) or not _volume_valido(dados.get("efeitos")):
+			var versao = dados.get("schema_version")
+			var opcoes_validas: bool = versao == 1 or (dados.get("vibracao") is bool and dados.get("dicas") is bool)
+			if (versao != 1 and versao != 2) or not opcoes_validas or not _volume_valido(dados.get("musica")) or not _volume_valido(dados.get("efeitos")):
 				aviso = "Preferências inválidas; usando valores padrão."
 			else:
 				musica = float(dados.musica)
 				efeitos = float(dados.efeitos)
+				if versao == 2:
+					vibracao = dados.vibracao
+					dicas = dados.dicas
 	aplicar()
 
 func aplicar() -> void:
@@ -41,15 +50,31 @@ func aplicar() -> void:
 		AudioServer.set_bus_mute(indice, item[1] <= 0)
 		AudioServer.set_bus_volume_db(indice, linear_to_db(maxf(item[1], 0.0001)))
 
-func alterar(campo: String, valor: float) -> bool:
-	if campo not in ["musica", "efeitos"] or not _volume_valido(valor):
-		return false
-	if campo == "musica":
-		musica = valor
+func alterar(campo: String, valor: Variant) -> bool:
+	if campo in ["musica", "efeitos"]:
+		if not _volume_valido(valor):
+			return false
+		set(campo, float(valor))
+		aplicar()
+	elif campo in ["vibracao", "dicas"]:
+		if not valor is bool:
+			return false
+		set(campo, valor)
 	else:
-		efeitos = valor
-	aplicar()
+		return false
 	return salvar()
+
+
+func vibrar(duracao_ms := 25) -> bool:
+	if not vibracao or duracao_ms <= 0 or duracao_ms > 500:
+		return false
+	_vibrar_dispositivo(duracao_ms)
+	return true
+
+
+func _vibrar_dispositivo(duracao_ms: int) -> void:
+	if OS.has_feature("android"):
+		Input.vibrate_handheld(duracao_ms)
 
 func salvar() -> bool:
 	if not persistir:
@@ -57,7 +82,7 @@ func salvar() -> bool:
 		aviso = ""
 		return true
 	_pendente = true
-	var texto := JSON.stringify({"schema_version": 1, "musica": musica, "efeitos": efeitos})
+	var texto := JSON.stringify({"schema_version": 2, "musica": musica, "efeitos": efeitos, "vibracao": vibracao, "dicas": dicas})
 	var arquivo := FileAccess.open(caminho + ".tmp", FileAccess.WRITE)
 	if arquivo == null:
 		aviso = "Não foi possível salvar as configurações."

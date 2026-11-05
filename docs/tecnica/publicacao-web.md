@@ -16,6 +16,8 @@ Alterações em `docs/index.html` na `main` atualizam a página. A exportação 
 
 ## Publicar ou atualizar o jogo
 
+O processo atualizado exige assinatura permanente e validação contra o último APK publicado. Antes de publicar, siga [atualização e reinstalação Android](atualizacao-android.md) e anexe também `atualizacao.json` e `revisao.txt`. APKs de prévia externa usam outro pacote e não devem entrar no download do ORBT. As instruções abaixo de criação de release continuam válidas após essa checagem.
+
 1. Gere o APK com o fluxo descrito em [Android na branch alpha](https://github.com/EclipseEstudio/ORBT/blob/alpha/docs/tecnica/android.md) e valide-o em um aparelho. A saída atual é `build/android/ORBT-debug.apk`.
 2. Abra **Releases → Draft a new release** no repositório e escolha uma tag nova, por exemplo `v0.3.1-alpha.1`, associada à revisão validada.
 3. Escreva as novidades e anexe o APK como arquivo da release. Não basta enviar o código-fonte nem deixar o APK nos artefatos temporários do Actions.

@@ -137,7 +137,7 @@ func _executar() -> void:
 	partida.tempo_restante = 0.001
 	nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2.UP * 80)
 	partida.avancar(0.02)
-	conferir(is_equal_approx(partida.tempo_restante, partida.nivel.tempo_voo - 0.02), "Impulso renova oxigênio antes de limitar o passo de simulação")
+	conferir(is_zero_approx(partida.tempo_restante) and partida.estado == partida.Estado.PERDIDA and partida.motivo == "Oxigênio esgotado", "Novo impulso não recarrega o saldo quase esgotado")
 	suporte.queue_free()
 	await process_frame
 	print("HUD e voo: %d verificações, %d falhas." % [verificacoes, falhas])

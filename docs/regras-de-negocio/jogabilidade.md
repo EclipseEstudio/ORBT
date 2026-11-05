@@ -29,14 +29,14 @@ Um impulso em voo acrescenta velocidade à nave; não interrompe o movimento ant
 ## Combustível, pouso e deriva
 
 - Cada impulso aceito consome uma unidade de combustível, independentemente de sua intensidade. Cancelar a mira não consome combustível. Pedidos ainda não aplicados são descartados sem cobrança ao pausar ou bloquear o controle.
-- Esgotar o combustível encerra a tentativa imediatamente, inclusive ao gastar a última unidade em um impulso. A nave não continua voando com saldo zero. Entrar em estado de deriva também encerra a tentativa.
+- Esgotar o combustível permite continuar à deriva até o oxigênio acabar; ainda é possível chegar à Terra e vencer usando a última carga.
 - Pousar em um apoio seguro zera a velocidade e preserva a posição relativa ao corpo. O combustível restante não é recarregado.
 - **Regra do protótipo:** pousar em apoio seguro com saldo zero causa derrota por falta de combustível para decolar.
-- Lançar em direção ao corpo de origem pode causar contato imediato e novo pouso. O impulso aceito continua sendo cobrado; se ele esgotar o combustível, a derrota ocorre antes de continuar a simulação.
+- Lançar em direção ao corpo de origem pode causar contato imediato e novo pouso. O impulso aceito continua sendo cobrado; pousar em apoio com saldo zero encerra a tentativa.
 
 ## Tempo, pausa e exploração
 
-Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O tempo diminui durante o voo. Ficar pousado suspende a contagem até a próxima decolagem. Observar o mapa ou cancelar a mira não reinicia o tempo. Um contato alcançado dentro do tempo restante é resolvido antes do esgotamento do tempo. Combustível esgotado ou deriva encerram a tentativa antes desse passo.
+O oxigênio é um saldo único por tentativa, com a duração definida na fase. O primeiro lançamento inicia o consumo, que continua em voo, durante correções e à deriva. Pousar suspende o consumo; a próxima decolagem retoma o saldo restante. Nenhum impulso nem pouso recarrega o oxigênio. Observar o mapa ou cancelar a mira não interrompe o consumo durante o voo. Um contato alcançado dentro do tempo restante é resolvido antes do esgotamento. A pausa geral do jogo congela a simulação e o oxigênio.
 
 **Pausar** cancela a mira e suspende a tentativa. Perder o foco ou suspender o aplicativo também pausa. Voltar ao aplicativo mantém a pausa até o jogador escolher **Retomar**.
 
@@ -46,7 +46,7 @@ Cada impulso aceito reinicia o tempo de voo com a duração definida na fase. O 
 
 ## Vitória, derrota e reinício
 
-Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, tempo esgotado, combustível esgotado, deriva ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez. O diálogo de fim de jogo mostra o motivo e oferece Último pouso, Repetir e Voltar ao menu; motivos longos têm rolagem.
+Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, oxigênio esgotado ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez. O diálogo de fim de jogo mostra o motivo e oferece Último pouso, Repetir e Voltar ao menu; motivos longos têm rolagem.
 
 **Reiniciar** começa uma nova tentativa com posição, orientação, combustível, tempo, câmera e contatos iniciais. A tentativa anterior não é retomada. Conclusões e desbloqueios da campanha seguem as [regras de progressão](campanha.md).
 
@@ -56,9 +56,13 @@ O jogo guarda o início da fase e depois substitui esse ponto a cada pouso segur
 
 ## Prévia, câmera e indicadores
 
-Enquanto a mira está fora da zona de cancelamento, a prévia mostra a trajetória estimada a partir da nave, considerando sua velocidade atual e a gravidade. Ela cobre até três segundos e termina no primeiro contato ou limite. A prévia não consome combustível nem movimenta o mundo; cancelar, lançar, pausar, explorar ou encerrar a tentativa limpa o indicador.
+Enquanto há um arraste válido, a mira mostra uma guia reta de 60 pixels lógicos na direção do impulso, independentemente da força e do zoom. A linha entre o ponto inicial do toque e o dedo usa um gradiente de ciano, amarelo, laranja e vermelho, com espessura de 1 a 3 pixels conforme a intensidade. Na zona morta, permanece fina e amarelo apagado. A força máxima acende um anel vermelho junto ao dedo. Cancelar, lançar, pausar, explorar ou encerrar a tentativa limpa a mira.
 
 A câmera apresenta a Terra no início e depois volta à nave para habilitar a mira. O painel da partida informa combustível, tempo, direção e distância da Terra, proximidade de corpos e causa do desfecho. Os controles permitem pausar, explorar, recentralizar, reiniciar e retornar à seleção de fases.
+
+Durante a partida, a câmera aproxima suavemente ao chegar perto da superfície de um corpo e afasta em espaço aberto. Todos os corpos contam, inclusive a Terra; portais são ignorados. O zoom automático fica congelado enquanto o dedo está tocando para mirar. A exploração usa zoom manual e, ao voltar à nave, restaura o zoom de voo antes de retomar a aproximação automática.
+
+A nave deixa um rastro curto em voo ou à deriva, acima de uma velocidade mínima. Ele termina em ciano e desaparece na cauda, mantendo espessura de 2 pixels lógicos na tela. Pouso, pausa, reinício, fim da tentativa e passagem por portal limpam o trecho anterior.
 
 O texto de distância indica a direção quando o centro da Terra sai da área segura ou fica encoberto pelos controles superiores ou pelo painel inferior. Sobreposição com o topo indica para cima; com o painel inferior, para baixo. A indicação orienta a busca pelo destino no mapa e não prevê uma rota de voo.
 

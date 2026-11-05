@@ -2,6 +2,18 @@ extends Node2D
 
 @onready var nave = get_parent().get_parent()
 var pontos := PackedVector2Array()
+const SEGMENTOS_FORCA := 10
+const CORES_FORCA := [Color("82f0d1"), Color("f5cc77"), Color("ff9c38"), Color("ff595e")]
+
+
+func largura_forca() -> float:
+	return 1.0 + roundf(nave.entrada.gesto.obter_intensidade() * 2.0)
+
+
+static func cor_intensidade(intensidade: float) -> Color:
+	var faixa := clampf(intensidade, 0.0, 1.0) * (CORES_FORCA.size() - 1)
+	var indice := mini(int(faixa), CORES_FORCA.size() - 2)
+	return CORES_FORCA[indice].lerp(CORES_FORCA[indice + 1], faixa - indice)
 
 func pontos_forca() -> PackedVector2Array:
 	var gesto = nave.entrada.gesto
@@ -38,13 +50,19 @@ func _draw() -> void:
 		return
 	var origem: Vector2 = entrada.gesto.origem
 	var valido: bool = not entrada.gesto.obter_impulso().is_zero_approx()
-	var cor := Color("82f0d1") if valido else Color("f5cc77")
+	var cor := Color("82f0d1") if valido else Color("9c906a")
 	var linha := pontos_forca()
-	var cor_forca := Color("ff9c38") if forca_saturada() else cor
-	draw_line(linha[0], linha[1], Color("0b1423"), 3)
-	draw_line(linha[0], linha[1], cor_forca, 1)
-	draw_circle(linha[1], 3, Color("0b1423"))
-	draw_circle(linha[1], 2, cor_forca)
+	var intensidade: float = entrada.gesto.obter_intensidade()
+	var cor_forca := cor_intensidade(intensidade) if valido else cor
+	var largura := largura_forca()
+	draw_line(linha[0], linha[1], Color("0b1423"), largura + 2)
+	for indice in SEGMENTOS_FORCA:
+		var inicio := float(indice) / SEGMENTOS_FORCA
+		var fim := float(indice + 1) / SEGMENTOS_FORCA
+		var cor_segmento := cor_intensidade(intensidade * fim) if valido else cor
+		draw_line(linha[0].lerp(linha[1], inicio), linha[0].lerp(linha[1], fim), cor_segmento, largura)
+	draw_circle(linha[1], largura / 2 + 2, Color("0b1423"))
+	draw_circle(linha[1], largura / 2 + 1, cor_forca)
 	if forca_saturada():
 		draw_arc(linha[1], 5, 0, TAU, 16, cor_forca, 1)
 	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, Color("0b1423"), 3)

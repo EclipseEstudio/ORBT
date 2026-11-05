@@ -34,6 +34,12 @@ func _executar() -> void:
 	partida.resolver_contato({"kind": "body", "body": apoio})
 	var pos_pouso: Vector2 = nave.global_position
 	var orientacao: float = nave.global_rotation
+	partida.avancar(4)
+	conferir(is_equal_approx(partida.tempo_restante, 12.5), "Pouso pausa o consumo sem repor oxigênio")
+	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2.LEFT * 80)
+	partida.avancar(0.1)
+	conferir(nave.condicao != nave.Condicao.POUSADA and is_equal_approx(partida.tempo_restante, 12.4), "Nova decolagem continua consumindo o saldo do pouso")
 	conferir(partida._checkpoint.corpo == "apoio" and partida._checkpoint.combustivel == 3, "pouso substitui checkpoint")
 	partida.finalizar(false, "teste")
 	nave.global_position = Vector2.ZERO

@@ -10,6 +10,7 @@ const Icones = preload("res://src/Visual/icones_ui.gd")
 const DialogoPausa = preload("res://src/Nivel/dialogo_pausa.gd")
 const DURACAO_AJUDA := 6.0
 var _ajuda_restante := DURACAO_AJUDA
+var _dicas_ativas := true
 var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
 var _dialogo_derrota: Control
@@ -292,7 +293,11 @@ func _process(delta: float) -> void:
 	elif not pausado and _dialogo_pausa.visible:
 		_dialogo_pausa.hide()
 		_pausa.grab_focus()
-	if partida.estado == partida.Estado.JOGANDO:
+	var mostrar_dicas: bool = preferencias == null or preferencias.dicas
+	if mostrar_dicas and not _dicas_ativas:
+		_ajuda_restante = DURACAO_AJUDA
+	_dicas_ativas = mostrar_dicas
+	if partida.estado == partida.Estado.JOGANDO and mostrar_dicas:
 		_ajuda_restante = maxf(0, _ajuda_restante - delta)
 	if OS.has_feature("android") and (_area_fisica != Rect2(DisplayServer.get_display_safe_area()) or _transformacao_tela != get_viewport().get_screen_transform()):
 		_atualizar_area_segura()
@@ -342,7 +347,7 @@ func _process(delta: float) -> void:
 		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
 		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Linha indica direção."
 	var jogando: bool = partida.estado == partida.Estado.JOGANDO
-	_mensagem.visible = not jogando or _ajuda_restante > 0
+	_mensagem.visible = not jogando or (mostrar_dicas and _ajuda_restante > 0)
 	_mensagem.modulate.a = clampf(_ajuda_restante / 0.4, 0, 1) if jogando else 1.0
 	var avisos := PackedStringArray()
 	for id_corpo in partida.proximos:
