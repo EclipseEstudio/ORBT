@@ -29,7 +29,7 @@ func _executar() -> void:
 	await acomodar()
 	var menu: Control = jogo.interface_atual
 	var splash: Control = menu.get_node("Splash")
-	conferir(splash.size == Vector2(180, 320) and splash.find_children("*", "TextureRect", true, false).size() == 2, "Splash apresenta as duas marcas")
+	conferir(splash.size == Vector2(180, 320) and splash.find_children("*", "TextureRect", true, false).size() == 1, "Splash apresenta somente Eclipse Estudio")
 	splash.free()
 	var acoes: HBoxContainer = menu.get_node("Margem/Rolagem/VBoxContainer/Acoes")
 	var titulo: Label = menu.get_node("Margem/Rolagem/VBoxContainer/Titulo")
@@ -40,15 +40,16 @@ func _executar() -> void:
 		var area := Rect2(Vector2.ZERO, Vector2(viewport.size))
 		conferir(acoes.get_child_count() == 3 and acoes.get_children().all(func(b): return area.encloses(b.get_global_rect())), "Três ações cabem em 180x%d" % altura)
 		var jogar: Button = acoes.get_child(0)
-		conferir(jogar.size.x > acoes.get_child(1).size.x and jogar.size.y > acoes.get_child(1).size.y, "Jogar é maior que as ações secundárias")
+		conferir(jogar.size.x > acoes.get_child(1).size.x and jogar.size.y == acoes.get_child(1).size.y and jogar.size.y == acoes.get_child(2).size.y, "Jogar tem maior largura e as três ações têm a mesma altura")
 		conferir(jogar.get_theme_stylebox("normal").bg_color != jogar.get_theme_stylebox("pressed").bg_color and jogar.get_theme_stylebox("normal").bg_color != jogar.get_theme_stylebox("hover").bg_color, "Hover e pressed têm estados distintos")
+	conferir(titulo.position.y >= 16 and titulo.get_rect().end.y < acoes.position.y, "Título fica abaixo do espaçador e acima das ações")
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	jogo.progresso.concluir(itens[0].id, itens)
 	jogo.get_node("GerenciadorDeNivel").itens = []
 	jogo.mostrar_selecao()
 	await acomodar()
 	var selecao: Control = jogo.interface_atual
-	conferir(selecao.cartoes.columns == 4, "Seleção usa quatro colunas")
+	conferir(selecao.cartoes.columns == 5, "Seleção usa cinco colunas")
 	conferir(selecao.cartoes.get_child_count() == itens.size(), "Abrir seleção relê o catálogo sem depender da lista em memória")
 	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.text.contains("Atualizar")), "Seleção não oferece atualização manual")
 	for i in 3:

@@ -10,6 +10,122 @@ var dados: Dictionary = {}
 var caminho := ""
 var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo.
 var _salvo := ""
+var _historico: Array[Dictionary] = []
+var _indice_historico := -1
+var _reproduzindo := false
+var _agrupando := false
+
+
+func _init() -> void:
+	alterado.connect(_registrar_estado)
+
+
+func limpar_historico() -> void:
+	_historico.clear()
+	_indice_historico = -1
+	_agrupando = false
+	_registrar_estado()
+
+
+func _registrar_estado() -> void:
+	if _reproduzindo or _agrupando:
+		return
+	var texto := JSON.stringify(dados, "", true, true)
+	if _indice_historico >= 0 and _historico[_indice_historico].texto == texto:
+		_historico[_indice_historico].selecao = selecao
+		return
+	_historico.resize(_indice_historico + 1)
+	_historico.append({"dados": dados.duplicate(true), "selecao": selecao, "texto": texto})
+	if _historico.size() > 101:
+		_historico.pop_front()
+	_indice_historico = _historico.size() - 1
+
+
+func iniciar_grupo() -> void:
+	_registrar_estado()
+	_agrupando = true
+
+
+func terminar_grupo() -> void:
+	if not _agrupando:
+		return
+	_agrupando = false
+	alterado.emit()
+
+
+func pode_desfazer() -> bool:
+	return _indice_historico > 0 and not _agrupando
+
+
+func pode_refazer() -> bool:
+	return _indice_historico + 1 < _historico.size() and not _agrupando
+
+
+func desfazer() -> bool:
+	terminar_grupo()
+	if not pode_desfazer():
+		return false
+	_restaurar_estado(_indice_historico - 1)
+	return true
+
+
+func refazer() -> bool:
+	terminar_grupo()
+	if not pode_refazer():
+		return false
+	_restaurar_estado(_indice_historico + 1)
+	return true
+
+
+func _restaurar_estado(indice: int) -> void:
+	_indice_historico = indice
+	dados = _historico[indice].dados.duplicate(true)
+	selecao = clampi(_historico[indice].selecao, -2, dados.bodies.size() - 1)
+	_reproduzindo = true
+	alterado.emit()
+	selecao_alterada.emit()
+	_reproduzindo = false
+
+
+func _id_copia(id_original: String) -> String:
+	var ids: Array = [dados.goal.id]
+	for corpo in dados.bodies:
+		ids.append(corpo.id)
+	var numero := 1
+	while (id_original + "_copia_%d" % numero) in ids:
+		numero += 1
+	return id_original + "_copia_%d" % numero
+
+
+func duplicar(deslocamento := Vector2(40, 40)) -> bool:
+	if selecao < 0 or selecao >= dados.bodies.size() or not deslocamento.is_finite():
+		return false
+	terminar_grupo()
+	var original := objeto(selecao)
+	var fontes: Array = [original]
+	if original.type == "portal":
+		for corpo in dados.bodies:
+			if corpo.id == original.get("target_id") and corpo.type == "portal" and corpo.get("target_id") == original.id and corpo.id != original.id:
+				fontes.append(corpo)
+		if fontes.size() != 2:
+			return false
+	var novos: Array = []
+	var primeiro: int = dados.bodies.size()
+	for fonte in fontes:
+		var copia: Dictionary = fonte.duplicate(true)
+		copia.id = _id_copia(fonte.id)
+		copia.position = [fonte.position[0] + deslocamento.x, fonte.position[1] + deslocamento.y]
+		if copia.has("orbit"):
+			copia.orbit.center = [fonte.orbit.center[0] + deslocamento.x, fonte.orbit.center[1] + deslocamento.y]
+		dados.bodies.append(copia)
+		novos.append(copia)
+	if novos.size() == 2:
+		novos[0].target_id = novos[1].id
+		novos[1].target_id = novos[0].id
+	selecao = primeiro
+	alterado.emit()
+	selecao_alterada.emit()
+	return true
 
 
 func modificado() -> bool:
@@ -29,6 +145,7 @@ func abrir(arquivo: String) -> Array[String]:
 	caminho = arquivo
 	selecao = -2
 	_salvo = JSON.stringify(dados, "", true, true)
+	limpar_historico()
 	alterado.emit()
 	return []
 
@@ -39,6 +156,7 @@ func novo() -> void:
 	dados.id = "nova_fase"
 	dados.name = "Nova fase"
 	_salvo = ""
+	limpar_historico()
 	alterado.emit()
 
 

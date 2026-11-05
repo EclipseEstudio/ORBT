@@ -249,19 +249,24 @@ func _executar() -> void:
 	partida.reiniciar()
 	lancar(nave, Vector2(0, -80))
 	partida.avancar(1.0 / 60)
-	conferir(nave.combustivel == 0 and partida.estado == partida.Estado.PERDIDA and partida.motivo == "Combustível esgotado", "Último combustível encerra a tentativa imediatamente")
+	conferir(nave.combustivel == 0 and partida.estado == partida.Estado.JOGANDO and nave.condicao == nave.Condicao.A_DERIVA, "Último impulso consome uma carga e permite deriva")
 	conferir(not nave.solicitar_impulso(2, Vector2(0, -80)), "Saldo zero bloqueia impulso")
-	var posicao_derrota: Vector2 = nave.global_position
+	var posicao_deriva: Vector2 = nave.global_position
 	var derrotas_antes: int = derrotas
-	partida.avancar(3)
-	conferir(nave.global_position == posicao_derrota and derrotas == derrotas_antes and vitorias == 1, "Fim por combustível impede voo e eventos repetidos")
+	partida.pausar()
+	partida.retomar()
+	partida.avancar(1.0 / 60)
+	conferir(nave.global_position != posicao_deriva and derrotas == derrotas_antes and partida.estado == partida.Estado.JOGANDO, "Retomar sem combustível mantém a deriva")
+	for passo in 180:
+		partida.avancar(1.0 / 60)
+	conferir(partida.estado == partida.Estado.CONCLUIDA and nave.combustivel == 0 and vitorias == 2, "Último impulso ainda pode chegar à Terra e vencer")
 	partida.nivel = nivel
 	partida.reiniciar()
 	lancar(nave, Vector2(0, -80))
 	partida.avancar(1.0 / 60)
 	partida.tempo_restante = 0.001
 	partida.avancar(1.0 / 60)
-	conferir(partida.motivo == "Tempo esgotado", "Timeout encerra a tentativa")
+	conferir(partida.motivo == "Oxigênio esgotado", "Timeout encerra a tentativa")
 	var eventos: int = derrotas
 	partida.avancar(10)
 	conferir(derrotas == eventos, "Derrota emitida uma vez")

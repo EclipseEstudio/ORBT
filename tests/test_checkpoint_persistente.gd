@@ -31,10 +31,8 @@ func _executar() -> void:
 		root.add_child(jogo)
 		await process_frame
 		jogo.mostrar_selecao()
-		var botao: Button = jogo.interface_atual._continuar
-		conferir(botao != null, "menu oferece Continuar")
-		if botao != null:
-			botao.pressed.emit()
+		conferir(not jogo.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar"), "Seleção não oferece retomada de checkpoint")
+		conferir(jogo.continuar_checkpoint(), "API interna preserva leitura do checkpoint")
 		var abriu: bool = is_instance_valid(jogo.mundo_atual) and jogo.mundo_atual.get("partida") != null
 		conferir(abriu, "controlador reaberto continua checkpoint")
 		if not abriu:
@@ -108,20 +106,10 @@ func _executar() -> void:
 	await process_frame
 	jogo_backup.mostrar_selecao()
 	var coluna = jogo_backup.interface_atual._checkpoint_controles
-	var continuar_backup = jogo_backup.interface_atual._continuar
-	await process_frame
-	for altura in [240, 320, 390]:
-		root.size.y = altura
-		for i in 4:
-			await process_frame
-		var tela = jogo_backup.interface_atual
-		conferir(tela.get_global_rect().encloses(continuar_backup.get_global_rect()) and continuar_backup.get_global_rect().position.y >= tela.rolagem.get_global_rect().end.y, "Continuar permanece abaixo da lista em altura %d" % altura)
-	conferir(continuar_backup != null and continuar_backup.visible and coluna.has_node("AvisoCheckpoint"), "menu oferece Continuar e mostra aviso ao recuperar cópia válida")
-	if continuar_backup != null and continuar_backup.visible:
-		continuar_backup.pressed.emit()
-		conferir(jogo_backup.mundo_atual.get("partida") != null and jogo_backup.mundo_atual.partida.estado == jogo_backup.mundo_atual.partida.Estado.PAUSADO and jogo_backup.mundo_atual.partida.nave.corpo_apoio == "origem", "cópia anterior continua pausada no checkpoint recuperado")
-	else:
-		conferir(false, "cópia anterior continua pausada no checkpoint recuperado")
+	conferir(coluna.has_node("AvisoCheckpoint") and coluna.has_node("DescartarCheckpoint"), "Seleção mostra aviso da cópia e descarte")
+	conferir(not jogo_backup.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar"), "Cópia válida não adiciona retomada à seleção")
+	conferir(jogo_backup.continuar_checkpoint(), "API interna lê cópia anterior")
+	conferir(jogo_backup.mundo_atual.partida.estado == jogo_backup.mundo_atual.partida.Estado.PAUSADO and jogo_backup.mundo_atual.partida.nave.corpo_apoio == "origem", "Cópia anterior preserva checkpoint recuperado")
 	paused = false
 	jogo_backup.queue_free()
 	await process_frame

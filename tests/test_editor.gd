@@ -20,6 +20,7 @@ func conferir(condicao: bool, mensagem: String) -> void:
 
 
 func _executar() -> void:
+	testar_historico()
 	var itens: Array = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json").itens
 	for item in itens:
 		var fase := Documento.new()
@@ -132,3 +133,32 @@ func _executar() -> void:
 	await process_frame
 	print("Editor: %d verificações, %d falhas." % [verificacoes, falhas])
 	quit(0 if falhas == 0 else 1)
+
+
+func testar_historico() -> void:
+	var documento := Documento.new()
+	documento.abrir(Documento.EXEMPLO)
+	var original := documento.dados.duplicate(true)
+	conferir(not documento.pode_desfazer() and not documento.pode_refazer(), "Abrir fase começa sem histórico anterior")
+	documento.selecionar(0)
+	documento.iniciar_grupo()
+	documento.mover(0, Vector2(100, 200))
+	documento.mover(0, Vector2(110, 210))
+	documento.terminar_grupo()
+	conferir(documento.desfazer() and documento.dados == original and not documento.modificado(), "Desfazer um arraste recupera fase salva inteira")
+	conferir(documento.refazer() and documento.dados.bodies[0].position == [110.0, 210.0] and documento.modificado(), "Refazer recupera posição final do arraste")
+	documento.desfazer()
+	documento.editar(["name"], "Outra edição")
+	conferir(not documento.pode_refazer(), "Nova edição substitui caminho de refazer")
+	documento.selecionar(0)
+	var quantidade: int = documento.dados.bodies.size()
+	conferir(documento.duplicar(), "Duplicar cria cópia do corpo selecionado")
+	var copia := documento.objeto(documento.selecao)
+	conferir(documento.dados.bodies.size() == quantidade + 1 and copia.id != original.bodies[0].id and copia.position == [original.bodies[0].position[0] + 40, original.bodies[0].position[1] + 40], "Cópia tem ID novo e deslocamento sem alterar origem")
+	conferir(documento.desfazer() and documento.dados.bodies.size() == quantidade, "Desfazer remove somente a cópia")
+	documento.abrir("res://Recursos/Fases/demo_portais.json")
+	documento.selecionar(0)
+	conferir(documento.duplicar(Vector2(0, 60)), "Duplicar portal cria par")
+	var primeiro: Dictionary = documento.dados.bodies[-2]
+	var segundo: Dictionary = documento.dados.bodies[-1]
+	conferir(primeiro.target_id == segundo.id and segundo.target_id == primeiro.id and documento.dados.bodies[0].target_id == documento.dados.bodies[1].id, "Par duplicado preserva ligações próprias e par original")

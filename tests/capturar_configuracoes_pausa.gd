@@ -36,7 +36,6 @@ func _capturar() -> void:
 		var tela = hud.get_node("TelaConfiguracoes")
 		Area.aplicar(tela._margem, 0, fisica)
 		await salvar(str(altura))
-		tela._margem.get_child(0).ensure_control_visible(tela.find_child("Voltar", true, false))
 		await salvar(str(altura) + "-voltar")
 		tela.free()
 	paused = false

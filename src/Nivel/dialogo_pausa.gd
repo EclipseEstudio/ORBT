@@ -37,12 +37,7 @@ func _ready() -> void:
 	var painel := PanelContainer.new()
 	painel.name = "Painel"
 	painel.custom_minimum_size.x = 144
-	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Tema.FUNDO
-	estilo.border_color = Tema.DESTAQUE
-	estilo.set_border_width_all(1)
-	estilo.set_content_margin_all(8)
-	painel.add_theme_stylebox_override("panel", estilo)
+	painel.add_theme_stylebox_override("panel", Tema.painel())
 	centro.add_child(painel)
 	var coluna := VBoxContainer.new()
 	coluna.add_theme_constant_override("separation", 6)
@@ -51,7 +46,7 @@ func _ready() -> void:
 	rotulo_titulo.text = titulo
 	rotulo_titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	rotulo_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rotulo_titulo.add_theme_font_size_override("font_size", 14)
+	rotulo_titulo.add_theme_font_size_override("font_size", 8)
 	coluna.add_child(rotulo_titulo)
 	_rolagem_motivo = ScrollContainer.new()
 	_rolagem_motivo.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -62,7 +57,7 @@ func _ready() -> void:
 	_motivo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_motivo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_motivo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_motivo.add_theme_font_size_override("font_size", 10)
+	_motivo.add_theme_font_size_override("font_size", 8)
 	_rolagem_motivo.add_child(_motivo)
 	_rolagem_motivo.hide()
 	_continuar = _botao(coluna, texto_primario, "jogar", func(): continuar.emit())
@@ -77,7 +72,7 @@ func _botao(pai: Node, texto: String, icone: String, acao: Callable) -> Button:
 	var botao := Button.new()
 	botao.text = texto
 	botao.custom_minimum_size.y = 32
-	botao.add_theme_font_size_override("font_size", 10)
+	botao.add_theme_font_size_override("font_size", 8)
 	Icones.aplicar(botao, icone, texto, false)
 	botao.pressed.connect(acao)
 	pai.add_child(botao)

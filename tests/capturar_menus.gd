@@ -34,7 +34,6 @@ func _capturar() -> void:
 	var configuracoes = menu.get_node("TelaConfiguracoes")
 	Area.aplicar(configuracoes._margem, 0, fisica)
 	await salvar("configuracoes")
-	configuracoes._margem.get_child(0).ensure_control_visible(configuracoes.find_child("Voltar", true, false))
 	await salvar("configuracoes-voltar")
 	configuracoes.free()
 	menu.get_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos").pressed.emit()

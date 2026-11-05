@@ -2,6 +2,7 @@ extends RefCounted
 ## Ícones de 12 px, sem dependência de fontes ou símbolos Unicode.
 
 const DESENHOS := {
+	"olho": ["............", "....####....", "..##....##..", ".##..##..##.", "##..####..##", ".##..##..##.", "..##....##..", "....####...."],
 	"combustivel": ["...#####....", "...#...#....", "...#####.##.", "...#####..#.", "...#####..#.", "...#####..#.", "...########.", "..#######..."],
 	"tempo": ["...######...", "..##....##..", ".##..#...##.", ".#...#....#.", ".#...###..#.", ".##......##.", "..##....##..", "...######..."],
 	"jogar": ["..#.........", "..###.......", "..#####.....", "..#######...", "..#########.", "..#######...", "..#####.....", "..###.......", "..#........."],
@@ -40,4 +41,10 @@ static func aplicar(botao: Button, nome: String, descricao: String, so_icone := 
 	botao.accessibility_name = descricao
 	if so_icone:
 		botao.text = ""
+		botao.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		botao.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		botao.expand_icon = false
+		botao.custom_minimum_size = Vector2(28, 28)
+		botao.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		botao.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	botao.custom_minimum_size.x = maxf(botao.custom_minimum_size.x, 28)

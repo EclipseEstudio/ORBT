@@ -4,10 +4,13 @@ const FUNDO = Color("070e21")
 const TEXTO = Color("f4f8ff")
 const DESTAQUE = Color("42f5d1")
 const PERIGO = Color("ff9c38")
+const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
 
 
 static func criar() -> Theme:
 	var tema := Theme.new()
+	tema.default_font = FONTE
+	tema.default_font_size = 8
 	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
 		var caixa := StyleBoxFlat.new()
 		caixa.bg_color = Color("237c89") if estado == "pressed" else (Color("173954") if estado == "hover" else FUNDO)
@@ -29,6 +32,15 @@ static func criar() -> Theme:
 	tema.set_constant("shadow_offset_x", "Label", 1)
 	tema.set_constant("shadow_offset_y", "Label", 1)
 	return tema
+
+
+static func painel() -> StyleBoxFlat:
+	var caixa := StyleBoxFlat.new()
+	caixa.bg_color = FUNDO
+	caixa.border_color = DESTAQUE
+	caixa.set_border_width_all(1)
+	caixa.set_content_margin_all(8)
+	return caixa
 
 static func destacar(botao: Button, cor := DESTAQUE) -> void:
 	for estado in ["normal", "hover", "pressed"]:

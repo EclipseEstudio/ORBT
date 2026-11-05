@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gra
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar** para abrir a seleção de fases. Nessa tela, escolha uma fase ou **Continuar** quando houver checkpoint válido. O APK histórico foi gerado e verificado; instalação e teste em aparelho permanecem pendentes.
+Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar** para abrir a seleção de fases. Nessa tela, escolha uma fase; os avisos e o descarte de checkpoint permanecem disponíveis, sem ação de retomada persistida.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
@@ -15,7 +15,7 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar
 - **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
 - A música continua durante a pausa; efeitos de voo aguardam a retomada. Os volumes podem ser reduzidos a zero.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
-- Após derrota, **Voltar ao último pouso** restaura o checkpoint da tentativa, preservando combustível e tempo. Sem combustível, use Reiniciar. O menu oferece **Continuar** para recuperar o último checkpoint salvo após reabrir o jogo.
+- Após derrota, **Último pouso** restaura o checkpoint da tentativa, preservando combustível e oxigênio. Sem combustível para decolar, use Repetir. Em voo, gastar a última carga permite seguir à deriva e ainda chegar à Terra; acabar o oxigênio encerra a tentativa.
 - Na vitória, **Próxima fase** abre a sucessora disponível; **Repetir** começa nova tentativa. Na última fase, use Repetir ou Seleção de fases. A pausa permite voltar ao menu principal.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
@@ -65,7 +65,7 @@ Esse teste exporta um PCK com o preset Android e carrega a fase em uma pasta iso
 
 ## Editor de fases
 
-Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [manual completo do editor](docs/auxiliar/guia-editor-de-fases.md) para o fluxo de autoria, propriedades, validação, salvamento e testes. Os [detalhes técnicos e roteiro de reprodução](docs/tecnica/editor-de-fases.md) ficam na documentação de desenvolvimento.
+Abra **ORBT Fases** na barra superior da Godot para criar, abrir, mover corpos, editar propriedades, desfazer/refazer, duplicar corpos, validar, salvar e testar JSON. O teste usa cópia independente e o carregador do jogo. Consulte o [manual completo do editor](docs/auxiliar/guia-editor-de-fases.md) para o fluxo de autoria, propriedades, validação, salvamento e testes. Os [detalhes técnicos e roteiro de reprodução](docs/tecnica/editor-de-fases.md) ficam na documentação de desenvolvimento.
 
 ## Documentação
 

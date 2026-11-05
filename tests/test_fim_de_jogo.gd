@@ -37,30 +37,22 @@ func _executar() -> void:
 		if filho.has_method("_alternar_pausa"):
 			hud = filho
 	var nave = partida.nave
-	for cenario in ["ultimo_impulso", "sem_combustivel", "deriva", "colisao", "limites", "tempo"]:
+	for cenario in ["pouso_sem_combustivel", "colisao", "limites", "oxigenio"]:
 		partida.reiniciar()
 		nivel.camera._process(2)
-		var causa := "Combustível esgotado"
+		var causa := "Sem combustível para decolar"
 		match cenario:
-			"ultimo_impulso":
-				nave.combustivel = 1
-				nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80))
-				partida.avancar(1.0 / 60)
-			"sem_combustivel":
+			"pouso_sem_combustivel":
 				nave.combustivel = 0
-				partida.avancar(0)
-			"deriva":
-				nave.condicao = nave.Condicao.A_DERIVA
-				causa = "Nave à deriva"
-				partida.avancar(0)
+				partida.resolver_contato({"kind": "body", "body": partida.nivel.obter_corpo("apoio")})
 			"colisao":
 				causa = "Colisão com perigo"
 				partida.resolver_contato({"kind": "body", "body": {"type": "asteroid"}})
 			"limites":
 				causa = "Fora dos limites"
 				partida.resolver_contato({"kind": "bounds"})
-			"tempo":
-				causa = "Tempo esgotado"
+			"oxigenio":
+				causa = "Oxigênio esgotado"
 				nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80))
 				partida.avancar(1.0 / 60)
 				partida.tempo_restante = 0

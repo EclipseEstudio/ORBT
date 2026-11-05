@@ -127,6 +127,10 @@ func aplicar_pedidos() -> void:
 	atualizar_entrada()
 
 
+func tem_impulso_pendente() -> bool:
+	return not _pedidos.is_empty()
+
+
 func avancar(delta: float) -> Dictionary:
 	if not simulacao_ativa or get_tree().paused:
 		return {}

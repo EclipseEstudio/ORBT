@@ -3,6 +3,16 @@ extends Node2D
 @onready var nave = get_parent().get_parent()
 var pontos := PackedVector2Array()
 
+func pontos_forca() -> PackedVector2Array:
+	var gesto = nave.entrada.gesto
+	if gesto.contato_ativo == -1:
+		return PackedVector2Array()
+	return PackedVector2Array([gesto.origem, gesto.posicao])
+
+func forca_saturada() -> bool:
+	var gesto = nave.entrada.gesto
+	return gesto.contato_ativo != -1 and gesto.origem.distance_to(gesto.posicao) >= gesto.arraste_maximo
+
 
 func _ready() -> void:
 	nave.get_node("Entrada").mira_encerrada.connect(limpar)
@@ -29,6 +39,14 @@ func _draw() -> void:
 	var origem: Vector2 = entrada.gesto.origem
 	var valido: bool = not entrada.gesto.obter_impulso().is_zero_approx()
 	var cor := Color("82f0d1") if valido else Color("f5cc77")
+	var linha := pontos_forca()
+	var cor_forca := Color("ff9c38") if forca_saturada() else cor
+	draw_line(linha[0], linha[1], Color("0b1423"), 3)
+	draw_line(linha[0], linha[1], cor_forca, 1)
+	draw_circle(linha[1], 3, Color("0b1423"))
+	draw_circle(linha[1], 2, cor_forca)
+	if forca_saturada():
+		draw_arc(linha[1], 5, 0, TAU, 16, cor_forca, 1)
 	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, Color("0b1423"), 3)
 	draw_arc(origem, entrada.zona_morta, 0, TAU, 40, cor, 1)
 	if not valido:

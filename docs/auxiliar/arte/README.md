@@ -43,7 +43,19 @@ Os prompts completos estão em [prompts.json](prompts.json): concatenar `base` c
 
 As fontes originais estão em `docs/auxiliar/arte/fontes/`, excluídas da importação e exportação; os seis arquivos de produção ficam em `Recursos/Sprites/Identidade/`. Para repetir a preparação, execute Godot com `--headless --path . --script scripts/preparar_sprites.gd`. O script somente recorta transparência, centraliza em um quadrado e reduz por nearest-neighbor para 32×32; preserva as fontes. Depois, importe o projeto no editor. Edições manuais nas fontes exigem regenerar saídas e atualizar os hashes do manifesto.
 
-## Verificação
+## Interface de 05/11/2026
+
+O menu segue a composição do wireframe: título ORBT abaixo de um espaçador superior, planeta e nave ao centro, três ações de 32 px de altura na base. Jogar conserva maior largura. `src/Visual/fundo_menu.gd` aceita uma `Texture2D` ou carrega `Recursos/ModelosVisuais/fundo_menu.png`, quando importada; sem essa imagem, desenha estrelas, planeta, nave e rastro por código. Não foi criada uma nova imagem de fundo. Configurações reutiliza o fundo e o painel com borda do diálogo de pausa. O splash apresenta somente Eclipse Estudio; a imagem de boot da engine continua desativada.
+
+Press Start 2P é a fonte comum a 8 px; o logotipo ORBT conserva `orbt-pixel.fnt`. A fonte foi obtida em 05/11/2026 do [repositório oficial Google Fonts](https://github.com/google/fonts/tree/main/ofl/pressstart2p), com a [licença SIL OFL 1.1](../../../Recursos/Fontes/OFL.txt) incluída em `Recursos/Fontes/` e no filtro de exportação. Crédito: Copyright 2012 The Press Start 2P Project Authors, com o nome reservado Press Start 2P. A importação desativa antialiasing, subpixel, hinting e fallback do sistema; acentos portugueses são verificados em `tests/test_hud_voo.gd`. Separadores e sinais da interface usam ASCII.
+
+A seleção usa cinco colunas, números de 8 px e cartões de pelo menos 28 × 40 px, com ícone acima do número. A retomada persistida não tem botão na seleção. Avisos, validação, salvar último pouso e descarte permanecem; a API interna e a recuperação pelo diálogo de derrota continuam disponíveis. O HUD mostra fase no topo esquerdo, olho e pausa no topo direito, combustível na base esquerda e barra de oxigênio em toda a largura útil. A bússola triangular acompanha a nave em coordenadas de tela e desaparece na pausa e nos resultados. A mira conserva a guia de 60 px e acrescenta a linha até o dedo, com marcador e anel de saturação.
+
+Os pedidos de impulso são aplicados somente por `nave.avancar()`. O último combustível permite continuar em deriva e vencer ao alcançar a Terra; a derrota por tempo agora informa “Oxigênio esgotado”. Pousar em apoio com saldo zero ainda encerra a tentativa com “Sem combustível para decolar”.
+
+As [capturas e o registro de verificação de 05/11/2026](../evidencias-ui-2026-11-05/README.md) cobrem splash, menu, configurações, seleção, HUD, mira, pausa e derrota, em 180 × 240, 180 × 320 e 180 × 390 unidades lógicas. A inspeção é desktop; a ergonomia no aparelho continua pendente.
+
+## Verificação anterior — 22/10/2026
 
 Godot 4.7.2 / Windows, 22/10/2026: 69 verificações de controles, 142 de partida, 32 do editor, 31 da campanha, 38 visuais e 22 do pacote exportado passaram: **334 no total**. A suíte visual confere transparência/grade, filtro/pivô, escala em relação ao raio, dados imutáveis, reinícios sem acúmulo, botões dentro da tela em jogo/pausa/vitória e a rota de referência com o mesmo consumo. A verificação do pacote confere os seis sprites incluídos e as fontes fora da entrega.
 

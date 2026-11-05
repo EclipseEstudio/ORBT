@@ -60,13 +60,14 @@ func _executar() -> void:
 	var tela = menu.get_node("TelaConfiguracoes")
 	Area.aplicar(tela._margem, 0, fisica)
 	await acomodar()
-	var scroll: ScrollContainer = tela._margem.get_child(0)
+	var scroll: ScrollContainer = tela.rolagem
 	conferir(segura.encloses(scroll.get_global_rect()), "Configurações respeitam área segura")
-	for nome in ["musica", "efeitos", "Voltar"]:
+	for nome in ["musica", "efeitos"]:
 		var controle: Control = tela.find_child(nome, true, false)
 		scroll.ensure_control_visible(controle)
 		await acomodar()
 		conferir(scroll.get_global_rect().encloses(controle.get_global_rect()), nome + ": controle alcançável por rolagem")
+	conferir(segura.encloses(tela.find_child("Voltar", true, false).get_global_rect()), "Voltar das configurações permanece no cabeçalho seguro")
 	tela.find_child("Voltar", true, false).pressed.emit()
 	await acomodar()
 	coluna.get_node("Acoes/Creditos").pressed.emit()
@@ -105,7 +106,6 @@ func _executar() -> void:
 		hud._abrir_configuracoes()
 		conferir(hud.get_child_count() == quantidade, "Abrir configurações novamente não duplica a tela")
 		var retorno: Button = tela_pausa.find_child("Voltar", true, false)
-		tela_pausa._margem.get_child(0).ensure_control_visible(retorno)
 		await acomodar()
 		conferir(recorte.encloses(retorno.get_global_rect()), "Voltar da configuração pausada cabe na área segura")
 		retorno.pressed.emit()

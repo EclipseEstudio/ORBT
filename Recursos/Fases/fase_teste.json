@@ -1,0 +1,79 @@
+{
+	"bodies": [
+		{
+			"capture_radius": 24.0,
+			"collision_radius": 20.0,
+			"danger_radius": 0.0,
+			"id": "origem",
+			"mass": 6000.0,
+			"position": [
+				93.39080810546876,
+				365.287353515625
+			],
+			"proximity_radius": 55.0,
+			"type": "planet",
+			"visual_radius": 20.0
+		},
+		{
+			"capture_radius": 100.0,
+			"collision_radius": 10.0,
+			"danger_radius": 0,
+			"id": "satellite_1",
+			"mass": 1000000.0,
+			"position": [
+				88.7693099975586,
+				174.15553283691406
+			],
+			"proximity_radius": 100.0,
+			"type": "satellite",
+			"visual_radius": 100.0
+		}
+	],
+	"bounds": {
+		"position": [
+			-180.0,
+			-200.0
+		],
+		"size": [
+			540.0,
+			800.0
+		]
+	},
+	"content_version": 1.0,
+	"flight_timeout": 30.0,
+	"goal": {
+		"capture_radius": 16.0,
+		"collision_radius": 14.0,
+		"danger_radius": 0.0,
+		"id": "terra",
+		"mass": 0.0,
+		"position": [
+			88.30459594726563,
+			0.660919189453125
+		],
+		"proximity_radius": 45.0,
+		"visual_radius": 20.0
+	},
+	"id": "fase_teste",
+	"initial_fuel": 5.0,
+	"name": "Fase Teste",
+	"notes": "Protótipo: um arraste vertical de 80 unidades resolve a fase com um impulso. Validar ergonomia no Android.",
+	"order": 2.0,
+	"physics": {
+		"gravity_constant": 1.0,
+		"softening": 8.0
+	},
+	"schema_version": 1.0,
+	"ship": {
+		"dead_zone": 10.0,
+		"mass": 1.0,
+		"max_drag": 80.0,
+		"max_impulse": 80.0,
+		"radius": 8.0
+	},
+	"start": {
+		"angle_degrees": -90.0,
+		"body_id": "origem"
+	},
+	"tutorial": "Arraste para baixo e solte para voar em direção à Terra."
+}

@@ -4,6 +4,7 @@ var dados: Dictionary = {}
 var proximo := false
 var depuracao := false
 const ESCURO = Color("0b1423")
+const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
 
 
 func traco(a: Vector2, b: Vector2, cor := Color.WHITE) -> void:
@@ -19,7 +20,7 @@ func _draw() -> void:
 		draw_arc(Vector2.ZERO, dados.collision_radius * 0.65, 0, TAU, 48, Color.MEDIUM_PURPLE, 2, true)
 		var direcao := Vector2.RIGHT.rotated(deg_to_rad(dados.exit_degrees))
 		traco(Vector2.ZERO, direcao * dados.collision_radius)
-		draw_string(ThemeDB.fallback_font, Vector2(-16, -dados.visual_radius - 5), dados.id + " → " + dados.target_id, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.CYAN)
+		draw_string(FONTE, Vector2(-16, -dados.visual_radius - 5), dados.id + " > " + dados.target_id, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.CYAN)
 		return
 	var perigoso: bool = dados.type in ["sun", "asteroid"]
 	var cor := Color("ffac78") if perigoso else Color("82f0d1")
@@ -36,7 +37,7 @@ func _draw() -> void:
 		traco(Vector2(-3, 0), Vector2(-3, 4))
 		traco(Vector2(3, 0), Vector2(3, 4))
 		traco(Vector2(-3, 4), Vector2(3, 4))
-		draw_string(ThemeDB.fallback_font, Vector2(-14, -dados.visual_radius - 5), "TERRA", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.WHITE)
+		draw_string(FONTE, Vector2(-20, -dados.visual_radius - 5), "TERRA", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.WHITE)
 	else:
 		traco(Vector2(-3, 0), Vector2(3, 0))
 		traco(Vector2(0, -3), Vector2(0, 3))

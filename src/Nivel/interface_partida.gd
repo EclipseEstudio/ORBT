@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const Tema = preload("res://src/Visual/tema_visual.gd")
+const Bussola = preload("res://src/Visual/bussola_terra.gd")
 const Indicadores = preload("res://src/Visual/indicadores.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 const Narrativa = preload("res://src/Narrativa/narrativa.gd")
@@ -13,7 +14,9 @@ var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
 var _dialogo_derrota: Control
 var _indicadores: Control
-var _tempo: Label
+var _fase: Label
+var _bussola: Control
+var _base_status: VBoxContainer
 
 var partida: Node
 var preferencias: RefCounted
@@ -21,7 +24,6 @@ var proxima_fase := ""
 var _status: Label
 var _mensagem: Label
 var _alerta: Label
-var _destino: Label
 var _pausa: Button
 var _explorar: Button
 var _zoom_controles: HBoxContainer
@@ -38,7 +40,7 @@ var _conteudo_rodape: VBoxContainer
 var _rolagem_rodape: ScrollContainer
 
 
-func rotulo(pai: Control, texto: String, tamanho := 10) -> Label:
+func rotulo(pai: Control, texto: String, tamanho := 8) -> Label:
 	var item := Label.new()
 	item.text = texto
 	item.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -52,7 +54,7 @@ func botao(pai: Control, texto: String, acao: Callable) -> Button:
 	item.text = texto
 	item.custom_minimum_size = Vector2(0, 28)
 	item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	item.add_theme_font_size_override("font_size", 10)
+	item.add_theme_font_size_override("font_size", 8)
 	item.pressed.connect(acao)
 	pai.add_child(item)
 	return item
@@ -78,36 +80,47 @@ func _ready() -> void:
 	var linha := HBoxContainer.new()
 	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	topo.add_child(linha)
-	_icone_status(linha, "combustivel")
-	_status = rotulo(linha, "", 9)
-	_status.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	var fundo_status := StyleBoxFlat.new()
-	fundo_status.bg_color = Tema.FUNDO
-	fundo_status.set_content_margin_all(1)
-	_status.add_theme_stylebox_override("normal", fundo_status)
-	_icone_status(linha, "tempo")
-	_tempo = rotulo(linha, "", 9)
-	_tempo.add_theme_stylebox_override("normal", fundo_status)
-	var espaco := Control.new()
-	espaco.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	espaco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	linha.add_child(espaco)
+	_fase = rotulo(linha, "%02d %s" % [partida.nivel.ordem, partida.nivel.nome], 8)
+	_fase.name = "Fase"
+	_fase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_fase.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fase.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var fundo_fase := StyleBoxFlat.new()
+	fundo_fase.bg_color = Tema.FUNDO
+	fundo_fase.set_content_margin_all(1)
+	_fase.add_theme_stylebox_override("normal", fundo_fase)
 	_explorar = botao(linha, "Explorar mapa", partida.alternar_exploracao)
-	Icones.aplicar(_explorar, "mapa", "Explorar mapa")
+	Icones.aplicar(_explorar, "olho", "Observar mapa")
 	_explorar.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_pausa = botao(linha, "Pausar", _alternar_pausa)
 	Icones.aplicar(_pausa, "pausa", "Pausar")
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_bussola = Bussola.new()
+	_bussola.partida = partida
+	raiz.add_child(_bussola)
+	raiz.move_child(_bussola, 0)
+	_base_status = VBoxContainer.new()
+	_base_status.name = "Recursos"
+	_base_status.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	raiz.add_child(_base_status)
+	_base_status.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_base_status.offset_left = 6
+	_base_status.offset_right = -6
+	_base_status.offset_top = -28
+	_base_status.offset_bottom = -6
+	var combustivel := HBoxContainer.new()
+	combustivel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_base_status.add_child(combustivel)
+	_icone_status(combustivel, "combustivel")
+	_status = rotulo(combustivel, "", 8)
+	var fundo_status := StyleBoxFlat.new()
+	fundo_status.bg_color = Tema.FUNDO
+	fundo_status.set_content_margin_all(1)
+	_status.add_theme_stylebox_override("normal", fundo_status)
 	_indicadores = Indicadores.new()
-	_indicadores.custom_minimum_size.x = 65
-	_indicadores.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	topo.add_child(_indicadores)
-	var linha_destino := HBoxContainer.new()
-	linha_destino.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	topo.add_child(linha_destino)
-	_icone_status(linha_destino, "casa")
-	_destino = rotulo(linha_destino, "", 9)
-	_alerta = rotulo(topo, "", 9)
+	_indicadores.name = "Oxigenio"
+	_base_status.add_child(_indicadores)
+	_alerta = rotulo(topo, "", 8)
 	_alerta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_rolagem_rodape = ScrollContainer.new()
 	_rolagem_rodape.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -124,7 +137,7 @@ func _ready() -> void:
 	_rolagem_rodape.add_child(base)
 	base.minimum_size_changed.connect(_ajustar_rodape)
 	_raiz.resized.connect(_ajustar_rodape)
-	_mensagem = rotulo(base, "", 9)
+	_mensagem = rotulo(base, "", 8)
 	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_mensagem.custom_minimum_size.y = 0
 	_mensagem.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
@@ -140,12 +153,12 @@ func _ready() -> void:
 	_zoom_controles = HBoxContainer.new()
 	acoes.add_child(_zoom_controles)
 	for fator in [0.8, 1.25]:
-		var controle := botao(_zoom_controles, "−" if fator < 1 else "+", func(): get_parent().camera.aplicar_zoom(fator))
+		var controle := botao(_zoom_controles, "-" if fator < 1 else "+", func(): get_parent().camera.aplicar_zoom(fator))
 		controle.accessibility_name = "Diminuir zoom" if fator < 1 else "Aumentar zoom"
 		controle.custom_minimum_size.x = 32
 	_reiniciar = botao(acoes, "Reiniciar", partida.reiniciar)
 	Icones.aplicar(_reiniciar, "reiniciar", "Reiniciar")
-	_checkpoint = botao(base, "Voltar ao último pouso", partida.restaurar_checkpoint)
+	_checkpoint = botao(base, "Voltar ao\núltimo pouso", partida.restaurar_checkpoint)
 	_checkpoint.visible = false
 	if preferencias != null:
 		_configuracoes = botao(base, "Configurações", _abrir_configuracoes)
@@ -208,30 +221,14 @@ func _ajustar_rodape() -> void:
 	_rolagem_rodape.mouse_filter = Control.MOUSE_FILTER_IGNORE if jogando else Control.MOUSE_FILTER_STOP
 	var altura := _conteudo_rodape.get_combined_minimum_size().y
 	if not jogando:
-		var disponivel := maxf(28, _raiz.size.y - _topo.get_rect().end.y - 12)
+		var disponivel := maxf(28, _raiz.size.y - _topo.get_rect().end.y - 42)
 		altura = minf(altura, disponivel)
-	_rolagem_rodape.offset_top = -altura - 6
+	_rolagem_rodape.offset_bottom = -36
+	_rolagem_rodape.offset_top = -altura - 36
 
 
 static func area_segura_logica(area_fisica: Rect2, transformacao: Transform2D, viewport: Rect2) -> Rect2:
 	return AreaSeguraMenu.logica(area_fisica, transformacao, viewport)
-
-
-static func direcao_alvo(na_tela: Vector2, viewport: Rect2, topo: Array[Rect2], rodape := Rect2()) -> String:
-	var direcao := ""
-	if na_tela.y < viewport.position.y:
-		direcao += "↑"
-	elif na_tela.y >= viewport.end.y:
-		direcao += "↓"
-	elif topo.any(func(regiao: Rect2): return regiao.has_point(na_tela)):
-		direcao += "↑"
-	elif rodape.has_point(na_tela):
-		direcao += "↓"
-	if na_tela.x < viewport.position.x:
-		direcao += "←"
-	elif na_tela.x >= viewport.end.x:
-		direcao += "→"
-	return direcao
 
 
 func _atualizar_area_segura() -> void:
@@ -301,18 +298,18 @@ func _process(delta: float) -> void:
 		_atualizar_area_segura()
 	_status.text = str(partida.nave.combustivel)
 	_status.tooltip_text = "Combustível: %d" % partida.nave.combustivel
-	_tempo.text = "%.1fs" % partida.tempo_restante
-	_indicadores.combustivel = partida.nave.combustivel
-	_indicadores.capacidade = partida.nivel.combustivel_inicial
 	_indicadores.tempo = partida.tempo_restante
 	_indicadores.duracao = partida.nivel.tempo_voo
+	_indicadores.tooltip_text = "Oxigênio: %.1f s" % partida.tempo_restante
+	_indicadores.accessibility_name = _indicadores.tooltip_text
 	_indicadores.queue_redraw()
+	_bussola.atualizar()
 	_pausa.text = "Retomar" if partida.estado == partida.Estado.PAUSADO else ""
 	_pausa.icon = Icones.obter("jogar" if partida.estado == partida.Estado.PAUSADO else "pausa")
 	_pausa.tooltip_text = "Retomar" if partida.estado == partida.Estado.PAUSADO else "Pausar"
 	_pausa.disabled = partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]
-	_explorar.icon = Icones.obter("alvo" if partida.explorando else "mapa")
-	_explorar.tooltip_text = "Voltar à nave" if partida.explorando else "Explorar mapa"
+	_explorar.icon = Icones.obter("olho")
+	_explorar.tooltip_text = "Voltar à nave" if partida.explorando else "Observar mapa"
 	_explorar.accessibility_name = _explorar.tooltip_text
 	_pausa.accessibility_name = _pausa.tooltip_text
 	_explorar.disabled = partida.estado != partida.Estado.JOGANDO
@@ -334,9 +331,9 @@ func _process(delta: float) -> void:
 	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
 		_mensagem.text = partida.motivo + "\nEscolha como continuar."
 	elif partida.explorando:
-		_mensagem.text = "Arraste para explorar.\nO tempo de voo continua correndo."
+		_mensagem.text = "Arraste para explorar.\nO oxigênio continua diminuindo."
 	elif partida.nave.combustivel == 0:
-		_mensagem.text = "Combustível esgotado."
+		_mensagem.text = "Sem combustível.\nÀ deriva até o oxigênio acabar."
 	elif partida.nivel.id == "teste_001":
 		_mensagem.text = _dica_tutorial()
 	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:
@@ -357,15 +354,4 @@ func _process(delta: float) -> void:
 	if not partida.aviso_salvamento.is_empty():
 		_alerta.text += "\n" + partida.aviso_salvamento
 	_alerta.visible = not _alerta.text.is_empty()
-	var alvo: Vector2 = partida.nave.corpos[-1].position
-	var na_tela: Vector2 = partida.nave.get_canvas_transform() * alvo
-	var regioes_topo: Array[Rect2] = []
-	for controle in [_status, _tempo, _indicadores, _explorar, _pausa, _destino, _alerta]:
-		if controle.is_visible_in_tree() and not (controle is Label and controle.text.is_empty()):
-			regioes_topo.append(controle.get_global_rect())
-	var area := _raiz.get_global_rect()
-	var rodape := _rolagem_rodape.get_global_rect().intersection(area)
-	var direcao := direcao_alvo(na_tela, area, regioes_topo, rodape)
-	_destino.text = "%s %d m" % [direcao, partida.nave.global_position.distance_to(alvo)]
-	_destino.tooltip_text = "Destino: Terra"
 	_ajustar_rodape()

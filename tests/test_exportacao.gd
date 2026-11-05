@@ -28,7 +28,9 @@ func _executar() -> void:
 	conferir(not ResourceLoader.exists("res://Recursos/Sprites/nave1.png"), "Casco legado excluído do pacote")
 	for nome in ["nave", "planeta", "satelite", "terra", "sol", "asteroide"]:
 		conferir(ResourceLoader.exists("res://Recursos/Sprites/Identidade/" + nome + ".png"), "Sprite incluído: " + nome)
-	conferir(not DirAccess.dir_exists_absolute("res://Recursos/ModelosVisuais"), "Referências autorais excluídas da entrega")
+	conferir(ResourceLoader.exists("res://Recursos/Fontes/PressStart2P-Regular.ttf") and FileAccess.file_exists("res://Recursos/Fontes/OFL.txt"), "Fonte Press Start 2P e licença incluídas")
+	var referencias := DirAccess.get_files_at("res://Recursos/ModelosVisuais") if DirAccess.dir_exists_absolute("res://Recursos/ModelosVisuais") else PackedStringArray()
+	conferir(Array(referencias).all(func(nome: String): return nome.begins_with("fundo_menu.png")), "Somente fundo de produção pode ser incluído com os modelos visuais")
 	conferir(not DirAccess.dir_exists_absolute("res://tmp"), "Arquivos temporários excluídos da entrega")
 	conferir(ProjectSettings.get_setting("display/window/handheld/orientation") == 1, "Orientação retrato incluída")
 	var principal = load(ProjectSettings.get_setting("application/run/main_scene"))

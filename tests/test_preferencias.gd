@@ -43,7 +43,7 @@ func _executar() -> void:
 	coluna.get_node("efeitos").value = 0.75
 	conferir(jogo.preferencias.musica == 0.25 and jogo.preferencias.efeitos == 0.75, "controles independentes do menu")
 	conferir(not FileAccess.file_exists(jogo.caminho_progresso) and not FileAccess.file_exists(jogo.caminho_checkpoint), "preferências não gravam campanha nem checkpoint")
-	coluna.get_node("Voltar").pressed.emit()
+	tela.find_child("Voltar", true, false).pressed.emit()
 	conferir(jogo.iniciar_fase("teste_001"), "inicia fase")
 	var checkpoint_antes := FileAccess.get_file_as_string(jogo.caminho_checkpoint)
 	var progresso_existe := FileAccess.file_exists(jogo.caminho_progresso)
@@ -62,7 +62,7 @@ func _executar() -> void:
 	conferir(AudioServer.is_bus_mute(AudioServer.get_bus_index("Musica")) and not AudioServer.is_bus_mute(AudioServer.get_bus_index("Efeitos")), "silêncio de música não afeta efeitos")
 	coluna_pausa.get_node("musica").value = 0.25
 	conferir(FileAccess.get_file_as_string(jogo.caminho_checkpoint) == checkpoint_antes and FileAccess.file_exists(jogo.caminho_progresso) == progresso_existe, "ajuste na pausa preserva checkpoint e progresso")
-	coluna_pausa.get_node("Voltar").pressed.emit()
+	tela_pausa.find_child("Voltar", true, false).pressed.emit()
 	conferir(paused and partida.estado == partida.Estado.PAUSADO, "fechar configurações preserva pausa")
 	paused = false
 	jogo.queue_free()

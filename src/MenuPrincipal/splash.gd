@@ -27,22 +27,8 @@ func _ready() -> void:
 	var estudio := Label.new()
 	estudio.text = "ECLIPSE\nESTUDIO"
 	estudio.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	estudio.add_theme_font_size_override("font_size", 15)
+	estudio.add_theme_font_size_override("font_size", 8)
 	coluna.add_child(estudio)
-	var separador := Control.new()
-	separador.custom_minimum_size.y = 12
-	coluna.add_child(separador)
-	var logo := TextureRect.new()
-	logo.texture = preload("res://Recursos/Sprites/icon.svg")
-	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	logo.custom_minimum_size = Vector2(38, 38)
-	coluna.add_child(logo)
-	var godot := Label.new()
-	godot.text = "GODOT ENGINE"
-	godot.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	godot.add_theme_font_size_override("font_size", 9)
-	coluna.add_child(godot)
 	get_tree().create_timer(1.5).timeout.connect(queue_free)
 
 func _input(event: InputEvent) -> void:
