@@ -62,6 +62,8 @@ func _ready() -> void:
 	painel.add_child(coluna)
 	_criar_volume(coluna, "Música", "musica", preferencias.musica)
 	_criar_volume(coluna, "Efeitos", "efeitos", preferencias.efeitos)
+	_criar_opcao(coluna, "Vibração", "vibracao", preferencias.vibracao)
+	_criar_opcao(coluna, "Dicas", "dicas", preferencias.dicas)
 	_aviso = Label.new()
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_aviso.name = "aviso"
@@ -90,7 +92,7 @@ func fechar() -> void:
 func _atualizar_aviso() -> void:
 	_aviso.text = preferencias.aviso
 	if preferencias.salvamento_pendente():
-		_aviso.text += "\nOs volumes valem nesta sessão, mas ainda não foram salvos."
+		_aviso.text += "\nAs configurações valem nesta sessão, mas ainda não foram salvas."
 	_tentar_salvar.visible = preferencias.salvamento_pendente()
 
 func _area_segura() -> void:
@@ -116,4 +118,23 @@ func _criar_volume(coluna: VBoxContainer, titulo: String, campo: String, valor: 
 	seletor.value_changed.connect(func(novo: float):
 		preferencias.alterar(campo, novo)
 		rotulo.text = "%s: %d%%" % [titulo, roundi(novo * 100)]
+		_atualizar_aviso())
+
+
+func _criar_opcao(coluna: VBoxContainer, titulo: String, campo: String, valor: bool) -> void:
+	var opcao := Button.new()
+	opcao.name = campo
+	opcao.toggle_mode = true
+	opcao.button_pressed = valor
+	opcao.custom_minimum_size.y = 32
+	opcao.add_theme_font_size_override("font_size", 8)
+	opcao.text = titulo + ": " + ("Sim" if valor else "Não")
+	opcao.tooltip_text = "Mostrar dicas" if campo == "dicas" else titulo
+	opcao.accessibility_name = opcao.tooltip_text
+	coluna.add_child(opcao)
+	opcao.toggled.connect(func(ativo: bool):
+		preferencias.alterar(campo, ativo)
+		opcao.text = titulo + ": " + ("Sim" if ativo else "Não")
+		if campo == "vibracao" and ativo:
+			preferencias.vibrar()
 		_atualizar_aviso())

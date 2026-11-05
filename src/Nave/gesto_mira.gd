@@ -53,6 +53,15 @@ func soltar(contato: int, ponto: Vector2) -> Vector2:
 	return intencao
 
 
+func obter_intensidade() -> float:
+	if contato_ativo == -1 or arraste_maximo <= zona_morta:
+		return 0.0
+	var distancia := origem.distance_to(posicao)
+	if not is_finite(distancia):
+		return 0.0
+	return clampf((distancia - zona_morta) / (arraste_maximo - zona_morta), 0.0, 1.0)
+
+
 func obter_impulso() -> Vector2:
 	if contato_ativo == -1:
 		return Vector2.ZERO
@@ -67,8 +76,7 @@ func obter_impulso() -> Vector2:
 		direcao = _direcao_estavel
 	elif not direcao.is_zero_approx():
 		_direcao_estavel = direcao
-	var intensidade := clampf((distancia - zona_morta) / (arraste_maximo - zona_morta), 0.0, 1.0)
-	return direcao * intensidade * impulso_maximo
+	return direcao * obter_intensidade() * impulso_maximo
 
 
 func cancelar() -> void:

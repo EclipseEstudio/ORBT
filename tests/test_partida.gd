@@ -168,15 +168,16 @@ func _executar() -> void:
 	conferir(not nave.solicitar_impulso(1, Vector2(0, -80)), "Mesmo ID rejeitado antes de aplicar")
 	conferir(nave.combustivel == 5 and confirmacoes == 0, "Pedido não cobra antes da física")
 	partida.avancar(1.0 / 60)
-	conferir(nave.combustivel == 4 and confirmacoes == 1, "Uma aplicação e uma cobrança")
+	conferir(nave.combustivel == 4 and confirmacoes == 1 and is_equal_approx(partida.tempo_restante, 30.0 - 1.0 / 60), "Uma aplicação cobra combustível e inicia o consumo de oxigênio")
 	conferir(not nave.solicitar_impulso(1, Vector2(0, -80)), "Reenvio após aplicar é rejeitado")
 	conferir(nave.condicao == nave.Condicao.EM_VOO and nave.corpo_apoio.is_empty(), "Decolagem libera vínculo")
 	partida.avancar(0.25)
+	var oxigenio_antes_correcao: float = partida.tempo_restante
 	var anterior: Vector2 = nave.velocidade
 	conferir(nave.solicitar_impulso(2, Vector2(10, 0)), "Correção aceita em voo")
 	partida.avancar(0)
 	conferir(nave.velocidade.is_equal_approx(anterior + Vector2(10, 0)), "Correção soma velocidade")
-	conferir(nave.combustivel == 3 and partida.tempo_restante == 30, "Correção cobra e reinicia tempo")
+	conferir(nave.combustivel == 3 and partida.tempo_restante == oxigenio_antes_correcao and oxigenio_antes_correcao < 30, "Correção cobra combustível sem repor oxigênio")
 	var corpos_guardados: Array = nave.corpos
 	var velocidade_guardada: Vector2 = nave.velocidade
 	nave.corpos = []

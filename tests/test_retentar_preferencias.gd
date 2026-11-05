@@ -45,7 +45,7 @@ func _executar() -> void:
 	tela.find_child("efeitos", true, false).value = 0.75
 	await acomodar()
 	conferir(tela._tentar_salvar.visible and preferencias.salvamento_pendente(), "Falha de escrita oferece retentativa")
-	conferir(tela._aviso.text.contains("nesta sessão") and tela._aviso.text.contains("não foram salvos"), "Aviso distingue valores da sessão de valores salvos")
+	conferir(tela._aviso.text.contains("nesta sessão") and tela._aviso.text.contains("não foram salvas"), "Aviso distingue valores da sessão de valores salvos")
 	conferir(is_equal_approx(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Musica")), linear_to_db(0.25)) and is_equal_approx(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Efeitos")), linear_to_db(0.75)), "Falha não impede aplicação independente dos volumes")
 	var scroll: ScrollContainer = tela.rolagem
 	scroll.ensure_control_visible(tela._tentar_salvar)

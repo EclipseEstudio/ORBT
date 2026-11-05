@@ -13,13 +13,17 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar
 - Nas cinco fases adaptadas do protótipo Python, **Explorar mapa** também abre a visão geral dos corredores, planetas e sóis.
 - **Pausar** suspende a tentativa; voltar ao aplicativo mantém a pausa até **Retomar**.
 - **Configurações**, no menu ou na pausa, ajusta separadamente os volumes de música e efeitos. Os valores são guardados no aparelho.
+- **Vibração** ativa ou desativa os pulsos de lançamento, pouso e resultado. **Dicas** mostra ou oculta a ajuda durante a partida; avisos e diálogos continuam disponíveis. As escolhas são salvas junto aos volumes, incluindo a migração das preferências antigas.
 - A música continua durante a pausa; efeitos de voo aguardam a retomada. Os volumes podem ser reduzidos a zero.
 - **Reiniciar** restaura nave, combustível, tempo, câmera e contatos.
 - Após derrota, **Último pouso** restaura o checkpoint da tentativa, preservando combustível e oxigênio. Sem combustível para decolar, use Repetir. Em voo, gastar a última carga permite seguir à deriva e ainda chegar à Terra; acabar o oxigênio encerra a tentativa.
+- O oxigênio começa a diminuir no primeiro lançamento. Pousar suspende o consumo; decolar novamente retoma o saldo restante. Impulsos de correção não recarregam oxigênio.
 - Na vitória, **Próxima fase** abre a sucessora disponível; **Repetir** começa nova tentativa. Na última fase, use Repetir ou Seleção de fases. A pausa permite voltar ao menu principal.
 - **Seleção de fases** retorna à campanha, inclusive durante pausa ou após o desfecho. Conclusões e desbloqueios são salvos neste aparelho; repetir começa uma tentativa nova.
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A mira mostra uma linha reta de 60 pixels lógicos, independente da força e do zoom, indicando a direção do impulso. Ela não prevê gravidade ou colisões. A nave aponta para a mira e, durante o voo, para a direção da velocidade.
+
+A linha entre o toque e o dedo cresce de 1 a 3 pixels e muda de ciano até vermelho conforme a força. Em voo e à deriva, a nave deixa um rastro curto de 2 pixels. A câmera aproxima suavemente perto dos corpos, incluindo a Terra, e afasta em espaço aberto; o zoom fica congelado durante o arraste. Explorar mantém os controles manuais e, ao voltar à nave, recupera o enquadramento anterior.
 
 ## Testes
 
@@ -42,6 +46,8 @@ godot --headless --path . --script tests/test_partida.gd
 Para capturas com renderizador real, execute `godot --path . --script tests/capturar_fase.gd`; os PNGs ficam em `.godot/`, ignorada pelo Git.
 
 ## Android
+
+Para atualizar ou reinstalar uma versão compatível, instale o APK sobre o aplicativo existente, preservando os dados. O processo de distribuição passa a usar assinatura permanente e código Android crescente; APKs de prévia externa usam outro identificador. Versões antigas com chaves temporárias podem exigir uma migração única com reinstalação. Consulte [atualização e reinstalação](docs/tecnica/atualizacao-android.md) antes de desinstalar.
 
 O preset **Android** inclui catálogo e fases JSON, usa orientação retrato e gera um APK de depuração para ARM de 32/64 bits. A importação de texturas ETC2/ASTC necessária ao renderizador Mobile está habilitada. Consulte a [preparação e validação Android](docs/tecnica/android.md).
 

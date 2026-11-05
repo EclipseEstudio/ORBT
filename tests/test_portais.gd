@@ -61,11 +61,14 @@ func executar():
 	verificar(var_to_str(nave.corpos)==antes,"Prévia não altera mundo")
 	verificar(nave.solicitar_impulso(nave._ultimo_pedido+1,Vector2(80,0)),"Lançamento aceito")
 	var teleportou=false
+	var rastro=nivel.get_node("RastroNave")
+	rastro.set_physics_process(false)
 	for i in range(120):
 		var pos:Vector2=nave.global_position
 		p.avancar(1.0/60)
 		if nave.global_position.x-pos.x>100:
 			teleportou=true
+			verificar(rastro.points.is_empty(),"Portal limpa o trecho anterior antes de desenhar a saída")
 			verificar(nave.combustivel==4,"Portal não cobra combustível")
 			verificar(p.tempo_restante<29.6,"Portal não reinicia tempo")
 			p.pausar()
@@ -73,6 +76,7 @@ func executar():
 			p.avancar(1)
 			verificar(nave.global_position==parada,"Pausa após salto")
 			p.retomar()
+		rastro._physics_process(1.0/60)
 		if p.estado!=p.Estado.JOGANDO: break
 	verificar(teleportou and p.estado==p.Estado.CONCLUIDA,"Rota atravessa portal e vence")
 	verificar(previa[-1].distance_to(nave.global_position)<0.001,"Prévia equivale ao voo após portal")

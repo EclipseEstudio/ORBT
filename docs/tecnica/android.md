@@ -52,7 +52,7 @@ PRs destinados à `alpha` executam o fluxo **APK Android para revisão** no GitH
 
 O fluxo usa Godot e modelos oficiais 4.7.2 conferidos por SHA-256, Java 17 e o SDK Android da máquina do GitHub (plataforma 36 e Build-Tools 36.1.0). Se uma dependência estiver ausente, a execução falha com o caminho necessário. PRs de forks podem precisar de autorização de um mantenedor para executar Actions.
 
-Uma chave de depuração temporária é criada em cada execução. Como a assinatura muda entre execuções, o Android pode exigir a desinstalação do APK anterior antes de instalar outro; a desinstalação pode apagar os dados do aplicativo. Esse APK serve para testes, não para publicação. A geração automática não substitui a instalação e os testes em aparelho.
+O processo atualizado usa chave permanente para APKs de distribuição e confere o certificado e o código de versão contra a release anterior. PRs externos usam outro identificador e chave temporária apenas para prévias. Versões distribuídas antes dessa migração podem exigir reinstalação única, com perda dos dados se forem desinstaladas. Consulte [atualização e reinstalação Android](atualizacao-android.md). A geração automática não substitui a instalação e os testes em aparelho.
 
 ## Gerar e instalar
 
@@ -119,7 +119,7 @@ Registre modelo do aparelho, versão do Android, versão/hash da branch, versão
 | Explorar / recentralizar | Arraste só move câmera; não há lançamento ao voltar | Pendente |
 | Soltar exploração sobre interface | Próximo arraste funciona, sem contato preso | Pendente |
 | Suspender com dedo na tela | Gesto cancelado; tempo e física pausados; Retomar não lança | Pendente |
-| Correção em voo | Soma velocidade, cobra uma unidade e reinicia tempo | Pendente |
+| Correção em voo | Soma velocidade, cobra uma unidade e mantém o saldo de oxigênio | Pendente |
 | Último combustível | Continua à deriva; chegada ainda pode vencer | Pendente |
 | Pouso / lançar contra origem | Não atravessa apoio; pouso não recarrega; saldo zero encerra | Pendente |
 | Perigo / limites / tempo | Uma derrota, causa visível, nave interrompida | Pendente |

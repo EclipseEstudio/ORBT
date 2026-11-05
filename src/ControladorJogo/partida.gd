@@ -60,10 +60,9 @@ func avancar(delta: float) -> void:
 	if estado != Estado.JOGANDO or not is_instance_valid(nave) or get_tree().paused:
 		return
 	# A nave aplica a fila uma única vez, no início de avancar().
-	# Um impulso pendente renova o oxigênio antes de limitar o passo.
-	var tem_impulso: bool = nave.tem_impulso_pendente()
-	var oxigenio_disponivel := nivel.tempo_voo if tem_impulso else tempo_restante
-	var passo := minf(delta, oxigenio_disponivel) if temporizador_ativo or tem_impulso else delta
+	# O oxigênio é um saldo da tentativa; novos impulsos não o recarregam.
+	var consumindo: bool = (temporizador_ativo and nave.condicao != nave.Condicao.POUSADA) or nave.tem_impulso_pendente()
+	var passo := minf(delta, tempo_restante) if consumindo else delta
 	nave.avancar(passo)
 	if estado != Estado.JOGANDO:
 		return
@@ -76,7 +75,6 @@ func avancar(delta: float) -> void:
 
 func _ao_impulso(_gesto_id: int) -> void:
 	temporizador_ativo = true
-	tempo_restante = nivel.tempo_voo
 
 
 func resolver_contato(contato: Dictionary) -> void:

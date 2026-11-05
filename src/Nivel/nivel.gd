@@ -4,6 +4,7 @@ const FabricaCorpos = preload("res://src/CorpoEstelar/gerenciador_corpos_estelar
 const Partida = preload("res://src/ControladorJogo/partida.gd")
 const CameraNivel = preload("res://src/Nivel/camera_nivel.gd")
 const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
+const RastroNave = preload("res://src/Nave/rastro_nave.gd")
 
 var nivel_res: NivelRes
 var campanha_permitida := false
@@ -32,6 +33,10 @@ func _ready() -> void:
 	camera = CameraNivel.new()
 	camera.partida = partida
 	add_child(camera)
+	var rastro := RastroNave.new()
+	rastro.partida = partida
+	rastro.camera = camera
+	add_child(rastro)
 	var hud := InterfacePartida.new()
 	hud.partida = partida
 	hud.preferencias = preferencias

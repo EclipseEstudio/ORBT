@@ -7,6 +7,25 @@ var _ultima_posicao := Vector2.ZERO
 var _abertura := 0.0
 var _destino := Vector2.ZERO
 var _eventos_aguardando_interface: Dictionary[int, bool] = {}
+var _zoom_antes_exploracao := Vector2.ONE
+var _exploracao_anterior := false
+const ZOOM_LONGE := 0.75
+const ZOOM_PERTO := 1.4
+const SUAVIZACAO_ZOOM := 3.0
+
+
+static func calcular_zoom_proximidade(posicao: Vector2, corpos: Array, base: float) -> float:
+	var distancia_menor := INF
+	var distancia_normalizada := 1.0
+	for corpo in corpos:
+		if corpo.type == "portal":
+			continue
+		var raio := maxf(corpo.visual_radius, corpo.collision_radius)
+		var distancia := maxf(0.0, posicao.distance_to(corpo.position) - raio)
+		if distancia < distancia_menor:
+			distancia_menor = distancia
+			distancia_normalizada = clampf(distancia / maxf(1.0, corpo.proximity_radius), 0.0, 1.0)
+	return base * lerpf(ZOOM_PERTO, ZOOM_LONGE, distancia_normalizada)
 
 
 func _configuracao() -> Dictionary:
@@ -41,6 +60,7 @@ func _ready() -> void:
 func apresentar() -> void:
 	_cancelar()
 	zoom = _zoom_voo()
+	_zoom_antes_exploracao = zoom
 	# A recuperação é pausada antes de emitir reiniciada; não iniciar uma
 	# apresentação que só avançaria depois de o jogador retomar.
 	if partida.estado == partida.Estado.PAUSADO:
@@ -63,6 +83,9 @@ func _process(delta: float) -> void:
 			partida.nave.atualizar_entrada()
 	elif not partida.explorando:
 		global_position = partida.nave.global_position
+		if partida.estado == partida.Estado.JOGANDO and not get_tree().paused and partida.nave.entrada.gesto.contato_ativo == -1:
+			var alvo := calcular_zoom_proximidade(global_position, partida.nave.corpos, _zoom_voo().x)
+			zoom = zoom.lerp(Vector2.ONE * alvo, 1.0 - exp(-SUAVIZACAO_ZOOM * maxf(0.0, delta)))
 
 
 func _input(event: InputEvent) -> void:
@@ -116,9 +139,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _cancelar() -> void:
 	_encerrar_arraste()
-	zoom = _zoom_voo()
 	if partida.explorando:
-		_mostrar_mapa()
+		if not _exploracao_anterior:
+			_zoom_antes_exploracao = zoom
+			_mostrar_mapa()
+	elif _exploracao_anterior:
+		zoom = _zoom_antes_exploracao
+	_exploracao_anterior = partida.explorando
 	if partida.estado != partida.Estado.JOGANDO or partida.explorando:
 		_abertura = 0
 

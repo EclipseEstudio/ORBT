@@ -11,6 +11,9 @@
 # Chaves de assinatura locais
 *.keystore
 *.jks
+*.p12
+*.pfx
+*.senha-protegida
 
 # Configurações e temporários do editor
 .vscode/
