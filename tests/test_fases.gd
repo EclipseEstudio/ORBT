@@ -122,11 +122,11 @@ func _executar() -> void:
 			conferir(dados.reference_level == rota.modelo and dados.bodies.filter(func(corpo: Dictionary): return corpo.type == "asteroid").size() == rota.rochas, rota.id + ": preserva mapa de referência e muros de asteroides")
 			conferir(jogo.mundo_atual.get_node("Nave").condicao == jogo.mundo_atual.get_node("Nave").Condicao.PRONTA, rota.id + ": início livre aguarda lançamento")
 			var camera: Camera2D = jogo.mundo_atual.camera
-			conferir(camera.zoom.is_equal_approx(Vector2(0.5, 0.5)), rota.id + ": zoom de voo do mapa maior")
+			conferir(camera.zoom.is_equal_approx(Vector2(0.7, 0.7)), rota.id + ": câmera próxima da nave no mapa maior")
 			jogo.mundo_atual.partida.alternar_exploracao()
 			conferir(camera.zoom.x < 0.5 and is_equal_approx(camera.global_position.x, 450.0) and camera.global_position.y > 300.0, rota.id + ": explorar enquadra o mapa entre o HUD e o rodapé")
 			jogo.mundo_atual.partida.alternar_exploracao()
-			conferir(camera.zoom.is_equal_approx(Vector2(0.5, 0.5)), rota.id + ": voltar restaura zoom de voo")
+			conferir(camera.zoom.is_equal_approx(Vector2(0.7, 0.7)), rota.id + ": voltar restaura enquadramento próximo")
 		jogar(jogo.mundo_atual, rota.etapas, [], true)
 		conferir(jogo.progresso.estado(rota.id) == "Concluída", rota.id + ": vitória registrada na campanha")
 		jogo.mostrar_selecao()

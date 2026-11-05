@@ -81,7 +81,7 @@ func _ready() -> void:
 	var linha := HBoxContainer.new()
 	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	topo.add_child(linha)
-	_fase = rotulo(linha, "%02d %s" % [partida.nivel.ordem, partida.nivel.nome], 8)
+	_fase = rotulo(linha, "%02d" % partida.nivel.ordem, 8)
 	_fase.name = "Fase"
 	_fase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_fase.size_flags_horizontal = Control.SIZE_EXPAND_FILL

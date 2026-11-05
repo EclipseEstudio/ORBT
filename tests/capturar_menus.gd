@@ -26,8 +26,8 @@ func _capturar() -> void:
 	var selecao: Control = jogo.interface_atual
 	selecao._exibir_aviso("O checkpoint pertence a uma versão anterior desta fase. Reinicie a fase para continuar. Seu progresso da campanha foi preservado.")
 	await salvar("diagnostico")
-	selecao.rolagem.ensure_control_visible(selecao._checkpoint_controles.get_node("DescartarCheckpoint"))
-	await salvar("reiniciar")
+	selecao.rolagem.ensure_control_visible(selecao._checkpoint_controles.get_node("AvisoCheckpoint"))
+	await salvar("aviso-sem-descarte")
 	jogo.mostrar_menu()
 	menu = jogo.interface_atual
 	menu.get_node("Margem/Rolagem/VBoxContainer/Acoes/Configuracoes").pressed.emit()

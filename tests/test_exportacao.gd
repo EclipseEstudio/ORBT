@@ -29,6 +29,9 @@ func _executar() -> void:
 	for nome in ["nave", "planeta", "satelite", "terra", "sol", "asteroide"]:
 		conferir(ResourceLoader.exists("res://Recursos/Sprites/Identidade/" + nome + ".png"), "Sprite incluído: " + nome)
 	conferir(ResourceLoader.exists("res://Recursos/Fontes/PressStart2P-Regular.ttf") and FileAccess.file_exists("res://Recursos/Fontes/OFL.txt"), "Fonte Press Start 2P e licença incluídas")
+	conferir(ResourceLoader.exists("res://Recursos/Logos/wmdg.png"), "Logo WMDG incluída no pacote")
+	conferir(ResourceLoader.exists("res://Recursos/Logos/godot.svg"), "Logo Godot incluída no pacote")
+	conferir(FileAccess.file_exists("res://Recursos/Logos/GODOT-LICENSE.txt"), "Licença da logo Godot incluída no pacote")
 	var referencias := DirAccess.get_files_at("res://Recursos/ModelosVisuais") if DirAccess.dir_exists_absolute("res://Recursos/ModelosVisuais") else PackedStringArray()
 	conferir(Array(referencias).all(func(nome: String): return nome.begins_with("fundo_menu.png")), "Somente fundo de produção pode ser incluído com os modelos visuais")
 	conferir(not DirAccess.dir_exists_absolute("res://tmp"), "Arquivos temporários excluídos da entrega")

@@ -8,6 +8,8 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'android-pacote.ps1')
 $orbtNovo = Ler-PacoteAndroid -Apk $Apk -Ferramentas $Ferramentas
+$orbtConfiguracao = Ler-ConfiguracaoAndroidProjeto
+Conferir-PacoteAndroidProjeto -Pacote $orbtNovo -Configuracao $orbtConfiguracao
 if (-not $orbtNovo.permissao_vibrar) { throw 'A permissão Android de vibração está ausente.' }
 $orbtContrato = Get-Content (Join-Path $PSScriptRoot 'assinatura-android.json') -Raw | ConvertFrom-Json
 $orbtMigracao = $false
@@ -17,8 +19,6 @@ if ($Previa) {
     if ($orbtNovo.pacote -ne $orbtContrato.pacote -or $orbtNovo.certificado_sha256 -ne $orbtContrato.certificado_sha256) { throw 'O APK não usa a identidade permanente de distribuição.' }
     if ($orbtNovo.codigo -lt $orbtContrato.primeiro_codigo_permanente) { throw 'Código Android anterior à migração de assinatura.' }
     $orbtProjeto = Split-Path $PSScriptRoot -Parent
-    $orbtVersaoProjeto = [regex]::Match([IO.File]::ReadAllText((Join-Path $orbtProjeto 'project.godot')), 'config/version="([^"]+)"').Groups[1].Value
-    if ($orbtNovo.versao -ne $orbtVersaoProjeto) { throw 'Versão do APK difere da versão do projeto.' }
     if ($CompararPublicada) {
         $orbtHeaders = @{Accept='application/vnd.github+json'; 'User-Agent'='ORBT-verificacao'}
         if ($env:GITHUB_TOKEN) { $orbtHeaders.Authorization = 'Bearer ' + $env:GITHUB_TOKEN }

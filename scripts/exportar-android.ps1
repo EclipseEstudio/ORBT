@@ -1,6 +1,8 @@
 param(
     [string] $Godot = 'godot',
-    [switch] $SomentePacote
+    [switch] $SomentePacote,
+    [string] $Ferramentas,
+    [switch] $Previa
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,6 +13,22 @@ if (-not $orbtComando) {
 # Resolver antes de mudar de pasta também permite caminhos relativos ao terminal.
 $orbtExecutavel = $orbtComando.Source
 $orbtProjeto = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'android-pacote.ps1')
+$null = Ler-ConfiguracaoAndroidProjeto -Projeto $orbtProjeto
+if (-not $SomentePacote) {
+    if (-not $Ferramentas) {
+        foreach ($orbtSdk in @($env:ANDROID_HOME, $env:ANDROID_SDK_ROOT, (Join-Path $orbtProjeto 'build/android/sdk-build'))) {
+            if ($orbtSdk) {
+                $orbtCandidato = Join-Path $orbtSdk 'build-tools/36.1.0'
+                if (Test-Path -LiteralPath (Join-Path $orbtCandidato 'aapt2.exe')) { $Ferramentas = $orbtCandidato; break }
+            }
+        }
+    }
+    if (-not $Ferramentas -or -not (Test-Path -LiteralPath (Join-Path $Ferramentas 'apksigner.bat'))) {
+        throw 'Informe -Ferramentas com a pasta Android build-tools para verificar a identidade do APK exportado.'
+    }
+    $Ferramentas = [IO.Path]::GetFullPath($Ferramentas)
+}
 Push-Location $orbtProjeto
 try {
     New-Item -ItemType Directory -Path 'build/android' -Force | Out-Null
@@ -30,6 +48,9 @@ try {
         throw "Exportação falhou. Consulte $orbtLog e docs/tecnica/android.md para configurar JDK, SDK e modelos da Godot."
     }
     if ((Get-Item -LiteralPath $orbtDestino).Length -eq 0) { throw 'Arquivo exportado vazio.' }
+    if (-not $SomentePacote) {
+        & (Join-Path $PSScriptRoot 'verificar-atualizacao-android.ps1') -Apk $orbtDestino -Ferramentas $Ferramentas -Previa:$Previa -Saida (Join-Path $orbtProjeto 'build/android/atualizacao.json')
+    }
     Write-Output "Gerado: $orbtDestino"
     if ($SomentePacote) { Write-Output 'PCK contém os recursos do jogo; não é um APK instalável.' }
 } finally {

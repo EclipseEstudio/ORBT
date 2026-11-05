@@ -51,42 +51,37 @@ func _executar() -> void:
 		conferir(Mira.cor_intensidade(par[0]).is_equal_approx(par[1]), "Gradiente passa por ciano, amarelo, laranja e vermelho")
 	gesto.cancelar()
 	conferir(is_zero_approx(gesto.obter_intensidade()) and mira.pontos_forca().is_empty(), "Cancelar remove força e linha")
-	# Proximidade usa superfície visual/física e inclui a Terra, ignorando portais.
-	var terra := {"type": "earth", "position": Vector2.ZERO, "visual_radius": 20.0, "collision_radius": 10.0, "proximity_radius": 100.0}
-	var anterior := INF
-	for distancia in [0.0, 20.0, 45.0, 70.0, 95.0, 120.0, 1000.0]:
-		var valor := Camera.calcular_zoom_proximidade(Vector2(distancia, 0), [terra], 0.5)
-		conferir(valor >= 0.375 and valor <= 0.7 and valor <= anterior, "Zoom diminui monotonicamente ao afastar-se e respeita limites")
-		anterior = valor
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(Vector2(20, 0), [terra], 0.5), 0.7), "Superfície da Terra recebe zoom próximo")
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(Vector2(70, 0), [terra], 0.5), 0.5375), "Distância até a superfície é normalizada pelo raio de proximidade")
-	terra.collision_radius = 30.0
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(Vector2(30, 0), [terra], 0.5), 0.7), "Raio de colisão maior também define a superfície")
-	var portal := terra.duplicate(true)
-	portal.type = "portal"
-	portal.position = Vector2(1000, 0)
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(portal.position, [terra, portal], 0.5), 0.375), "Portal próximo não altera o zoom")
-	var outro := terra.duplicate(true)
-	outro.type = "asteroid"
-	outro.position = Vector2(990, 0)
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(Vector2(1000, 0), [terra, outro], 0.5), 0.7), "Outros corpos também aproximam a câmera")
-	conferir(is_equal_approx(Camera.calcular_zoom_proximidade(Vector2(1000, 0), [terra], 1.0), 0.75), "Limites acompanham o zoom autoral da fase")
+	# Sem gesto, a câmera nasce próxima da nave e independe dos corpos.
 	var base: Vector2 = camera.zoom
-	camera._process(0.1)
-	conferir(camera.zoom == base, "Abertura inicial mantém zoom autoral")
-	camera._process(2)
-	nave.corpos = [terra]
-	nave.global_position = Vector2(30, 0)
-	camera._process(0.1)
-	conferir(camera.zoom.x > base.x and camera.zoom.x < 0.7, "Aproximação começa suavemente após a abertura")
-	var durante_arraste: Vector2 = camera.zoom
-	gesto.iniciar(2, Vector2(90, 140))
+	conferir(is_equal_approx(base.x, 0.7) and camera.global_position == nave.global_position, "Fase começa perto da nave, sem passeio inicial pela Terra")
+	conferir(nave.controle_permitido, "Entrada está disponível desde o início")
+	var anterior := INF
+	for intensidade in [0.0, 0.25, 0.5, 0.75, 1.0, 2.0]:
+		var valor := Camera.calcular_zoom_arraste(intensidade, 0.5)
+		conferir(valor >= 0.375 and valor <= 0.7 and valor <= anterior, "Afastamento proporcional ao arraste respeita limites")
+		anterior = valor
+	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0.5, 0.5), 0.5375), "Metade da força usa metade da variação de zoom")
+	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0, 1.0), 1.4), "Enquadramento próximo acompanha a base autoral")
+	nave.corpos = []
 	nave.global_position = Vector2(1000, 0)
 	camera._process(1)
-	conferir(camera.zoom == durante_arraste, "Até o toque dentro da zona morta congela o zoom")
-	gesto.cancelar()
+	conferir(camera.zoom == base and camera.global_position == nave.global_position, "Espaço aberto mantém a câmera próxima e centrada na nave")
+	gesto.iniciar(2, Vector2(90, 140))
+	gesto.mover(2, Vector2(90, 145))
+	camera._process(1)
+	conferir(camera.zoom == base, "Toque dentro da zona morta não afasta a câmera")
+	gesto.mover(2, Vector2(90, 220))
 	camera._process(0.1)
-	conferir(camera.zoom.x < durante_arraste.x and camera.zoom.x > 0.375, "Soltar retoma suavemente o zoom de distância")
+	conferir(camera.zoom.x < base.x and camera.zoom.x > 0.375, "Arraste forte começa a afastar suavemente")
+	camera._process(2)
+	conferir(is_equal_approx(camera.zoom.x, 0.375), "Arraste máximo alcança o limite distante")
+	gesto.mover(2, Vector2(90, 185))
+	camera._process(2)
+	conferir(is_equal_approx(camera.zoom.x, 0.5375), "Reduzir o arraste aproxima proporcionalmente")
+	gesto.cancelar()
+	var ao_soltar: float = camera.zoom.x
+	camera._process(0.1)
+	conferir(camera.zoom.x > ao_soltar and camera.zoom.x < base.x, "Soltar ou cancelar recupera suavemente a visão próxima")
 	var voo: Vector2 = camera.zoom
 	partida.alternar_exploracao()
 	camera.aplicar_zoom(1.2)

@@ -58,7 +58,7 @@ func _executar() -> void:
 	hud._process(0)
 	await acomodar()
 	conferir(hud._raiz.has_node("BussolaTerra") and hud._bussola.is_visible_in_tree(), "Bússola existe e aparece durante a partida")
-	conferir(hud._fase.text.contains(partida.nivel.nome) and hud._fase.text.begins_with("01"), "Topo identifica número e nome da fase")
+	conferir(hud._fase.text == "01", "Topo mostra somente o número da fase")
 	for botao in [hud._explorar, hud._pausa]:
 		conferir(botao.text.is_empty() and botao.icon_alignment == HORIZONTAL_ALIGNMENT_CENTER and botao.size == Vector2(28, 28), "HUD tem botões de ícone de tamanho fixo")
 	for altura in [240, 320, 390]:

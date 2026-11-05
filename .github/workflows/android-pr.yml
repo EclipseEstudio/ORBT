@@ -74,12 +74,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          ./scripts/exportar-android.ps1 -Godot $env:ORBT_GODOT
+          $previa = '${{ github.event.pull_request.head.repo.full_name != github.repository }}' -eq 'true'
+          ./scripts/exportar-android.ps1 -Godot $env:ORBT_GODOT -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/apksigner.bat') verify --verbose build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Assinatura do APK inválida.' }
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/zipalign.exe') -c -P 16 4 build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Alinhamento do APK inválido.' }
-          $previa = '${{ github.event.pull_request.head.repo.full_name != github.repository }}' -eq 'true'
           ./scripts/verificar-atualizacao-android.ps1 -Apk build/android/ORBT-debug.apk -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa -CompararPublicada:(-not $previa) -Saida build/android/atualizacao.json
           @(
             "PR: #${{ github.event.pull_request.number }}",

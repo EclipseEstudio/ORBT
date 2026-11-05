@@ -58,9 +58,9 @@ O jogo guarda o início da fase e depois substitui esse ponto a cada pouso segur
 
 Enquanto há um arraste válido, a mira mostra uma guia reta de 60 pixels lógicos na direção do impulso, independentemente da força e do zoom. A linha entre o ponto inicial do toque e o dedo usa um gradiente de ciano, amarelo, laranja e vermelho, com espessura de 1 a 3 pixels conforme a intensidade. Na zona morta, permanece fina e amarelo apagado. A força máxima acende um anel vermelho junto ao dedo. Cancelar, lançar, pausar, explorar ou encerrar a tentativa limpa a mira.
 
-A câmera apresenta a Terra no início e depois volta à nave para habilitar a mira. O painel da partida informa combustível, tempo, direção e distância da Terra, proximidade de corpos e causa do desfecho. Os controles permitem pausar, explorar, recentralizar, reiniciar e retornar à seleção de fases.
+A câmera começa junto da nave, com a mira disponível imediatamente. O topo da partida mostra somente o número da fase. O painel informa combustível, tempo, direção e distância da Terra, proximidade de corpos e causa do desfecho. Os controles permitem pausar, explorar, recentralizar, reiniciar e retornar à seleção de fases.
 
-Durante a partida, a câmera aproxima suavemente ao chegar perto da superfície de um corpo e afasta em espaço aberto. Todos os corpos contam, inclusive a Terra; portais são ignorados. O zoom automático fica congelado enquanto o dedo está tocando para mirar. A exploração usa zoom manual e, ao voltar à nave, restaura o zoom de voo antes de retomar a aproximação automática.
+Durante a partida, a câmera mantém a nave próxima e centralizada. Arrastar para lançar afasta a visão proporcionalmente à intensidade da força; um toque dentro da zona morta mantém o enquadramento próximo. Soltar ou cancelar retorna suavemente à visão próxima. A distância até os corpos não altera o zoom. A exploração usa zoom manual e, ao voltar à nave, restaura o zoom de voo antes de retomar o enquadramento próximo.
 
 A nave deixa um rastro curto em voo ou à deriva, acima de uma velocidade mínima. Ele termina em ciano e desaparece na cauda, mantendo espessura de 2 pixels lógicos na tela. Pouso, pausa, reinício, fim da tentativa e passagem por portal limpam o trecho anterior.
 
