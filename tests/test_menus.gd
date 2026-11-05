@@ -31,7 +31,9 @@ func _executar() -> void:
 	coluna.get_node("Acoes/Creditos").pressed.emit()
 	conferir(menu.has_node("TelaCreditos"), "abre créditos")
 	var creditos = menu.get_node("TelaCreditos")
-	conferir(creditos.find_child("Texto", true, false).text == "Miguel Alves Cordeiro Braz\n\nRubensAugustoMM", "Créditos mostram apenas participantes")
+	conferir(creditos.find_child("Texto", true, false).text == "Miguel Alves\nRubens Augusto\nGustavo Costa\nCesar Caus", "Créditos mostram os quatro nomes solicitados")
+	var logos = creditos.find_child("Logos", true, false)
+	conferir(logos.find_child("WMDG", true, false).texture != null and logos.find_child("Godot", true, false).texture != null, "Créditos incluem as duas logos lado a lado")
 	creditos.find_child("Voltar", true, false).pressed.emit()
 	await process_frame
 	conferir(not menu.has_node("TelaCreditos"), "volta dos créditos ao menu")
@@ -42,12 +44,11 @@ func _executar() -> void:
 	conferir(menu.find_children("*", "Button", true, false).size() == 3, "checkpoint incompatível não acrescenta ações ao menu principal")
 	jogo.mostrar_selecao()
 	var recuperacao: VBoxContainer = jogo.interface_atual._checkpoint_controles
-	conferir(not recuperacao.has_node("Continuar") and recuperacao.has_node("AvisoCheckpoint") and recuperacao.has_node("DescartarCheckpoint"), "checkpoint incompatível oferece reinício na seleção de fases")
+	conferir(not recuperacao.has_node("Continuar") and recuperacao.has_node("AvisoCheckpoint") and not recuperacao.has_node("DescartarCheckpoint"), "checkpoint incompatível mantém aviso sem botão de descarte")
 	conferir(recuperacao.get_node("AvisoCheckpoint").text.contains("incompatível") and jogo.checkpoint.bloqueado, "Seleção valida checkpoint e preserva diagnóstico de versão")
-	recuperacao.get_node("DescartarCheckpoint").pressed.emit()
 	await process_frame
 	await process_frame
-	conferir(jogo.checkpoint.dados.is_empty() and jogo.interface_atual.get_script() == preload("res://src/Campanha/selecao_fases.gd") and not jogo.interface_atual._checkpoint_controles.has_node("DescartarCheckpoint"), "Reiniciar fase descarta checkpoint incompatível e mantém seleção navegável")
+	conferir(jogo.checkpoint.dados == {"fase": "teste_001", "content_version": -1} and jogo.interface_atual.get_script() == preload("res://src/Campanha/selecao_fases.gd"), "Exibir o aviso preserva os dados e mantém a seleção navegável")
 	jogo.checkpoint.dados = {}
 	jogo.checkpoint.bloqueado = false
 	jogo.checkpoint.aviso = ""

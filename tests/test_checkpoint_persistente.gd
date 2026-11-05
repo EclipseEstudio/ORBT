@@ -42,7 +42,7 @@ func _executar() -> void:
 		conferir(partida.estado == partida.Estado.PAUSADO and paused, "recuperação inicia pausada")
 		conferir(partida.nave.corpo_apoio == "apoio" and partida.nave.combustivel == 3 and is_equal_approx(partida.tempo_restante, 12.5), "checkpoint e saldo corretos após novo processo")
 		conferir(partida.nave.entrada.gesto.contato_ativo == -1 and partida.nave.velocidade == Vector2.ZERO, "gesto cancelado e velocidade zero")
-		conferir(jogo.mundo_atual.camera.global_position.is_equal_approx(partida.nave.global_position) and jogo.mundo_atual.camera._abertura == 0.0, "recuperação pausada enquadra a nave no checkpoint")
+		conferir(jogo.mundo_atual.camera.global_position.is_equal_approx(partida.nave.global_position) and jogo.mundo_atual.camera.zoom == jogo.mundo_atual.camera._zoom_voo(), "recuperação pausada enquadra a nave no checkpoint")
 		paused = false
 		jogo.queue_free()
 		print("CHECKPOINT_REABERTO")
@@ -106,7 +106,7 @@ func _executar() -> void:
 	await process_frame
 	jogo_backup.mostrar_selecao()
 	var coluna = jogo_backup.interface_atual._checkpoint_controles
-	conferir(coluna.has_node("AvisoCheckpoint") and coluna.has_node("DescartarCheckpoint"), "Seleção mostra aviso da cópia e descarte")
+	conferir(coluna.has_node("AvisoCheckpoint") and not coluna.has_node("DescartarCheckpoint"), "Seleção mostra aviso da cópia sem descarte")
 	conferir(not jogo_backup.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar"), "Cópia válida não adiciona retomada à seleção")
 	conferir(jogo_backup.continuar_checkpoint(), "API interna lê cópia anterior")
 	conferir(jogo_backup.mundo_atual.partida.estado == jogo_backup.mundo_atual.partida.Estado.PAUSADO and jogo_backup.mundo_atual.partida.nave.corpo_apoio == "origem", "Cópia anterior preserva checkpoint recuperado")

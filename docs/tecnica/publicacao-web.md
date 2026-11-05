@@ -16,7 +16,7 @@ Alterações em `docs/index.html` na `main` atualizam a página. A exportação 
 
 ## Publicar ou atualizar o jogo
 
-O processo atualizado exige assinatura permanente e validação contra o último APK publicado. Antes de publicar, siga [atualização e reinstalação Android](atualizacao-android.md) e anexe também `atualizacao.json` e `revisao.txt`. APKs de prévia externa usam outro pacote e não devem entrar no download do ORBT. As instruções abaixo de criação de release continuam válidas após essa checagem.
+O processo atualizado exige assinatura permanente e validação contra o último APK publicado. Antes de publicar, siga [atualização e reinstalação Android](atualizacao-android.md), comprove a atualização sobre a versão anterior no aparelho preservando os saves e confira a abertura pelo instalador do celular. Anexe também `atualizacao.json` e `revisao.txt`. APKs de prévia externa usam outro pacote e não devem entrar no download do ORBT. As instruções abaixo de criação de release continuam válidas após essa checagem.
 
 1. Gere o APK com o fluxo descrito em [Android na branch alpha](https://github.com/EclipseEstudio/ORBT/blob/alpha/docs/tecnica/android.md) e valide-o em um aparelho. A saída atual é `build/android/ORBT-debug.apk`.
 2. Abra **Releases → Draft a new release** no repositório e escolha uma tag nova, por exemplo `v0.3.1-alpha.1`, associada à revisão validada.
@@ -28,7 +28,7 @@ A página consulta a API pública do GitHub uma vez por visita, sem token, consi
 
 Publique preferencialmente **um APK universal por release**. Se houver vários, a página prefere `ORBT.apk`, `ORBT-debug.apk` ou `ORBT-universal.apk`; fora desses nomes, usa o primeiro APK. O nome pode variar entre versões quando há apenas um APK. Para retirar uma versão de teste do download automático, remova sua publicação ou seu APK; publicar apenas uma release estável não oculta uma prerelease que tenha sido publicada depois.
 
-Notas e histórico ficam no link **Versões**, para manter a página focada no download. As instruções ficam recolhidas em **Como instalar?**. Quando o GitHub informa o SHA-256 do arquivo, ele aparece em **Verificar integridade do arquivo**, dentro da ajuda. Versão mínima do Android e tamanho não são inventados nem fixados no HTML.
+A versão publicada e o tamanho ficam visíveis abaixo do botão para distinguir um APK novo de um download repetido. Notas e histórico ficam no link **Versões**. As instruções ficam recolhidas em **Como instalar?**. Quando o GitHub informa o SHA-256 do arquivo, ele aparece em **Verificar integridade do arquivo**, dentro da ajuda. Versão mínima do Android e tamanho não são inventados nem fixados no HTML.
 
 ## Ausência de versão e indisponibilidade
 

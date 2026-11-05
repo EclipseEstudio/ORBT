@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "data": "2026-11-05",
+  "aparelho": "Samsung SM-A556E",
+  "android": "16",
+  "api_android": 36,
+  "origem": { "versao": "0.3.2", "codigo": 5 },
+  "candidato": {
+    "versao": "0.3.3",
+    "codigo": 6,
+    "apk_sha256": "8ec90e357eed4164146f2b281c183534b7dbcc26a61fe9e4dbe5d794ed1dd901",
+    "certificado_sha256": "8cb1972c2bec45b3de59fe76441564527bd8e0f802aa88dff6d09c6289013843"
+  },
+  "atualizacao_usb": { "concluida": true, "desinstalacao": false, "arquivos_verificados": 4, "dados_preservados": true },
+  "instalador_celular": { "confirmado_pelo_usuario": true, "desinstalacao": false, "arquivos_verificados": 4, "dados_preservados": true },
+  "publicado": false
+}

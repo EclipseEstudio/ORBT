@@ -4,7 +4,7 @@ Puzzle espacial em Godot 4.7.2, com campanha, pouso, impulsos, combustível, gra
 
 ## Jogar
 
-Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar** para abrir a seleção de fases. Nessa tela, escolha uma fase; os avisos e o descarte de checkpoint permanecem disponíveis, sem ação de retomada persistida.
+Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar** para abrir a seleção de fases. Nessa tela, escolha uma fase; os avisos de checkpoint e a retentativa de salvamento permanecem disponíveis, sem botões de descarte ou retomada persistida.
 
 - Pressione a área livre do jogo, arraste e solte para lançar na direção oposta ao arraste.
 - Volte ao círculo para cancelar. Para tentar de novo, solte e inicie outro toque/clique.
@@ -23,7 +23,9 @@ Abra `project.godot` na Godot e execute o projeto (F5). No menu, escolha **Jogar
 
 Na fase inicial, um arraste vertical para baixo de 80 unidades lógicas (160 pixels na janela padrão, sem escala adicional do sistema) produz um impulso suficiente para chegar à Terra. Use a área central, fora dos botões. A mira mostra uma linha reta de 60 pixels lógicos, independente da força e do zoom, indicando a direção do impulso. Ela não prevê gravidade ou colisões. A nave aponta para a mira e, durante o voo, para a direção da velocidade.
 
-A linha entre o toque e o dedo cresce de 1 a 3 pixels e muda de ciano até vermelho conforme a força. Em voo e à deriva, a nave deixa um rastro curto de 2 pixels. A câmera aproxima suavemente perto dos corpos, incluindo a Terra, e afasta em espaço aberto; o zoom fica congelado durante o arraste. Explorar mantém os controles manuais e, ao voltar à nave, recupera o enquadramento anterior.
+A linha entre o toque e o dedo cresce de 1 a 3 pixels e muda de ciano até vermelho conforme a força. Em voo e à deriva, a nave deixa um rastro curto de 2 pixels. A câmera começa perto da nave e afasta suavemente conforme a força do arraste, retornando ao enquadramento próximo ao soltar ou cancelar. Explorar mantém os controles manuais e, ao voltar à nave, recupera o enquadramento anterior. O topo da partida mostra somente o número da fase.
+
+Os créditos incluem Miguel Alves, Rubens Augusto, Gustavo Costa e Cesar Caus, com WMDG e Godot no rodapé. O fundo mais detalhado e as estrelas coletáveis estão apenas [planejados](docs/tecnica/plano-fundo-e-estrelas.md).
 
 ## Testes
 

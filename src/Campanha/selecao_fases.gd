@@ -202,15 +202,3 @@ func _exibir_aviso(texto: String) -> void:
 		aviso.add_theme_font_size_override("font_size", 8)
 		coluna.add_child(aviso)
 	aviso.text = texto
-	if coluna.get_node_or_null("DescartarCheckpoint") == null:
-		var descartar := Button.new()
-		descartar.name = "DescartarCheckpoint"
-		descartar.text = "Descartar\ncheckpoint"
-		descartar.custom_minimum_size = Vector2(120, 48)
-		descartar.add_theme_font_size_override("font_size", 8)
-		coluna.add_child(descartar)
-		descartar.pressed.connect(func():
-			if controlador.checkpoint.limpar():
-				controlador.mostrar_selecao.call_deferred()
-			else:
-				aviso.text = controlador.checkpoint.aviso)

@@ -39,7 +39,7 @@ func _capturar() -> void:
 	await process_frame
 	var menu = jogo.interface_atual
 	var coluna = menu._checkpoint_controles
-	menu.rolagem.ensure_control_visible(coluna.get_node("DescartarCheckpoint"))
+	menu.rolagem.ensure_control_visible(coluna.get_node("TentarSalvarCheckpoint"))
 	await salvar("pendente")
 	jogo.checkpoint.falhar = false
 	coluna.get_node("TentarSalvarCheckpoint").pressed.emit()
@@ -49,7 +49,7 @@ func _capturar() -> void:
 	coluna = menu._checkpoint_controles
 	for i in range(5):
 		await process_frame
-	menu.rolagem.ensure_control_visible(coluna.get_node("DescartarCheckpoint"))
+	menu.rolagem.ensure_control_visible(coluna.get_node("AvisoCheckpoint"))
 	await salvar("salvo")
 
 	paused = false

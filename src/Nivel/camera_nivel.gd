@@ -4,28 +4,16 @@ var partida: Node
 var _contato := -1
 var _toques: Dictionary[int, Vector2] = {}
 var _ultima_posicao := Vector2.ZERO
-var _abertura := 0.0
-var _destino := Vector2.ZERO
 var _eventos_aguardando_interface: Dictionary[int, bool] = {}
 var _zoom_antes_exploracao := Vector2.ONE
 var _exploracao_anterior := false
-const ZOOM_LONGE := 0.75
+const ZOOM_ARRASTE_MAXIMO := 0.75
 const ZOOM_PERTO := 1.4
-const SUAVIZACAO_ZOOM := 3.0
+const SUAVIZACAO_ZOOM := 6.0
 
 
-static func calcular_zoom_proximidade(posicao: Vector2, corpos: Array, base: float) -> float:
-	var distancia_menor := INF
-	var distancia_normalizada := 1.0
-	for corpo in corpos:
-		if corpo.type == "portal":
-			continue
-		var raio := maxf(corpo.visual_radius, corpo.collision_radius)
-		var distancia := maxf(0.0, posicao.distance_to(corpo.position) - raio)
-		if distancia < distancia_menor:
-			distancia_menor = distancia
-			distancia_normalizada = clampf(distancia / maxf(1.0, corpo.proximity_radius), 0.0, 1.0)
-	return base * lerpf(ZOOM_PERTO, ZOOM_LONGE, distancia_normalizada)
+static func calcular_zoom_arraste(intensidade: float, base: float) -> float:
+	return base * lerpf(ZOOM_PERTO, ZOOM_ARRASTE_MAXIMO, clampf(intensidade, 0.0, 1.0))
 
 
 func _configuracao() -> Dictionary:
@@ -33,7 +21,7 @@ func _configuracao() -> Dictionary:
 
 
 func _zoom_voo() -> Vector2:
-	return Vector2.ONE * float(_configuracao().get("zoom", 1.0))
+	return Vector2.ONE * calcular_zoom_arraste(0.0, float(_configuracao().get("zoom", 1.0)))
 
 
 func _mostrar_mapa() -> void:
@@ -61,30 +49,17 @@ func apresentar() -> void:
 	_cancelar()
 	zoom = _zoom_voo()
 	_zoom_antes_exploracao = zoom
-	# A recuperação é pausada antes de emitir reiniciada; não iniciar uma
-	# apresentação que só avançaria depois de o jogador retomar.
-	if partida.estado == partida.Estado.PAUSADO:
-		_abertura = 0.0
-		global_position = partida.nave.global_position
-		return
-	_destino = partida.nave.corpos[-1].position
-	global_position = _destino
-	_abertura = 1.2
-	partida.nave.controle_permitido = false
+	global_position = partida.nave.global_position
+	partida.nave.controle_permitido = partida.estado == partida.Estado.JOGANDO and not partida.explorando
 	partida.nave.atualizar_entrada()
 
 
 func _process(delta: float) -> void:
-	if _abertura > 0:
-		_abertura = maxf(0, _abertura - delta)
-		global_position = _destino.lerp(partida.nave.global_position, 1.0 - _abertura / 1.2)
-		if _abertura == 0 and partida.estado == partida.Estado.JOGANDO:
-			partida.nave.controle_permitido = not partida.explorando
-			partida.nave.atualizar_entrada()
-	elif not partida.explorando:
+	if not partida.explorando:
 		global_position = partida.nave.global_position
-		if partida.estado == partida.Estado.JOGANDO and not get_tree().paused and partida.nave.entrada.gesto.contato_ativo == -1:
-			var alvo := calcular_zoom_proximidade(global_position, partida.nave.corpos, _zoom_voo().x)
+		if partida.estado == partida.Estado.JOGANDO and not get_tree().paused:
+			var intensidade: float = partida.nave.entrada.gesto.obter_intensidade()
+			var alvo := calcular_zoom_arraste(intensidade, float(_configuracao().get("zoom", 1.0)))
 			zoom = zoom.lerp(Vector2.ONE * alvo, 1.0 - exp(-SUAVIZACAO_ZOOM * maxf(0.0, delta)))
 
 
@@ -101,7 +76,7 @@ func _input(event: InputEvent) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	_eventos_aguardando_interface.erase(event.get_instance_id())
-	if not partida.explorando or partida.estado != partida.Estado.JOGANDO or _abertura > 0:
+	if not partida.explorando or partida.estado != partida.Estado.JOGANDO:
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 		aplicar_zoom(1.15 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.15)
@@ -146,8 +121,6 @@ func _cancelar() -> void:
 	elif _exploracao_anterior:
 		zoom = _zoom_antes_exploracao
 	_exploracao_anterior = partida.explorando
-	if partida.estado != partida.Estado.JOGANDO or partida.explorando:
-		_abertura = 0
 
 
 func _encerrar_arraste() -> void:
