@@ -204,7 +204,7 @@ func parar() -> void:
 func velocidade_apoio() -> Vector2:
 	for corpo in corpos:
 		if corpo.id == corpo_apoio:
-			return Fisica.velocidade_corpo(corpo, tempo_simulacao) + Fisica.velocidade_superficie(corpo, posicao_relativa)
+			return Fisica.velocidade_corpo(corpo, tempo_simulacao)
 	return Vector2.ZERO
 
 

@@ -30,7 +30,7 @@ func _executar() -> void:
 	await acomodar()
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	for item in itens.slice(0, itens.size() - 1):
-		jogo.progresso.concluir(item.id, itens)
+		jogo.progresso.concluir_com_estrelas(item.id, itens, 3)
 	conferir(jogo.iniciar_fase(itens[-1].id), "Abre última fase para verificar desfecho longo")
 	await acomodar()
 	var nivel = jogo.mundo_atual

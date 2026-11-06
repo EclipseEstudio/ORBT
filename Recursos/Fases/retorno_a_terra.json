@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "retorno_a_terra",
   "name": "Retorno à Terra",
   "order": 10,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      106.8148,
-      301.7638
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -52,20 +50,21 @@
       493.1852,
       198.2362
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 20,
     "collision_radius": 20,
     "capture_radius": 20,
     "danger_radius": 0,
-    "proximity_radius": 50
+    "proximity_radius": 50,
+    "gravity_radius": 58
   },
   "bodies": [
     {
       "id": "rocha",
       "type": "asteroid",
       "position": [
-        300.0,
-        250.0
+        300,
+        250
       ],
       "mass": 0,
       "visual_radius": 35,
@@ -101,6 +100,20 @@
       "capture_radius": 24,
       "danger_radius": 0,
       "proximity_radius": 60
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        92.67266437626905,
+        315.90593562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Ajuste a trajetória entre os planetas e retorne à Terra.",

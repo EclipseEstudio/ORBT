@@ -129,7 +129,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
-			progresso.concluir_com_estrelas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.estrelas_coletadas.size())
+			progresso.concluir_com_coletas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.quantidade_coletada("gold"), instancia.partida.quantidade_coletada("blue"))
 			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:
@@ -141,6 +141,9 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 		if mundo_atual != instancia or instancia.partida.estado != instancia.partida.Estado.CONCLUIDA:
 			return
 		var id: String = proxima_fase(instancia.nivel_res.id)
+		if not id.is_empty() and not progresso.pode_abrir(id):
+			mostrar_selecao()
+			return
 		if id.is_empty() or not iniciar_fase(id):
 			mostrar_selecao()
 			if not id.is_empty():

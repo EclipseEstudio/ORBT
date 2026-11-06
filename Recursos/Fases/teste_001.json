@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "teste_001",
   "name": "Primeiro impulso",
   "order": 1,
@@ -37,22 +37,23 @@
       90,
       60
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 14,
     "collision_radius": 14,
     "capture_radius": 16,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 54
   },
   "bodies": [
     {
       "id": "origem",
-      "type": "planet",
+      "type": "station",
       "position": [
         90,
         250
       ],
-      "mass": 24000,
+      "mass": 0,
       "visual_radius": 20,
       "collision_radius": 20,
       "capture_radius": 24,
@@ -61,7 +62,7 @@
     },
     {
       "id": "apoio",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         210,
         140
@@ -89,7 +90,7 @@
     }
   ],
   "tutorial": "Arraste para baixo e solte para voar em direção à Terra.",
-  "notes": "Protótipo: um arraste vertical de 80 unidades resolve a fase com um impulso. Validar ergonomia no Android.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -97,7 +98,8 @@
         90.32,
         187.021
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -105,7 +107,8 @@
         91.204,
         159.313
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
@@ -113,7 +116,8 @@
         122.863,
         101.571
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     }
   ]
 }

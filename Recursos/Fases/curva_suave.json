@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 4,
+  "content_version": 5,
   "id": "curva_suave",
   "name": "O Labirinto",
   "order": 4,
@@ -29,10 +29,8 @@
     "max_impulse": 260
   },
   "start": {
-    "position": [
-      110,
-      300
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -53,22 +51,23 @@
       840,
       300
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 32,
     "collision_radius": 32,
     "capture_radius": 40,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 78
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         300,
         120
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 16,
       "collision_radius": 16,
       "capture_radius": 16,
@@ -78,12 +77,12 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         640,
         120
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 16,
       "collision_radius": 16,
       "capture_radius": 16,
@@ -93,12 +92,12 @@
     },
     {
       "id": "apoio_3",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         490,
         535
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -110,8 +109,8 @@
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
-        230.0,
-        333.0
+        230,
+        333
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -194,8 +193,8 @@
       "id": "asteroide_007",
       "type": "asteroid",
       "position": [
-        530.0,
-        318.0
+        530,
+        318
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -278,8 +277,8 @@
       "id": "asteroide_013",
       "type": "asteroid",
       "position": [
-        380.0,
-        202.0
+        380,
+        202
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -348,8 +347,8 @@
       "id": "asteroide_018",
       "type": "asteroid",
       "position": [
-        330.0,
-        452.0
+        330,
+        452
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -446,8 +445,8 @@
       "id": "asteroide_025",
       "type": "asteroid",
       "position": [
-        -75.0,
-        -67.0
+        -75,
+        -67
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -614,8 +613,8 @@
       "id": "asteroide_037",
       "type": "asteroid",
       "position": [
-        -75.0,
-        683.0
+        -75,
+        683
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -782,8 +781,8 @@
       "id": "asteroide_049",
       "type": "asteroid",
       "position": [
-        -75.0,
-        3.0
+        -75,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -894,8 +893,8 @@
       "id": "asteroide_057",
       "type": "asteroid",
       "position": [
-        975.0,
-        3.0
+        975,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -1057,6 +1056,20 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        95.85786437626905,
+        314.14213562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Pouse no satélite superior esquerdo, depois no da direita. Ajuste cada salto pela prévia até a Terra.",

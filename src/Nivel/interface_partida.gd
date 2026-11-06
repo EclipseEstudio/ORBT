@@ -89,10 +89,6 @@ func _ready() -> void:
 	_fase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_fase.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fase.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var fundo_fase := StyleBoxFlat.new()
-	fundo_fase.bg_color = Tema.FUNDO
-	fundo_fase.set_content_margin_all(1)
-	_fase.add_theme_stylebox_override("normal", fundo_fase)
 	_explorar = botao(linha, "Explorar mapa", partida.alternar_exploracao)
 	Icones.aplicar(_explorar, "olho", "Observar mapa")
 	_explorar.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -125,10 +121,6 @@ func _ready() -> void:
 	_estrelas = rotulo(combustivel, "", 8)
 	_estrelas.name = "Estrelas"
 	_estrelas.modulate = Color("ffc845")
-	var fundo_status := StyleBoxFlat.new()
-	fundo_status.bg_color = Tema.FUNDO
-	fundo_status.set_content_margin_all(1)
-	_status.add_theme_stylebox_override("normal", fundo_status)
 	_indicadores = Indicadores.new()
 	_indicadores.name = "Oxigenio"
 	_base_status.add_child(_indicadores)
@@ -178,7 +170,7 @@ func _ready() -> void:
 	if partida.campanha_permitida:
 		_proxima = botao(base, "Próxima fase", func(): partida.proxima_solicitada.emit.call_deferred())
 		_proxima.visible = false
-		_menu = botao(base, "Menu principal", func(): partida.menu_solicitado.emit.call_deferred())
+		_menu = botao(base, "Menu de fases", func(): partida.selecao_solicitada.emit.call_deferred())
 		_menu.visible = false
 	_ajustar_rodape.call_deferred()
 	get_viewport().size_changed.connect(_atualizar_area_segura)
@@ -187,18 +179,20 @@ func _ready() -> void:
 	_dialogo_pausa.name = "DialogoPausa"
 	_dialogo_pausa.continuar.connect(partida.retomar)
 	_dialogo_pausa.resetar.connect(partida.reiniciar)
-	_dialogo_pausa.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
+	_dialogo_pausa.texto_menu = "Menu de fases"
+	_dialogo_pausa.menu.connect(func(): partida.selecao_solicitada.emit.call_deferred())
 	add_child(_dialogo_pausa)
 	_dialogo_pausa.hide()
 	_dialogo_conclusao = DialogoPausa.new()
 	_dialogo_conclusao.name = "DialogoConclusao"
+	_dialogo_conclusao.modo_conclusao = true
 	_dialogo_conclusao.titulo = "CAMPANHA CONCLUÍDA" if partida.campanha_permitida and proxima_fase.is_empty() else "FASE CONCLUÍDA"
-	_dialogo_conclusao.texto_primario = "Próxima fase"
+	_dialogo_conclusao.texto_primario = "Próximo"
 	_dialogo_conclusao.texto_secundario = "Repetir"
 	_dialogo_conclusao.mostrar_primario = partida.campanha_permitida and not proxima_fase.is_empty()
 	_dialogo_conclusao.continuar.connect(func(): partida.proxima_solicitada.emit.call_deferred())
 	_dialogo_conclusao.resetar.connect(partida.reiniciar)
-	_dialogo_conclusao.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
+	_dialogo_conclusao.menu.connect(func(): partida.selecao_solicitada.emit.call_deferred())
 	add_child(_dialogo_conclusao)
 	_dialogo_conclusao.hide()
 	_dialogo_derrota = DialogoPausa.new()
@@ -301,15 +295,8 @@ func _process(delta: float) -> void:
 	elif not perdida:
 		_dialogo_derrota.hide()
 	if concluida and not _dialogo_conclusao.visible:
-		var quantidade: int = partida.nivel.estrelas.size()
-		var resultado := ""
-		if quantidade > 0:
-			var coletadas: int = partida.estrelas_coletadas.size()
-			var recorde: int = maxi(coletadas, progresso.melhor_estrelas(partida.nivel.id)) if progresso != null else coletadas
-			resultado = "Estrelas: %d/%d\nMelhor: %d/%d" % [coletadas, quantidade, recorde, quantidade]
-		if not partida.aviso_salvamento.is_empty():
-			resultado = partida.aviso_salvamento + "\n" + resultado
-		_dialogo_conclusao.exibir_motivo(resultado)
+		_dialogo_conclusao.exibir_estrelas(partida.quantidade_coletada("gold"), partida.quantidade_coletada("blue") > 0)
+		_dialogo_conclusao.exibir_motivo(partida.aviso_salvamento)
 		_dialogo_conclusao.abrir()
 	elif not concluida:
 		_dialogo_conclusao.hide()
@@ -328,8 +315,8 @@ func _process(delta: float) -> void:
 		_atualizar_area_segura()
 	_status.text = str(partida.nave.combustivel)
 	_status.tooltip_text = "Combustível: %d" % partida.nave.combustivel
-	_estrelas.text = "%d/%d" % [partida.estrelas_coletadas.size(), partida.nivel.estrelas.size()]
-	_estrelas.tooltip_text = "Estrelas opcionais. Só valem ao chegar à Terra."
+	_estrelas.text = "%d/%d" % [partida.quantidade_coletada("gold"), partida.nivel.quantidade_estrelas("gold")]
+	_estrelas.tooltip_text = "Douradas: classificação e acesso aos conjuntos. Só valem ao chegar à Terra."
 	_estrelas.accessibility_name = "Estrelas coletadas: " + _estrelas.text + ". Só valem ao chegar à Terra."
 	_estrelas.visible = not partida.nivel.estrelas.is_empty()
 	_icone_estrelas.visible = _estrelas.visible

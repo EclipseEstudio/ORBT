@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "pouso_de_precisao",
   "name": "Pouso de precisão",
   "order": 15,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      60,
-      410
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       390,
       70
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "station",
       "position": [
         290,
         320
@@ -68,7 +67,7 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "station",
       "position": [
         140,
         170
@@ -111,6 +110,20 @@
       "capture_radius": 0,
       "danger_radius": 28,
       "proximity_radius": 63
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        45.857864376269,
+        424.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -127,7 +140,7 @@
     }
   },
   "tutorial": "Pouse nas faixas claras dos dois apoios. Use a superfície para reorganizar o voo entre as rochas.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -135,7 +148,8 @@
         104.7,
         392.509
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -143,13 +157,24 @@
         145.209,
         376.657
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         345.002,
         127.717
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        358.864,
+        109.938
       ],
       "radius": 7
     }

@@ -44,7 +44,7 @@ func executar():
 	for campo in ["posicao", "posicao_relativa"]:
 		var ponto: Vector2 = disco.dados[campo]
 		disco.dados[campo]=[ponto.x,ponto.y]
-	disco.dados.content_version=1
+	disco.dados.content_version=dados.content_version
 	verificar(not disco.validar(r.nivel).is_empty(), "Checkpoint aceita posição orbital")
 	p.pausar()
 	var t: float = nave.tempo_simulacao

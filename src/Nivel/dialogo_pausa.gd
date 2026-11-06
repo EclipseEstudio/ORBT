@@ -13,9 +13,13 @@ var _menu: Button
 var titulo := "PAUSA"
 var texto_primario := "Continuar"
 var texto_secundario := "Resetar"
+var texto_menu := "Voltar ao menu"
 var mostrar_primario := true
+var modo_conclusao := false
 var _motivo: Label
 var _rolagem_motivo: ScrollContainer
+var _titulo: Label
+var _estrelas_resultado: HBoxContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -43,11 +47,28 @@ func _ready() -> void:
 	coluna.add_theme_constant_override("separation", 6)
 	painel.add_child(coluna)
 	var rotulo_titulo := Label.new()
+	_titulo = rotulo_titulo
 	rotulo_titulo.text = titulo
 	rotulo_titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	rotulo_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rotulo_titulo.add_theme_font_size_override("font_size", 8)
 	coluna.add_child(rotulo_titulo)
+	if modo_conclusao:
+		rotulo_titulo.add_theme_color_override("font_color", Tema.DESTAQUE)
+		_estrelas_resultado = HBoxContainer.new()
+		_estrelas_resultado.name = "EstrelasResultado"
+		_estrelas_resultado.alignment = BoxContainer.ALIGNMENT_CENTER
+		_estrelas_resultado.add_theme_constant_override("separation", 5)
+		coluna.add_child(_estrelas_resultado)
+		for indice in range(4):
+			var estrela := TextureRect.new()
+			estrela.name = "Azul" if indice == 3 else "Dourada%d" % (indice + 1)
+			estrela.texture = Icones.obter("estrela")
+			estrela.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			estrela.custom_minimum_size = Vector2(20, 20)
+			estrela.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			estrela.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			_estrelas_resultado.add_child(estrela)
 	_rolagem_motivo = ScrollContainer.new()
 	_rolagem_motivo.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_rolagem_motivo.custom_minimum_size.y = 36
@@ -60,11 +81,21 @@ func _ready() -> void:
 	_motivo.add_theme_font_size_override("font_size", 8)
 	_rolagem_motivo.add_child(_motivo)
 	_rolagem_motivo.hide()
-	_continuar = _botao(coluna, texto_primario, "jogar", func(): continuar.emit())
+	var acoes: Node = coluna
+	if modo_conclusao:
+		var linha := HBoxContainer.new()
+		linha.alignment = BoxContainer.ALIGNMENT_CENTER
+		coluna.add_child(linha)
+		acoes = linha
+	_continuar = _botao(acoes, texto_primario, "jogar", func(): continuar.emit())
 	_continuar.visible = mostrar_primario
 	Tema.destacar(_continuar)
 	_resetar = _botao(coluna, texto_secundario, "reiniciar", func(): resetar.emit())
-	_menu = _botao(coluna, "Voltar ao menu", "casa", func(): menu.emit())
+	_resetar.visible = not modo_conclusao
+	_menu = _botao(acoes, texto_menu, "casa", func(): menu.emit())
+	if modo_conclusao:
+		Icones.aplicar(_menu, "casa", "Voltar ao menu de fases")
+		_menu.custom_minimum_size = Vector2(32, 32)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
 
@@ -83,6 +114,8 @@ func abrir() -> void:
 	show()
 	if _continuar.visible:
 		_continuar.grab_focus()
+	elif modo_conclusao:
+		_menu.grab_focus()
 	else:
 		_resetar.grab_focus()
 
@@ -90,6 +123,17 @@ func exibir_motivo(texto: String) -> void:
 	_motivo.text = texto
 	_rolagem_motivo.visible = not texto.is_empty()
 	_rolagem_motivo.scroll_vertical = 0
+
+
+func exibir_estrelas(douradas: int, azul: bool) -> void:
+	if not is_instance_valid(_estrelas_resultado):
+		return
+	for indice in range(4):
+		var estrela := _estrelas_resultado.get_child(indice) as TextureRect
+		var obtida := azul if indice == 3 else indice < douradas
+		estrela.visible = indice != 3 or azul
+		estrela.modulate = (Color("57b9ff") if indice == 3 else Color("ffc845")) if obtida else Color("45516b")
+		estrela.accessibility_name = ("Estrela azul" if indice == 3 else "Estrela dourada %d" % (indice + 1)) + (" conquistada" if obtida else " não conquistada")
 
 func _area_segura() -> void:
 	var fisica := AreaSegura.fisica()

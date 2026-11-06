@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "ultima_manobra",
   "name": "Última manobra",
   "order": 20,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      60,
-      430
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       550,
       100
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "station",
       "position": [
         310,
         340
@@ -72,7 +71,7 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "station",
       "position": [
         130,
         180
@@ -139,6 +138,20 @@
       "capture_radius": 0,
       "danger_radius": 24,
       "proximity_radius": 59
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        45.857864376269,
+        444.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -154,8 +167,8 @@
       ]
     }
   },
-  "tutorial": "Combine órbita, pousos e correção em voo. Volte à Terra para confirmar as estrelas desta última viagem.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "tutorial": "Combine órbita, pousos e correção em voo. Volte à Terra para confirmar as estrelas desta última viagem. O tanque verde recupera uma carga de combustível.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -163,7 +176,8 @@
         102.294,
         410.278
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -171,7 +185,8 @@
         141.568,
         391.964
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
@@ -179,7 +194,28 @@
         490.751,
         131.999
       ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        469.823,
+        122.459
+      ],
       "radius": 7
+    }
+  ],
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        121.931,
+        401.121
+      ],
+      "radius": 7,
+      "amount": 1
     }
   ]
 }

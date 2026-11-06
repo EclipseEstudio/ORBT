@@ -9,7 +9,7 @@ signal voltar
 var itens: Array = []
 var progresso: RefCounted
 var erros: Array = []
-var cartoes: GridContainer
+var cartoes: VBoxContainer
 var mensagem: Label
 var _margem: MarginContainer
 var _ocupada := false
@@ -19,7 +19,6 @@ var _nota: Label
 var _colecao: Label
 var _tentar_salvar: Button
 var controlador: Node
-var _checkpoint_controles: VBoxContainer
 var rolagem: ScrollContainer
 
 
@@ -50,14 +49,14 @@ func _ready() -> void:
 	estrela.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	estrela.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	estrela.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	estrela.modulate = Color("ffc845")
+	estrela.modulate = Color("57b9ff")
 	cabecalho.add_child(estrela)
 	_colecao = _rotulo(cabecalho, "", 8)
 	_colecao.name = "Colecao"
 	_colecao.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_colecao.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_colecao.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_colecao.modulate = Color("ffc845")
+	_colecao.modulate = Color("57b9ff")
 	rolagem = ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -68,13 +67,8 @@ func _ready() -> void:
 	rolagem.add_child(conteudo)
 	_nota = _rotulo(conteudo, progresso.descricao() if progresso != null else "", 8)
 	mensagem = _rotulo(conteudo, "", 8)
-	_checkpoint_controles = VBoxContainer.new()
-	_checkpoint_controles.name = "Checkpoint"
-	conteudo.add_child(_checkpoint_controles)
-	cartoes = GridContainer.new()
-	cartoes.columns = 5
-	cartoes.add_theme_constant_override("h_separation", 2)
-	cartoes.add_theme_constant_override("v_separation", 6)
+	cartoes = VBoxContainer.new()
+	cartoes.add_theme_constant_override("separation", 6)
 	cartoes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	conteudo.add_child(cartoes)
 	_tentar_salvar = _botao(coluna, "Tentar salvar\nnovamente", func():
@@ -83,7 +77,6 @@ func _ready() -> void:
 		_tentar_salvar.visible = progresso.salvamento_pendente()
 		_mostrar_controle(_nota), 40)
 	atualizar(itens, erros)
-	configurar_checkpoint()
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
 
@@ -122,17 +115,37 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		cartoes.remove_child(filho)
 		filho.queue_free()
 	mensagem.text = "\n".join(erros) if not erros.is_empty() else ("Nenhuma fase cadastrada." if itens.is_empty() else "")
-	var total := 0
-	var obtidas := 0
-	for item in itens:
+	var total_azuis := 0
+	var obtidas_azuis := 0
+	var grade: GridContainer
+	for indice_item in range(itens.size()):
+		var item: Dictionary = itens[indice_item]
+		if indice_item % 10 == 0:
+			_adicionar_divisor(indice_item)
+			grade = GridContainer.new()
+			grade.name = "Fases%02d" % (indice_item + 1)
+			grade.columns = 5
+			grade.add_theme_constant_override("h_separation", 2)
+			grade.add_theme_constant_override("v_separation", 6)
+			grade.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			if not progresso.bloqueio(item.id).is_empty():
+				var bloco := PanelContainer.new()
+				bloco.name = "Bloco%02d" % (indice_item + 1)
+				bloco.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+				cartoes.add_child(bloco)
+				bloco.add_child(grade)
+				_adicionar_meta(bloco, indice_item)
+			else:
+				cartoes.add_child(grade)
 		var quantidade: int = item.get("estrelas", 0)
 		var recorde: int = mini(quantidade, progresso.melhor_estrelas(item.id))
-		total += quantidade
-		obtidas += recorde
+		var azuis: int = int(item.get("azuis", 0))
+		total_azuis += azuis
+		obtidas_azuis += mini(azuis, progresso.melhor_azuis(item.id))
 		var cartao := VBoxContainer.new()
 		cartao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cartao.add_theme_constant_override("separation", 3)
-		cartoes.add_child(cartao)
+		grade.add_child(cartao)
 		var nome := _rotulo(cartao, item.nome, 8)
 		nome.hide()
 		var estado: String = progresso.estado(item.id)
@@ -146,6 +159,9 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		var descricao := "%02d - %s - %s" % [item.ordem, item.nome, estado]
 		if quantidade > 0:
 			descricao += " - Estrelas: %d/%d" % [recorde, quantidade]
+		var bloqueio: String = progresso.bloqueio(item.id)
+		if not bloqueio.is_empty():
+			descricao += " - " + bloqueio
 		Icones.aplicar(botao, icone, descricao, false)
 		botao.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		botao.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
@@ -155,6 +171,15 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		botao.add_theme_font_size_override("font_size", 8)
 		if not botao.disabled:
 			Tema.destacar(botao, Color("ffc845") if estado == "Concluída" else Tema.DESTAQUE)
+		else:
+			var sombra := StyleBoxFlat.new()
+			sombra.bg_color = Color("181b20")
+			sombra.border_color = Color("44484f")
+			sombra.set_border_width_all(1)
+			sombra.set_content_margin_all(4)
+			botao.add_theme_stylebox_override("disabled", sombra)
+			botao.add_theme_color_override("font_disabled_color", Color("8b8d91"))
+			botao.add_theme_color_override("icon_disabled_color", Color("797c80"))
 		if quantidade > 0:
 			var colecao := HBoxContainer.new()
 			colecao.name = "Estrelas"
@@ -170,15 +195,96 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 				pequena.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				pequena.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 				pequena.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				pequena.modulate = Color("ffc845") if indice < recorde else Color("45516b")
+				pequena.modulate = Color("77797c") if botao.disabled and indice < recorde else (Color("44464a") if botao.disabled else (Color("ffc845") if indice < recorde else Color("45516b")))
 				colecao.add_child(pequena)
 			if quantidade > 3:
 				var contagem := _rotulo(colecao, str(recorde), 6)
 				contagem.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 				contagem.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_colecao.text = "%d/%d" % [obtidas, total]
-	_colecao.accessibility_name = "Coleção de estrelas: %d de %d" % [obtidas, total]
-	_colecao.tooltip_text = "Melhor coleta de cada fase. Só vale ao chegar à Terra."
+	_colecao.text = "%d/%d" % [obtidas_azuis, total_azuis]
+	_colecao.accessibility_name = "Estrelas azuis descobertas: %d de %d" % [obtidas_azuis, total_azuis]
+	_colecao.tooltip_text = "Estrelas azuis descobertas. Elas são segredos e não bloqueiam fases."
+
+
+func _adicionar_divisor(indice: int) -> void:
+	var divisor := HBoxContainer.new()
+	divisor.name = "Divisor%02d" % (indice + 1)
+	divisor.alignment = BoxContainer.ALIGNMENT_CENTER
+	divisor.add_theme_constant_override("separation", 4)
+	cartoes.add_child(divisor)
+	var esquerda := HSeparator.new()
+	esquerda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	divisor.add_child(esquerda)
+	var texto := _rotulo(divisor, "NÍVEL %d" % (indice / 10 + 1), 8)
+	texto.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	texto.autowrap_mode = TextServer.AUTOWRAP_OFF
+	var direita := HSeparator.new()
+	direita.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	divisor.add_child(direita)
+
+
+func _adicionar_meta(bloco: Control, indice: int) -> void:
+	if indice > 0:
+		var total := 0
+		var obtidas := 0
+		for anterior in itens.slice(indice - 10, indice):
+			var quantidade: int = anterior.get("estrelas", 0)
+			total += quantidade
+			obtidas += mini(quantidade, progresso.melhor_estrelas(anterior.id))
+		var centro := CenterContainer.new()
+		centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bloco.add_child(centro)
+		var conteudo := VBoxContainer.new()
+		conteudo.alignment = BoxContainer.ALIGNMENT_CENTER
+		conteudo.add_theme_constant_override("separation", 0)
+		conteudo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		centro.add_child(conteudo)
+		var cadeado := TextureRect.new()
+		cadeado.name = "Cadeado%02d" % (indice + 1)
+		cadeado.texture = Icones.obter("cadeado")
+		cadeado.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		cadeado.custom_minimum_size = Vector2(44, 44)
+		cadeado.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		cadeado.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		cadeado.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		cadeado.modulate = Color("b1b4bb")
+		cadeado.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		conteudo.add_child(cadeado)
+		var painel := PanelContainer.new()
+		painel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var estilo := StyleBoxFlat.new()
+		estilo.bg_color = Color("181b20f2")
+		estilo.set_content_margin_all(3)
+		painel.add_theme_stylebox_override("panel", estilo)
+		conteudo.add_child(painel)
+		var linha := HBoxContainer.new()
+		linha.name = "Meta%02d" % (indice + 1)
+		linha.alignment = BoxContainer.ALIGNMENT_CENTER
+		linha.add_theme_constant_override("separation", 3)
+		painel.add_child(linha)
+		var icone := TextureRect.new()
+		icone.texture = Icones.obter("estrela")
+		icone.custom_minimum_size = Vector2(10, 10)
+		icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icone.modulate = Color("ffc845")
+		linha.add_child(icone)
+		var meta := _rotulo(linha, "%d/%d" % [obtidas, total], 8)
+		meta.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		meta.autowrap_mode = TextServer.AUTOWRAP_OFF
+		meta.modulate = Color("ffc845")
+		meta.accessibility_name = "%d de %d estrelas douradas; %d necessárias" % [obtidas, total, ceili(total * 0.8)]
+
+
+func quantidade_cartoes() -> int:
+	return itens.size()
+
+
+func obter_cartao(indice: int) -> Control:
+	if indice < 0 or indice >= itens.size():
+		return null
+	var grade := cartoes.find_child("Fases%02d" % (indice / 10 * 10 + 1), true, false) as GridContainer
+	return grade.get_child(indice % 10) if grade != null else null
 
 
 func escolher(id: String) -> void:
@@ -215,38 +321,3 @@ func _area_segura() -> void:
 func _process(_delta: float) -> void:
 	if OS.has_feature("android") and (_segura != Rect2(DisplayServer.get_display_safe_area()) or _transformacao != get_viewport().get_screen_transform()):
 		_area_segura()
-
-
-func configurar_checkpoint() -> void:
-	var jogo = controlador
-	if not is_instance_valid(jogo):
-		return
-	var coluna := _checkpoint_controles
-	# Validar o conteúdo para preservar os avisos, mesmo sem ação de retomada.
-	jogo.checkpoint_disponivel()
-	if jogo.checkpoint.salvamento_pendente():
-		var tentar := Button.new()
-		tentar.name = "TentarSalvarCheckpoint"
-		tentar.text = "Salvar último pouso"
-		tentar.custom_minimum_size = Vector2(120, 48)
-		tentar.add_theme_font_size_override("font_size", 8)
-		coluna.add_child(tentar)
-		tentar.pressed.connect(func():
-			jogo.tentar_salvar_checkpoint()
-			jogo.mostrar_selecao.call_deferred())
-	if not jogo.checkpoint.aviso.is_empty():
-		_exibir_aviso(jogo.checkpoint.aviso)
-	elif not jogo.checkpoint.dados.is_empty():
-		_exibir_aviso("Último pouso salvo.")
-
-func _exibir_aviso(texto: String) -> void:
-	var coluna: VBoxContainer = _checkpoint_controles
-	var aviso := coluna.get_node_or_null("AvisoCheckpoint") as Label
-	if aviso == null:
-		aviso = Label.new()
-		aviso.name = "AvisoCheckpoint"
-		aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		aviso.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		aviso.add_theme_font_size_override("font_size", 8)
-		coluna.add_child(aviso)
-	aviso.text = texto

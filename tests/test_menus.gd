@@ -43,9 +43,8 @@ func _executar() -> void:
 	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
 	conferir(menu.find_children("*", "Button", true, false).size() == 3, "checkpoint incompatível não acrescenta ações ao menu principal")
 	jogo.mostrar_selecao()
-	var recuperacao: VBoxContainer = jogo.interface_atual._checkpoint_controles
-	conferir(not recuperacao.has_node("Continuar") and recuperacao.has_node("AvisoCheckpoint") and not recuperacao.has_node("DescartarCheckpoint"), "checkpoint incompatível mantém aviso sem botão de descarte")
-	conferir(recuperacao.get_node("AvisoCheckpoint").text.contains("incompatível") and jogo.checkpoint.bloqueado, "Seleção valida checkpoint e preserva diagnóstico de versão")
+	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Seleção não contém controles de checkpoint")
+	conferir(not jogo.checkpoint_disponivel() and jogo.checkpoint.bloqueado, "API interna preserva diagnóstico de versão")
 	await process_frame
 	await process_frame
 	conferir(jogo.checkpoint.dados == {"fase": "teste_001", "content_version": -1} and jogo.interface_atual.get_script() == preload("res://src/Campanha/selecao_fases.gd"), "Exibir o aviso preserva os dados e mantém a seleção navegável")
@@ -62,7 +61,7 @@ func _executar() -> void:
 	conferir(hud._dialogo_pausa.visible and not hud._raiz.visible and hud._dialogo_pausa.find_children("*", "Button", true, false).size() == 3, "pausa mostra diálogo modal com três ações")
 	hud._dialogo_pausa._menu.pressed.emit()
 	await process_frame
-	conferir(not paused and jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos") and jogo.mundo_atual != mundo, "retorno ao menu limpa mundo e pausa")
+	conferir(not paused and jogo.interface_atual.get("cartoes") != null and jogo.mundo_atual != mundo, "retorno à seleção limpa mundo e pausa")
 	conferir(not is_instance_valid(partida) or (not partida.is_inside_tree() and not partida.nave.simulacao_ativa), "simulação anterior não permanece ativa")
 	conferir(jogo.iniciar_fase("teste_001"), "reabre fase")
 	await process_frame
@@ -85,7 +84,7 @@ func _executar() -> void:
 	conferir(jogo.progresso.estado("teste_001") == "Concluída" and (not is_instance_valid(anterior) or not anterior.is_inside_tree()), "progresso preservado e fase anterior removida")
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	for item in itens:
-		jogo.progresso.concluir(item.id, itens)
+		jogo.progresso.concluir_com_estrelas(item.id, itens, 3)
 	await process_frame
 	conferir(jogo.iniciar_fase(itens[-1].id), "abre última fase")
 	await process_frame
@@ -95,9 +94,8 @@ func _executar() -> void:
 	hud._process(0)
 	conferir(not hud._proxima.visible and hud._reiniciar.text == "Repetir", "última fase não oferece próxima")
 	conferir(not hud._dialogo_conclusao._continuar.visible, "última fase não oferece próxima no diálogo")
-	hud._dialogo_conclusao._resetar.pressed.emit()
-	conferir(partida.estado == partida.Estado.JOGANDO and partida.nave.combustivel == partida.nivel.combustivel_inicial, "repetir inicia nova tentativa")
-	conferir(jogo.progresso.estado(itens[-1].id) == "Concluída", "repetição mantém conclusão")
+	conferir(not hud._dialogo_conclusao._resetar.visible and hud._dialogo_conclusao._menu.visible, "última fase oferece somente casa")
+	conferir(jogo.progresso.estado(itens[-1].id) == "Concluída", "conclusão mantém progresso")
 	jogo.queue_free()
 	await process_frame
 	print("Menus: ", verificacoes, " verificações, ", falhas, " falhas.")

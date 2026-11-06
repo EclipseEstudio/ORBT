@@ -19,7 +19,7 @@ func _ready() -> void:
 func _ao_coletar(id: String) -> void:
 	for estrela in partida.nivel.estrelas:
 		if estrela.id == id:
-			_brilhos.append({"posicao": estrela.position, "tempo": 0.0})
+			_brilhos.append({"posicao": estrela.position, "tempo": 0.0, "cor": Color("57b9ff") if estrela.get("type", "gold") == "blue" else OURO})
 			break
 	queue_redraw()
 
@@ -44,11 +44,12 @@ func _draw() -> void:
 			continue
 		var posicao: Vector2 = estrela.position
 		var pulso := 0.5 + 0.5 * sin(_tempo * 3.0 + indice)
-		draw_circle(posicao, estrela.radius + 2.0, Color(1.0, 0.65, 0.15, 0.08 + pulso * 0.08))
-		draw_texture_rect(textura, Rect2(posicao - Vector2(6, 6), Vector2(12, 12)), false, OURO)
+		var cor := Color("57b9ff") if estrela.get("type", "gold") == "blue" else OURO
+		draw_circle(posicao, estrela.radius + 2.0, Color(cor, 0.08 + pulso * 0.08))
+		draw_texture_rect(textura, Rect2(posicao - Vector2(6, 6), Vector2(12, 12)), false, cor)
 	for brilho in _brilhos:
 		var fracao: float = brilho.tempo / 0.45
-		var cor := Color(OURO, 1.0 - fracao)
+		var cor := Color(brilho.cor, 1.0 - fracao)
 		for direcao in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
 			var ponto: Vector2 = brilho.posicao + direcao * (5 + fracao * 13)
 			draw_rect(Rect2(ponto.round(), Vector2(2, 2)), cor)

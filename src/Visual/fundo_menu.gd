@@ -1,22 +1,39 @@
 extends Control
 ## Cenário apenas visual. Nunca recebe eventos nem participa do mundo físico.
 var mostrar_planeta := true
+var apenas_estrelas := false
 var textura: Texture2D
 const CAMINHO_TEXTURA := "res://Recursos/ModelosVisuais/fundo_menu.png"
+var _tempo := 0.0
+var _deslocamento := Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	if textura == null and ResourceLoader.exists(CAMINHO_TEXTURA):
+	if not apenas_estrelas and textura == null and ResourceLoader.exists(CAMINHO_TEXTURA):
 		textura = load(CAMINHO_TEXTURA)
 	resized.connect(queue_redraw)
+	var estrelas := preload("res://src/Visual/ceu_parallax.gd").new()
+	estrelas.name = "EstrelasParallax"
+	estrelas.animar = true
+	add_child(estrelas)
+
+func _process(delta: float) -> void:
+	_tempo += delta
+	var alvo := Vector2(sin(_tempo * 0.09), cos(_tempo * 0.07)) * 3.0
+	if not OS.has_feature("android"):
+		alvo += (get_local_mouse_position() / size.max(Vector2.ONE) - Vector2(0.5, 0.5)).limit_length(0.7) * 3.0
+	_deslocamento = _deslocamento.lerp(alvo, 1.0 - exp(-delta * 2.0))
+	queue_redraw()
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("070e21"))
+	if apenas_estrelas:
+		return
 	if textura != null:
-		var escala := maxf(size.x / textura.get_width(), size.y / textura.get_height())
+		var escala := maxf((size.x + 20) / textura.get_width(), (size.y + 20) / textura.get_height())
 		var dimensoes := Vector2(textura.get_size()) * escala
-		draw_texture_rect(textura, Rect2((size - dimensoes) / 2, dimensoes), false)
+		draw_texture_rect(textura, Rect2((size - dimensoes) / 2 + _deslocamento, dimensoes), false)
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 731

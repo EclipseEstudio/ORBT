@@ -52,9 +52,11 @@ static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> V
 	var epsilon: float = fisica.get("softening", 8.0)
 	var constante: float = fisica.get("gravity_constant", 1.0)
 	for corpo in corpos:
-		if corpo.type in ["asteroid", "earth", "portal"] or corpo.mass <= 0.0:
+		if corpo.type in ["asteroid", "station", "portal"] or corpo.mass <= 0.0:
 			continue
 		var r: Vector2 = corpo.position - posicao
+		if corpo.has("gravity_radius") and r.length() > corpo.gravity_radius:
+			continue
 		resultado += constante * corpo.mass * r / pow(r.length_squared() + epsilon * epsilon, 1.5)
 	return resultado
 
@@ -101,7 +103,7 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 	for corpo in corpos:
 		var relativo: Vector2 = posicao - corpo.position
 		# A proteção vale só para saída externa do apoio de origem.
-		if corpo.id == origem and corpo.type in ["planet", "satellite"]:
+		if corpo.id == origem and corpo.type in ["planet", "station", "satellite"]:
 			# Normalizar e reposicionar no pouso pode arredondar para dentro da superfície.
 			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao - (posicao_corpo(corpo, tempo + delta) - corpo.position)) >= 0.0:
 				continue

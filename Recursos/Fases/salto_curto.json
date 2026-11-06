@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "salto_curto",
   "name": "Tutorial",
   "order": 2,
@@ -29,10 +29,8 @@
     "max_impulse": 260
   },
   "start": {
-    "position": [
-      350,
-      300
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -53,22 +51,23 @@
       820,
       300
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 32,
     "collision_radius": 32,
     "capture_radius": 40,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 78
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         450,
         300
       ],
-      "mass": 500.0,
+      "mass": 500,
       "visual_radius": 15,
       "collision_radius": 15,
       "capture_radius": 15,
@@ -80,8 +79,8 @@
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
-        -75.0,
-        -67.0
+        -75,
+        -67
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -248,8 +247,8 @@
       "id": "asteroide_013",
       "type": "asteroid",
       "position": [
-        -75.0,
-        683.0
+        -75,
+        683
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -416,8 +415,8 @@
       "id": "asteroide_025",
       "type": "asteroid",
       "position": [
-        -75.0,
-        3.0
+        -75,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -528,8 +527,8 @@
       "id": "asteroide_033",
       "type": "asteroid",
       "position": [
-        975.0,
-        3.0
+        975,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -691,6 +690,20 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        335.85786437626905,
+        314.14213562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Arraste para a esquerda e um pouco para baixo. Use a prévia para contornar o satélite até a Terra.",

@@ -15,6 +15,7 @@ func _ready() -> void:
 	theme = Tema.criar()
 	var fundo := Fundo.new()
 	fundo.name = "Fundo"
+	fundo.textura = preload("res://Recursos/Sprites/fundo_menu_principal.png")
 	add_child(fundo)
 	move_child(fundo, 0)
 	$Margem/Rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "corredor_de_retorno",
   "name": "Corredor de retorno",
   "order": 8,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      80,
-      300
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,12 +38,13 @@
       500,
       300
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
@@ -89,6 +88,20 @@
       "capture_radius": 0,
       "danger_radius": 30,
       "proximity_radius": 65
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        65.857864376269,
+        314.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -104,8 +117,8 @@
       ]
     }
   },
-  "tutorial": "Atravesse por cima e corrija no momento certo. Os impulsos em voo somam velocidade.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "tutorial": "Atravesse por cima e corrija no momento certo. Os impulsos em voo somam velocidade. O tanque verde recupera uma carga de combustível.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -113,7 +126,8 @@
         126.188,
         273.333
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -121,7 +135,8 @@
         168.046,
         249.167
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
@@ -129,7 +144,28 @@
         430.733,
         294.546
       ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        452.694,
+        296.276
+      ],
       "radius": 7
+    }
+  ],
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        147.117,
+        261.25
+      ],
+      "radius": 7,
+      "amount": 1
     }
   ]
 }

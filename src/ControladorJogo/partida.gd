@@ -11,6 +11,7 @@ signal proxima_solicitada
 signal checkpoint_alterado(checkpoint: Dictionary)
 signal pouso_realizado
 signal estrela_coletada(id: String)
+signal combustivel_coletado(id: String)
 var campanha_permitida := false
 
 enum Estado { JOGANDO, PAUSADO, PERDIDA, CONCLUIDA }
@@ -22,6 +23,7 @@ var temporizador_ativo := false
 var explorando := false
 var proximos: Dictionary = {}
 var estrelas_coletadas: Dictionary = {}
+var combustiveis_coletados: Dictionary = {}
 var nivel: NivelRes
 var nave: Node2D
 var _checkpoint: Dictionary = {}
@@ -49,6 +51,7 @@ func reiniciar() -> void:
 	tempo_restante = nivel.tempo_voo
 	temporizador_ativo = false
 	estrelas_coletadas.clear()
+	combustiveis_coletados.clear()
 	_limpar_proximidade()
 	nave.configurar(nivel)
 	_registrar_checkpoint()
@@ -57,7 +60,32 @@ func reiniciar() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	avancar(delta)
+	avancar(delta * escala_tempo())
+
+
+func escala_tempo() -> float:
+	if estado != Estado.JOGANDO or not is_instance_valid(nave):
+		return 1.0
+	if nave.entrada.gesto.contato_ativo != -1 and nave.entrada.pode_controlar():
+		return 0.25
+	if nave.condicao == nave.Condicao.POUSADA:
+		return 1.0
+	var escala := 1.0
+	for corpo in nave.corpos:
+		# A Terra é o destino e uma margem de erro gravitacional: aproximar-se
+		# dela não altera o ritmo de voo. A câmera lenta é reservada aos demais
+		# obstáculos e corpos da rota, além da mira.
+		if corpo.type in ["earth", "station", "portal"]:
+			continue
+		var contato: float = nave.Fisica.raio_contato(corpo) + nave.raio
+		var alcance: float = maxf(contato + 24.0, corpo.proximity_radius + nave.raio)
+		var fracao := clampf((nave.global_position.distance_to(corpo.position) - contato) / (alcance - contato), 0, 1)
+		escala = minf(escala, lerpf(0.35, 1.0, smoothstep(0.0, 1.0, fracao)))
+	return escala
+
+
+func quantidade_coletada(tipo := "gold") -> int:
+	return nivel.estrelas.filter(func(estrela: Dictionary): return estrela.get("type", "gold") == tipo and estrelas_coletadas.has(estrela.id)).size()
 
 
 func avancar(delta: float) -> void:
@@ -84,6 +112,17 @@ func _ao_impulso(_gesto_id: int) -> void:
 func _coletar_trecho(inicio: Vector2, fim: Vector2) -> void:
 	if estado != Estado.JOGANDO or get_tree().paused:
 		return
+	for tanque in nivel.combustiveis:
+		if combustiveis_coletados.has(tanque.id):
+			continue
+		if is_finite(nave.Fisica.intersecao_circulo(inicio, fim, tanque.position, tanque.radius + nave.raio)):
+			combustiveis_coletados[tanque.id] = true
+			nave.combustivel += tanque.amount
+			if nave.condicao == nave.Condicao.A_DERIVA:
+				nave.condicao = nave.Condicao.EM_VOO
+			nave.atualizar_entrada()
+			nave.combustivel_alterado.emit(nave.combustivel)
+			combustivel_coletado.emit(tanque.id)
 	var encontradas: Array = []
 	for estrela in nivel.estrelas:
 		if estrelas_coletadas.has(estrela.id):
@@ -132,6 +171,7 @@ func _registrar_checkpoint() -> void:
 		"temporizador_ativo": temporizador_ativo,
 		"tempo_simulacao": nave.tempo_simulacao,
 		"estrelas_coletadas": estrelas_coletadas.keys(),
+		"combustiveis_coletados": combustiveis_coletados.keys(),
 	}
 	checkpoint_alterado.emit(_checkpoint.duplicate(true))
 
@@ -169,6 +209,9 @@ func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	estrelas_coletadas.clear()
 	for id in _checkpoint.get("estrelas_coletadas", []):
 		estrelas_coletadas[id] = true
+	combustiveis_coletados.clear()
+	for id in _checkpoint.get("combustiveis_coletados", []):
+		combustiveis_coletados[id] = true
 	nave.animation_player.play("default")
 	nave.combustivel_alterado.emit(nave.combustivel)
 	nave.condicao_alterada.emit()

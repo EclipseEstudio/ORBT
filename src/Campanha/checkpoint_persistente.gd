@@ -22,7 +22,7 @@ func validar(nivel: NivelRes) -> Dictionary:
 		bloqueado = true
 		return {}
 	var corpo: Dictionary = nivel.obter_corpo(dados.corpo) if not dados.corpo.is_empty() else {}
-	var valido: bool = dados.corpo.is_empty() or (not corpo.is_empty() and corpo.type in ["planet", "satellite"])
+	var valido: bool = dados.corpo.is_empty() or (not corpo.is_empty() and corpo.type in ["planet", "station"])
 	for campo in ["posicao", "posicao_relativa"]:
 		var v = dados.get(campo)
 		valido = valido and v is Array and v.size() == 2
@@ -30,7 +30,22 @@ func validar(nivel: NivelRes) -> Dictionary:
 			valido = _numero(v[0], -1000000, 1000000) and _numero(v[1], -1000000, 1000000)
 	valido = valido and _numero(dados.get("orientacao"), -1000000, 1000000)
 	var combustivel = dados.get("combustivel")
-	valido = valido and _numero(combustivel, 0, nivel.combustivel_inicial)
+	var tanques = dados.get("combustiveis_coletados", [])
+	var combustivel_maximo := nivel.combustivel_inicial
+	valido = valido and tanques is Array
+	var ids_tanques: Dictionary = {}
+	if tanques is Array:
+		for id in tanques:
+			if not id is String or ids_tanques.has(id):
+				valido = false
+				continue
+			ids_tanques[id] = true
+			var encontrados := nivel.combustiveis.filter(func(tanque: Dictionary): return tanque.id == id)
+			if encontrados.is_empty():
+				valido = false
+			else:
+				combustivel_maximo += encontrados[0].amount
+	valido = valido and _numero(combustivel, 0, combustivel_maximo)
 	if valido:
 		valido = float(combustivel) == floorf(float(combustivel))
 	valido = valido and _numero(dados.get("tempo"), 0, nivel.tempo_voo)
@@ -50,6 +65,7 @@ func validar(nivel: NivelRes) -> Dictionary:
 		return {}
 	var copia := dados.duplicate(true)
 	copia["estrelas_coletadas"] = coletadas.duplicate()
+	copia["combustiveis_coletados"] = tanques.duplicate()
 	copia.posicao = Vector2(copia.posicao[0], copia.posicao[1])
 	copia.posicao_relativa = Vector2(copia.posicao_relativa[0], copia.posicao_relativa[1])
 	if not corpo.is_empty():

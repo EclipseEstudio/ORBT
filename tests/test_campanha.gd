@@ -70,10 +70,10 @@ func _executar() -> void:
 	tela.itens = resultado.itens
 	root.add_child(tela)
 	await process_frame
-	conferir(tela.cartoes.get_child_count() == 2, "Tela abre sem mundo ou nave")
+	conferir(tela.quantidade_cartoes() == 2, "Tela abre sem mundo ou nave")
 	tela.atualizar(resultado.itens, [])
-	conferir(tela.cartoes.get_child_count() == 2, "Atualização não duplica cartões")
-	var botao: Button = tela.cartoes.get_child(0).get_child(2)
+	conferir(tela.quantidade_cartoes() == 2, "Atualização não duplica cartões")
+	var botao: Button = tela.obter_cartao(0).get_child(2)
 	conferir(botao.get_meta("estado") == "Concluída" and botao.icon != null and botao.custom_minimum_size.y == 40, "Concluída tem ícone de estado e cartão compacto para repetição")
 	tela.atualizar([], [])
 	conferir(tela.mensagem.text.contains("Nenhuma fase"), "Catálogo vazio mantém navegação")
@@ -99,7 +99,7 @@ func _executar() -> void:
 	gerenciador.caminho = caminho
 	jogo.progresso = Progresso.new()
 	jogo.mostrar_selecao()
-	conferir(gerenciador.itens.all(func(item: Dictionary): return item.keys().size() == 5 and item.has("estrelas") and not item.has("corpos")), "Listagem usa somente metadados de campanha e quantidade de estrelas")
+	conferir(gerenciador.itens.all(func(item: Dictionary): return item.keys().size() == 6 and item.has("estrelas") and not item.has("corpos")), "Listagem usa somente metadados de campanha e quantidade de estrelas")
 	var mundo_antes: Node = jogo.mundo_atual
 	gerenciador.erros.append("sentinela")
 	conferir(not jogo.iniciar_fase("b") and jogo.mundo_atual == mundo_antes and gerenciador.erros.has("sentinela"), "Bloqueio direto impede até carregar JSON")
@@ -123,7 +123,7 @@ func _executar() -> void:
 	conferir(jogo.progresso.estado("a") == "Concluída" and jogo.progresso.pode_abrir("b"), "Vitória de produção atualiza progresso da sessão")
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(not is_instance_valid(nivel) and jogo.interface_atual.cartoes.get_child_count() == 2, "Retorno libera mundo anterior e atualiza cartões")
+	conferir(not is_instance_valid(nivel) and jogo.interface_atual.quantidade_cartoes() == 2, "Retorno libera mundo anterior e atualiza cartões")
 	conferir(jogo.iniciar_fase("b") and not jogo.iniciar_fase("b"), "Chamadas diretas duplicadas não criam duas cenas")
 	await process_frame
 	conferir(jogo.mundo_atual.nivel_res.id == "b" and jogo.mundo_atual.get_node("Nave").combustivel == 2 and jogo.mundo_atual.partida.tempo_restante == 30, "Alternância começa nova fase com dados corretos")

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "janela_orbital",
   "name": "Janela orbital",
   "order": 12,
@@ -38,17 +38,18 @@
       360,
       150
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "origem",
-      "type": "planet",
+      "type": "station",
       "position": [
         160,
         350
@@ -97,7 +98,7 @@
     }
   },
   "tutorial": "Observe a órbita antes de lançar. O movimento do planeta muda a posição e a velocidade de saída.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -105,7 +106,8 @@
         146.648,
         247.347
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -113,13 +115,24 @@
         195.775,
         224.932
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         305.728,
         207.894
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        283.747,
+        208.813
       ],
       "radius": 7
     }

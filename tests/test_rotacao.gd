@@ -47,7 +47,7 @@ func executar():
 	for i in range(60): p.avancar(1.0/60)
 	verificar(nave.posicao_relativa.distance_to(relativo.rotated(PI/6))<0.001,"Nave transportada pela superfície")
 	verificar(absf(angle_difference(nave.global_rotation,nave.posicao_relativa.angle()+PI/2))<0.001,"Orientação acompanha apoio")
-	verificar(nave.velocidade_apoio().distance_to(F.velocidade_corpo(corpo,nave.tempo_simulacao)+F.velocidade_superficie(corpo,nave.posicao_relativa))<0.001,"Herança soma órbita e superfície")
+	verificar(nave.velocidade_apoio().distance_to(F.velocidade_corpo(corpo,nave.tempo_simulacao))<0.001,"Decolagem herda somente translação orbital")
 	p._registrar_checkpoint()
 	var cp=p._checkpoint.duplicate(true)
 	var disco=Disco.new()
@@ -55,7 +55,7 @@ func executar():
 	for campo in ["posicao","posicao_relativa"]:
 		var ponto:Vector2=disco.dados[campo]
 		disco.dados[campo]=[ponto.x,ponto.y]
-	disco.dados.content_version=1
+	disco.dados.content_version=dados.content_version
 	verificar(not disco.validar(r.nivel).is_empty(),"Checkpoint giratório válido")
 	p.pausar()
 	p.avancar(1)
@@ -68,7 +68,7 @@ func executar():
 	var impulso:Vector2=nave.posicao_relativa.normalized()*80
 	verificar(nave.solicitar_impulso(nave._ultimo_pedido+1,impulso),"Decolagem aceita")
 	nave.aplicar_pedidos()
-	verificar(nave.velocidade.distance_to(heranca+impulso)<0.001,"Decolagem herda giro")
+	verificar(nave.velocidade.distance_to(heranca+impulso)<0.001,"Decolagem não soma velocidade de rotação")
 	p.reiniciar()
 	p.resolver_contato({"kind":"body","body":corpo,"safe_landing":false})
 	verificar(p.motivo=="Pouso fora da faixa segura" and p.estado==p.Estado.PERDIDA,"Contato inseguro encerra")

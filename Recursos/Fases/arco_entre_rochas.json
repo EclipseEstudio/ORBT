@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "arco_entre_rochas",
   "name": "Arco entre rochas",
   "order": 17,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      60,
-      340
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       520,
       264
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "gravidade",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         270,
         300
@@ -60,7 +59,10 @@
       "collision_radius": 26,
       "capture_radius": 26,
       "danger_radius": 0,
-      "proximity_radius": 61
+      "proximity_radius": 61,
+      "rotation": {
+        "degrees_per_second": 24
+      }
     },
     {
       "id": "superior",
@@ -89,6 +91,20 @@
       "capture_radius": 0,
       "danger_radius": 32,
       "proximity_radius": 67
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        45.857864376269,
+        354.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -105,7 +121,7 @@
     }
   },
   "tutorial": "Encontre o arco entre as rochas. A gravidade altera a direção durante todo o voo.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -113,7 +129,8 @@
         132.897,
         278.035
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -121,13 +138,24 @@
         220.706,
         227.824
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         387.779,
         293.911
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        432.838,
+        285.944
       ],
       "radius": 7
     }

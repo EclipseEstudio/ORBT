@@ -39,7 +39,7 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	var selecao: Control = jogo.interface_atual
 	Area.aplicar(selecao._margem, 0, fisica)
-	selecao._exibir_aviso("Checkpoint incompatível. ".repeat(8))
+	selecao.falhou("Checkpoint incompatível. ".repeat(8))
 	await acomodar()
 	conferir(selecao.rolagem.get_v_scroll_bar().visible and not selecao.rolagem.get_h_scroll_bar().visible, "Diagnóstico da seleção usa apenas rolagem vertical")
 	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.name == "DescartarCheckpoint"), "Nenhum botão de descarte é criado com diagnóstico longo")

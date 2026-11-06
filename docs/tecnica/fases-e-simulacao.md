@@ -1,6 +1,6 @@
 # Fases e simulação — contrato de protótipo v1
 
-Atualização de 05/11/2026: o contrato aceita estrelas opcionais em `stars`. Consulte [estrelas coletáveis](estrelas-coletaveis.md) para dados, segmentos físicos, checkpoint e persistência. O JSON de fase continua na versão 1; o save de progresso usa esquema 2. As descrições de protótipo abaixo são históricas onde mencionam ausência de órbitas, rotação ou portais: essas mecânicas já estão implementadas e cobertas por suas suítes.
+Atualização de 06/11/2026: o contrato atual está na [revisão de jogabilidade](revisao-jogabilidade.md): estações, douradas/azuis, tanques, gravidade da Terra, tempo reduzido e lançamento sem força da rotação. JSON de fase no esquema 1; progresso no esquema 3. As descrições do protótipo abaixo são históricas onde divergirem desse contrato.
 
 Implementado em 14/10/2026 para integrar #15–#20 às dependências #7–#14 e #32–#37. Este documento registra o contrato JSON, a arquitetura e a resolução determinística da simulação. O comportamento esperado pelo jogador está nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md). As escolhas do protótipo continuam sujeitas ao aceite da equipe e à calibração no Android; o GDD original permanece preservado.
 

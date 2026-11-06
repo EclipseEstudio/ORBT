@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "contorno",
   "name": "O Contorno",
   "order": 13,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      103.0384,
-      215.2704
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -52,12 +50,13 @@
       496.9616,
       284.7296
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 20,
     "collision_radius": 20,
     "capture_radius": 20,
     "danger_radius": 0,
-    "proximity_radius": 50
+    "proximity_radius": 50,
+    "gravity_radius": 58
   },
   "bodies": [
     {
@@ -73,10 +72,24 @@
       "capture_radius": 0,
       "danger_radius": 30,
       "proximity_radius": 65
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        88.896264376269,
+        229.412535623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Desvie da rocha e corrija o voo em direção à Terra.",
-  "notes": "Contorno de um perigo com correção em voo.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -84,7 +97,8 @@
         146.505,
         203.624
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -92,13 +106,24 @@
         185.142,
         193.271
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         429.909,
         280.95
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        417.139,
+        261.821
       ],
       "radius": 7
     }

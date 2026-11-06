@@ -108,7 +108,7 @@ static func validar(dados: Variant) -> Dictionary:
 		else:
 			ids[corpo.id] = true
 			prefixo += " (" + corpo.id + ")"
-		if not corpo.get("type") in ["planet", "satellite", "sun", "asteroid", "earth", "portal"] or (indice < dados.bodies.size() and corpo.get("type") == "earth"):
+		if not corpo.get("type") in ["planet", "station", "satellite", "sun", "asteroid", "earth", "portal"] or (indice < dados.bodies.size() and corpo.get("type") == "earth"):
 			erros.append(prefixo + ".type: tipo inválido")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
@@ -123,7 +123,7 @@ static func validar(dados: Variant) -> Dictionary:
 				erros.append(prefixo + ".rotation: degrees_per_second e initial_degrees entre -360 e 360")
 		if corpo.has("landing_zone"):
 			var setor = corpo.landing_zone
-			if corpo.get("type") not in ["planet", "satellite"] or not setor is Dictionary or not numero(setor.get("center_degrees"), -360, 360) or not numero(setor.get("half_width_degrees"), 0.01, 180):
+			if corpo.get("type") not in ["planet", "station", "satellite"] or not setor is Dictionary or not numero(setor.get("center_degrees"), -360, 360) or not numero(setor.get("half_width_degrees"), 0.01, 180):
 				erros.append(prefixo + ".landing_zone: apenas apoios; center_degrees entre -360 e 360, half_width_degrees entre 0,01 e 180")
 		if corpo.has("orbit"):
 			var orbita = corpo.orbit
@@ -139,8 +139,16 @@ static func validar(dados: Variant) -> Dictionary:
 				erros.append(prefixo + "." + campo + ": número fora do intervalo")
 		if erros.size() > erros_antes:
 			continue
-		if corpo.type in ["asteroid", "earth"] and corpo.mass != 0:
+		if corpo.type in ["asteroid", "station"] and corpo.mass != 0:
 			erros.append(prefixo + ".mass: este tipo não atrai")
+		if corpo.has("gravity_radius") and not numero(corpo.gravity_radius, corpo.capture_radius, 10000):
+			erros.append(prefixo + ".gravity_radius: deve cobrir captura e ter no máximo 10000")
+		# Compatibilidade com fases antigas; satélites deixam de existir na simulação.
+		if corpo.type == "satellite":
+			corpo.type = "planet" if corpo.mass > 0 else "station"
+		if corpo.type == "earth":
+			corpo.mass = maxf(corpo.mass, 180000.0)
+			corpo["gravity_radius"] = corpo.get("gravity_radius", corpo.capture_radius + 38.0)
 		if corpo.type in ["sun", "asteroid"]:
 			if corpo.danger_radius < corpo.collision_radius or corpo.capture_radius != 0:
 				erros.append(prefixo + ": perigo deve cobrir colisão e não ter captura")
@@ -187,10 +195,11 @@ static func validar(dados: Variant) -> Dictionary:
 	nivel.corpos = normalizados
 	nivel.dados_autorais = dados.duplicate(true)
 	_validar_estrelas(dados.get("stars", []), nivel, erros)
+	_validar_combustiveis(dados.get("fuel_pickups", []), nivel, erros)
 	if not Fisica.dentro_limites(normalizados[-1].position, nivel.limites):
 		erros.append("goal.position: Terra fora dos limites")
 	var apoio := nivel.obter_corpo(inicio.get("body_id", ""))
-	if not inicio.has("position") and (apoio.is_empty() or not apoio.type in ["planet", "satellite"]):
+	if not inicio.has("position") and (apoio.is_empty() or not apoio.type in ["planet", "station"]):
 		erros.append("start.body_id: apoio seguro inexistente")
 	else:
 		var posicao := nivel.obter_posicao_inicial()
@@ -232,6 +241,8 @@ static func _validar_estrelas(dados: Variant, nivel: NivelRes, erros: Array[Stri
 			erros.append(prefixo + ": position [x, y] e radius positivo até 1000 obrigatórios")
 			continue
 		var posicao := Vector2(estrela.position[0], estrela.position[1])
+		if estrela.get("type", "gold") not in ["gold", "blue"]:
+			erros.append(prefixo + ".type: esperado gold ou blue")
 		var raio := float(estrela.radius)
 		if not Fisica.dentro_limites(posicao - Vector2.ONE * raio, nivel.limites) or not Fisica.dentro_limites(posicao + Vector2.ONE * raio, nivel.limites):
 			erros.append(prefixo + ": estrela fora dos limites")
@@ -243,4 +254,31 @@ static func _validar_estrelas(dados: Variant, nivel: NivelRes, erros: Array[Stri
 				var saida: Vector2 = corpo.position + direcao * (corpo.collision_radius + nivel.parametros_nave.radius + 0.01)
 				if posicao.distance_to(saida) <= raio + nivel.parametros_nave.radius:
 					erros.append(prefixo + ": sobreposta à saída do portal " + corpo.id)
-		nivel.estrelas.append({"id": estrela.id, "position": posicao, "radius": raio})
+		nivel.estrelas.append({"id": estrela.id, "position": posicao, "radius": raio, "type": estrela.get("type", "gold")})
+
+
+static func _validar_combustiveis(dados: Variant, nivel: NivelRes, erros: Array[String]) -> void:
+	if not dados is Array or dados.size() > 256:
+		erros.append("fuel_pickups: lista opcional com até 256 tanques")
+		return
+	var ids: Dictionary = {}
+	for tanque in dados:
+		if not tanque is Dictionary or not texto(tanque.get("id")) or tanque.id.length() > 256 or ids.has(tanque.id):
+			erros.append("fuel_pickups: ID ausente ou duplicado")
+			continue
+		ids[tanque.id] = true
+		if not vetor(tanque.get("position")) or not numero(tanque.get("radius"), 0.01, 1000) or not inteiro(tanque.get("amount"), 1) or tanque.amount > 100:
+			erros.append("fuel_pickups: position [x,y], radius positivo e amount inteiro entre 1 e 100")
+			continue
+		var posicao := Vector2(tanque.position[0], tanque.position[1])
+		var raio := float(tanque.radius)
+		if not nivel.limites.encloses(Rect2(posicao - Vector2.ONE * raio, Vector2.ONE * raio * 2)):
+			erros.append("fuel_pickups: tanque fora dos limites")
+		for corpo in nivel.corpos:
+			if posicao.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + raio:
+				erros.append("fuel_pickups: sobreposto ao corpo " + corpo.id)
+			if corpo.type == "portal":
+				var saida: Vector2 = corpo.position + Vector2.RIGHT.rotated(deg_to_rad(corpo.exit_degrees)) * (corpo.collision_radius + nivel.parametros_nave.radius + 0.01)
+				if posicao.distance_to(saida) <= raio + nivel.parametros_nave.radius:
+					erros.append("fuel_pickups: sobreposto à saída do portal " + corpo.id)
+		nivel.combustiveis.append({"id": tanque.id, "position": posicao, "radius": raio, "amount": int(tanque.amount)})

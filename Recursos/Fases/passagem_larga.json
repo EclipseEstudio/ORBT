@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 3,
   "id": "passagem_larga",
   "name": "Passagem larga",
   "order": 3,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      60,
-      330
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,12 +38,13 @@
       320,
       100
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
@@ -75,6 +74,20 @@
       "capture_radius": 0,
       "danger_radius": 26,
       "proximity_radius": 61
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        45.857864376269,
+        344.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -91,7 +104,7 @@
     }
   },
   "tutorial": "Encontre a passagem entre as rochas. Escolha a direção antes de lançar.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -99,7 +112,8 @@
         112.804,
         283.289
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -107,13 +121,24 @@
         161.115,
         240.553
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         275.687,
         179.294
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        136.5,
+        262.3
       ],
       "radius": 7
     }

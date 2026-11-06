@@ -105,8 +105,7 @@ func _executar() -> void:
 	root.add_child(jogo_backup)
 	await process_frame
 	jogo_backup.mostrar_selecao()
-	var coluna = jogo_backup.interface_atual._checkpoint_controles
-	conferir(coluna.has_node("AvisoCheckpoint") and not coluna.has_node("DescartarCheckpoint"), "Seleção mostra aviso da cópia sem descarte")
+	conferir(jogo_backup.interface_atual.find_child("Checkpoint", true, false) == null, "Seleção não exibe diagnóstico ou ações de checkpoint")
 	conferir(not jogo_backup.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar"), "Cópia válida não adiciona retomada à seleção")
 	conferir(jogo_backup.continuar_checkpoint(), "API interna lê cópia anterior")
 	conferir(jogo_backup.mundo_atual.partida.estado == jogo_backup.mundo_atual.partida.Estado.PAUSADO and jogo_backup.mundo_atual.partida.nave.corpo_apoio == "origem", "Cópia anterior preserva checkpoint recuperado")

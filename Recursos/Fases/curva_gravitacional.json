@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "curva_gravitacional",
   "name": "Curva gravitacional",
   "order": 9,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      70,
-      310
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       500,
       264
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "gravidade",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         270,
         280
@@ -60,7 +59,24 @@
       "collision_radius": 26,
       "capture_radius": 26,
       "danger_radius": 0,
-      "proximity_radius": 61
+      "proximity_radius": 61,
+      "rotation": {
+        "degrees_per_second": 16
+      }
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        55.857864376269,
+        324.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -76,8 +92,8 @@
       ]
     }
   },
-  "tutorial": "A atração da lua curva o voo. Lance por fora da superfície e deixe a gravidade ajudar.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "tutorial": "O planeta curva o voo com gravidade. Lance por fora da superfície; o tempo desacelera na aproximação.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -85,7 +101,8 @@
         141.352,
         258.393
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -93,13 +110,24 @@
         223.085,
         216.86
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         367.762,
         247.265
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        394.136,
+        251.763
       ],
       "radius": 7
     }
