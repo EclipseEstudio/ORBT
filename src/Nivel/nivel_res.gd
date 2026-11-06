@@ -13,6 +13,7 @@ var parametros_nave: Dictionary = {}
 var inicio: Dictionary = {}
 var corpos: Array = []
 var estrelas: Array = []
+var combustiveis: Array = []
 var dados_autorais: Dictionary = {}
 
 
@@ -29,3 +30,7 @@ func obter_corpo(id_corpo: String) -> Dictionary:
 		if corpo.id == id_corpo:
 			return corpo
 	return {}
+
+
+func quantidade_estrelas(tipo := "gold") -> int:
+	return estrelas.filter(func(estrela: Dictionary): return estrela.get("type", "gold") == tipo).size()

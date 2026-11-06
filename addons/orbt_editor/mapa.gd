@@ -72,11 +72,15 @@ func _draw() -> void:
 		var pontos := PackedVector2Array()
 		for ponta in range(10):
 			pontos.append(posicao + Vector2.UP.rotated(ponta * PI / 5.0) * (9.0 if ponta % 2 == 0 else 4.0))
-		draw_colored_polygon(pontos, Color("ffc845"))
+		draw_colored_polygon(pontos, Color("57b9ff") if estrela.get("type", "gold") == "blue" else Color("ffc845"))
 		draw_arc(posicao, maxf(2, estrela.radius * escala), 0, TAU, 32, Color("ffc84588"), 1)
 		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), estrela.id, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("ffc845"))
 		if documento.selecao == -3 - indice:
 			draw_rect(Rect2(posicao - Vector2.ONE * 11, Vector2.ONE * 22), Color.YELLOW, false, 2)
+	for tanque in dados.get("fuel_pickups", []):
+		var ponto := tela(Vector2(tanque.position[0], tanque.position[1]))
+		draw_rect(Rect2(ponto - Vector2(4, 5), Vector2(8, 10)), Color("6af0b4"), false, 2)
+		draw_string(ThemeDB.fallback_font, ponto + Vector2(8, 0), "+" + str(tanque.amount), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("6af0b4"))
 	var validacao := Carregador.validar(dados)
 	if validacao.nivel != null:
 		var inicio := tela(validacao.nivel.obter_posicao_inicial())

@@ -42,7 +42,7 @@ func _ler(arquivo: String) -> Dictionary:
 	var versao = dados.get("schema_version")
 	if not (versao is int or versao is float) or not is_finite(float(versao)) or versao != floorf(versao):
 		return {"estado": "invalido"}
-	if versao != 1 and versao != 2:
+	if int(versao) not in [1, 2, 3]:
 		return {"estado": "incompativel"}
 	var numero = dados.get("geracao")
 	if not (numero is float or numero is int) or not is_finite(numero) or numero < 1 or numero > 1000000000 or numero != floorf(numero):
@@ -59,7 +59,7 @@ func _ler(arquivo: String) -> Dictionary:
 		if id not in dados.liberadas:
 			return {"estado": "invalido"}
 	var conteudo := {"schema_version": int(versao), "geracao": int(numero), "concluidas": dados.concluidas, "liberadas": dados.liberadas}
-	if versao == 2:
+	if versao >= 2:
 		if not dados.get("melhores_estrelas") is Dictionary or dados.melhores_estrelas.size() > 10000:
 			return {"estado": "invalido"}
 		var recordes: Dictionary = {}
@@ -69,6 +69,16 @@ func _ler(arquivo: String) -> Dictionary:
 				return {"estado": "invalido"}
 			recordes[id] = int(quantidade)
 		conteudo["melhores_estrelas"] = recordes
+	if versao == 3:
+		if not dados.get("melhores_azuis") is Dictionary or dados.melhores_azuis.size() > 10000:
+			return {"estado": "invalido"}
+		var azuis: Dictionary = {}
+		for id in dados.melhores_azuis:
+			var quantidade = dados.melhores_azuis[id]
+			if id not in dados.concluidas or not (quantidade is int or quantidade is float) or not is_finite(float(quantidade)) or quantidade != floorf(quantidade) or quantidade < 1 or quantidade > 256:
+				return {"estado": "invalido"}
+			azuis[id] = int(quantidade)
+		conteudo["melhores_azuis"] = azuis
 	if dados.get("checksum") != JSON.stringify(conteudo, "", true).sha256_text():
 		return {"estado": "invalido"}
 	return {"estado": "valido", "dados": conteudo, "texto": texto}
@@ -95,6 +105,7 @@ func carregar() -> bool:
 	concluidas.clear()
 	liberadas.clear()
 	melhores_estrelas.clear()
+	melhores_azuis.clear()
 	for id in escolhido.dados.concluidas:
 		concluidas[id] = true
 	for id in escolhido.dados.liberadas:
@@ -102,12 +113,14 @@ func carregar() -> bool:
 	for id in escolhido.dados.get("melhores_estrelas", {}):
 		melhores_estrelas[id] = int(escolhido.dados.melhores_estrelas[id])
 	geracao = escolhido.dados.geracao
+	for id in escolhido.dados.get("melhores_azuis", {}):
+		melhores_azuis[id] = int(escolhido.dados.melhores_azuis[id])
 	_ultimo_valido = escolhido.texto
 	if principal.estado != "valido":
 		aviso = "Progresso recuperado da última cópia válida."
 	alterado.emit()
 	# Migrar apenas depois de verificar o checksum antigo; a cópia mantém o legado.
-	if escolhido.dados.schema_version == 1:
+	if escolhido.dados.schema_version < 3:
 		_sujo = true
 		salvar()
 	return true
@@ -132,8 +145,27 @@ func registrar_estrelas(id: String, quantidade: int) -> bool:
 
 
 func concluir_com_estrelas(id: String, itens: Array, quantidade: int) -> bool:
+	var ja_agrupando := _agrupando
 	_agrupando = true
 	var mudou := super.concluir_com_estrelas(id, itens, quantidade)
+	_agrupando = ja_agrupando
+	if _sujo and not _agrupando:
+		salvar()
+	return mudou
+
+
+func registrar_azuis(id: String, quantidade: int) -> bool:
+	var mudou := super.registrar_azuis(id, quantidade)
+	if mudou or _sujo:
+		_sujo = true
+		if not _agrupando:
+			salvar()
+	return mudou
+
+
+func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int) -> bool:
+	_agrupando = true
+	var mudou := super.concluir_com_coletas(id, itens, douradas, azuis)
 	_agrupando = false
 	if _sujo:
 		salvar()
@@ -158,7 +190,7 @@ func salvar() -> bool:
 	var abertas: Array = liberadas.keys()
 	completas.sort()
 	abertas.sort()
-	var dados := {"schema_version": 2, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas, "melhores_estrelas": melhores_estrelas.duplicate()}
+	var dados := {"schema_version": 3, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas, "melhores_estrelas": melhores_estrelas.duplicate(), "melhores_azuis": melhores_azuis.duplicate()}
 	dados["checksum"] = JSON.stringify(dados, "", true).sha256_text()
 	var texto := JSON.stringify(dados, "\t") + "\n"
 	aviso = "Não foi possível salvar. O progresso novo vale só nesta sessão."

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "demo_portais",
   "name": "Travessia por portais",
   "order": 11,
@@ -28,10 +28,8 @@
     "max_impulse": 80
   },
   "start": {
-    "position": [
-      0,
-      0
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -39,12 +37,13 @@
       300,
       0
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 14,
     "collision_radius": 14,
     "capture_radius": 16,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 54
   },
   "bodies": [
     {
@@ -78,6 +77,20 @@
       "proximity_radius": 40,
       "target_id": "portal_a",
       "exit_degrees": 0
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -15.556349186104045,
+        15.556349186104045
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Arraste para a esquerda e solte. A prévia mostra o salto entre portais.",

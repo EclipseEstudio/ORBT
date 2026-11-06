@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "duas_rotas",
   "name": "Duas Rotas",
   "order": 14,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      100,
-      250
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -52,12 +50,13 @@
       500,
       250
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 20,
     "collision_radius": 20,
     "capture_radius": 20,
     "danger_radius": 0,
-    "proximity_radius": 50
+    "proximity_radius": 50,
+    "gravity_radius": 58
   },
   "bodies": [
     {
@@ -101,10 +100,24 @@
       "capture_radius": 0,
       "danger_radius": 20,
       "proximity_radius": 45
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        85.857864376269,
+        264.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
-  "tutorial": "Escolha passar acima ou abaixo e corrija o voo para a Terra.",
-  "notes": "Duas alternativas simétricas usando somente impulso e correção em voo.",
+  "tutorial": "Escolha passar acima ou abaixo e corrija o voo para a Terra. O tanque verde recupera uma carga de combustível.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -112,7 +125,8 @@
         140.784,
         230.982
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -120,7 +134,8 @@
         177.036,
         214.077
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
@@ -128,7 +143,28 @@
         433.309,
         257.921
       ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        418.101,
+        242.023
+      ],
       "radius": 7
+    }
+  ],
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        158.91,
+        222.5295
+      ],
+      "radius": 7,
+      "amount": 1
     }
   ]
 }

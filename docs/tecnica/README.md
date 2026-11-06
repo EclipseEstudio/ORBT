@@ -3,6 +3,7 @@
 Contratos, decisões de implementação e procedimentos para desenvolver e exportar o ORBT. Consulte o [índice geral](../README.md) para navegar pelas outras categorias.
 
 - [Fases e simulação](fases-e-simulacao.md): formato JSON v1, validação, unidades, integrador e contatos.
+- [Revisão de jogabilidade de 06/11](revisao-jogabilidade.md): estações, parallax, giroscópio, tempo, combustível e estrelas.
 - [Campanha](campanha.md): leitura do catálogo, carregamento, serviço de progresso e recuperação de saves.
 - [Editor de fases](editor-de-fases.md): integração do plugin, operações e reprodução dos testes.
 - [Android](android.md): configuração de exportação, pacotes e roteiro de validação em aparelho.

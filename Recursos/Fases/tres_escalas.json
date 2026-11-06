@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "tres_escalas",
   "name": "Três escalas",
   "order": 18,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      60,
-      430
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       80,
       30
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "station",
       "position": [
         280,
         360
@@ -64,7 +63,7 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "station",
       "position": [
         120,
         220
@@ -78,7 +77,7 @@
     },
     {
       "id": "apoio_3",
-      "type": "satellite",
+      "type": "station",
       "position": [
         360,
         160
@@ -145,6 +144,20 @@
       "capture_radius": 0,
       "danger_radius": 40,
       "proximity_radius": 75
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        45.857864376269,
+        444.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -160,8 +173,8 @@
       ]
     }
   },
-  "tutorial": "Planeje três pousos e preserve as cargas para as decolagens. As estrelas podem exigir uma rota mais longa.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "tutorial": "Planeje três pousos e preserve as cargas para as decolagens. As estrelas podem exigir uma rota mais longa. O tanque verde recupera uma carga de combustível.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -169,7 +182,8 @@
         102.882,
         416.356
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -177,7 +191,8 @@
         142.905,
         403.621
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
@@ -185,7 +200,28 @@
         158.889,
         38.353
       ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        136.968,
+        36.032
+      ],
       "radius": 7
+    }
+  ],
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        122.8935,
+        409.9885
+      ],
+      "radius": 7,
+      "amount": 1
     }
   ]
 }

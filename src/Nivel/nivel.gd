@@ -6,6 +6,8 @@ const CameraNivel = preload("res://src/Nivel/camera_nivel.gd")
 const InterfacePartida = preload("res://src/Nivel/interface_partida.gd")
 const RastroNave = preload("res://src/Nave/rastro_nave.gd")
 const EstrelasColetaveis = preload("res://src/Visual/estrelas_coletaveis.gd")
+const CeuParallax = preload("res://src/Visual/ceu_parallax.gd")
+const CombustiveisColetaveis = preload("res://src/Visual/combustiveis_coletaveis.gd")
 
 var nivel_res: NivelRes
 var campanha_permitida := false
@@ -38,6 +40,14 @@ func _ready() -> void:
 	camera = CameraNivel.new()
 	camera.partida = partida
 	add_child(camera)
+	$CanvasLayer/GeradorEstrelas.hide()
+	var ceu := CeuParallax.new()
+	ceu.name = "CeuParallax"
+	ceu.camera = camera
+	$CanvasLayer.add_child(ceu)
+	var combustiveis := CombustiveisColetaveis.new()
+	combustiveis.partida = partida
+	add_child(combustiveis)
 	var rastro := RastroNave.new()
 	rastro.partida = partida
 	rastro.camera = camera

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "escala_no_desvio",
   "name": "Escala no desvio",
   "order": 7,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      70,
-      380
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "goal": {
     "id": "terra",
@@ -40,17 +38,18 @@
       70,
       60
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 22,
     "collision_radius": 22,
     "capture_radius": 22,
     "danger_radius": 0,
-    "proximity_radius": 57
+    "proximity_radius": 57,
+    "gravity_radius": 60
   },
   "bodies": [
     {
       "id": "apoio",
-      "type": "satellite",
+      "type": "station",
       "position": [
         300,
         285
@@ -89,6 +88,20 @@
       "capture_radius": 0,
       "danger_radius": 25,
       "proximity_radius": 60
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        55.857864376269,
+        394.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "camera": {
@@ -105,7 +118,7 @@
     }
   },
   "tutorial": "Contorne a barreira pelo apoio. Guarde combustível para decolar e, se quiser, buscar a estrela afastada.",
-  "notes": "Campanha progressiva. Três estrelas opcionais; a coleta só é confirmada ao chegar à Terra.",
+  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
   "stars": [
     {
       "id": "estrela_1",
@@ -113,7 +126,8 @@
         115.751,
         361.103
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_2",
@@ -121,13 +135,24 @@
         155.956,
         344.496
       ],
-      "radius": 7
+      "radius": 7,
+      "type": "gold"
     },
     {
       "id": "estrela_3",
       "position": [
         143.677,
         99.911
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        151.053,
+        120.639
       ],
       "radius": 7
     }

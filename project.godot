@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="ORBT"
-config/version="0.4.0"
+config/version="0.4.1"
 run/main_scene="res://src/ControladorJogo/main.tscn"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "Mobile")
 boot_splash/bg_color=Color(0.02745, 0.0549, 0.1294, 1)
 boot_splash/show_image=false
-config/icon="res://Recursos/Sprites/icon.svg"
+config/icon="res://Recursos/Sprites/orbt.svg"
 
 [autoload]
 
@@ -44,6 +44,7 @@ enabled=PackedStringArray("res://addons/orbt_editor/plugin.cfg")
 
 [input_devices]
 
+sensors/enable_gyroscope=true
 pointing/emulate_touch_from_mouse=true
 
 [physics]

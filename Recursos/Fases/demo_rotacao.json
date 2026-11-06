@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "demo_rotacao",
   "name": "Pouso na faixa segura",
   "order": 11,
@@ -37,22 +37,23 @@
       90,
       60
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 14,
     "collision_radius": 14,
     "capture_radius": 16,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 54
   },
   "bodies": [
     {
       "id": "origem",
-      "type": "planet",
+      "type": "station",
       "position": [
         90,
         250
       ],
-      "mass": 24000,
+      "mass": 0,
       "visual_radius": 20,
       "collision_radius": 20,
       "capture_radius": 24,
@@ -77,7 +78,7 @@
     },
     {
       "id": "apoio",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         210,
         140

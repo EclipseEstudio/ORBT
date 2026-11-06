@@ -123,12 +123,12 @@ func jogar(nivel: Node, etapas: Array, estrelas: int, desvio := 0.0) -> bool:
 			var destino: String = "terra" if partida.estado == partida.Estado.CONCLUIDA else nave.corpo_apoio
 			if not conferir(destino == etapa.contato, contexto + ": chega a " + str(etapa.contato) + " (" + partida.motivo + ")"):
 				return false
-		conferir(nave.combustivel == nivel.nivel_res.combustivel_inicial - indice - 1, contexto + ": uma carga por impulso")
+		conferir(nave.combustivel == nivel.nivel_res.combustivel_inicial - indice - 1 + partida.combustiveis_coletados.size(), contexto + ": uma carga por impulso")
 	if not conferir(partida.estado == partida.Estado.CONCLUIDA, nivel.nivel_res.id + ": chega à Terra"):
 		return false
 	conferir(partida.tempo_restante > 0, nivel.nivel_res.id + ": rota cabe no oxigênio disponível")
 	if is_zero_approx(desvio):
-		conferir(partida.estrelas_coletadas.size() == estrelas, "%s: rota recolhe %d estrelas, obtido %d" % [nivel.nivel_res.id, estrelas, partida.estrelas_coletadas.size()])
+		conferir(partida.quantidade_coletada("gold") == estrelas, "%s: rota recolhe %d estrelas, obtido %d" % [nivel.nivel_res.id, estrelas, partida.quantidade_coletada("gold")])
 	return true
 
 
@@ -144,18 +144,20 @@ func _executar() -> void:
 	await process_frame
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(jogo.interface_atual.cartoes.get_child_count() == 20, "Seleção mostra vinte fases")
+	conferir(jogo.interface_atual.quantidade_cartoes() == 20, "Seleção mostra vinte fases")
 	for indice in range(ROTAS.size()):
 		var rota: Dictionary = ROTAS[indice]
 		var resultado := Carregador.carregar(catalogo.itens[indice].arquivo)
 		conferir(catalogo.itens[indice].id == rota.id and catalogo.itens[indice].ordem == indice + 1, rota.id + ": ordem progressiva contínua")
 		if not conferir(resultado.nivel != null, rota.id + ": dados e geometria válidos: " + str(resultado.erros)):
 			continue
-		conferir(resultado.nivel.estrelas.size() == 3, rota.id + ": três estrelas opcionais")
+		conferir(resultado.nivel.quantidade_estrelas("gold") == 3, rota.id + ": três estrelas opcionais")
 		conferir(rota.coleta.size() == rota.etapas.size() + 2 and rota.coleta.size() <= resultado.nivel.combustivel_inicial, rota.id + ": coleta completa exige mais recursos e cabe no combustível")
 		if not conferir(jogo.iniciar_fase(rota.id), rota.id + ": desbloqueada pela vitória anterior e aberta em produção"):
 			continue
 		jogar(jogo.mundo_atual, rota.etapas, 2)
+		if rota.id in ["mira_aberta", "passagem_larga"]:
+			conferir(jogo.mundo_atual.partida.quantidade_coletada("blue") == 1, rota.id + ": primeira estrela azul aparece na rota direta")
 		conferir(jogo.progresso.estado(rota.id) == "Concluída", rota.id + ": conclusão econômica registrada")
 		conferir(jogo.progresso.melhor_estrelas(rota.id) == 2, rota.id + ": somente as estrelas trazidas à Terra são confirmadas")
 		jogo.mostrar_selecao()
@@ -170,6 +172,9 @@ func _executar() -> void:
 		if conferir(jogo.iniciar_fase(rota.id), rota.id + ": repetição abre fase concluída"):
 			jogar(jogo.mundo_atual, rota.coleta, 3)
 			conferir(jogo.progresso.melhor_estrelas(rota.id) == 3, rota.id + ": repetição melhora recorde para três estrelas")
+			var azuis: int = resultado.nivel.quantidade_estrelas("blue")
+			conferir(jogo.mundo_atual.partida.quantidade_coletada("blue") == azuis, rota.id + ": rota alternativa permite a conquista azul com combustível disponível")
+			conferir(jogo.progresso.melhor_azuis(rota.id) == azuis, rota.id + ": chegada confirma a conquista azul separadamente")
 			jogo.mostrar_selecao()
 			await process_frame
 	conferir(jogo.progresso.concluidas.size() == 20 and jogo.progresso.total_estrelas() == 60, "Campanha completa: vinte fases e sessenta estrelas confirmadas")

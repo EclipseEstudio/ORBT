@@ -31,8 +31,8 @@ func _executar() -> void:
 	await process_frame
 	jogo.mostrar_selecao()
 	conferir(jogo.progresso.estado("a") == "Concluída" and jogo.progresso.estado("b") == "Disponível", "Controlador reaberto restaura conclusão e acesso à segunda fase")
-	var cartoes: GridContainer = jogo.interface_atual.cartoes
-	conferir(cartoes.get_child_count() == 2 and cartoes.get_child(0).get_child(2).get_meta("estado") == "Concluída" and not cartoes.get_child(0).get_child(2).disabled and not cartoes.get_child(1).get_child(2).disabled, "Seleção reaberta oferece repetição e próxima fase liberada")
+	var selecao = jogo.interface_atual
+	conferir(selecao.quantidade_cartoes() == 2 and selecao.obter_cartao(0).get_child(2).get_meta("estado") == "Concluída" and not selecao.obter_cartao(0).get_child(2).disabled and not selecao.obter_cartao(1).get_child(2).disabled, "Seleção reaberta oferece repetição e próxima fase liberada")
 	var abriu_ultima: bool = jogo.iniciar_fase("b")
 	conferir(abriu_ultima, "Segunda fase desbloqueada abre após encerrar o processo anterior")
 	if abriu_ultima:
@@ -41,8 +41,8 @@ func _executar() -> void:
 		conferir(jogo.progresso.estado("b") == "Concluída" and jogo.progresso.concluidas.size() == 2 and jogo.progresso.liberadas.size() == 2, "Última vitória conclui a campanha sem criar outro ID")
 		jogo.mostrar_selecao()
 		await process_frame
-		cartoes = jogo.interface_atual.cartoes
-		conferir(cartoes.get_child_count() == 2 and cartoes.get_child(0).get_child(2).get_meta("estado") == "Concluída" and cartoes.get_child(1).get_child(2).get_meta("estado") == "Concluída" and not cartoes.get_child(1).get_child(2).disabled, "Conclusão da última fase mantém campanha navegável")
+		selecao = jogo.interface_atual
+		conferir(selecao.quantidade_cartoes() == 2 and selecao.obter_cartao(0).get_child(2).get_meta("estado") == "Concluída" and selecao.obter_cartao(1).get_child(2).get_meta("estado") == "Concluída" and not selecao.obter_cartao(1).get_child(2).disabled, "Conclusão da última fase mantém campanha navegável")
 		var salvo := FileAccess.get_file_as_string(argumentos[0])
 		var abriu_repeticao: bool = jogo.iniciar_fase("a")
 		conferir(abriu_repeticao, "Primeira fase concluída continua acessível após a última vitória")
@@ -52,7 +52,9 @@ func _executar() -> void:
 		conferir(FileAccess.get_file_as_string(argumentos[0]) == salvo, "Abrir repetição não altera o progresso salvo")
 		var restaurado = jogo.progresso.get_script().new()
 		restaurado.caminho = argumentos[0]
-		conferir(restaurado.carregar() and restaurado.estado("a") == "Concluída" and restaurado.estado("b") == "Concluída" and restaurado.liberadas.size() == 2, "Conclusão da última fase também fica persistida")
+		var carregou: bool = restaurado.carregar()
+		restaurado.configurar(jogo.get_node("GerenciadorDeNivel").itens)
+		conferir(carregou and restaurado.estado("a") == "Concluída" and restaurado.estado("b") == "Concluída" and restaurado.liberadas.size() == 2, "Conclusão da última fase também fica persistida")
 	jogo.queue_free()
 	await process_frame
 	print("Reabertura: %d verificações, %d falhas." % [verificacoes, falhas])

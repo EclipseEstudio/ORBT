@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 1,
+  "content_version": 2,
   "id": "portas_gemeas",
   "name": "Portas Gêmeas",
   "order": 9,
@@ -28,10 +28,8 @@
     "max_impulse": 100
   },
   "start": {
-    "position": [
-      300.0,
-      50.0
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -49,23 +47,24 @@
   "goal": {
     "id": "terra",
     "position": [
-      300.0,
-      450.0
+      300,
+      450
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 20,
     "collision_radius": 20,
     "capture_radius": 20,
     "danger_radius": 0,
-    "proximity_radius": 50
+    "proximity_radius": 50,
+    "gravity_radius": 58
   },
   "bodies": [
     {
       "id": "primeira_rocha",
       "type": "asteroid",
       "position": [
-        300.0,
-        200.0
+        300,
+        200
       ],
       "mass": 0,
       "visual_radius": 32,
@@ -78,8 +77,8 @@
       "id": "segunda_rocha",
       "type": "asteroid",
       "position": [
-        300.0,
-        300.0
+        300,
+        300
       ],
       "mass": 0,
       "visual_radius": 32,
@@ -92,8 +91,8 @@
       "id": "limite_superior",
       "type": "asteroid",
       "position": [
-        495.0,
-        250.0
+        495,
+        250
       ],
       "mass": 0,
       "visual_radius": 24,
@@ -106,8 +105,8 @@
       "id": "limite_inferior",
       "type": "asteroid",
       "position": [
-        105.0,
-        250.0
+        105,
+        250
       ],
       "mass": 0,
       "visual_radius": 24,
@@ -115,6 +114,20 @@
       "capture_radius": 0,
       "danger_radius": 24,
       "proximity_radius": 55
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        285.85786437626905,
+        64.14213562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Atravesse por um dos dois corredores e corrija após passar pelas rochas.",

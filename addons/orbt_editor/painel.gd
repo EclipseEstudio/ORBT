@@ -44,7 +44,7 @@ func _ready() -> void:
 	var ferramentas := HFlowContainer.new()
 	add_child(ferramentas)
 	var tipo := OptionButton.new()
-	for texto in ["planet", "satellite", "sun", "asteroid", "portal"]:
+	for texto in ["planet", "station", "sun", "asteroid", "portal"]:
 		tipo.add_item(texto)
 	ferramentas.add_child(tipo)
 	_botao(ferramentas, "Inserir corpo", func():
@@ -239,7 +239,7 @@ func _mostrar_propriedades() -> void:
 		_propriedades.remove_child(filho)
 		filho.queue_free()
 	if documento.selecao == -2:
-		for chave in ["id", "name", "schema_version", "content_version", "order", "initial_fuel", "flight_timeout", "bounds", "physics", "ship", "start", "tutorial", "notes"]:
+		for chave in ["id", "name", "schema_version", "content_version", "order", "initial_fuel", "fuel_pickups", "flight_timeout", "bounds", "physics", "ship", "start", "tutorial", "notes"]:
 			if documento.dados.has(chave):
 				_campo([chave], documento.dados[chave], chave)
 			elif chave == "initial_fuel":
@@ -267,7 +267,7 @@ func _mostrar_propriedades() -> void:
 		for campo in ["rotation", "landing_zone"]:
 			if documento.objeto(documento.selecao).get("type") == "portal":
 				continue
-			if campo == "landing_zone" and documento.objeto(documento.selecao).get("type", "earth") not in ["planet", "satellite"]:
+			if campo == "landing_zone" and documento.objeto(documento.selecao).get("type", "earth") not in ["planet", "station"]:
 				continue
 			var opcao := CheckBox.new()
 			opcao.text = "Rotação do corpo" if campo == "rotation" else "Faixa segura de pouso"
@@ -301,7 +301,8 @@ func _campo(trilha: Array, valor: Variant, nome_campo: String) -> void:
 	_propriedades.add_child(rotulo)
 	if nome_campo == "type":
 		var opcao := OptionButton.new()
-		for tipo in ["planet", "satellite", "sun", "asteroid", "portal"]:
+		var tipos: Array = ["gold", "blue"] if trilha[0] == "stars" else ["planet", "station", "sun", "asteroid", "portal"]
+		for tipo in tipos:
 			opcao.add_item(tipo)
 			if tipo == valor:
 				opcao.selected = opcao.item_count - 1

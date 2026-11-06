@@ -19,6 +19,8 @@ func _initialize() -> void:
 		quit(1)
 		return
 	var planeta: Dictionary = nivel.obter_corpo("origem")
+	planeta.type = "planet"
+	planeta.mass = 24000
 	var apoio: Dictionary = nivel.obter_corpo("apoio")
 	var centro: Vector2 = planeta.position
 	var a_centro: Vector2 = Fisica.aceleracao(centro, [planeta], nivel.fisica)

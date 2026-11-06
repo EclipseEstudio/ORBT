@@ -142,6 +142,9 @@ func testar_fisica(nivel: NivelRes) -> void:
 
 func _executar() -> void:
 	var dados: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Fases/teste_001.json"))
+	# Fonte gravitacional isolada para os ensaios físicos legados.
+	dados.bodies[0].type = "planet"
+	dados.bodies[0].mass = 24000
 	testar_dados(dados)
 	var nivel: NivelRes = Carregador.validar(dados).nivel
 	if nivel == null:

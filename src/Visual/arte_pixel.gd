@@ -15,6 +15,20 @@ static var _texturas: Dictionary = {}
 
 
 static func textura(tipo: String) -> Texture2D:
+	if tipo == "station":
+		if not _texturas.has(tipo):
+			var imagem := Image.create(40, 40, false, Image.FORMAT_RGBA8)
+			imagem.fill(Color.TRANSPARENT)
+			# Painéis solares, casco central e escotilha; textura contida no raio físico.
+			imagem.fill_rect(Rect2i(4, 14, 32, 12), Color("2d426c"))
+			for x in [5, 9, 13, 26, 30, 34]:
+				imagem.fill_rect(Rect2i(x, 15, 2, 10), Color("648bd1"))
+			imagem.fill_rect(Rect2i(16, 10, 8, 20), Color("c5d9e6"))
+			imagem.fill_rect(Rect2i(14, 16, 12, 8), Color("e7f1ef"))
+			imagem.fill_rect(Rect2i(18, 15, 4, 5), Color("42f5d1"))
+			imagem.fill_rect(Rect2i(18, 25, 4, 3), Color("526b89"))
+			_texturas[tipo] = ImageTexture.create_from_image(imagem)
+		return _texturas[tipo]
 	# Carregar após a importação, sem exigir arquivos .ctex ao analisar os scripts.
 	if not _texturas.has(tipo):
 		_texturas[tipo] = load(TEXTURAS[tipo])

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "na_diagonal",
   "name": "O Estilingue",
   "order": 3,
@@ -29,10 +29,8 @@
     "max_impulse": 260
   },
   "start": {
-    "position": [
-      110,
-      500
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -53,12 +51,13 @@
       830,
       120
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 32,
     "collision_radius": 32,
     "capture_radius": 40,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 78
   },
   "bodies": [
     {
@@ -68,7 +67,7 @@
         300,
         420
       ],
-      "mass": 2500.0,
+      "mass": 2500,
       "visual_radius": 34,
       "collision_radius": 34,
       "capture_radius": 34,
@@ -83,7 +82,7 @@
         620,
         180
       ],
-      "mass": 2200.0,
+      "mass": 2200,
       "visual_radius": 32,
       "collision_radius": 32,
       "capture_radius": 32,
@@ -93,12 +92,12 @@
     },
     {
       "id": "apoio_3",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         480,
         320
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -110,8 +109,8 @@
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
-        150.0,
-        130.0
+        150,
+        130
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -208,8 +207,8 @@
       "id": "asteroide_008",
       "type": "asteroid",
       "position": [
-        750.0,
-        550.0
+        750,
+        550
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -306,8 +305,8 @@
       "id": "asteroide_015",
       "type": "asteroid",
       "position": [
-        -75.0,
-        -67.0
+        -75,
+        -67
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -474,8 +473,8 @@
       "id": "asteroide_027",
       "type": "asteroid",
       "position": [
-        -75.0,
-        683.0
+        -75,
+        683
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -642,8 +641,8 @@
       "id": "asteroide_039",
       "type": "asteroid",
       "position": [
-        -75.0,
-        3.0
+        -75,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -754,8 +753,8 @@
       "id": "asteroide_047",
       "type": "asteroid",
       "position": [
-        975.0,
-        3.0
+        975,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -917,6 +916,20 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        95.85786437626905,
+        514.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Arraste quase para a esquerda. Os planetas curvam o voo pelo corredor até a Terra.",

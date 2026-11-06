@@ -5,6 +5,8 @@ signal alterado
 var concluidas: Dictionary = {}
 var liberadas: Dictionary = {}
 var melhores_estrelas: Dictionary = {}
+var melhores_azuis: Dictionary = {}
+var _itens: Array = []
 
 
 func descricao() -> String:
@@ -20,6 +22,7 @@ func aviso_para_partida() -> String:
 
 
 func configurar(itens: Array) -> void:
+	_itens = itens.duplicate(true)
 	if not itens.is_empty():
 		liberadas[itens[0].id] = true
 	# Uma campanha pode ganhar fases depois da conclusão da antiga última.
@@ -29,13 +32,56 @@ func configurar(itens: Array) -> void:
 
 
 func estado(id: String) -> String:
+	if not pode_abrir(id):
+		return "Bloqueada"
 	if concluidas.has(id):
 		return "Concluída"
-	return "Disponível" if liberadas.has(id) else "Bloqueada"
+	return "Disponível"
 
 
 func pode_abrir(id: String) -> bool:
-	return liberadas.has(id) or concluidas.has(id)
+	var indice := _itens.find_custom(func(item: Dictionary): return item.id == id)
+	if indice < 0 or not bloqueio(id).is_empty():
+		return false
+	for anterior in range(indice):
+		if not concluidas.has(_itens[anterior].id):
+			return false
+	return indice == 0 or liberadas.has(id) or concluidas.has(id)
+
+
+func bloqueio(id: String) -> String:
+	var indice := -1
+	for i in range(_itens.size()):
+		if _itens[i].id == id:
+			indice = i
+	for inicio in range(0, maxi(0, indice / 10) * 10, 10):
+		var total := 0
+		var obtidas := 0
+		for i in range(inicio, mini(inicio + 10, _itens.size())):
+			var quantidade: int = _itens[i].get("estrelas", 3)
+			total += quantidade
+			obtidas += mini(quantidade, melhor_estrelas(_itens[i].id))
+		var exigidas := ceili(total * 0.8)
+		if obtidas < exigidas:
+			return "Conjunto %d: %d/%d douradas. Meta: %d (80%%)." % [inicio / 10 + 1, obtidas, total, exigidas]
+	return ""
+
+
+func melhor_azuis(id: String) -> int:
+	return int(melhores_azuis.get(id, 0))
+
+
+func registrar_azuis(id: String, quantidade: int) -> bool:
+	if not concluidas.has(id) or quantidade <= melhor_azuis(id) or quantidade > 256:
+		return false
+	melhores_azuis[id] = quantidade
+	alterado.emit()
+	return true
+
+
+func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int) -> bool:
+	var mudou := concluir_com_estrelas(id, itens, douradas)
+	return registrar_azuis(id, azuis) or mudou
 
 
 func melhor_estrelas(id: String) -> int:

@@ -68,7 +68,7 @@ func _executar() -> void:
 	escrever(base + "-legado", texto_legado)
 	var migrado = ler(base + "-legado")
 	var dados_migrados: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "-legado"))
-	conferir(migrado.estado("a") == "Concluída" and migrado.pode_abrir("b") and migrado.total_estrelas() == 0 and dados_migrados.schema_version == 2, "Migração preserva progresso antigo e inicia coleta vazia")
+	conferir(migrado.estado("a") == "Concluída" and migrado.pode_abrir("b") and migrado.total_estrelas() == 0 and dados_migrados.schema_version == 3, "Migração preserva progresso antigo e inicia coleta vazia")
 	conferir(FileAccess.get_file_as_string(base + "-legado.bak") == texto_legado, "Migração guarda save antigo como backup")
 	conferir(migrado.concluir_com_estrelas("a", itens, 1) and ler(base + "-legado").melhor_estrelas("a") == 1, "Fase migrada recebe estrela no replay")
 	var falha := FalhaDisco.new()
@@ -81,7 +81,7 @@ func _executar() -> void:
 	conferir(not falha.carregar() and FileAccess.get_file_as_string(falha.caminho) == antes_falha, "Releitura não descarta estrelas pendentes nem sobrescreve save")
 	falha.falhar = false
 	conferir(falha.salvar() and ler(falha.caminho).melhor_estrelas("a") == 3, "Retentativa persiste estrelas pendentes")
-	var futuro := "{\"schema_version\":3}"
+	var futuro := "{\"schema_version\":4}"
 	escrever(base + "-futuro", futuro)
 	var bloqueado = ler(base + "-futuro")
 	bloqueado.concluir_com_estrelas("a", itens, 3)

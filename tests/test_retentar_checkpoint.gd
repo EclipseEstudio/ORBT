@@ -52,16 +52,10 @@ func _executar() -> void:
 	conferir(not jogo.continuar_checkpoint(), "Não restaura cópia antiga enquanto há pouso pendente")
 	jogo.mostrar_selecao()
 	await acomodar()
-	var coluna = jogo.interface_atual._checkpoint_controles
-	conferir(coluna.has_node("TentarSalvarCheckpoint") and not jogo.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar"), "Menu oferece retentativa sem Continuar antigo")
-	coluna.get_node("TentarSalvarCheckpoint").pressed.emit()
-	await acomodar()
-	conferir(jogo.checkpoint.salvamento_pendente() and jogo.interface_atual._checkpoint_controles.has_node("TentarSalvarCheckpoint") and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém retentativa e arquivo válido")
+	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Menu sem ações de último pouso")
+	conferir(not jogo.tentar_salvar_checkpoint() and jogo.checkpoint.salvamento_pendente() and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém arquivo válido e pouso pendente")
 	jogo.checkpoint.falhar = false
-	jogo.interface_atual._checkpoint_controles.get_node("TentarSalvarCheckpoint").pressed.emit()
-	await acomodar()
-	coluna = jogo.interface_atual._checkpoint_controles
-	conferir(not jogo.checkpoint.salvamento_pendente() and not jogo.interface_atual.find_children("*", "Button", true, false).any(func(b): return b.name == "Continuar") and not coluna.has_node("TentarSalvarCheckpoint"), "Sucesso remove retentativa e mantém seleção sem retomada")
+	conferir(jogo.tentar_salvar_checkpoint() and not jogo.checkpoint.salvamento_pendente(), "API interna persiste retentativa")
 	var salvo := Save.new()
 	salvo.caminho = base
 	conferir(salvo.carregar() and salvo.dados.corpo == "apoio" and salvo.dados.combustivel == 3 and is_equal_approx(salvo.dados.tempo, 12.5), "Nova instância lê último pouso gravado de verdade")

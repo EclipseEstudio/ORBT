@@ -30,7 +30,7 @@ func executar():
 	errado=dados.duplicate(true)
 	errado.goal.position=[220,0]
 	verificar(C.validar(errado).nivel==null,"Saída sobreposta rejeitada")
-	var resultado=F.passo(Vector2.ZERO,Vector2(800,0),0.1,r.nivel.corpos,r.nivel.fisica,r.nivel.limites,8)
+	var resultado=F.passo(Vector2.ZERO,Vector2(800,0),0.1,r.nivel.corpos,r.nivel.fisica,r.nivel.limites,8,r.nivel.inicio.body_id)
 	verificar(resultado.get("teleported",false),"Contato rápido atravessa portal")
 	verificar(resultado.position.distance_to(Vector2(220.01,0))<0.001,"Saída fora do destino")
 	verificar(resultado.velocity==Vector2(800,0),"Módulo preservado e direção da saída aplicada")

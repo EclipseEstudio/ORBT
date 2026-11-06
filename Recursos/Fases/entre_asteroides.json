@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "entre_asteroides",
   "name": "Deriva Final",
   "order": 6,
@@ -29,10 +29,8 @@
     "max_impulse": 260
   },
   "start": {
-    "position": [
-      110,
-      540
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -53,22 +51,23 @@
       840,
       540
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 16,
     "collision_radius": 16,
     "capture_radius": 16,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 54
   },
   "bodies": [
     {
       "id": "apoio_1",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         215,
         425
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -78,12 +77,12 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         500,
         60
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -93,12 +92,12 @@
     },
     {
       "id": "apoio_3",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         705,
         415
       ],
-      "mass": 450.0,
+      "mass": 450,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -113,7 +112,7 @@
         555,
         260
       ],
-      "mass": 4000.0,
+      "mass": 4000,
       "visual_radius": 34,
       "collision_radius": 34,
       "capture_radius": 0,
@@ -128,7 +127,7 @@
         345,
         260
       ],
-      "mass": 4000.0,
+      "mass": 4000,
       "visual_radius": 34,
       "collision_radius": 34,
       "capture_radius": 0,
@@ -140,8 +139,8 @@
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
-        330.0,
-        563.0
+        330,
+        563
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -224,8 +223,8 @@
       "id": "asteroide_007",
       "type": "asteroid",
       "position": [
-        610.0,
-        65.0
+        610,
+        65
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -280,8 +279,8 @@
       "id": "asteroide_011",
       "type": "asteroid",
       "position": [
-        330.0,
-        65.0
+        330,
+        65
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -364,8 +363,8 @@
       "id": "asteroide_017",
       "type": "asteroid",
       "position": [
-        -75.0,
-        -67.0
+        -75,
+        -67
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -532,8 +531,8 @@
       "id": "asteroide_029",
       "type": "asteroid",
       "position": [
-        -75.0,
-        683.0
+        -75,
+        683
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -700,8 +699,8 @@
       "id": "asteroide_041",
       "type": "asteroid",
       "position": [
-        -75.0,
-        3.0
+        -75,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -812,8 +811,8 @@
       "id": "asteroide_049",
       "type": "asteroid",
       "position": [
-        975.0,
-        3.0
+        975,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -975,6 +974,20 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        95.85786437626905,
+        554.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Passe abaixo dos dois sóis. Depois da faixa de asteroides, corrija para cima e à direita.",

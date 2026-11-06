@@ -40,10 +40,10 @@ func _executar() -> void:
 	conferir(menu.find_children("*", "Button", true, false).size() == 3 and not coluna.has_node("Continuar"), "menu com checkpoint continua tendo somente três ações")
 	jogo.mostrar_selecao()
 	var selecao: Control = jogo.interface_atual
-	selecao._exibir_aviso("Checkpoint inválido. Reinicie a fase para continuar.")
+	selecao.falhou("Checkpoint inválido. Reinicie a fase para continuar.")
 	await process_frame
 	await process_frame
-	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.name in ["Continuar", "DescartarCheckpoint"]) and selecao._checkpoint_controles.has_node("AvisoCheckpoint"), "Seleção preserva diagnóstico sem retomada ou descarte")
+	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.name in ["Continuar", "DescartarCheckpoint"]) and selecao.find_child("Checkpoint", true, false) == null, "Seleção sem ações de checkpoint")
 	jogo.checkpoint.dados = {}
 	conferir(jogo.iniciar_fase("teste_001"), "primeira fase abre")
 	await process_frame
@@ -62,7 +62,7 @@ func _executar() -> void:
 	conferir(jogo.progresso.estado("teste_001") == "Concluída", "narrativa não impede a progressão")
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	for item in itens:
-		jogo.progresso.concluir(item.id, itens)
+		jogo.progresso.concluir_com_estrelas(item.id, itens, 3)
 	await process_frame
 	conferir(jogo.iniciar_fase(itens[-1].id), "última fase abre")
 	await process_frame

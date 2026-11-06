@@ -92,7 +92,7 @@ func _executar() -> void:
 		partida.avancar(DELTA)
 	conferir(nave.condicao == nave.Condicao.EM_VOO and nave.combustivel == 4 and partida.temporizador_ativo, "Primeiro lançamento ativa voo, tempo e uma cobrança")
 	conferir(nave.global_position.distance_to(previa[1]) < 0.001, "Prévia e voo coincidem depois do início livre")
-	conferir(nave.velocidade.y < 0 and not nave.global_position.is_equal_approx(Vector2(94, 400)), "Gravidade passa a atuar após o lançamento")
+	conferir(nave.velocidade.y < 0 and nave.global_position.x > 90, "Gravidade passa a atuar após o lançamento")
 	nave.pousar(nivel.obter_corpo("origem"))
 	partida.reiniciar()
 	conferir(nave.condicao == nave.Condicao.PRONTA and nave.global_position == Vector2(90, 400) and nave.velocidade == Vector2.ZERO and nave.combustivel == 5 and nave.corpo_apoio.is_empty() and nave.posicao_relativa == Vector2.ZERO, "Reinício após pouso restaura início livre sem vínculo residual")

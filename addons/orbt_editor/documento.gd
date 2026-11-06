@@ -250,7 +250,7 @@ func inserir_estrela(posicao: Vector2) -> void:
 	var ids: Array = dados.stars.map(func(estrela: Dictionary): return estrela.id)
 	while "estrela_%d" % numero in ids:
 		numero += 1
-	dados.stars.append({"id": "estrela_%d" % numero, "position": [posicao.x, posicao.y], "radius": 7.0})
+	dados.stars.append({"id": "estrela_%d" % numero, "type": "gold", "position": [posicao.x, posicao.y], "radius": 7.0})
 	selecao = -3 - (dados.stars.size() - 1)
 	alterado.emit()
 	selecao_alterada.emit()
@@ -263,7 +263,7 @@ func selecionar(indice: int) -> void:
 
 
 func inserir(tipo: String, posicao: Vector2) -> void:
-	if tipo not in ["planet", "satellite", "sun", "asteroid", "portal"]:
+	if tipo not in ["planet", "station", "sun", "asteroid", "portal"]:
 		return
 	var numero := 1
 	var ids: Array = [dados.goal.id]
@@ -273,7 +273,7 @@ func inserir(tipo: String, posicao: Vector2) -> void:
 		numero += 1
 	var perigoso := tipo in ["sun", "asteroid"]
 	dados.bodies.append({"id": "%s_%d" % [tipo, numero], "type": tipo,
-		"position": [posicao.x, posicao.y], "mass": 0 if tipo == "asteroid" else 500,
+		"position": [posicao.x, posicao.y], "mass": 0 if tipo in ["asteroid", "station"] else 500,
 		"visual_radius": 12, "collision_radius": 12, "capture_radius": 0 if perigoso else 16,
 		"danger_radius": 12 if perigoso else 0, "proximity_radius": 40})
 	if tipo == "portal":
@@ -321,6 +321,8 @@ func editar(trilha: Array, valor: Variant) -> void:
 			if corpo.get("target_id") == alvo.id:
 				corpo.target_id = valor
 	alvo[chave] = valor
+	if chave == "type" and valor == "station":
+		alvo.mass = 0
 	if chave == "type" and valor == "portal":
 		alvo.mass = 0
 		alvo.capture_radius = 0

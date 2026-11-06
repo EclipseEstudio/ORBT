@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "escala_segura",
   "name": "O Sol",
   "order": 5,
@@ -29,10 +29,8 @@
     "max_impulse": 260
   },
   "start": {
-    "position": [
-      120,
-      480
-    ]
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
   },
   "camera": {
     "zoom": 0.5,
@@ -53,12 +51,13 @@
       850,
       480
     ],
-    "mass": 0,
+    "mass": 180000,
     "visual_radius": 32,
     "collision_radius": 32,
     "capture_radius": 40,
     "danger_radius": 0,
-    "proximity_radius": 45
+    "proximity_radius": 45,
+    "gravity_radius": 78
   },
   "bodies": [
     {
@@ -68,7 +67,7 @@
         450,
         150
       ],
-      "mass": 2000.0,
+      "mass": 2000,
       "visual_radius": 30,
       "collision_radius": 30,
       "capture_radius": 30,
@@ -78,12 +77,12 @@
     },
     {
       "id": "apoio_2",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         160,
         160
       ],
-      "mass": 400.0,
+      "mass": 400,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -93,12 +92,12 @@
     },
     {
       "id": "apoio_3",
-      "type": "satellite",
+      "type": "planet",
       "position": [
         760,
         150
       ],
-      "mass": 400.0,
+      "mass": 400,
       "visual_radius": 13,
       "collision_radius": 13,
       "capture_radius": 13,
@@ -113,7 +112,7 @@
         450,
         300
       ],
-      "mass": 5000.0,
+      "mass": 5000,
       "visual_radius": 55,
       "collision_radius": 55,
       "capture_radius": 0,
@@ -125,8 +124,8 @@
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
-        330.0,
-        122.0
+        330,
+        122
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -181,8 +180,8 @@
       "id": "asteroide_005",
       "type": "asteroid",
       "position": [
-        322.0,
-        367.0
+        322,
+        367
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -237,8 +236,8 @@
       "id": "asteroide_009",
       "type": "asteroid",
       "position": [
-        572.0,
-        122.0
+        572,
+        122
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -279,8 +278,8 @@
       "id": "asteroide_012",
       "type": "asteroid",
       "position": [
-        592.0,
-        347.0
+        592,
+        347
       ],
       "mass": 0,
       "visual_radius": 9,
@@ -335,8 +334,8 @@
       "id": "asteroide_016",
       "type": "asteroid",
       "position": [
-        -75.0,
-        -67.0
+        -75,
+        -67
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -503,8 +502,8 @@
       "id": "asteroide_028",
       "type": "asteroid",
       "position": [
-        -75.0,
-        683.0
+        -75,
+        683
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -671,8 +670,8 @@
       "id": "asteroide_040",
       "type": "asteroid",
       "position": [
-        -75.0,
-        3.0
+        -75,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -783,8 +782,8 @@
       "id": "asteroide_048",
       "type": "asteroid",
       "position": [
-        975.0,
-        3.0
+        975,
+        3
       ],
       "mass": 0,
       "visual_radius": 10,
@@ -946,6 +945,20 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        105.85786437626905,
+        494.14213562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
     }
   ],
   "tutorial": "Passe por baixo do Sol. Use a prévia para atravessar os portões até a Terra.",

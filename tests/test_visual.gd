@@ -95,7 +95,7 @@ func _executar() -> void:
 				hud = filho
 	conferir(Bussola.calcular_direcao(Vector2(90, 100), Vector2(90, 35)) == Vector2.UP, "Bússola aponta para cima")
 	conferir(Bussola.calcular_direcao(Vector2(90, 100), Vector2(-10, -5)).is_equal_approx(Vector2(-100, -105).normalized()), "Bússola mantém direção diagonal fora da tela")
-	conferir(hud._status.mouse_filter == Control.MOUSE_FILTER_IGNORE and hud._status.get_theme_stylebox("normal").bg_color.a == 1.0, "Fundo do status preserva contraste sem capturar gestos")
+	conferir(hud._status.mouse_filter == Control.MOUSE_FILTER_IGNORE and not hud._status.has_theme_stylebox_override("normal") and not hud._fase.has_theme_stylebox_override("normal"), "Números do HUD sem fundo e sem capturar gestos")
 	for estado in ["jogando", "pausado", "concluida"]:
 		partida.reiniciar()
 		if estado == "pausado":
