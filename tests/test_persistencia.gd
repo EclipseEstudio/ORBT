@@ -75,8 +75,9 @@ func testar_expansao_catalogo() -> void:
 		var reconciliado := FileAccess.get_file_as_string(caminho)
 		var reaberto := Progresso.new()
 		reaberto.caminho = caminho
-		conferir(reaberto.carregar() and reaberto.estado("teste_001") == "Concluída" and reaberto.estado("nova_1") == "Disponível" and FileAccess.get_file_as_string(caminho + ".bak") == salvo, "Reconciliação persiste e preserva save anterior (%d)" % quantidade)
+		var carregou := reaberto.carregar()
 		reaberto.configurar(expandido)
+		conferir(carregou and reaberto.estado("teste_001") == "Concluída" and reaberto.estado("nova_1") == "Disponível" and FileAccess.get_file_as_string(caminho + ".bak") == salvo, "Reconciliação persiste e preserva save anterior (%d)" % quantidade)
 		conferir(not reaberto.concluir("teste_001", expandido) and FileAccess.get_file_as_string(caminho) == reconciliado, "Reconfiguração e vitória repetida não regravam expansão (%d)" % quantidade)
 		for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 			if FileAccess.file_exists(caminho + sufixo):
@@ -98,7 +99,9 @@ func testar_expansao_catalogo() -> void:
 	falha.falhar = false
 	var reaberto := Progresso.new()
 	reaberto.caminho = caminho
-	conferir(falha.salvar() and reaberto.carregar() and reaberto.pode_abrir("nova_1") and not reaberto.pode_abrir("nova_2"), "Retentativa persiste somente próxima fase após expansão")
+	var gravou := falha.salvar() and reaberto.carregar()
+	reaberto.configurar([{"id": "teste_001"}, {"id": "nova_1"}, {"id": "nova_2"}])
+	conferir(gravou and reaberto.pode_abrir("nova_1") and not reaberto.pode_abrir("nova_2"), "Retentativa persiste somente próxima fase após expansão")
 	for sufixo in ["", ".bak", ".tmp", ".bak.tmp"]:
 		if FileAccess.file_exists(caminho + sufixo):
 			DirAccess.remove_absolute(caminho + sufixo)
@@ -118,7 +121,8 @@ func _executar() -> void:
 	var segundo := FileAccess.get_file_as_string(base)
 	progresso = novo(base)
 	progresso.configurar([{"id": "c"}, {"id": "b"}, {"id": "a"}])
-	conferir(progresso.estado("a") == "Concluída" and progresso.estado("b") == "Concluída", "Reordenação mantém progresso por IDs")
+	conferir(progresso.concluidas.has("a") and progresso.concluidas.has("b") and not progresso.pode_abrir("a"), "Reordenação preserva IDs e respeita a sequência atual")
+	progresso.configurar(itens)
 	conferir(progresso.concluir("c", itens) and progresso.liberadas.size() == 3, "Última fase não cria próximo ID")
 	escrever(base + ".tmp", "{incompleto")
 	progresso = novo(base)
@@ -203,7 +207,7 @@ func _executar() -> void:
 	await process_frame
 	# Segunda execução de processo: não compartilha objeto ou estado em memória.
 	var saida: Array = []
-	var codigo := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", "res://tests/verificar_progresso.gd", "--log-file", ProjectSettings.globalize_path("res://.godot/filho-progresso.log"), "--", base + "-jogo", caminho_catalogo], saida, true)
+	var codigo := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", "res://tests/verificar_progresso.gd", "--quit-after", "1200", "--log-file", ProjectSettings.globalize_path("res://.godot/filho-progresso.log"), "--", base + "-jogo", caminho_catalogo], saida, true)
 	print("\n".join(saida))
 	conferir(codigo == 0 and "PROGRESSO_REABERTO" in "\n".join(saida), "Processo separado reabre controlador, conclui última fase e permite repetição")
 	for arquivo in catalogo.values():
