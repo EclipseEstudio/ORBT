@@ -75,7 +75,9 @@ func _executar() -> void:
 	conferir(jogo.progresso.estado("teste_001") == "Concluída", "Vitória exportada atualiza estado da sessão")
 	var restaurado = jogo.progresso.get_script().new()
 	restaurado.caminho = caminho_progresso
-	conferir(restaurado.carregar() and restaurado.estado("teste_001") == "Concluída", "Pacote exportado grava e restaura progresso real")
+	var carregou: bool = restaurado.carregar()
+	restaurado.configurar(jogo.get_node("GerenciadorDeNivel").itens)
+	conferir(carregou and restaurado.estado("teste_001") == "Concluída", "Pacote exportado grava e restaura progresso real")
 	conferir(restaurado.melhor_estrelas("teste_001") == 2, "Estrelas confirmadas persistem no pacote exportado")
 	conferir(jogo.iniciar_fase("teste_001") and jogo.mundo_atual.get_node("Nave").combustivel == 5, "Repetição exportada restaura combustível")
 	jogo.queue_free()
