@@ -29,6 +29,9 @@ func atualizar() -> void:
 			break
 	direcao = calcular_direcao(tela, terra) if encontrou else Vector2.ZERO
 	centro = get_global_transform_with_canvas().affine_inverse() * (tela + direcao * DISTANCIA)
+	if partida.nivel.dados_autorais.has("nebula"):
+		# Referência fixa no HUD mesmo quando a nave sai da tela ao explorar.
+		centro = Vector2(get_viewport_rect().size.x / 2.0, 46)
 	queue_redraw()
 
 func _draw() -> void:
@@ -36,6 +39,6 @@ func _draw() -> void:
 		return
 	var lateral := direcao.orthogonal()
 	var triangulo := PackedVector2Array([centro + direcao * 7, centro - direcao * 4 + lateral * 3, centro - direcao * 4 - lateral * 3])
-	draw_colored_polygon(triangulo, Color("42f5d1"))
+	draw_colored_polygon(triangulo, Color("87b6d9"))
 	triangulo.append(triangulo[0])
 	draw_polyline(triangulo, Color("070e21"), 1)

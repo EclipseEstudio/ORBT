@@ -14,4 +14,4 @@ func _draw() -> void:
 	var barra := Rect2(Vector2.ZERO, size)
 	draw_rect(barra, Color("070e21"))
 	draw_rect(barra, Color("c4dbf4"), false, 1)
-	draw_rect(Rect2(Vector2.ONE, Vector2(maxf(0, size.x - 2) * restante, maxf(0, size.y - 2))), Color("ff9c38") if restante < 0.2 else Color("42f5d1"))
+	draw_rect(Rect2(Vector2.ONE, Vector2(maxf(0, size.x - 2) * restante, maxf(0, size.y - 2))), Color("ff9c38") if restante < 0.2 else Color("87b6d9"))

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "de_lua_em_lua",
   "name": "Escalas em rotação",
   "order": 6,
@@ -79,20 +79,6 @@
       "proximity_radius": 57
     },
     {
-      "id": "barreira",
-      "type": "asteroid",
-      "position": [
-        225,
-        210
-      ],
-      "mass": 0,
-      "visual_radius": 30,
-      "collision_radius": 30,
-      "capture_radius": 0,
-      "danger_radius": 30,
-      "proximity_radius": 65
-    },
-    {
       "id": "estacao_partida",
       "type": "station",
       "position": [
@@ -105,6 +91,104 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "barreira",
+      "type": "asteroid",
+      "position": [
+        217.575,
+        197.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_1",
+      "type": "asteroid",
+      "position": [
+        232.425,
+        197.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_2",
+      "type": "asteroid",
+      "position": [
+        210.15,
+        210
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_3",
+      "type": "asteroid",
+      "position": [
+        225,
+        210
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_4",
+      "type": "asteroid",
+      "position": [
+        239.85,
+        210
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_5",
+      "type": "asteroid",
+      "position": [
+        217.575,
+        222.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_6",
+      "type": "asteroid",
+      "position": [
+        232.425,
+        222.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
     }
   ],
   "camera": {
@@ -121,7 +205,7 @@
     }
   },
   "tutorial": "Pouse no planeta e espere o giro para mudar a direção. Ao mirar, o tempo desacelera.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

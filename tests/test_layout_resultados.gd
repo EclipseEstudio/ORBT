@@ -73,6 +73,11 @@ func _executar() -> void:
 				conferir(paused and partida.estado == partida.Estado.PAUSADO, "Rolagem da pausa não retoma a simulação")
 	partida.reiniciar()
 	nivel.camera._process(2)
+	if hud.has_node("TituloFase"):
+		await hud.get_node("TituloFase").terminou
+	if hud.has_node("DialogoDica"):
+		hud.get_node("DialogoDica").find_children("*", "Button", true, false)[0].pressed.emit()
+		await process_frame
 	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
 	await acomodar()
 	var toque := InputEventScreenTouch.new()

@@ -16,6 +16,8 @@ Alterações em `docs/index.html` na `main` atualizam a página. A exportação 
 
 ## Publicar ou atualizar o jogo
 
+O PR da branch `release/0.5.0` publica automaticamente a prerelease `v0.5.0-alpha.20261107` após o job Android concluir todas as verificações. O job de publicação aceita somente essa branch no próprio repositório, confere a árvore testada contra a revisão da branch e anexa o APK, os relatórios e os hashes. Não substitui uma release existente nem integra o PR automaticamente. A página de download passa a selecionar o APK assim que o upload termina.
+
 O processo atualizado exige assinatura permanente e validação contra o último APK publicado. Antes de publicar, siga [atualização e reinstalação Android](atualizacao-android.md), comprove a atualização sobre a versão anterior no aparelho preservando os saves e confira a abertura pelo instalador do celular. Anexe também `atualizacao.json` e `revisao.txt`. APKs de prévia externa usam outro pacote e não devem entrar no download do ORBT. As instruções abaixo de criação de release continuam válidas após essa checagem.
 
 1. Gere o APK com o fluxo descrito em [Android na branch alpha](https://github.com/EclipseEstudio/ORBT/blob/alpha/docs/tecnica/android.md) e valide-o em um aparelho. A saída atual é `build/android/ORBT-debug.apk`.

@@ -18,5 +18,15 @@
   "arco_entre_rochas": "res://Recursos/Fases/arco_entre_rochas.json",
   "tres_escalas": "res://Recursos/Fases/tres_escalas.json",
   "cinturao_em_movimento": "res://Recursos/Fases/cinturao_em_movimento.json",
-  "ultima_manobra": "res://Recursos/Fases/ultima_manobra.json"
+  "ultima_manobra": "res://Recursos/Fases/ultima_manobra.json",
+  "fenda_no_espaco": "res://Recursos/Fases/fenda_no_espaco.json",
+  "salto_entre_rochas": "res://Recursos/Fases/salto_entre_rochas.json",
+  "nevoa_cega": "res://Recursos/Fases/nevoa_cega.json",
+  "rota_no_escuro": "res://Recursos/Fases/rota_no_escuro.json",
+  "orbita_cega": "res://Recursos/Fases/orbita_cega.json",
+  "desvio_nebuloso": "res://Recursos/Fases/desvio_nebuloso.json",
+  "portal_invisivel": "res://Recursos/Fases/portal_invisivel.json",
+  "rede_de_portais": "res://Recursos/Fases/rede_de_portais.json",
+  "travessia_extrema": "res://Recursos/Fases/travessia_extrema.json",
+  "grande_retorno": "res://Recursos/Fases/grande_retorno.json"
 }

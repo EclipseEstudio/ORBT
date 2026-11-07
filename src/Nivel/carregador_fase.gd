@@ -64,6 +64,10 @@ static func validar(dados: Variant) -> Dictionary:
 		if numero(nave.get("dead_zone"), 0.01) and numero(nave.get("max_drag"), 0.01) and nave.max_drag <= nave.dead_zone:
 			erros.append("ship.max_drag: deve superar dead_zone")
 	var inicio = dados.get("start")
+	if dados.has("nebula"):
+		var nebulosa = dados.nebula
+		if not nebulosa is Dictionary or not numero(nebulosa.get("visibility_radius"), 45, 300):
+			erros.append("nebula.visibility_radius: raio entre 45 e 300 obrigatório")
 	if not inicio is Dictionary:
 		erros.append("start: esperado apoio ou position [x, y]")
 	elif inicio.has("position"):

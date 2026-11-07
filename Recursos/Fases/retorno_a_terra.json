@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "retorno_a_terra",
   "name": "Retorno à Terra",
   "order": 10,
@@ -60,20 +60,6 @@
   },
   "bodies": [
     {
-      "id": "rocha",
-      "type": "asteroid",
-      "position": [
-        300,
-        250
-      ],
-      "mass": 0,
-      "visual_radius": 35,
-      "collision_radius": 35,
-      "capture_radius": 0,
-      "danger_radius": 35,
-      "proximity_radius": 65
-    },
-    {
       "id": "planeta_superior",
       "type": "planet",
       "position": [
@@ -114,6 +100,160 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "rocha",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_1",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_2",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_3",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_4",
+      "type": "asteroid",
+      "position": [
+        285.15,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_5",
+      "type": "asteroid",
+      "position": [
+        300,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_6",
+      "type": "asteroid",
+      "position": [
+        314.85,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_7",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_8",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_9",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_10",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
     }
   ],
   "tutorial": "Ajuste a trajetória entre os planetas e retorne à Terra.",

@@ -6,6 +6,7 @@ const Fundo = preload("res://src/Visual/fundo_menu.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 signal fechada
 var preferencias: RefCounted
+var acao_resetar: Callable
 var _aviso: Label
 var _margem: MarginContainer
 var _tentar_salvar: Button
@@ -64,6 +65,8 @@ func _ready() -> void:
 	_criar_volume(coluna, "Efeitos", "efeitos", preferencias.efeitos)
 	_criar_opcao(coluna, "Vibração", "vibracao", preferencias.vibracao)
 	_criar_opcao(coluna, "Dicas", "dicas", preferencias.dicas)
+	if acao_resetar.is_valid():
+		_criar_reset(coluna)
 	_aviso = Label.new()
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_aviso.name = "aviso"
@@ -138,3 +141,48 @@ func _criar_opcao(coluna: VBoxContainer, titulo: String, campo: String, valor: b
 		if campo == "vibracao" and ativo:
 			preferencias.vibrar()
 		_atualizar_aviso())
+
+
+func _criar_reset(coluna: VBoxContainer) -> void:
+	var botao := Button.new()
+	botao.name = "ResetarProgresso"
+	botao.text = "Resetar\nprogresso"
+	botao.custom_minimum_size.y = 36
+	botao.add_theme_font_size_override("font_size", 8)
+	coluna.add_child(botao)
+	var confirmacao := VBoxContainer.new()
+	confirmacao.name = "ConfirmacaoReset"
+	confirmacao.hide()
+	coluna.add_child(confirmacao)
+	var texto := Label.new()
+	texto.text = "Apagar fases, estrelas e último pouso?"
+	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	texto.add_theme_font_size_override("font_size", 8)
+	confirmacao.add_child(texto)
+	var acoes := VBoxContainer.new()
+	confirmacao.add_child(acoes)
+	var cancelar := Button.new()
+	cancelar.text = "Cancelar"
+	cancelar.custom_minimum_size.y = 32
+	cancelar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cancelar.add_theme_font_size_override("font_size", 8)
+	acoes.add_child(cancelar)
+	var confirmar := Button.new()
+	confirmar.name = "ConfirmarReset"
+	confirmar.text = "Apagar"
+	confirmar.custom_minimum_size.y = 32
+	confirmar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	confirmar.add_theme_font_size_override("font_size", 8)
+	acoes.add_child(confirmar)
+	var resultado := Label.new()
+	resultado.name = "ResultadoReset"
+	resultado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	resultado.add_theme_font_size_override("font_size", 8)
+	coluna.add_child(resultado)
+	botao.pressed.connect(func():
+		resultado.text = ""
+		confirmacao.show())
+	cancelar.pressed.connect(confirmacao.hide)
+	confirmar.pressed.connect(func():
+		resultado.text = acao_resetar.call()
+		confirmacao.hide())

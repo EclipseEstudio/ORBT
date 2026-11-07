@@ -90,8 +90,13 @@ func _ready() -> void:
 	_continuar = _botao(acoes, texto_primario, "jogar", func(): continuar.emit())
 	_continuar.visible = mostrar_primario
 	Tema.destacar(_continuar)
-	_resetar = _botao(coluna, texto_secundario, "reiniciar", func(): resetar.emit())
-	_resetar.visible = not modo_conclusao
+	if modo_conclusao:
+		Icones.aplicar(_continuar, "jogar", "Próxima fase")
+		_continuar.custom_minimum_size = Vector2(32, 32)
+	_resetar = _botao(acoes, texto_secundario, "reiniciar", func(): resetar.emit())
+	if modo_conclusao:
+		Icones.aplicar(_resetar, "reiniciar", "Repetir fase")
+		_resetar.custom_minimum_size = Vector2(32, 32)
 	_menu = _botao(acoes, texto_menu, "casa", func(): menu.emit())
 	if modo_conclusao:
 		Icones.aplicar(_menu, "casa", "Voltar ao menu de fases")

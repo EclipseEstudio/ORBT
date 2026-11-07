@@ -99,3 +99,62 @@ jobs:
             build/android/atualizacao.json
           if-no-files-found: error
           retention-days: 14
+
+  publicar-0-5-0:
+    name: Publicar ORBT 0.5.0 alpha
+    needs: android
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'release/0.5.0'
+    runs-on: windows-2025
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: ORBT-android-debug-pr-${{ github.event.pull_request.number }}
+          path: build/publicacao
+      - name: Publicar o APK validado
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORBT_HEAD: ${{ github.event.pull_request.head.sha }}
+          ORBT_PR: ${{ github.event.pull_request.number }}
+          ORBT_REPO: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = 'v0.5.0-alpha.20261107'
+          $testada = git rev-parse 'HEAD^{tree}'
+          $origem = git rev-parse ($env:ORBT_HEAD + '^{tree}')
+          if ($LASTEXITCODE -ne 0 -or $testada -ne $origem) { throw 'A árvore testada difere da revisão a publicar; atualize a branch de release.' }
+          $atual = gh api "repos/$env:ORBT_REPO/pulls/$env:ORBT_PR" --jq '.head.sha'
+          if ($LASTEXITCODE -ne 0 -or $atual -ne $env:ORBT_HEAD) { throw 'O PR mudou durante a validação.' }
+          . ./scripts/android-pacote.ps1
+          $configuracao = Ler-ConfiguracaoAndroidProjeto
+          $pacote = Get-Content build/publicacao/atualizacao.json -Raw | ConvertFrom-Json
+          if ($configuracao.versao -ne '0.5.0' -or $configuracao.codigo -ne 9) { throw 'Versão de publicação inesperada.' }
+          if ($pacote.versao -ne '0.5.0' -or $pacote.codigo -ne 9 -or $pacote.canal -ne 'distribuicao') { throw 'Metadados do APK incompatíveis.' }
+          $hash = (Get-FileHash build/publicacao/ORBT-debug.apk -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($hash -ne $pacote.apk_sha256) { throw 'O APK difere do arquivo verificado.' }
+          if (-not (Select-String -Path build/publicacao/revisao.txt -SimpleMatch "Cabeça: $env:ORBT_HEAD" -Quiet)) { throw 'Artefato de outra revisão.' }
+          $releases = gh api "repos/$env:ORBT_REPO/releases?per_page=100" | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw 'Não foi possível consultar releases.' }
+          if ($releases | Where-Object tag_name -eq $tag) {
+            $publicada = gh api "repos/$env:ORBT_REPO/commits/$tag" --jq '.sha'
+            if ($LASTEXITCODE -ne 0 -or $publicada -ne $env:ORBT_HEAD) { throw 'A tag existente aponta para outra revisão.' }
+            Write-Output "Release já publicada: $tag"
+            exit 0
+          }
+          Get-ChildItem build/publicacao -File | Sort-Object Name | ForEach-Object {
+            '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name
+          } | Set-Content -Encoding utf8 build/publicacao/SHA256SUMS.txt
+          $notas = Get-Content docs/auxiliar/versao-0.5.0-alpha-2026-11-07.md -Raw
+          $notas += "`n`n[PR #$env:ORBT_PR](https://github.com/$env:ORBT_REPO/pull/$env:ORBT_PR) · Revisão: $env:ORBT_HEAD`n"
+          $notas | Set-Content -Encoding utf8 build/publicacao/notas.md
+          gh release create $tag build/publicacao/ORBT-debug.apk build/publicacao/atualizacao.json build/publicacao/revisao.txt build/publicacao/SHA256SUMS.txt --repo $env:ORBT_REPO --target $env:ORBT_HEAD --title 'ORBT 0.5.0 alpha' --notes-file build/publicacao/notas.md --prerelease
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao publicar a release.' }

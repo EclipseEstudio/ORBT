@@ -1,0 +1,348 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "rede_de_portais",
+  "name": "Rede de Portais",
+  "order": 28,
+  "bounds": {
+    "position": [
+      -180,
+      -320
+    ],
+    "size": [
+      1450,
+      880
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": 0
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      1050,
+      0
+    ],
+    "mass": 180000,
+    "visual_radius": 24,
+    "collision_radius": 24,
+    "capture_radius": 24,
+    "danger_radius": 0,
+    "proximity_radius": 49,
+    "gravity_radius": 62
+  },
+  "bodies": [
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -20,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    },
+    {
+      "id": "A",
+      "type": "portal",
+      "position": [
+        120,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "B",
+      "exit_degrees": 180
+    },
+    {
+      "id": "B",
+      "type": "portal",
+      "position": [
+        370,
+        -120
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "A",
+      "exit_degrees": 0
+    },
+    {
+      "id": "C",
+      "type": "portal",
+      "position": [
+        550,
+        -120
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "D",
+      "exit_degrees": 180
+    },
+    {
+      "id": "D",
+      "type": "portal",
+      "position": [
+        820,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "C",
+      "exit_degrees": 0
+    },
+    {
+      "id": "sol",
+      "type": "sun",
+      "position": [
+        900,
+        120
+      ],
+      "mass": 180000,
+      "visual_radius": 26,
+      "collision_radius": 26,
+      "capture_radius": 0,
+      "danger_radius": 26,
+      "proximity_radius": 51,
+      "gravity_radius": 190
+    },
+    {
+      "id": "rocha_0",
+      "type": "asteroid",
+      "position": [
+        260,
+        -100
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_1",
+      "type": "asteroid",
+      "position": [
+        260,
+        -76
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_2",
+      "type": "asteroid",
+      "position": [
+        260,
+        -52
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_3",
+      "type": "asteroid",
+      "position": [
+        260,
+        -28
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_4",
+      "type": "asteroid",
+      "position": [
+        260,
+        -4
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_5",
+      "type": "asteroid",
+      "position": [
+        260,
+        20
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_6",
+      "type": "asteroid",
+      "position": [
+        260,
+        44
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_7",
+      "type": "asteroid",
+      "position": [
+        260,
+        68
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_8",
+      "type": "asteroid",
+      "position": [
+        260,
+        92
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_9",
+      "type": "asteroid",
+      "position": [
+        260,
+        116
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -80,
+        -220
+      ],
+      "size": [
+        1210,
+        700
+      ]
+    }
+  },
+  "tutorial": "Use dois pares de portais: A–B e C–D. Após o segundo salto, compense a atração solar. Há um tanque +1 para uma correção extra.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "dourada_1",
+      "type": "gold",
+      "position": [
+        426.676,
+        -120
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_2",
+      "type": "gold",
+      "position": [
+        858.359,
+        0.795
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_3",
+      "type": "gold",
+      "position": [
+        897.216,
+        -38.154
+      ],
+      "radius": 7
+    },
+    {
+      "id": "azul",
+      "type": "blue",
+      "position": [
+        914.479,
+        -77.228
+      ],
+      "radius": 7
+    }
+  ],
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        897,
+        -100
+      ],
+      "radius": 9,
+      "amount": 1
+    }
+  ]
+}

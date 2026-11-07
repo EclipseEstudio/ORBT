@@ -39,29 +39,29 @@ func _executar() -> void:
 	conferir(is_zero_approx(gesto.obter_intensidade()), "Sem contato a intensidade é zero")
 	gesto.iniciar(0, Vector2(90, 140))
 	gesto.mover(0, Vector2(90, 140 + gesto.zona_morta * 0.5))
-	conferir(is_zero_approx(gesto.obter_intensidade()) and mira.largura_forca() == 1, "Zona morta mantém linha fina e força zero")
+	conferir(is_zero_approx(gesto.obter_intensidade()) and mira.largura_forca() == 4, "Zona morta mantém linha mínima e força zero")
 	for intensidade in [0.1, 0.5, 1.0, 1.5]:
 		var distancia: float = gesto.zona_morta + (gesto.arraste_maximo - gesto.zona_morta) * intensidade
 		gesto.mover(0, Vector2(90, 140 + distancia))
 		conferir(is_equal_approx(gesto.obter_intensidade(), minf(intensidade, 1.0)), "Intensidade acompanha arraste e satura no máximo")
 		conferir(is_equal_approx(gesto.obter_impulso().length(), gesto.obter_intensidade() * gesto.impulso_maximo), "Visual representa a força realmente aplicada")
-		conferir(mira.largura_forca() in [1.0, 2.0, 3.0], "Espessura usa apenas pixels inteiros entre 1 e 3")
-	conferir(mira.largura_forca() == 3 and mira.forca_saturada(), "Força máxima usa 3 px e indica saturação")
-	for par in [[0.0, Color("82f0d1")], [1.0 / 3, Color("f5cc77")], [2.0 / 3, Color("ff9c38")], [1.0, Color("ff595e")]]:
-		conferir(Mira.cor_intensidade(par[0]).is_equal_approx(par[1]), "Gradiente passa por ciano, amarelo, laranja e vermelho")
+		conferir(mira.largura_forca() in [4.0, 5.0, 6.0], "Espessura usa apenas pixels inteiros entre 4 e 6")
+	conferir(mira.largura_forca() == 6 and mira.forca_saturada(), "Força máxima usa 6 px e indica saturação")
+	for par in [[0.0, Color("4b6585")], [1.0 / 3, Color("688db5")], [2.0 / 3, Color("8cbce0")], [1.0, Color("d5edff")]]:
+		conferir(Mira.cor_intensidade(par[0]).is_equal_approx(par[1]), "Gradiente azul clareia conforme a força")
 	gesto.cancelar()
 	conferir(is_zero_approx(gesto.obter_intensidade()) and mira.pontos_forca().is_empty(), "Cancelar remove força e linha")
 	# Sem gesto, a câmera nasce próxima da nave e independe dos corpos.
 	var base: Vector2 = camera.zoom
-	conferir(is_equal_approx(base.x, 0.7) and camera.global_position == nave.global_position, "Fase começa perto da nave, sem passeio inicial pela Terra")
+	conferir(is_equal_approx(base.x, 0.825) and camera.global_position == nave.global_position, "Fase começa perto da nave, sem passeio inicial pela Terra")
 	conferir(nave.controle_permitido, "Entrada está disponível desde o início")
 	var anterior := INF
 	for intensidade in [0.0, 0.25, 0.5, 0.75, 1.0, 2.0]:
 		var valor := Camera.calcular_zoom_arraste(intensidade, 0.5)
-		conferir(valor >= 0.375 and valor <= 0.7 and valor <= anterior, "Afastamento proporcional ao arraste respeita limites")
+		conferir(valor >= 0.425 and valor <= 0.825 and valor <= anterior, "Afastamento proporcional ao arraste respeita limites")
 		anterior = valor
-	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0.5, 0.5), 0.5375), "Metade da força usa metade da variação de zoom")
-	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0, 1.0), 1.4), "Enquadramento próximo acompanha a base autoral")
+	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0.5, 0.5), 0.625), "Metade da força usa metade da variação de zoom")
+	conferir(is_equal_approx(Camera.calcular_zoom_arraste(0, 1.0), 1.65), "Enquadramento próximo acompanha a base autoral")
 	nave.corpos = []
 	nave.global_position = Vector2(1000, 0)
 	camera._process(1)
@@ -72,12 +72,12 @@ func _executar() -> void:
 	conferir(camera.zoom == base, "Toque dentro da zona morta não afasta a câmera")
 	gesto.mover(2, Vector2(90, 220))
 	camera._process(0.1)
-	conferir(camera.zoom.x < base.x and camera.zoom.x > 0.375, "Arraste forte começa a afastar suavemente")
+	conferir(camera.zoom.x < base.x and camera.zoom.x > 0.425, "Arraste forte começa a afastar suavemente")
 	camera._process(2)
-	conferir(is_equal_approx(camera.zoom.x, 0.375), "Arraste máximo alcança o limite distante")
+	conferir(is_equal_approx(camera.zoom.x, 0.425), "Arraste máximo alcança o limite distante")
 	gesto.mover(2, Vector2(90, 185))
 	camera._process(2)
-	conferir(is_equal_approx(camera.zoom.x, 0.5375), "Reduzir o arraste aproxima proporcionalmente")
+	conferir(is_equal_approx(camera.zoom.x, 0.625), "Reduzir o arraste aproxima proporcionalmente")
 	gesto.cancelar()
 	var ao_soltar: float = camera.zoom.x
 	camera._process(0.1)
@@ -102,15 +102,15 @@ func _executar() -> void:
 	for i in 12:
 		camera._process(1.0 / 60)
 	conferir(camera.zoom.is_equal_approx(unico), "Suavização independe da taxa de quadros")
-	# Circular: mantém os 32 últimos pontos em ordem e em coordenadas de mundo.
+	# Circular: mantém os 64 últimos pontos em ordem e em coordenadas de mundo.
 	nave.condicao = nave.Condicao.EM_VOO
 	nave.velocidade = Vector2(60, 0)
 	var combustivel: int = nave.combustivel
 	var tempo: float = partida.tempo_restante
-	for indice in 48:
+	for indice in 80:
 		nave.global_position = Vector2(indice * 2, 100)
 		rastro._physics_process(1.0 / 30)
-	conferir(rastro.points.size() == 32 and rastro.points[0] == Vector2(32, 100) and rastro.points[-1] == Vector2(94, 100), "Buffer circular descarta os mais antigos sem inverter a ordem")
+	conferir(rastro.points.size() == 64 and rastro.points[0] == Vector2(32, 100) and rastro.points[-1] == Vector2(158, 100), "Buffer circular descarta os mais antigos sem inverter a ordem")
 	var pontos: PackedVector2Array = rastro.points.duplicate()
 	camera.global_position += Vector2(200, 100)
 	nave.global_rotation = PI
@@ -119,7 +119,7 @@ func _executar() -> void:
 		camera.zoom = Vector2.ONE * zoom
 		rastro._process(0)
 		conferir(is_equal_approx(rastro.width * zoom, 2.0) and not rastro.antialiased, "Rastro mantém 2 px de tela sem antialias")
-	conferir(rastro.gradient.get_color(0).a == 0 and rastro.gradient.get_color(1) == Color("82f0d1"), "Cauda transparente termina em ciano")
+	conferir(rastro.gradient.get_color(0).a == 0 and rastro.gradient.get_color(1) == Color("9ac8e5"), "Cauda transparente termina em azul claro")
 	conferir(nave.combustivel == combustivel and partida.tempo_restante == tempo and nave.velocidade == Vector2(60, 0), "Efeitos não consomem recursos nem mudam velocidade")
 	nave.condicao = nave.Condicao.A_DERIVA
 	nave.global_position += Vector2(2, 0)

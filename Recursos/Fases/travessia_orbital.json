@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "travessia_orbital",
   "name": "Travessia orbital",
   "order": 16,
@@ -70,48 +70,6 @@
       }
     },
     {
-      "id": "barreira",
-      "type": "asteroid",
-      "position": [
-        65,
-        215
-      ],
-      "mass": 0,
-      "visual_radius": 45,
-      "collision_radius": 45,
-      "capture_radius": 0,
-      "danger_radius": 45,
-      "proximity_radius": 80
-    },
-    {
-      "id": "alto",
-      "type": "asteroid",
-      "position": [
-        315,
-        100
-      ],
-      "mass": 0,
-      "visual_radius": 22,
-      "collision_radius": 22,
-      "capture_radius": 0,
-      "danger_radius": 22,
-      "proximity_radius": 57
-    },
-    {
-      "id": "externa",
-      "type": "asteroid",
-      "position": [
-        430,
-        300
-      ],
-      "mass": 0,
-      "visual_radius": 26,
-      "collision_radius": 26,
-      "capture_radius": 0,
-      "danger_radius": 26,
-      "proximity_radius": 61
-    },
-    {
       "id": "estacao_partida",
       "type": "station",
       "position": [
@@ -124,6 +82,468 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "barreira",
+      "type": "asteroid",
+      "position": [
+        50.15,
+        189.27904550760218
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_1",
+      "type": "asteroid",
+      "position": [
+        65,
+        189.27904550760218
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_2",
+      "type": "asteroid",
+      "position": [
+        79.85,
+        189.27904550760218
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_3",
+      "type": "asteroid",
+      "position": [
+        42.725,
+        202.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_4",
+      "type": "asteroid",
+      "position": [
+        57.575,
+        202.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_5",
+      "type": "asteroid",
+      "position": [
+        72.425,
+        202.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_6",
+      "type": "asteroid",
+      "position": [
+        87.275,
+        202.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_7",
+      "type": "asteroid",
+      "position": [
+        35.3,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_8",
+      "type": "asteroid",
+      "position": [
+        50.15,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_9",
+      "type": "asteroid",
+      "position": [
+        65,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_10",
+      "type": "asteroid",
+      "position": [
+        79.85,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_11",
+      "type": "asteroid",
+      "position": [
+        94.7,
+        215
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_12",
+      "type": "asteroid",
+      "position": [
+        42.725,
+        227.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_13",
+      "type": "asteroid",
+      "position": [
+        57.575,
+        227.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_14",
+      "type": "asteroid",
+      "position": [
+        72.425,
+        227.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_15",
+      "type": "asteroid",
+      "position": [
+        87.275,
+        227.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_16",
+      "type": "asteroid",
+      "position": [
+        50.15,
+        240.72095449239782
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_17",
+      "type": "asteroid",
+      "position": [
+        65,
+        240.72095449239782
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_18",
+      "type": "asteroid",
+      "position": [
+        79.85,
+        240.72095449239782
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "alto",
+      "type": "asteroid",
+      "position": [
+        308.95,
+        89.5210926142083
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_1",
+      "type": "asteroid",
+      "position": [
+        321.05,
+        89.5210926142083
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_2",
+      "type": "asteroid",
+      "position": [
+        302.9,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_3",
+      "type": "asteroid",
+      "position": [
+        315,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_4",
+      "type": "asteroid",
+      "position": [
+        327.1,
+        100
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_5",
+      "type": "asteroid",
+      "position": [
+        308.95,
+        110.4789073857917
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "alto_6",
+      "type": "asteroid",
+      "position": [
+        321.05,
+        110.4789073857917
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "externa",
+      "type": "asteroid",
+      "position": [
+        422.85,
+        287.6158367258825
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_1",
+      "type": "asteroid",
+      "position": [
+        437.15,
+        287.6158367258825
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_2",
+      "type": "asteroid",
+      "position": [
+        415.7,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_3",
+      "type": "asteroid",
+      "position": [
+        430,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_4",
+      "type": "asteroid",
+      "position": [
+        444.3,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_5",
+      "type": "asteroid",
+      "position": [
+        422.85,
+        312.3841632741175
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
+    },
+    {
+      "id": "externa_6",
+      "type": "asteroid",
+      "position": [
+        437.15,
+        312.3841632741175
+      ],
+      "mass": 0,
+      "visual_radius": 8.666666666666666,
+      "collision_radius": 8.666666666666666,
+      "capture_radius": 0,
+      "danger_radius": 8.666666666666666,
+      "proximity_radius": 33.666666666666664
     }
   ],
   "camera": {
@@ -140,7 +560,7 @@
     }
   },
   "tutorial": "Intercepte o apoio orbital sem tocar as rochas. A saída exige compensar o movimento da estação.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

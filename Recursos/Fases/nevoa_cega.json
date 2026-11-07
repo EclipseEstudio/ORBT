@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "nevoa_cega",
+  "name": "Névoa Cega",
+  "order": 23,
+  "bounds": {
+    "position": [
+      -180,
+      -320
+    ],
+    "size": [
+      940,
+      880
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": 0
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      540,
+      0
+    ],
+    "mass": 180000,
+    "visual_radius": 24,
+    "collision_radius": 24,
+    "capture_radius": 24,
+    "danger_radius": 0,
+    "proximity_radius": 49,
+    "gravity_radius": 62
+  },
+  "bodies": [
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -20,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -80,
+        -220
+      ],
+      "size": [
+        700,
+        700
+      ]
+    }
+  },
+  "tutorial": "A nebulosa esconde tudo fora do alcance circular da nave, inclusive no mapa. A bússola aponta para a Terra; os instrumentos indicam tanques e portais.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "dourada_1",
+      "type": "gold",
+      "position": [
+        151.5,
+        0
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_2",
+      "type": "gold",
+      "position": [
+        286.5,
+        0
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_3",
+      "type": "gold",
+      "position": [
+        357.894,
+        -36.263
+      ],
+      "radius": 7
+    },
+    {
+      "id": "azul",
+      "type": "blue",
+      "position": [
+        421.617,
+        -34.955
+      ],
+      "radius": 7
+    }
+  ],
+  "nebula": {
+    "visibility_radius": 125
+  }
+}

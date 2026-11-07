@@ -94,7 +94,7 @@ func _executar() -> void:
 	hud._process(0)
 	conferir(not hud._proxima.visible and hud._reiniciar.text == "Repetir", "última fase não oferece próxima")
 	conferir(not hud._dialogo_conclusao._continuar.visible, "última fase não oferece próxima no diálogo")
-	conferir(not hud._dialogo_conclusao._resetar.visible and hud._dialogo_conclusao._menu.visible, "última fase oferece somente casa")
+	conferir(hud._dialogo_conclusao._resetar.visible and hud._dialogo_conclusao._menu.visible, "última fase oferece repetir e voltar às fases")
 	conferir(jogo.progresso.estado(itens[-1].id) == "Concluída", "conclusão mantém progresso")
 	jogo.queue_free()
 	await process_frame

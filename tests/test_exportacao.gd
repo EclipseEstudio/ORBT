@@ -20,7 +20,7 @@ func _executar() -> void:
 	conferir(FileAccess.file_exists("res://Recursos/Niveis.json"), "Catálogo incluído no pacote")
 	conferir(FileAccess.file_exists("res://Recursos/Fases/teste_001.json"), "JSON da fase incluído no pacote")
 	var catalogo: Dictionary = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json")
-	conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 20, "Pacote inclui campanha de vinte fases")
+	conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 30, "Pacote inclui campanha de trinta fases")
 	for item in catalogo.itens:
 		var resultado: Dictionary = load("res://src/Nivel/carregador_fase.gd").carregar(item.arquivo)
 		conferir(resultado.nivel != null and resultado.nivel.quantidade_estrelas("gold") == 3, item.id + ": fase e três estrelas válidas no pacote")

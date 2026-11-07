@@ -134,17 +134,19 @@ func jogar(nivel: Node, etapas: Array, estrelas: int, desvio := 0.0) -> bool:
 
 func _executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 20 and ROTAS.size() == 20, "Campanha contém vinte fases válidas"):
+	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 30 and ROTAS.size() == 20, "Campanha contém trinta fases; este teste cobre as vinte originais"):
 		quit(1)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.persistir_progresso = false
 	jogo.ativar_audio = false
+	jogo.preferencias.dicas = false
 	root.add_child(jogo)
 	await process_frame
+	jogo.preferencias.dicas = false
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(jogo.interface_atual.quantidade_cartoes() == 20, "Seleção mostra vinte fases")
+	conferir(jogo.interface_atual.quantidade_cartoes() == 30, "Seleção mostra trinta fases")
 	for indice in range(ROTAS.size()):
 		var rota: Dictionary = ROTAS[indice]
 		var resultado := Carregador.carregar(catalogo.itens[indice].arquivo)
@@ -177,7 +179,7 @@ func _executar() -> void:
 			conferir(jogo.progresso.melhor_azuis(rota.id) == azuis, rota.id + ": chegada confirma a conquista azul separadamente")
 			jogo.mostrar_selecao()
 			await process_frame
-	conferir(jogo.progresso.concluidas.size() == 20 and jogo.progresso.total_estrelas() == 60, "Campanha completa: vinte fases e sessenta estrelas confirmadas")
+	conferir(jogo.progresso.concluidas.size() == 20 and jogo.progresso.total_estrelas() == 60, "Dois primeiros níveis: vinte fases e sessenta estrelas confirmadas")
 	jogo.queue_free()
 	await process_frame
 	print("Fases: %d verificações, %d falhas." % [verificacoes, falhas])

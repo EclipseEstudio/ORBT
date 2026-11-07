@@ -8,12 +8,15 @@ const Narrativa = preload("res://src/Narrativa/narrativa.gd")
 const AreaSeguraMenu = preload("res://src/Visual/area_segura_menu.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 const DialogoPausa = preload("res://src/Nivel/dialogo_pausa.gd")
+const TituloFase = preload("res://src/Nivel/titulo_fase.gd")
+const InstrumentosNebulosa = preload("res://src/Visual/instrumentos_nebulosa.gd")
 const DURACAO_AJUDA := 6.0
 var _ajuda_restante := DURACAO_AJUDA
 var _dicas_ativas := true
 var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
 var _dialogo_derrota: Control
+var _tempo_explosao := 0.0
 var _indicadores: Control
 var _fase: Label
 var _estrelas: Label
@@ -126,6 +129,10 @@ func _ready() -> void:
 	_base_status.add_child(_indicadores)
 	_alerta = rotulo(topo, "", 8)
 	_alerta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if partida.nivel.dados_autorais.has("nebula"):
+		var instrumentos := InstrumentosNebulosa.new()
+		instrumentos.partida = partida
+		raiz.add_child(instrumentos)
 	_rolagem_rodape = ScrollContainer.new()
 	_rolagem_rodape.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_rolagem_rodape.follow_focus = true
@@ -205,6 +212,8 @@ func _ready() -> void:
 	_dialogo_derrota.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
 	add_child(_dialogo_derrota)
 	_dialogo_derrota.hide()
+	partida.perdida.connect(func(_causa): _tempo_explosao = 0.85)
+	_apresentar_fase.call_deferred()
 
 func _icone_status(pai: Control, nome: String) -> void:
 	var icone := TextureRect.new()
@@ -262,6 +271,9 @@ func _abrir_configuracoes() -> void:
 	var tela := TelaConfiguracoes.new()
 	tela.name = "TelaConfiguracoes"
 	tela.preferencias = preferencias
+	var global := get_node_or_null("/root/GLOBAL")
+	if global != null and is_instance_valid(global.controlador_jogo):
+		tela.acao_resetar = global.controlador_jogo.resetar_progresso
 	# A tela calcula sua própria área segura a partir do viewport inteiro.
 	# Ser filha da raiz já recuada do HUD aplicaria as margens duas vezes.
 	add_child(tela)
@@ -284,10 +296,10 @@ func _process(delta: float) -> void:
 	var concluida: bool = partida.estado == partida.Estado.CONCLUIDA
 	var perdida: bool = partida.estado == partida.Estado.PERDIDA
 	_raiz.visible = not pausado and not concluida and not perdida
-	if perdida and not _dialogo_derrota.visible:
+	if perdida:
+		_tempo_explosao = maxf(0.0, _tempo_explosao - delta)
+	if perdida and _tempo_explosao <= 0.0 and not _dialogo_derrota.visible:
 		var motivo: String = partida.motivo
-		if not partida.estrelas_coletadas.is_empty():
-			motivo += "\nEstrelas não confirmadas."
 		if not partida.aviso_salvamento.is_empty():
 			motivo += "\n" + partida.aviso_salvamento
 		_dialogo_derrota.exibir_motivo(motivo)
@@ -308,6 +320,8 @@ func _process(delta: float) -> void:
 	var mostrar_dicas: bool = preferencias == null or preferencias.dicas
 	if mostrar_dicas and not _dicas_ativas:
 		_ajuda_restante = DURACAO_AJUDA
+		if not has_node("TituloFase"):
+			_criar_dica.call_deferred()
 	_dicas_ativas = mostrar_dicas
 	if partida.estado == partida.Estado.JOGANDO and mostrar_dicas:
 		_ajuda_restante = maxf(0, _ajuda_restante - delta)
@@ -364,16 +378,74 @@ func _process(delta: float) -> void:
 		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
 		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Linha indica direção."
 	var jogando: bool = partida.estado == partida.Estado.JOGANDO
-	_mensagem.visible = not jogando or (mostrar_dicas and _ajuda_restante > 0)
+	_mensagem.visible = false
 	_mensagem.modulate.a = clampf(_ajuda_restante / 0.4, 0, 1) if jogando else 1.0
 	var avisos := PackedStringArray()
+	var perigos := 0
 	for id_corpo in partida.proximos:
 		if id_corpo == partida.nave.corpo_apoio:
 			continue
 		var tipo: String = partida.proximos[id_corpo]
-		avisos.append(("! Perigo: " if tipo in ["sun", "asteroid"] else "+ Próximo: ") + id_corpo)
+		if tipo in ["sun", "asteroid"]:
+			perigos += 1
+	if perigos > 0:
+		avisos.append("Perigo próximo")
 	_alerta.text = "  ".join(avisos)
 	if not partida.aviso_salvamento.is_empty():
 		_alerta.text += "\n" + partida.aviso_salvamento
 	_alerta.visible = not _alerta.text.is_empty()
 	_ajustar_rodape()
+
+
+func _criar_dica() -> void:
+	if has_node("DialogoDica"):
+		return
+	if preferencias != null and not preferencias.dicas:
+		return
+	var texto := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
+	if partida.estado != partida.Estado.JOGANDO:
+		return
+	if texto.is_empty():
+		texto = "Arraste e solte para lançar. Volte ao círculo para cancelar."
+	var dialogo := Control.new()
+	dialogo.name = "DialogoDica"
+	dialogo.process_mode = Node.PROCESS_MODE_ALWAYS
+	dialogo.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(dialogo)
+	dialogo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var fundo := ColorRect.new()
+	fundo.color = Color(0.015, 0.025, 0.06, 0.8)
+	dialogo.add_child(fundo)
+	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var centro := CenterContainer.new()
+	dialogo.add_child(centro)
+	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var painel := PanelContainer.new()
+	painel.theme = Tema.criar()
+	painel.add_theme_stylebox_override("panel", Tema.painel())
+	centro.add_child(painel)
+	var coluna := VBoxContainer.new()
+	coluna.custom_minimum_size.x = minf(180, get_viewport().get_visible_rect().size.x - 32)
+	coluna.add_theme_constant_override("separation", 12)
+	painel.add_child(coluna)
+	var dica := rotulo(coluna, texto, 8)
+	dica.custom_minimum_size.x = coluna.custom_minimum_size.x
+	dica.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var linha := CenterContainer.new()
+	coluna.add_child(linha)
+	var confirmar := botao(linha, "OK", func():
+		dialogo.queue_free()
+		get_tree().paused = false
+	)
+	confirmar.custom_minimum_size = Vector2(64, 32)
+	get_tree().paused = true
+	confirmar.grab_focus()
+
+
+func _apresentar_fase() -> void:
+	var titulo := TituloFase.new()
+	titulo.titulo = partida.nivel.nome
+	titulo.ordem = partida.nivel.ordem
+	add_child(titulo)
+	titulo.terminou.connect(_criar_dica)
