@@ -112,6 +112,8 @@ func _executar() -> void:
 		preload("res://src/Visual/area_segura_menu.gd").aplicar(hud._dialogo_pausa._margem, 8, viewport.get_screen_transform() * segura)
 		await acomodar()
 		conferir(hud._dialogo_pausa.find_children("*", "Button", true, false).all(func(b): return segura.encloses(b.get_global_rect())), "Três ações da pausa respeitam recortes em 180x%d" % altura)
+		var botoes_pausa: Array = [hud._dialogo_pausa._menu, hud._dialogo_pausa._resetar, hud._dialogo_pausa._continuar]
+		conferir(botoes_pausa.all(func(b): return b.text.is_empty() and b.icon != null and is_equal_approx(b.global_position.y, botoes_pausa[0].global_position.y)) and botoes_pausa[0].global_position.x < botoes_pausa[1].global_position.x and botoes_pausa[1].global_position.x < botoes_pausa[2].global_position.x, "Pausa usa somente ícones alinhados: menu, resetar, continuar")
 	hud._dialogo_pausa._continuar.pressed.emit()
 	hud._process(0)
 	conferir(not paused and not hud._dialogo_pausa.visible and partida.nave.combustivel == saldo and partida.tempo_restante == tempo, "Continuar preserva combustível e tempo")
@@ -132,6 +134,8 @@ func _executar() -> void:
 		preload("res://src/Visual/area_segura_menu.gd").aplicar(hud._dialogo_conclusao._margem, 8, viewport.get_screen_transform() * segura)
 		await acomodar()
 		conferir(hud._dialogo_conclusao.find_children("*", "Button", true, false).filter(func(b): return b.is_visible_in_tree()).all(func(b): return segura.encloses(b.get_global_rect())), "Diálogo de vitória respeita recortes em 180x%d" % altura)
+		var botoes_conclusao: Array = [hud._dialogo_conclusao._menu, hud._dialogo_conclusao._resetar, hud._dialogo_conclusao._continuar]
+		conferir(botoes_conclusao.all(func(b): return b.text.is_empty() and b.icon != null and is_equal_approx(b.global_position.y, botoes_conclusao[0].global_position.y)) and botoes_conclusao[0].global_position.x < botoes_conclusao[1].global_position.x and botoes_conclusao[1].global_position.x < botoes_conclusao[2].global_position.x, "Conclusão usa somente ícones alinhados: menu, repetir, próximo")
 	conferir(hud._dialogo_conclusao._resetar.visible and hud._dialogo_conclusao._resetar.text.is_empty() and hud._dialogo_conclusao._menu.text.is_empty(), "Vitória oferece repetir e voltar às fases por ícones")
 	hud._dialogo_conclusao._menu.pressed.emit()
 	await acomodar()

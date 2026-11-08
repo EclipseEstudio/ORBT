@@ -26,6 +26,8 @@ var raio := 8.0
 var corpo_apoio := ""
 var posicao_relativa := Vector2.ZERO
 var origem_decolagem := ""
+var tempo_decolagem := -INF
+var guia_obstruida := false
 var corpos: Array = []
 var tempo_simulacao := 0.0
 var fisica: Dictionary = {"gravity_constant": 1.0, "softening": 8.0}
@@ -49,7 +51,8 @@ func configurar(nivel: NivelRes) -> void:
 	trajeto_interrompido.emit()
 	cancelar_pedidos()
 	corpos = nivel.corpos.duplicate(true)
-	tempo_simulacao = 0.0
+	tempo_simulacao = nivel.obter_tempo_inicial()
+	Fisica.atualizar_corpos(corpos, tempo_simulacao)
 	fisica = nivel.fisica.duplicate(true)
 	limites = nivel.limites
 	massa = nivel.parametros_nave.mass
@@ -58,6 +61,7 @@ func configurar(nivel: NivelRes) -> void:
 	combustivel = nivel.combustivel_inicial
 	entrada.configurar(nivel.parametros_nave)
 	origem_decolagem = ""
+	tempo_decolagem = -INF
 	# IDs continuam monotônicos para rejeitar eventos atrasados da tentativa anterior.
 	entrada.ultimo_gesto = maxi(entrada.ultimo_gesto, _ultimo_pedido)
 	simulacao_ativa = true
@@ -71,7 +75,10 @@ func configurar(nivel: NivelRes) -> void:
 		condicao = Condicao.PRONTA
 		condicao_alterada.emit()
 	else:
-		pousar(nivel.obter_corpo(nivel.inicio.body_id))
+		for corpo in corpos:
+			if corpo.id == nivel.inicio.body_id:
+				pousar(corpo)
+				break
 	combustivel_alterado.emit(combustivel)
 	animation_player.play("default")
 	atualizar_entrada()
@@ -87,6 +94,8 @@ func solicitar_impulso(gesto_id: int, impulso: Vector2) -> bool:
 	if combustivel <= _pedidos.size() or not impulso.is_finite() or impulso.is_zero_approx() or impulso.length() > entrada.impulso_maximo + 0.001:
 		return false
 	_ultimo_pedido = gesto_id
+	if lancamento_bloqueado(impulso):
+		return false
 	_pedidos.append({"id": gesto_id, "impulso": impulso})
 	return true
 
@@ -115,9 +124,13 @@ func aplicar_pedidos() -> void:
 	for pedido in pedidos:
 		if not entrada.pode_controlar() or combustivel <= 0:
 			break
+		# A superfície pode ter girado entre a soltura e a aplicação do pedido.
+		if lancamento_bloqueado(pedido.impulso):
+			continue
 		if condicao in [Condicao.POUSADA, Condicao.PRONTA]:
 			velocidade = velocidade_apoio()
 			origem_decolagem = corpo_apoio
+			tempo_decolagem = tempo_simulacao
 			corpo_apoio = ""
 			posicao_relativa = Vector2.ZERO
 		velocidade += pedido.impulso / massa
@@ -157,7 +170,7 @@ func avancar(delta: float) -> Dictionary:
 		if not transporte.contact.is_empty():
 			contato_detectado.emit(transporte.contact)
 		return transporte.contact
-	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem, tempo_simulacao)
+	var resultado := Fisica.passo(global_position, velocidade, delta, corpos, fisica, limites, raio, origem_decolagem, tempo_simulacao, tempo_decolagem)
 	tempo_simulacao += delta
 	Fisica.atualizar_corpos(corpos, tempo_simulacao)
 	if resultado.get("teleported", false):
@@ -187,6 +200,7 @@ func pousar(corpo: Dictionary) -> void:
 	global_rotation = normal.angle() + PI / 2.0
 	corpo_apoio = corpo.id
 	origem_decolagem = ""
+	tempo_decolagem = -INF
 	velocidade = Vector2.ZERO
 	condicao = Condicao.POUSADA
 	condicao_alterada.emit()
@@ -208,12 +222,34 @@ func velocidade_apoio() -> Vector2:
 	return Vector2.ZERO
 
 
+func lancamento_bloqueado(impulso: Vector2) -> bool:
+	return condicao == Condicao.POUSADA and not posicao_relativa.is_zero_approx() and impulso.dot(posicao_relativa.normalized()) < -0.0001
+
+
 func obter_guia_mira() -> PackedVector2Array:
+	guia_obstruida = false
 	var impulso: Vector2 = entrada.gesto.obter_impulso()
 	if not entrada.pode_controlar() or impulso.is_zero_approx():
 		return PackedVector2Array()
 	var deslocamento := get_canvas_transform().affine_inverse().basis_xform(impulso.normalized() * COMPRIMENTO_GUIA)
-	return PackedVector2Array([global_position, global_position + deslocamento])
+	if lancamento_bloqueado(impulso):
+		guia_obstruida = true
+		return PackedVector2Array([global_position, global_position + deslocamento * (8.0 / COMPRIMENTO_GUIA)])
+	var fim := global_position + deslocamento
+	var fracao := 1.0
+	for corpo in corpos:
+		if not corpo.has("type") or corpo.type == "portal" or corpo.id == corpo_apoio:
+			continue
+		if corpo.id == origem_decolagem:
+			var relativo: Vector2 = global_position - corpo.position
+			if relativo.length() >= corpo.collision_radius + raio - Fisica.TOLERANCIA_SUPERFICIE and relativo.dot(deslocamento) >= -Fisica.TOLERANCIA_SUPERFICIE:
+				continue
+		# Apenas o segmento da guia: sem prever a gravidade nem consumir recursos.
+		var contato := Fisica.intersecao_circulo(global_position, fim, corpo.position, Fisica.raio_contato(corpo) + raio)
+		if contato < fracao:
+			fracao = contato
+			guia_obstruida = true
+	return PackedVector2Array([global_position, global_position.lerp(fim, fracao)])
 
 
 ## Simulação completa para ferramentas e testes; não é usada pela mira durante o jogo.
@@ -223,7 +259,8 @@ func prever_trajetoria() -> PackedVector2Array:
 		return PackedVector2Array()
 	var velocidade_inicial := velocidade_apoio() if condicao in [Condicao.POUSADA, Condicao.PRONTA] else velocidade
 	var origem := corpo_apoio if condicao == Condicao.POUSADA else origem_decolagem
-	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second, tempo_simulacao)
+	var inicio_decolagem := tempo_simulacao if condicao == Condicao.POUSADA else tempo_decolagem
+	return Fisica.prever(global_position, velocidade_inicial + impulso / massa, corpos, fisica, limites, raio, origem, 180, 1.0 / Engine.physics_ticks_per_second, tempo_simulacao, inicio_decolagem)
 
 
 func _atualizar_orientacao(_delta: float) -> void:

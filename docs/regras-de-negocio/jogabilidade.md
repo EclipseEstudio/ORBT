@@ -11,10 +11,10 @@ O objetivo de cada fase é levar a nave até a Terra. A nave pode começar pousa
 | Terra | Chegar à sua região de captura durante uma tentativa ativa conclui a fase. |
 | Planeta ou satélite | Permite pousar e lançar novamente enquanto houver combustível. O pouso não reabastece. |
 | Sol ou asteroide | Entrar na região de perigo causa derrota. |
-| Limites da fase | Sair do mundo com o centro da nave causa derrota; permanecer exatamente na borda ainda é permitido. |
+| Espaço aberto | Não há borda visível nem derrota imediata por sair da região autoral. Fora dela, o consumo de oxigênio dobra; ao retornar, volta ao normal. A nave continua em voo até chegar à Terra, colidir ou esgotar o oxigênio. |
 | Proximidade | Produz um aviso ao se aproximar de um corpo. Não limita a gravidade nem substitui as regiões de contato. |
 
-Os corpos permanecem parados nesta versão. Os corpos com massa positiva atraem a nave; o desenho de um sprite não define sua superfície física. As regiões de captura, colisão e perigo são parâmetros distintos da fase.
+Estações ficam sem rotação por padrão, inclusive nas fases iniciais. Giros e órbitas explicitamente definidos na fase são preservados. Planetas e Terra sem giro definido recebem 24 graus por segundo, ou 8 nos planetas com faixa segura. A nave pousada acompanha a superfície sem consumir combustível ou oxigênio. Nas estações com giro, a posição inicial deixa apenas 0,35 segundo até a direção de saída prevista; o mundo aguarda o título desaparecer para começar a se mover. A fase Janela orbital já começa na janela de lançamento. Os corpos com massa positiva atraem a nave; o desenho de um sprite não define sua superfície física. As regiões de captura, colisão e perigo são parâmetros distintos da fase.
 
 ## Mira e impulsos
 
@@ -32,7 +32,8 @@ Um impulso em voo acrescenta velocidade à nave; não interrompe o movimento ant
 - Esgotar o combustível permite continuar à deriva até o oxigênio acabar; ainda é possível chegar à Terra e vencer usando a última carga.
 - Pousar em um apoio seguro zera a velocidade e preserva a posição relativa ao corpo. O combustível restante não é recarregado.
 - **Regra do protótipo:** pousar em apoio seguro com saldo zero causa derrota por falta de combustível para decolar.
-- Lançar em direção ao corpo de origem pode causar contato imediato e novo pouso. O impulso aceito continua sendo cobrado; pousar em apoio com saldo zero encerra a tentativa.
+- Mirar para dentro do apoio mostra uma guia curta vermelha, uma cruz e o aviso **BLOQUEADO**. Soltar nessa direção mantém o pouso sem gastar combustível nem ativar o oxigênio. A direção é conferida novamente no passo de aplicação para considerar o giro da superfície.
+- Ao decolar, a atração gravitacional do apoio de origem fica suspensa por 1,2 segundo e retorna suavemente durante o segundo seguinte, limitada a 12 unidades de aceleração durante esse voo. Isso dá espaço para a nave sair da captura. Correções não renovam a proteção; outros corpos, perigos e colisões continuam ativos.
 
 ## Tempo, pausa e exploração
 
@@ -46,17 +47,17 @@ O oxigênio é um saldo único por tentativa, com a duração definida na fase. 
 
 ## Vitória, derrota e reinício
 
-Chegar à Terra vence a tentativa. Contato com perigo, saída dos limites, oxigênio esgotado ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez. O diálogo de fim de jogo mostra o motivo e oferece Último pouso, Repetir e Voltar ao menu; motivos longos têm rolagem.
+Chegar à Terra vence a tentativa. Contato com perigo, oxigênio esgotado ou pouso seguro sem combustível causam derrota. Cada tentativa termina uma única vez. O diálogo de fim de jogo mostra o motivo e oferece Último pouso, Repetir e Voltar ao menu; motivos longos têm rolagem.
 
 **Reiniciar** começa uma nova tentativa com posição, orientação, combustível, tempo, câmera e contatos iniciais. A tentativa anterior não é retomada. Conclusões e desbloqueios da campanha seguem as [regras de progressão](campanha.md).
 
-Na pausa, **Menu principal** encerra a cena atual e retorna ao menu. Após vitória, **Próxima fase** abre a sucessora, **Repetir** inicia novamente a mesma fase e **Seleção de fases** volta à campanha. Na última fase, a opção de próxima fase não é exibida. Na derrota, pode-se restaurar o checkpoint ou reiniciar.
+Na pausa e na conclusão, as ações aparecem apenas como ícones na mesma linha: **Menu de fases** à esquerda, **Resetar/Repetir** no centro e **Continuar/Próxima fase** à direita. O menu encerra a tentativa e retorna à campanha. Após vitória, **Próxima fase** abre a sucessora e **Repetir** inicia novamente a mesma fase. Na última fase, a opção de próxima fase não é exibida. Na derrota, pode-se restaurar o checkpoint ou reiniciar.
 
 O jogo guarda o início da fase e depois substitui esse ponto a cada pouso seguro. Após uma derrota, **Voltar ao último pouso** recupera o último ponto, posição e orientação, combustível e tempo registrados, sem repetir a mira ou um impulso. Um início livre também é recuperável. Se o último pouso ocorreu sem combustível, restaurá-lo mantém a derrota; use **Reiniciar** para voltar ao começo com o saldo inicial. Ao reabrir o jogo, **Continuar** recupera o checkpoint pausado. Dados incompatíveis ou danificados geram aviso e opção para reiniciar uma fase; o progresso de campanha é independente.
 
 ## Prévia, câmera e indicadores
 
-Enquanto há um arraste válido, a mira mostra uma guia reta de 60 pixels lógicos na direção do impulso, independentemente da força e do zoom. A linha entre o ponto inicial do toque e o dedo usa um gradiente de ciano, amarelo, laranja e vermelho, com espessura de 1 a 3 pixels conforme a intensidade. Na zona morta, permanece fina e amarelo apagado. A força máxima acende um anel vermelho junto ao dedo. Cancelar, lançar, pausar, explorar ou encerrar a tentativa limpa a mira.
+Enquanto há um arraste válido, a mira mostra uma guia reta de até 60 pixels lógicos na direção do impulso, independentemente da força e do zoom. A guia para no primeiro obstáculo, considerando o tamanho da nave, e marca o contato em amarelo; contra o próprio apoio, fica curta e vermelha. Ela não prevê curvas gravitacionais. A linha de força entre o toque e o dedo usa dez segmentos em tons de azul, com espessura de 4 a 6 pixels conforme a intensidade. Cancelar, lançar, pausar, explorar ou encerrar a tentativa limpa a mira.
 
 A câmera começa junto da nave, com a mira disponível imediatamente. O topo da partida mostra somente o número da fase. O painel informa combustível, tempo, direção e distância da Terra, proximidade de corpos e causa do desfecho. Os controles permitem pausar, explorar, recentralizar, reiniciar e retornar à seleção de fases.
 
@@ -64,10 +65,14 @@ Durante a partida, a câmera mantém a nave próxima e centralizada. Arrastar pa
 
 A nave deixa um rastro curto em voo ou à deriva, acima de uma velocidade mínima. Ele termina em ciano e desaparece na cauda, mantendo espessura de 2 pixels lógicos na tela. Pouso, pausa, reinício, fim da tentativa e passagem por portal limpam o trecho anterior.
 
-O texto de distância indica a direção quando o centro da Terra sai da área segura ou fica encoberto pelos controles superiores ou pelo painel inferior. Sobreposição com o topo indica para cima; com o painel inferior, para baixo. A indicação orienta a busca pelo destino no mapa e não prevê uma rota de voo.
+A seta azul da Terra permanece ao redor da nave, acima dos demais indicadores. Nas nebulosas, as outras bússolas também acompanham a nave: dourado para combustível, roxo para entrada de portal e branco para saída. A distância dos ponteiros à nave permanece constante na tela mesmo ao mudar o zoom. A mira e a barra de força ficam acima da fumaça. A barra de oxigênio traz a identificação **O2**.
+
+Os pares de portais exibem um buraco negro com partículas sendo sugadas e um buraco branco expelindo partículas, sem nomes ou textos de ligação sobre o mapa. O efeito é visual e não acrescenta gravidade nem custo de combustível ao teleporte.
+
+O título da fase pode ser dispensado imediatamente com um toque ou clique. O mesmo toque não inicia um lançamento. No menu de fases, arrastar sobre um cartão rola a lista e cancela sua seleção; um toque simples continua abrindo a fase. A barra lateral ocupa três pixels lógicos.
 
 ## Aceite e limites do protótipo
 
 Ainda precisam de aceite da equipe e calibração no Android: direção livre oposta ao arraste, curva e valores de impulso, gravidade, contato contra a origem, pouso seguro sem combustível e suspensão da contagem no pouso. A prévia, os gestos, a pausa e a legibilidade também dependem de teste no aparelho.
 
-As verificações e capturas em Windows estão registradas no [documento técnico](../tecnica/fases-e-simulacao.md#evidências-e-limites-de-aceite). O [roteiro Android](../tecnica/android.md) mantém os critérios de validação no telefone. Movimento dos corpos e portais não fazem parte desta versão implementada.
+As verificações e capturas em Windows estão registradas no [documento técnico](../tecnica/fases-e-simulacao.md#evidências-e-limites-de-aceite). O [roteiro Android](../tecnica/android.md) mantém os critérios de validação no telefone.

@@ -28,7 +28,8 @@ func _executar() -> void:
 		var guia: PackedVector2Array = nave.obter_guia_mira()
 		var tela: Transform2D = nave.get_canvas_transform()
 		conferir(guia.size() == 2 and guia[0] == nave.global_position, "Guia contém apenas origem e destino")
-		conferir(is_equal_approx((tela * guia[0]).distance_to(tela * guia[1]), 60), "Comprimento de tela fixo para qualquer força")
+		var bloqueado: bool = nave.lancamento_bloqueado(arraste)
+		conferir(is_equal_approx((tela * guia[0]).distance_to(tela * guia[1]), 8 if bloqueado else 60), "Guia curta indica bloqueio; direção livre mantém 60 pixels")
 		nave._atualizar_orientacao(0)
 		conferir(Vector2.UP.rotated(nave.global_rotation).is_equal_approx(arraste.normalized()), "Nave pousada aponta imediatamente na direção da mira")
 		nave.entrada.cancelar()
@@ -40,7 +41,7 @@ func _executar() -> void:
 	var guia_zoom: PackedVector2Array = nave.obter_guia_mira()
 	var tela_zoom: Transform2D = nave.get_canvas_transform()
 	conferir(is_equal_approx((tela_zoom * guia_zoom[0]).distance_to(tela_zoom * guia_zoom[1]), 60), "Zoom não altera comprimento aparente da guia")
-	# Dados físicos inválidos evidenciam que a guia não acessa nem simula os corpos.
+	# Objetos incompletos do editor são ignorados; a guia não integra trajetórias.
 	nave.corpos = [{}]
 	var inicio := Time.get_ticks_usec()
 	for i in 10000:

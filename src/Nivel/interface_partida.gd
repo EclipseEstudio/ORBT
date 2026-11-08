@@ -100,8 +100,8 @@ func _ready() -> void:
 	_pausa.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_bussola = Bussola.new()
 	_bussola.partida = partida
+	_bussola.z_index = 2
 	raiz.add_child(_bussola)
-	raiz.move_child(_bussola, 0)
 	_base_status = VBoxContainer.new()
 	_base_status.name = "Recursos"
 	_base_status.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -184,6 +184,7 @@ func _ready() -> void:
 	_atualizar_area_segura()
 	_dialogo_pausa = DialogoPausa.new()
 	_dialogo_pausa.name = "DialogoPausa"
+	_dialogo_pausa.modo_pausa = true
 	_dialogo_pausa.continuar.connect(partida.retomar)
 	_dialogo_pausa.resetar.connect(partida.reiniciar)
 	_dialogo_pausa.texto_menu = "Menu de fases"
@@ -444,8 +445,11 @@ func _criar_dica() -> void:
 
 
 func _apresentar_fase() -> void:
+	partida.apresentando_fase = true
 	var titulo := TituloFase.new()
 	titulo.titulo = partida.nivel.nome
 	titulo.ordem = partida.nivel.ordem
 	add_child(titulo)
-	titulo.terminou.connect(_criar_dica)
+	titulo.terminou.connect(func():
+		partida.apresentando_fase = false
+		_criar_dica())

@@ -4,6 +4,7 @@ const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 const Fundo = preload("res://src/Visual/fundo_menu.gd")
+const RolagemFases = preload("res://src/Campanha/rolagem_fases.gd")
 signal fase_escolhida(id: String)
 signal voltar
 var itens: Array = []
@@ -57,7 +58,7 @@ func _ready() -> void:
 	_colecao.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_colecao.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_colecao.modulate = Color("57b9ff")
-	rolagem = ScrollContainer.new()
+	rolagem = RolagemFases.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rolagem.follow_focus = true

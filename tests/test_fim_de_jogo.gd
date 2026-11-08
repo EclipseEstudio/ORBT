@@ -37,7 +37,7 @@ func _executar() -> void:
 		if filho.has_method("_alternar_pausa"):
 			hud = filho
 	var nave = partida.nave
-	for cenario in ["pouso_sem_combustivel", "colisao", "limites", "oxigenio"]:
+	for cenario in ["pouso_sem_combustivel", "colisao", "oxigenio"]:
 		partida.reiniciar()
 		nivel.camera._process(2)
 		var causa := "Sem combustível para decolar"
@@ -48,9 +48,6 @@ func _executar() -> void:
 			"colisao":
 				causa = "Colisão com perigo"
 				partida.resolver_contato({"kind": "body", "body": {"type": "asteroid"}})
-			"limites":
-				causa = "Fora dos limites"
-				partida.resolver_contato({"kind": "bounds"})
 			"oxigenio":
 				causa = "Oxigênio esgotado"
 				nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80))
@@ -81,7 +78,7 @@ func _executar() -> void:
 	hud._dialogo_derrota._continuar.pressed.emit()
 	hud._process(0.9)
 	conferir(partida.estado == partida.Estado.JOGANDO and not hud._dialogo_derrota.visible, "Último pouso recupera tentativa e fecha diálogo")
-	partida.finalizar(false, "Fora dos limites")
+	partida.finalizar(false, "Oxigênio esgotado")
 	hud._process(0.9)
 	hud._dialogo_derrota._menu.pressed.emit()
 	await acomodar()

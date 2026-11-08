@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 5,
   "id": "janela_orbital",
   "name": "Janela orbital",
   "order": 12,
@@ -29,7 +29,8 @@
   },
   "start": {
     "body_id": "origem",
-    "angle_degrees": -90
+    "angle_degrees": -90,
+    "time_seconds": 4
   },
   "goal": {
     "id": "terra",
@@ -237,7 +238,7 @@
       ]
     }
   },
-  "tutorial": "Observe a órbita da estação de partida. O movimento muda a posição e a velocidade de saída; espere a janela antes de lançar.",
+  "tutorial": "A estação já começa perto da janela de lançamento. Mire na Terra; o movimento da estação também ajuda na saída.",
   "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {

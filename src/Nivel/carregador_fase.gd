@@ -64,6 +64,8 @@ static func validar(dados: Variant) -> Dictionary:
 		if numero(nave.get("dead_zone"), 0.01) and numero(nave.get("max_drag"), 0.01) and nave.max_drag <= nave.dead_zone:
 			erros.append("ship.max_drag: deve superar dead_zone")
 	var inicio = dados.get("start")
+	if inicio is Dictionary and inicio.has("time_seconds") and not numero(inicio.time_seconds, 0, 86400):
+		erros.append("start.time_seconds: tempo inicial entre 0 e 86400")
 	if dados.has("nebula"):
 		var nebulosa = dados.nebula
 		if not nebulosa is Dictionary or not numero(nebulosa.get("visibility_radius"), 45, 300):
@@ -153,6 +155,8 @@ static func validar(dados: Variant) -> Dictionary:
 		if corpo.type == "earth":
 			corpo.mass = maxf(corpo.mass, 180000.0)
 			corpo["gravity_radius"] = corpo.get("gravity_radius", corpo.capture_radius + 38.0)
+		if corpo.type in ["planet", "earth"] and not corpo.has("rotation"):
+			corpo["rotation"] = {"initial_degrees": corpo.get("rotation", {}).get("initial_degrees", 0.0), "degrees_per_second": 8.0 if corpo.has("landing_zone") else 24.0}
 		if corpo.type in ["sun", "asteroid"]:
 			if corpo.danger_radius < corpo.collision_radius or corpo.capture_radius != 0:
 				erros.append(prefixo + ": perigo deve cobrir colisão e não ter captura")
@@ -176,6 +180,9 @@ static func validar(dados: Variant) -> Dictionary:
 		if destino.is_empty() or destino.type != "portal" or destino.id == portal.id or destino.get("target_id") != portal.id:
 			erros.append(portal.id + ".target_id: exige outro portal com ligação recíproca")
 			continue
+		if not portal.has("_portal_saida"):
+			portal["_portal_saida"] = false
+			destino["_portal_saida"] = true
 		var direcao := Vector2.RIGHT.rotated(deg_to_rad(destino.exit_degrees))
 		var saida: Vector2 = destino.position + direcao * (destino.collision_radius + nave.radius + 0.01)
 		var area := Rect2(Vector2(bounds.position[0], bounds.position[1]), Vector2(bounds["size"][0], bounds["size"][1]))
@@ -210,7 +217,7 @@ static func validar(dados: Variant) -> Dictionary:
 		if not Fisica.dentro_limites(posicao, nivel.limites):
 			erros.append("start: nave fora dos limites")
 		for corpo in normalizados:
-			if corpo.id != apoio.get("id", "") and posicao.distance_to(corpo.position) <= Fisica.raio_contato(corpo) + nave.radius:
+			if corpo.id != apoio.get("id", "") and posicao.distance_to(Fisica.posicao_corpo(corpo, nivel.obter_tempo_inicial())) <= Fisica.raio_contato(corpo) + nave.radius:
 				erros.append("start: sobreposto ao corpo " + corpo.id)
 	for i in range(normalizados.size()):
 		for j in range(i + 1, normalizados.size()):

@@ -3,6 +3,7 @@ extends Node2D
 
 const Arte = preload("res://src/Visual/arte_pixel.gd")
 const Marcas = preload("res://src/Visual/marcas_corpo.gd")
+const PortalVisual = preload("res://src/Visual/portal_visual.gd")
 var sprite: Sprite2D
 var marcas: Node2D
 
@@ -25,7 +26,7 @@ func _ready() -> void:
 	if dados.type == "planet":
 		sprite.modulate = Arte.cor_apoio(dados.id)
 	add_child(sprite)
-	marcas = Marcas.new()
+	marcas = PortalVisual.new() if dados.type == "portal" else Marcas.new()
 	marcas.dados = dados
 	marcas.proximo = proximo
 	add_child(marcas)

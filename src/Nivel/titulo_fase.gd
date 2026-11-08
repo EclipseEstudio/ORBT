@@ -6,6 +6,8 @@ const LEITURA := 1.8
 const FADE := 0.7
 var titulo := ""
 var ordem := 1
+var _tween: Tween
+var _encerrado := false
 
 func _ready() -> void:
 	name = "TituloFase"
@@ -28,9 +30,23 @@ func _ready() -> void:
 	rotulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rotulo.text = titulo
 	margem.add_child(rotulo)
-	var tween := create_tween()
-	tween.tween_interval(LEITURA)
-	tween.tween_property(self, "modulate:a", 0.0, FADE).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_callback(func():
-		terminou.emit()
-		queue_free())
+	_tween = create_tween()
+	_tween.tween_interval(LEITURA)
+	_tween.tween_property(self, "modulate:a", 0.0, FADE).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tween.tween_callback(_encerrar)
+
+func _input(evento: InputEvent) -> void:
+	if (evento is InputEventScreenTouch and evento.pressed) or (evento is InputEventMouseButton and evento.pressed and evento.button_index == MOUSE_BUTTON_LEFT):
+		get_viewport().set_input_as_handled()
+		_encerrar.call_deferred()
+
+func _encerrar() -> void:
+	if _encerrado:
+		return
+	_encerrado = true
+	if _tween != null:
+		_tween.kill()
+	hide()
+	# O toque que dispensa o título não deve acionar a dica nem lançar a nave.
+	terminou.emit()
+	queue_free()

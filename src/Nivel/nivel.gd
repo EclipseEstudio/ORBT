@@ -88,11 +88,6 @@ func _ao_alerta(id_corpo: String, ativo: bool) -> void:
 		corpos_visuais[id_corpo].proximo = ativo
 
 
-func _draw() -> void:
-	if nivel_res != null:
-		draw_rect(nivel_res.limites, Color(0.35, 0.5, 0.7, 0.35), false, 1)
-
-
 func _explodir(_motivo: String) -> void:
 	var efeito := Explosao.new()
 	efeito.position = $Nave.position

@@ -1,15 +1,15 @@
 extends Control
-## Rumos de rádio: revelam direção/distância, nunca a imagem dos obstáculos.
+## Rumos ao redor da nave, em pixels lógicos independentes do zoom.
 var partida: Node
-const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
+const COR_TANQUE = Color("ffc845")
+const COR_ENTRADA = Color("c28aff")
+const COR_SAIDA = Color("f4f8ff")
 var leituras: Array[Dictionary] = []
 
 func _ready() -> void:
 	name = "InstrumentosNebulosa"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	offset_top = 52
-	offset_left = 8
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _process(_delta: float) -> void:
 	visible = partida.estado == partida.Estado.JOGANDO
@@ -17,21 +17,24 @@ func _process(_delta: float) -> void:
 	var origem: Vector2 = partida.nave.global_position
 	for tanque in partida.nivel.combustiveis:
 		if not partida.combustiveis_coletados.has(tanque.id):
-			leituras.append({"nome":"TANQUE +1","vetor":tanque.position - origem})
+			leituras.append({"alvo": tanque.position, "cor": COR_TANQUE, "raio": 28.0})
 	var portais: Array[Dictionary] = []
 	for corpo in partida.nave.corpos:
 		if corpo.type == "portal" and corpo.position.distance_to(origem) > 40:
-			portais.append({"nome":"PORTAL " + corpo.id,"vetor":corpo.position-origem})
-	portais.sort_custom(func(a: Dictionary,b: Dictionary): return a.vetor.length_squared() < b.vetor.length_squared())
-	leituras.append_array(portais.slice(0,2))
+			portais.append({"alvo": corpo.position, "cor": COR_SAIDA if corpo.get("_portal_saida", false) else COR_ENTRADA, "raio": 35.0})
+	portais.sort_custom(func(a: Dictionary, b: Dictionary): return a.alvo.distance_squared_to(origem) < b.alvo.distance_squared_to(origem))
+	leituras.append_array(portais.slice(0, 2))
 	queue_redraw()
 
 func _draw() -> void:
-	for i in leituras.size():
-		var leitura: Dictionary = leituras[i]
-		var direcao: Vector2 = leitura.vetor.normalized()
-		var centro := Vector2(5, i * 15 + 5)
+	var inversa := get_global_transform_with_canvas().affine_inverse()
+	var tela_nave: Vector2 = partida.nave.get_global_transform_with_canvas().origin
+	for leitura in leituras:
+		var tela_alvo: Vector2 = partida.nave.get_canvas_transform() * Vector2(leitura.alvo)
+		var direcao := (tela_alvo - tela_nave).normalized()
+		var centro := inversa * (tela_nave + direcao * float(leitura.raio))
 		var lateral := direcao.orthogonal()
-		draw_rect(Rect2(Vector2(-2,i*15-2),Vector2(140,14)),Color("070e21e8"))
-		draw_colored_polygon(PackedVector2Array([centro+direcao*4,centro-direcao*3+lateral*2,centro-direcao*3-lateral*2]),Color("87b6d9"))
-		draw_string(FONTE,Vector2(14,i*15+7),"%s: %d" % [leitura.nome,roundi(leitura.vetor.length())],HORIZONTAL_ALIGNMENT_LEFT,-1,6,Color("d5edff"))
+		var triangulo := PackedVector2Array([centro + direcao * 5, centro - direcao * 3 + lateral * 2, centro - direcao * 3 - lateral * 2])
+		draw_colored_polygon(triangulo, leitura.cor)
+		triangulo.append(triangulo[0])
+		draw_polyline(triangulo, Color("070e21"), 1)

@@ -51,6 +51,8 @@ func _executar() -> void:
 		conferir(Mira.cor_intensidade(par[0]).is_equal_approx(par[1]), "Gradiente azul clareia conforme a força")
 	gesto.cancelar()
 	conferir(is_zero_approx(gesto.obter_intensidade()) and mira.pontos_forca().is_empty(), "Cancelar remove força e linha")
+	# A estação já pode ter girado na física antes deste process_frame.
+	camera._process(0)
 	# Sem gesto, a câmera nasce próxima da nave e independe dos corpos.
 	var base: Vector2 = camera.zoom
 	conferir(is_equal_approx(base.x, 0.825) and camera.global_position == nave.global_position, "Fase começa perto da nave, sem passeio inicial pela Terra")
