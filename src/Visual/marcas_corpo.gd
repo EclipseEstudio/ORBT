@@ -15,15 +15,8 @@ func traco(a: Vector2, b: Vector2, cor := Color.WHITE) -> void:
 func _draw() -> void:
 	if dados.is_empty():
 		return
-	if dados.type == "portal":
-		draw_arc(Vector2.ZERO, dados.collision_radius, 0, TAU, 48, Color.CYAN, 3, true)
-		draw_arc(Vector2.ZERO, dados.collision_radius * 0.65, 0, TAU, 48, Color.MEDIUM_PURPLE, 2, true)
-		var direcao := Vector2.RIGHT.rotated(deg_to_rad(dados.exit_degrees))
-		traco(Vector2.ZERO, direcao * dados.collision_radius)
-		draw_string(FONTE, Vector2(-16, -dados.visual_radius - 5), dados.id + " > " + dados.target_id, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.CYAN)
-		return
 	var perigoso: bool = dados.type in ["sun", "asteroid"]
-	var cor := Color("ffac78") if perigoso else Color("82f0d1")
+	var cor := Color("ffac78") if perigoso else Color("9ac8e5")
 	var raio: float = dados.danger_radius if perigoso else dados.collision_radius
 	# Contorno contínuo: contato; tracejado: aviso de proximidade, não gravidade.
 	draw_arc(Vector2.ZERO, raio, 0, TAU, 64, ESCURO, 3)

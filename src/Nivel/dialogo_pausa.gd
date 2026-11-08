@@ -16,6 +16,7 @@ var texto_secundario := "Resetar"
 var texto_menu := "Voltar ao menu"
 var mostrar_primario := true
 var modo_conclusao := false
+var modo_pausa := false
 var _motivo: Label
 var _rolagem_motivo: ScrollContainer
 var _titulo: Label
@@ -82,7 +83,7 @@ func _ready() -> void:
 	_rolagem_motivo.add_child(_motivo)
 	_rolagem_motivo.hide()
 	var acoes: Node = coluna
-	if modo_conclusao:
+	if modo_conclusao or modo_pausa:
 		var linha := HBoxContainer.new()
 		linha.alignment = BoxContainer.ALIGNMENT_CENTER
 		coluna.add_child(linha)
@@ -90,12 +91,16 @@ func _ready() -> void:
 	_continuar = _botao(acoes, texto_primario, "jogar", func(): continuar.emit())
 	_continuar.visible = mostrar_primario
 	Tema.destacar(_continuar)
-	_resetar = _botao(coluna, texto_secundario, "reiniciar", func(): resetar.emit())
-	_resetar.visible = not modo_conclusao
+	_resetar = _botao(acoes, texto_secundario, "reiniciar", func(): resetar.emit())
 	_menu = _botao(acoes, texto_menu, "casa", func(): menu.emit())
-	if modo_conclusao:
+	if modo_conclusao or modo_pausa:
 		Icones.aplicar(_menu, "casa", "Voltar ao menu de fases")
-		_menu.custom_minimum_size = Vector2(32, 32)
+		Icones.aplicar(_resetar, "reiniciar", "Repetir fase" if modo_conclusao else texto_secundario)
+		Icones.aplicar(_continuar, "jogar", "Próxima fase" if modo_conclusao else texto_primario)
+		for botao in [_menu, _resetar, _continuar]:
+			botao.custom_minimum_size = Vector2(32, 32)
+		acoes.move_child(_menu, 0)
+		acoes.move_child(_resetar, 1)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
 

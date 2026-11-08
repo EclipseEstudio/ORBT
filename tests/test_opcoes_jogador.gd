@@ -81,6 +81,10 @@ func _executar() -> void:
 	var mundo = jogo.mundo_atual
 	var partida = mundo.partida
 	partida.set_physics_process(false)
+	for filho in mundo.get_children():
+		if filho.has_method("_alternar_pausa"):
+			await filho.get_node("TituloFase").terminou
+	await process_frame
 	mundo.camera._process(2)
 	var nave = partida.nave
 	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
@@ -103,7 +107,10 @@ func _executar() -> void:
 	espia.alterar("dicas", true)
 	partida.retomar()
 	hud._process(0)
-	conferir(hud._mensagem.visible, "Ativar dicas durante a tentativa mostra ajuda novamente")
+	await process_frame
+	conferir(hud.has_node("DialogoDica") and paused, "Ativar dicas durante a tentativa abre ajuda com confirmação")
+	hud.get_node("DialogoDica").find_children("*", "Button", true, false)[0].pressed.emit()
+	await process_frame
 	espia.alterar("vibracao", true)
 	partida.reiniciar()
 	mundo.camera._process(2)

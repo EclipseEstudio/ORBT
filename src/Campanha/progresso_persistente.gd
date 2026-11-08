@@ -31,6 +31,19 @@ func configurar(itens: Array) -> void:
 		salvar()
 
 
+func resetar() -> bool:
+	super.resetar()
+	_bloqueado = false
+	_sujo = true
+	if not salvar():
+		return false
+	# A cópia de segurança também precisa refletir o reset.
+	if not _gravar(caminho + ".bak.tmp", _ultimo_valido) or DirAccess.rename_absolute(caminho + ".bak.tmp", caminho + ".bak") != OK:
+		aviso = "Progresso resetado, mas não foi possível atualizar a cópia de segurança."
+		return false
+	return true
+
+
 func _ler(arquivo: String) -> Dictionary:
 	if not FileAccess.file_exists(arquivo):
 		return {"estado": "ausente"}

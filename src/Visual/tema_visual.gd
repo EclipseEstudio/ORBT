@@ -2,7 +2,7 @@ extends RefCounted
 
 const FUNDO = Color("070e21")
 const TEXTO = Color("f4f8ff")
-const DESTAQUE = Color("42f5d1")
+const DESTAQUE = Color("87b6d9")
 const PERIGO = Color("ff9c38")
 const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
 
@@ -13,7 +13,7 @@ static func criar() -> Theme:
 	tema.default_font_size = 8
 	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
 		var caixa := StyleBoxFlat.new()
-		caixa.bg_color = Color("237c89") if estado == "pressed" else (Color("173954") if estado == "hover" else FUNDO)
+		caixa.bg_color = Color("304f70") if estado == "pressed" else (Color("173954") if estado == "hover" else FUNDO)
 		caixa.border_color = Color("63738a") if estado == "disabled" else (TEXTO if estado in ["hover", "focus"] else DESTAQUE)
 		caixa.set_border_width_all(2 if estado == "focus" else 1)
 		caixa.content_margin_left = 5

@@ -1,5 +1,6 @@
 # Cache e configurações locais da Godot 4+
 .godot/
+Recursos/Fases/.teste-persistencia-*/
 
 # Exportações e ferramentas Android geradas localmente
 /android/

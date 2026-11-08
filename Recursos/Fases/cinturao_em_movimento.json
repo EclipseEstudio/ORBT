@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "cinturao_em_movimento",
   "name": "Cinturão em movimento",
   "order": 19,
@@ -48,70 +48,6 @@
   },
   "bodies": [
     {
-      "id": "centro",
-      "type": "asteroid",
-      "position": [
-        300,
-        330
-      ],
-      "mass": 0,
-      "visual_radius": 62,
-      "collision_radius": 62,
-      "capture_radius": 0,
-      "danger_radius": 62,
-      "proximity_radius": 97
-    },
-    {
-      "id": "alto",
-      "type": "asteroid",
-      "position": [
-        320,
-        75
-      ],
-      "mass": 0,
-      "visual_radius": 24,
-      "collision_radius": 24,
-      "capture_radius": 0,
-      "danger_radius": 24,
-      "proximity_radius": 59
-    },
-    {
-      "id": "baixo",
-      "type": "asteroid",
-      "position": [
-        320,
-        490
-      ],
-      "mass": 0,
-      "visual_radius": 32,
-      "collision_radius": 32,
-      "capture_radius": 0,
-      "danger_radius": 32,
-      "proximity_radius": 67
-    },
-    {
-      "id": "movel",
-      "type": "asteroid",
-      "position": [
-        440,
-        240
-      ],
-      "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
-      "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 54,
-      "orbit": {
-        "center": [
-          440,
-          190
-        ],
-        "period_seconds": 18,
-        "clockwise": false
-      }
-    },
-    {
       "id": "estacao_partida",
       "type": "station",
       "position": [
@@ -124,6 +60,930 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "centro",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        291.41856826140327
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_1",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        291.41856826140327
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_2",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        291.41856826140327
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_3",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        291.41856826140327
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_4",
+      "type": "asteroid",
+      "position": [
+        255.45,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_5",
+      "type": "asteroid",
+      "position": [
+        270.3,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_6",
+      "type": "asteroid",
+      "position": [
+        285.15,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_7",
+      "type": "asteroid",
+      "position": [
+        300,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_8",
+      "type": "asteroid",
+      "position": [
+        314.85,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_9",
+      "type": "asteroid",
+      "position": [
+        329.7,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_10",
+      "type": "asteroid",
+      "position": [
+        344.55,
+        304.2790455076022
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_11",
+      "type": "asteroid",
+      "position": [
+        262.875,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_12",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_13",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_14",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_15",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_16",
+      "type": "asteroid",
+      "position": [
+        337.125,
+        317.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_17",
+      "type": "asteroid",
+      "position": [
+        255.45,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_18",
+      "type": "asteroid",
+      "position": [
+        270.3,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_19",
+      "type": "asteroid",
+      "position": [
+        285.15,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_20",
+      "type": "asteroid",
+      "position": [
+        300,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_21",
+      "type": "asteroid",
+      "position": [
+        314.85,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_22",
+      "type": "asteroid",
+      "position": [
+        329.7,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_23",
+      "type": "asteroid",
+      "position": [
+        344.55,
+        330
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_24",
+      "type": "asteroid",
+      "position": [
+        262.875,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_25",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_26",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_27",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_28",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_29",
+      "type": "asteroid",
+      "position": [
+        337.125,
+        342.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_30",
+      "type": "asteroid",
+      "position": [
+        255.45,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_31",
+      "type": "asteroid",
+      "position": [
+        270.3,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_32",
+      "type": "asteroid",
+      "position": [
+        285.15,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_33",
+      "type": "asteroid",
+      "position": [
+        300,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_34",
+      "type": "asteroid",
+      "position": [
+        314.85,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_35",
+      "type": "asteroid",
+      "position": [
+        329.7,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_36",
+      "type": "asteroid",
+      "position": [
+        344.55,
+        355.7209544923978
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_37",
+      "type": "asteroid",
+      "position": [
+        277.725,
+        368.58143173859673
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_38",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        368.58143173859673
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_39",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        368.58143173859673
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "centro_40",
+      "type": "asteroid",
+      "position": [
+        322.275,
+        368.58143173859673
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "alto",
+      "type": "asteroid",
+      "position": [
+        313.4,
+        63.568464670045415
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_1",
+      "type": "asteroid",
+      "position": [
+        326.6,
+        63.568464670045415
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_2",
+      "type": "asteroid",
+      "position": [
+        306.8,
+        75
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_3",
+      "type": "asteroid",
+      "position": [
+        320,
+        75
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_4",
+      "type": "asteroid",
+      "position": [
+        333.2,
+        75
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_5",
+      "type": "asteroid",
+      "position": [
+        313.4,
+        86.43153532995458
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "alto_6",
+      "type": "asteroid",
+      "position": [
+        326.6,
+        86.43153532995458
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "baixo",
+      "type": "asteroid",
+      "position": [
+        312.575,
+        477.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_1",
+      "type": "asteroid",
+      "position": [
+        327.425,
+        477.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_2",
+      "type": "asteroid",
+      "position": [
+        305.15,
+        490
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_3",
+      "type": "asteroid",
+      "position": [
+        320,
+        490
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_4",
+      "type": "asteroid",
+      "position": [
+        334.85,
+        490
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_5",
+      "type": "asteroid",
+      "position": [
+        312.575,
+        502.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "baixo_6",
+      "type": "asteroid",
+      "position": [
+        327.425,
+        502.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "movel",
+      "type": "asteroid",
+      "position": [
+        434.775,
+        230.95003453045263
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_1",
+      "type": "asteroid",
+      "position": [
+        445.225,
+        230.95003453045263
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_2",
+      "type": "asteroid",
+      "position": [
+        429.55,
+        240
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_3",
+      "type": "asteroid",
+      "position": [
+        440,
+        240
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_4",
+      "type": "asteroid",
+      "position": [
+        450.45,
+        240
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_5",
+      "type": "asteroid",
+      "position": [
+        434.775,
+        249.04996546954737
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
+    },
+    {
+      "id": "movel_6",
+      "type": "asteroid",
+      "position": [
+        445.225,
+        249.04996546954737
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332,
+      "orbit": {
+        "center": [
+          440,
+          190
+        ],
+        "period_seconds": 18,
+        "clockwise": false
+      }
     }
   ],
   "camera": {
@@ -140,7 +1000,7 @@
     }
   },
   "tutorial": "Contorne o cinturão e escolha a hora da correção. Uma rocha em órbita atravessa o caminho.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

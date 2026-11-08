@@ -7,8 +7,8 @@ var _ultima_posicao := Vector2.ZERO
 var _eventos_aguardando_interface: Dictionary[int, bool] = {}
 var _zoom_antes_exploracao := Vector2.ONE
 var _exploracao_anterior := false
-const ZOOM_ARRASTE_MAXIMO := 0.75
-const ZOOM_PERTO := 1.4
+const ZOOM_ARRASTE_MAXIMO := 0.85
+const ZOOM_PERTO := 1.65
 const SUAVIZACAO_ZOOM := 6.0
 
 

@@ -60,6 +60,16 @@ func _notification(what: int) -> void:
 		solicitar_voltar(true)
 
 
+func resetar_progresso() -> String:
+	if persistir_progresso and not checkpoint.limpar():
+		return checkpoint.aviso
+	if not progresso.resetar():
+		return progresso.aviso
+	if is_instance_valid(mundo_atual) and mundo_atual.get("partida") != null:
+		mostrar_menu.call_deferred()
+	return "Progresso resetado."
+
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		get_viewport().set_input_as_handled()

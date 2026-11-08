@@ -80,7 +80,7 @@ script = ExtResource("1_x6s2j")
 script = ExtResource("9_entrada")
 
 [node name="Indicadores" type="CanvasLayer" parent="."]
-layer = 5
+layer = 8
 
 [node name="Mira" type="Node2D" parent="Indicadores"]
 script = ExtResource("10_mira")

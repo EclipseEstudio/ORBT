@@ -62,6 +62,6 @@ func _draw() -> void:
 		casco[i] = nave + casco[i] * escala
 	draw_colored_polygon(casco, Color("426682"))
 	draw_polyline(PackedVector2Array([casco[0], casco[1], casco[2], casco[3], casco[4], casco[5], casco[0]]), Color("91d7e5"), 1)
-	draw_line(nave + Vector2(1, -1) * escala, nave + Vector2(7, 1) * escala, Color("42f5d1"), 2)
+	draw_line(nave + Vector2(1, -1) * escala, nave + Vector2(7, 1) * escala, Color("87b6d9"), 2)
 	draw_line(nave + Vector2(-21, 3) * escala, nave + Vector2(-30, 1) * escala, Color("ffca57"), 2)
 	draw_arc(nave + Vector2(-1, -27) * escala, 40 * escala, 1.6, 3.9, 24, Color("24405b"), 1)

@@ -4,6 +4,7 @@ const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 const Fundo = preload("res://src/Visual/fundo_menu.gd")
+const RolagemFases = preload("res://src/Campanha/rolagem_fases.gd")
 signal fase_escolhida(id: String)
 signal voltar
 var itens: Array = []
@@ -57,7 +58,7 @@ func _ready() -> void:
 	_colecao.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_colecao.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_colecao.modulate = Color("57b9ff")
-	rolagem = ScrollContainer.new()
+	rolagem = RolagemFases.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rolagem.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rolagem.follow_focus = true
@@ -227,7 +228,7 @@ func _adicionar_meta(bloco: Control, indice: int) -> void:
 	if indice > 0:
 		var total := 0
 		var obtidas := 0
-		for anterior in itens.slice(indice - 10, indice):
+		for anterior in itens.slice(0, indice):
 			var quantidade: int = anterior.get("estrelas", 0)
 			total += quantidade
 			obtidas += mini(quantidade, progresso.melhor_estrelas(anterior.id))
@@ -269,11 +270,12 @@ func _adicionar_meta(bloco: Control, indice: int) -> void:
 		icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icone.modulate = Color("ffc845")
 		linha.add_child(icone)
-		var meta := _rotulo(linha, "%d/%d" % [obtidas, total], 8)
+		var exigidas := total
+		var meta := _rotulo(linha, "%d/%d" % [obtidas, exigidas], 8)
 		meta.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		meta.autowrap_mode = TextServer.AUTOWRAP_OFF
 		meta.modulate = Color("ffc845")
-		meta.accessibility_name = "%d de %d estrelas douradas; %d necessárias" % [obtidas, total, ceili(total * 0.8)]
+		meta.accessibility_name = "%d de %d estrelas douradas; %d necessárias" % [obtidas, total, exigidas]
 
 
 func quantidade_cartoes() -> int:

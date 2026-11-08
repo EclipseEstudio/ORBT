@@ -10,7 +10,7 @@ const QUADROS = [
 	[" ooo ", " o*o ", " o*o ", "  o  ", "  o  "],
 	[" ooo ", " o*o ", "  o  "],
 ]
-const BORDA = Color("ffac78")
+const BORDA = Color("6f9fc8")
 const NUCLEO = Color("f4f8ff")
 
 @export_range(-1, 5) var quadro := -1:

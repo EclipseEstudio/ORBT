@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 3,
   "id": "arco_entre_rochas",
   "name": "Arco entre rochas",
   "order": 17,
@@ -65,34 +65,6 @@
       }
     },
     {
-      "id": "superior",
-      "type": "asteroid",
-      "position": [
-        300,
-        80
-      ],
-      "mass": 0,
-      "visual_radius": 22,
-      "collision_radius": 22,
-      "capture_radius": 0,
-      "danger_radius": 22,
-      "proximity_radius": 57
-    },
-    {
-      "id": "inferior",
-      "type": "asteroid",
-      "position": [
-        430,
-        380
-      ],
-      "mass": 0,
-      "visual_radius": 32,
-      "collision_radius": 32,
-      "capture_radius": 0,
-      "danger_radius": 32,
-      "proximity_radius": 67
-    },
-    {
       "id": "estacao_partida",
       "type": "station",
       "position": [
@@ -105,6 +77,202 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "superior",
+      "type": "asteroid",
+      "position": [
+        293.95,
+        69.5210926142083
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_1",
+      "type": "asteroid",
+      "position": [
+        306.05,
+        69.5210926142083
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_2",
+      "type": "asteroid",
+      "position": [
+        287.9,
+        80
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_3",
+      "type": "asteroid",
+      "position": [
+        300,
+        80
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_4",
+      "type": "asteroid",
+      "position": [
+        312.1,
+        80
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_5",
+      "type": "asteroid",
+      "position": [
+        293.95,
+        90.4789073857917
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "superior_6",
+      "type": "asteroid",
+      "position": [
+        306.05,
+        90.4789073857917
+      ],
+      "mass": 0,
+      "visual_radius": 7.333333333333333,
+      "collision_radius": 7.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 7.333333333333333,
+      "proximity_radius": 32.333333333333336
+    },
+    {
+      "id": "inferior",
+      "type": "asteroid",
+      "position": [
+        422.575,
+        367.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_1",
+      "type": "asteroid",
+      "position": [
+        437.425,
+        367.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_2",
+      "type": "asteroid",
+      "position": [
+        415.15,
+        380
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_3",
+      "type": "asteroid",
+      "position": [
+        430,
+        380
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_4",
+      "type": "asteroid",
+      "position": [
+        444.85,
+        380
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_5",
+      "type": "asteroid",
+      "position": [
+        422.575,
+        392.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "inferior_6",
+      "type": "asteroid",
+      "position": [
+        437.425,
+        392.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
     }
   ],
   "camera": {
@@ -121,7 +289,7 @@
     }
   },
   "tutorial": "Encontre o arco entre as rochas. A gravidade altera a direção durante todo o voo.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

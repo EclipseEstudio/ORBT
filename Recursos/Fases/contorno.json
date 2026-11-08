@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 3,
+  "content_version": 4,
   "id": "contorno",
   "name": "O Contorno",
   "order": 13,
@@ -60,20 +60,6 @@
   },
   "bodies": [
     {
-      "id": "rocha_central",
-      "type": "asteroid",
-      "position": [
-        300,
-        250
-      ],
-      "mass": 0,
-      "visual_radius": 30,
-      "collision_radius": 30,
-      "capture_radius": 0,
-      "danger_radius": 30,
-      "proximity_radius": 65
-    },
-    {
       "id": "estacao_partida",
       "type": "station",
       "position": [
@@ -86,10 +72,108 @@
       "capture_radius": 14,
       "danger_radius": 0,
       "proximity_radius": 39
+    },
+    {
+      "id": "rocha_central",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_1",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        237.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_2",
+      "type": "asteroid",
+      "position": [
+        285.15,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_3",
+      "type": "asteroid",
+      "position": [
+        300,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_4",
+      "type": "asteroid",
+      "position": [
+        314.85,
+        250
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_5",
+      "type": "asteroid",
+      "position": [
+        292.575,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "rocha_central_6",
+      "type": "asteroid",
+      "position": [
+        307.425,
+        262.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
     }
   ],
   "tutorial": "Desvie da rocha e corrija o voo em direção à Terra.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

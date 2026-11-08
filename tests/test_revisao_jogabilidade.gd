@@ -27,7 +27,7 @@ func executar() -> void:
 	progresso.configurar(itens)
 	for i in range(10):
 		progresso.concluir_com_coletas(str(i), itens, 2, 1)
-	conferir(progresso.liberadas.has("10") and not progresso.pode_abrir("10"), "Vitória libera próxima; portão impede entrar sem 80%")
+	conferir(progresso.liberadas.has("10") and not progresso.pode_abrir("10"), "Vitória libera próxima; portão exige todas as estrelas")
 	conferir(not progresso.pode_abrir("11") and progresso.total_estrelas() == 20, "Azuis não contam no bloqueio nem pulam sequência")
 	progresso.concluidas["12"] = true
 	progresso.liberadas["12"] = true
@@ -39,16 +39,26 @@ func executar() -> void:
 	progresso.concluidas.erase("13")
 	for i in range(3):
 		progresso.registrar_estrelas(str(i), 3)
-	conferir(not progresso.pode_abrir("10"), "23 de 30 não atingem 80%")
+	conferir(not progresso.pode_abrir("10"), "23 de 30 não liberam o próximo nível")
 	progresso.registrar_estrelas("3", 3)
-	conferir(progresso.pode_abrir("10") and not progresso.pode_abrir("11"), "24 de 30 abrem somente a próxima fase")
+	conferir(not progresso.pode_abrir("10"), "24 de 30 não liberam o próximo nível")
+	for i in range(4, 9):
+		progresso.registrar_estrelas(str(i), 3)
+	conferir(not progresso.pode_abrir("10"), "29 de 30 não liberam o próximo nível")
+	progresso.registrar_estrelas("9", 3)
+	conferir(progresso.pode_abrir("10") and not progresso.pode_abrir("11"), "30 de 30 abrem somente a próxima fase")
 	conferir(not progresso.pode_abrir("13"), "Liberação antiga não pula fase anterior após abrir o portão")
 	for i in range(10, 20):
 		progresso.concluir_com_coletas(str(i), itens, 2, 1)
 	conferir(not progresso.pode_abrir("20"), "Novo portão avalia o bloco anterior, sem reutilizar douradas do primeiro")
 	for i in range(10, 14):
 		progresso.registrar_estrelas(str(i), 3)
-	conferir(progresso.pode_abrir("20"), "Segundo conjunto exige outras 24 douradas")
+	conferir(not progresso.pode_abrir("20"), "54 acumuladas não liberam o nível 3")
+	for i in range(14, 19):
+		progresso.registrar_estrelas(str(i), 3)
+	conferir(progresso.total_estrelas() == 59 and not progresso.pode_abrir("20"), "59 acumuladas não liberam o nível 3")
+	progresso.registrar_estrelas("19", 3)
+	conferir(progresso.total_estrelas() == 60 and progresso.pode_abrir("20"), "60 douradas liberam o nível 3: duas dezenas completas")
 	var salvo := Disco.new()
 	salvo.caminho = "res://.godot/revisao-save-%d.json" % OS.get_process_id()
 	salvo.configurar(itens)

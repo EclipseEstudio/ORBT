@@ -21,6 +21,7 @@ var aviso_salvamento := ""
 var tempo_restante := 0.0
 var temporizador_ativo := false
 var explorando := false
+var apresentando_fase := false
 var proximos: Dictionary = {}
 var estrelas_coletadas: Dictionary = {}
 var combustiveis_coletados: Dictionary = {}
@@ -60,7 +61,8 @@ func reiniciar() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	avancar(delta * escala_tempo())
+	if not apresentando_fase:
+		avancar(delta * escala_tempo())
 
 
 func escala_tempo() -> float:
@@ -94,13 +96,14 @@ func avancar(delta: float) -> void:
 	# A nave aplica a fila uma única vez, no início de avancar().
 	# O oxigênio é um saldo da tentativa; novos impulsos não o recarregam.
 	var consumindo: bool = (temporizador_ativo and nave.condicao != nave.Condicao.POUSADA) or nave.tem_impulso_pendente()
-	var passo := minf(delta, tempo_restante) if consumindo else delta
+	var consumo := 1.0 if nave.Fisica.dentro_limites(nave.global_position, nivel.limites) else 2.0
+	var passo := minf(delta, tempo_restante / consumo) if consumindo else delta
 	nave.avancar(passo)
 	if estado != Estado.JOGANDO:
 		return
 	_atualizar_proximidade()
 	if temporizador_ativo and nave.condicao != nave.Condicao.POUSADA:
-		tempo_restante = maxf(0, tempo_restante - passo)
+		tempo_restante = maxf(0, tempo_restante - passo * consumo)
 		if tempo_restante <= 0:
 			finalizar(false, "Oxigênio esgotado")
 
@@ -140,7 +143,7 @@ func resolver_contato(contato: Dictionary) -> void:
 	if estado != Estado.JOGANDO:
 		return
 	if contato.kind == "bounds":
-		finalizar(false, "Fora dos limites")
+		# Compatibilidade com contatos antigos: o espaço não encerra o voo.
 		return
 	var corpo: Dictionary = contato.body
 	if not contato.get("safe_landing", true):
@@ -202,6 +205,7 @@ func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	nave.global_position = corpo.position + nave.posicao_relativa if not corpo.is_empty() else _checkpoint.posicao
 	nave.global_rotation = _checkpoint.orientacao
 	nave.origem_decolagem = ""
+	nave.tempo_decolagem = -INF
 	nave.combustivel = _checkpoint.combustivel
 	nave.condicao = nave.Condicao.POUSADA if not corpo.is_empty() else nave.Condicao.PRONTA
 	tempo_restante = _checkpoint.tempo

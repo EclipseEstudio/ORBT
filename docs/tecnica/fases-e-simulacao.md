@@ -25,6 +25,7 @@ O arquivo `Recursos/Fases/teste_001.json` é o exemplo executável. `CarregadorF
 | `ship.max_impulse` | Impulso entre 0,01 e 1.000; exemplo 80. Variação de velocidade = impulso / massa da nave |
 | `start.body_id` | Referência a planeta/satélite seguro, no modo de início pousado |
 | `start.angle_degrees` | Ângulo entre −360 e 360; zero aponta à direita, −90 para cima; acompanha `body_id` |
+| `start.time_seconds` | Opcional, de 0 a 86.400; adianta a simulação e as órbitas para começar em uma janela favorável, sem consumir oxigênio |
 | `start.position` | Alternativa `[x,y]` para início livre e parado; não pode coexistir com `body_id`/`angle_degrees` |
 | `camera.zoom` | Opcional, maior que zero até 4; padrão 1, mapas adaptados usam 0,5 |
 | `camera.overview` | Opcional, `position` e `size` em vetores; tamanho positivo define o enquadramento ao explorar |

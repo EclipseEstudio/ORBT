@@ -126,8 +126,10 @@ func _executar() -> void:
 	partida.reiniciar()
 	nave.condicao = nave.Condicao.EM_VOO
 	nave.global_position = Vector2(10000, 10000)
+	partida.temporizador_ativo = true
+	partida.tempo_restante = 0.001
 	partida.avancar(1.0 / 60)
-	conferir(partida.estado == partida.Estado.PERDIDA, "Teste também permite derrota")
+	conferir(partida.estado == partida.Estado.PERDIDA and partida.motivo == "Oxigênio esgotado", "Teste do editor permite derrota por oxigênio no espaço aberto")
 	conferir(documento.dados == dados and FileAccess.get_file_as_string(Documento.EXEMPLO) == original, "Vitória, reinício e derrota preservam dados")
 	jogo.queue_free()
 	await process_frame

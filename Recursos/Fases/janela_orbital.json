@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 2,
+  "content_version": 5,
   "id": "janela_orbital",
   "name": "Janela orbital",
   "order": 12,
@@ -29,7 +29,8 @@
   },
   "start": {
     "body_id": "origem",
-    "angle_degrees": -90
+    "angle_degrees": -90,
+    "time_seconds": 4
   },
   "goal": {
     "id": "terra",
@@ -73,15 +74,155 @@
       "id": "bloqueio",
       "type": "asteroid",
       "position": [
+        247.725,
+        287.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_1",
+      "type": "asteroid",
+      "position": [
+        262.575,
+        287.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_2",
+      "type": "asteroid",
+      "position": [
+        277.425,
+        287.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_3",
+      "type": "asteroid",
+      "position": [
+        292.275,
+        287.1395227538011
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_4",
+      "type": "asteroid",
+      "position": [
+        255.15,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_5",
+      "type": "asteroid",
+      "position": [
         270,
         300
       ],
       "mass": 0,
-      "visual_radius": 35,
-      "collision_radius": 35,
+      "visual_radius": 9,
+      "collision_radius": 9,
       "capture_radius": 0,
-      "danger_radius": 35,
-      "proximity_radius": 70
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_6",
+      "type": "asteroid",
+      "position": [
+        284.85,
+        300
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_7",
+      "type": "asteroid",
+      "position": [
+        247.725,
+        312.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_8",
+      "type": "asteroid",
+      "position": [
+        262.575,
+        312.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_9",
+      "type": "asteroid",
+      "position": [
+        277.425,
+        312.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "bloqueio_10",
+      "type": "asteroid",
+      "position": [
+        292.275,
+        312.8604772461989
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
     }
   ],
   "camera": {
@@ -97,8 +238,8 @@
       ]
     }
   },
-  "tutorial": "Observe a órbita antes de lançar. O movimento do planeta muda a posição e a velocidade de saída.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "tutorial": "A estação já começa perto da janela de lançamento. Mire na Terra; o movimento da estação também ajuda na saída.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",

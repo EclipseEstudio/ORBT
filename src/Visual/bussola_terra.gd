@@ -2,6 +2,7 @@ extends Control
 ## Overlay em pixels lógicos: a câmera transforma a direção, nunca o tamanho.
 
 const DISTANCIA := 20.0
+const COR = Color("57b9ff")
 var partida: Node
 var direcao := Vector2.ZERO
 var centro := Vector2.ZERO
@@ -36,6 +37,6 @@ func _draw() -> void:
 		return
 	var lateral := direcao.orthogonal()
 	var triangulo := PackedVector2Array([centro + direcao * 7, centro - direcao * 4 + lateral * 3, centro - direcao * 4 - lateral * 3])
-	draw_colored_polygon(triangulo, Color("42f5d1"))
+	draw_colored_polygon(triangulo, COR)
 	triangulo.append(triangulo[0])
 	draw_polyline(triangulo, Color("070e21"), 1)

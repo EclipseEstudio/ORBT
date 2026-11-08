@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "desvio_nebuloso",
+  "name": "Desvio Nebuloso",
+  "order": 25,
+  "bounds": {
+    "position": [
+      -220,
+      -400
+    ],
+    "size": [
+      1000,
+      1000
+    ]
+  },
+  "initial_fuel": 3,
+  "flight_timeout": 20,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": 0
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      -80,
+      100
+    ],
+    "mass": 180000,
+    "visual_radius": 24,
+    "collision_radius": 24,
+    "capture_radius": 24,
+    "danger_radius": 0,
+    "proximity_radius": 49,
+    "gravity_radius": 62
+  },
+  "bodies": [
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -20,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    },
+    {
+      "id": "apoio_1",
+      "type": "station",
+      "position": [
+        180,
+        -140
+      ],
+      "mass": 0,
+      "visual_radius": 23,
+      "collision_radius": 23,
+      "capture_radius": 23,
+      "danger_radius": 0,
+      "proximity_radius": 48
+    },
+    {
+      "id": "apoio_3",
+      "type": "station",
+      "position": [
+        250,
+        30
+      ],
+      "mass": 0,
+      "visual_radius": 21,
+      "collision_radius": 21,
+      "capture_radius": 21,
+      "danger_radius": 0,
+      "proximity_radius": 46
+    },
+    {
+      "id": "barreira_0",
+      "type": "asteroid",
+      "position": [
+        350,
+        -50
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_1",
+      "type": "asteroid",
+      "position": [
+        350,
+        -26
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_2",
+      "type": "asteroid",
+      "position": [
+        350,
+        -2
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_3",
+      "type": "asteroid",
+      "position": [
+        350,
+        22
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_4",
+      "type": "asteroid",
+      "position": [
+        350,
+        46
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_5",
+      "type": "asteroid",
+      "position": [
+        350,
+        70
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "barreira_6",
+      "type": "asteroid",
+      "position": [
+        350,
+        94
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "atalho_0",
+      "type": "asteroid",
+      "position": [
+        -50,
+        30
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    },
+    {
+      "id": "atalho_1",
+      "type": "asteroid",
+      "position": [
+        -50,
+        50
+      ],
+      "mass": 0,
+      "visual_radius": 8,
+      "collision_radius": 8,
+      "capture_radius": 0,
+      "danger_radius": 8,
+      "proximity_radius": 33
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -180,
+        -340
+      ],
+      "size": [
+        760,
+        780
+      ]
+    }
+  },
+  "tutorial": "Três cargas não bastam para a rota de escalas. Desvie até o tanque (+1), guiado pelo instrumento, e conserve carga para decolar.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "dourada_1",
+      "type": "gold",
+      "position": [
+        82.446,
+        -188.72
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_2",
+      "type": "gold",
+      "position": [
+        -4.341,
+        -261.969
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_3",
+      "type": "gold",
+      "position": [
+        102.397,
+        -139.439
+      ],
+      "radius": 7
+    },
+    {
+      "id": "azul",
+      "type": "blue",
+      "position": [
+        208.588,
+        -17.539
+      ],
+      "radius": 7
+    }
+  ],
+  "nebula": {
+    "visibility_radius": 95
+  },
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        -20,
+        -280
+      ],
+      "radius": 9,
+      "amount": 1
+    }
+  ]
+}

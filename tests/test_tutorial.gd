@@ -41,6 +41,17 @@ func _executar() -> void:
 	for item in nivel.get_children():
 		if item is CanvasLayer and item.get_script() != null and item.get_script().resource_path == "res://src/Nivel/interface_partida.gd":
 			hud = item
+	conferir(hud.has_node("TituloFase") and not hud.has_node("DialogoDica"), "Título precede a dica")
+	await hud.get_node("TituloFase").terminou
+	var dica := hud.get_node("DialogoDica")
+	conferir(paused and dica.find_children("*", "Label", true, false).any(func(rotulo): return rotulo.text == partida.nivel.dados_autorais.tutorial), "Dica autoral pausa a tentativa até confirmação")
+	var saldo_inicial: int = nave.combustivel
+	toque(8, Vector2(5, 5), true)
+	toque(8, Vector2(5, 5), false)
+	conferir(nave.entrada.gesto.contato_ativo == -1 and nave.combustivel == saldo_inicial, "Fundo da dica não inicia gesto")
+	dica.find_children("*", "Button", true, false)[0].pressed.emit()
+	await process_frame
+	conferir(not paused and not hud.has_node("DialogoDica"), "OK fecha dica e libera a tentativa")
 	hud._process(0)
 	conferir(hud._mensagem.text.contains("Toque") and hud._mensagem.text.contains("Arraste para baixo"), "instrução inicial mostra toque e dica autoral")
 	conferir(hud._mensagem.mouse_filter == Control.MOUSE_FILTER_IGNORE, "texto não intercepta entrada")

@@ -31,6 +31,17 @@ func configurar(itens: Array) -> void:
 			liberadas[itens[indice + 1].id] = true
 
 
+func resetar() -> bool:
+	concluidas.clear()
+	liberadas.clear()
+	melhores_estrelas.clear()
+	melhores_azuis.clear()
+	if not _itens.is_empty():
+		liberadas[_itens[0].id] = true
+	alterado.emit()
+	return true
+
+
 func estado(id: String) -> String:
 	if not pode_abrir(id):
 		return "Bloqueada"
@@ -61,9 +72,9 @@ func bloqueio(id: String) -> String:
 			var quantidade: int = _itens[i].get("estrelas", 3)
 			total += quantidade
 			obtidas += mini(quantidade, melhor_estrelas(_itens[i].id))
-		var exigidas := ceili(total * 0.8)
+		var exigidas := total
 		if obtidas < exigidas:
-			return "Conjunto %d: %d/%d douradas. Meta: %d (80%%)." % [inicio / 10 + 1, obtidas, total, exigidas]
+			return "Conjunto %d: %d/%d douradas. Meta: %d." % [inicio / 10 + 1, obtidas, total, exigidas]
 	return ""
 
 

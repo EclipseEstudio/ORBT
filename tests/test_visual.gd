@@ -23,7 +23,8 @@ func _executar() -> void:
 	for tipo in Arte.TEXTURAS:
 		var textura: Texture2D = Arte.textura(tipo)
 		var imagem := textura.get_image()
-		conferir(imagem.get_size() == Vector2i(32, 32) and imagem.detect_alpha() != Image.ALPHA_NONE, "%s: sprite 32x32 com transparência" % tipo)
+		var lado := 64 if tipo == "ship" else 32
+		conferir(imagem.get_size() == Vector2i(lado, lado) and imagem.detect_alpha() != Image.ALPHA_NONE, "%s: sprite com transparência na resolução de jogo" % tipo)
 	var resultado := Carregador.carregar("res://Recursos/Fases/teste_001.json")
 	var nivel = resultado.nivel
 	var autorais: Dictionary = nivel.dados_autorais.duplicate(true)

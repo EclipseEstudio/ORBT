@@ -101,6 +101,7 @@ func configurar_acoes() -> void:
 			var tela := TelaConfiguracoes.new()
 			tela.name = "TelaConfiguracoes"
 			tela.preferencias = jogo.preferencias
+			tela.acao_resetar = jogo.resetar_progresso
 			add_child(tela))
 	var creditos := Button.new()
 	creditos.name = "Creditos"

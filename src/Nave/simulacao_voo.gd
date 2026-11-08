@@ -3,6 +3,9 @@ class_name SimulacaoVoo extends RefCounted
 ## Integrador compartilhado pelo voo e pela prévia. Órbitas circulares prescritas.
 
 const TOLERANCIA_SUPERFICIE := 0.0001
+const FOLGA_DECOLAGEM := 1.2
+const RETORNO_GRAVIDADE := 1.0
+const ATRACAO_MAXIMA_ORIGEM := 12.0
 
 static func rotacao_corpo(corpo: Dictionary, tempo: float) -> float:
 	var giro: Dictionary = corpo.get("rotation", {})
@@ -47,7 +50,7 @@ static func atualizar_corpos(corpos: Array, tempo: float) -> void:
 				corpo["_posicao_inicial"] = corpo.position
 			corpo.position = posicao_corpo(corpo, tempo)
 
-static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> Vector2:
+static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary, origem := "", tempo_decolagem := -INF, tempo := 0.0) -> Vector2:
 	var resultado := Vector2.ZERO
 	var epsilon: float = fisica.get("softening", 8.0)
 	var constante: float = fisica.get("gravity_constant", 1.0)
@@ -57,7 +60,12 @@ static func aceleracao(posicao: Vector2, corpos: Array, fisica: Dictionary) -> V
 		var r: Vector2 = corpo.position - posicao
 		if corpo.has("gravity_radius") and r.length() > corpo.gravity_radius:
 			continue
-		resultado += constante * corpo.mass * r / pow(r.length_squared() + epsilon * epsilon, 1.5)
+		var atracao: Vector2 = constante * corpo.mass * r / pow(r.length_squared() + epsilon * epsilon, 1.5)
+		if corpo.id == origem and is_finite(tempo_decolagem):
+			# Só o apoio de saída recebe a folga; perigos e outros planetas continuam ativos.
+			var retorno := smoothstep(FOLGA_DECOLAGEM, FOLGA_DECOLAGEM + RETORNO_GRAVIDADE, tempo - tempo_decolagem)
+			atracao = atracao.limit_length(ATRACAO_MAXIMA_ORIGEM) * retorno
+		resultado += atracao
 	return resultado
 
 
@@ -90,13 +98,13 @@ static func dentro_limites(ponto: Vector2, limites: Rect2) -> bool:
 	return ponto.x >= limites.position.x and ponto.y >= limites.position.y and ponto.x <= limites.end.x and ponto.y <= limites.end.y
 
 
-static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", tempo := 0.0) -> Dictionary:
-	var nova_velocidade := velocidade + aceleracao(posicao, corpos, fisica) * delta
+static func passo(posicao: Vector2, velocidade: Vector2, delta: float, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", tempo := 0.0, tempo_decolagem := -INF) -> Dictionary:
+	var nova_velocidade := velocidade + aceleracao(posicao, corpos, fisica, origem, tempo_decolagem, tempo) * delta
 	var fim := posicao + nova_velocidade * delta
 	return varrer(posicao, fim, nova_velocidade, delta, corpos, limites, raio_nave, origem, tempo)
 
 
-static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, delta: float, corpos: Array, limites: Rect2, raio_nave: float, origem := "", tempo := 0.0) -> Dictionary:
+static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, delta: float, corpos: Array, _limites: Rect2, raio_nave: float, origem := "", tempo := 0.0) -> Dictionary:
 	var contato: Dictionary = {}
 	var primeiro := INF
 	var prioridade := 99
@@ -104,8 +112,8 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 		var relativo: Vector2 = posicao - corpo.position
 		# A proteção vale só para saída externa do apoio de origem.
 		if corpo.id == origem and corpo.type in ["planet", "station", "satellite"]:
-			# Normalizar e reposicionar no pouso pode arredondar para dentro da superfície.
-			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao - (posicao_corpo(corpo, tempo + delta) - corpo.position)) >= 0.0:
+			# Arredondamento da superfície e do produto escalar não deve prender saídas tangenciais.
+			if relativo.length() >= corpo.collision_radius + raio_nave - TOLERANCIA_SUPERFICIE and relativo.dot(fim - posicao - (posicao_corpo(corpo, tempo + delta) - corpo.position)) >= -TOLERANCIA_SUPERFICIE:
 				continue
 		var centro_atual := posicao_corpo(corpo, tempo)
 		var centro_seguinte := posicao_corpo(corpo, tempo + delta)
@@ -118,18 +126,6 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 			corpo_contato.position = centro_seguinte
 			var relativo_contato := (posicao - centro_atual).lerp(fim - centro_seguinte, t)
 			contato = {"body": corpo_contato, "kind": "body", "fraction": t, "safe_landing": pouso_seguro(corpo, relativo_contato, tempo + delta * t)}
-	if not dentro_limites(fim, limites):
-		var t := 0.0
-		if dentro_limites(posicao, limites):
-			t = 1.0
-			for eixo in range(2):
-				if fim[eixo] < limites.position[eixo]:
-					t = minf(t, (limites.position[eixo] - posicao[eixo]) / (fim[eixo] - posicao[eixo]))
-				elif fim[eixo] > limites.end[eixo]:
-					t = minf(t, (limites.end[eixo] - posicao[eixo]) / (fim[eixo] - posicao[eixo]))
-		if t <= primeiro:
-			primeiro = t
-			contato = {"kind": "bounds", "fraction": t}
 	var ponto := posicao.lerp(fim, primeiro) if not contato.is_empty() else fim
 	if contato.get("body", {}).get("type") == "portal":
 		for destino in corpos:
@@ -141,13 +137,13 @@ static func varrer(posicao: Vector2, fim: Vector2, nova_velocidade: Vector2, del
 	return {"position": ponto, "velocity": nova_velocidade, "contact": contato, "segments": [PackedVector2Array([posicao, ponto])]}
 
 
-static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0, tempo := 0.0) -> PackedVector2Array:
+static func prever(posicao: Vector2, velocidade: Vector2, corpos: Array, fisica: Dictionary, limites: Rect2, raio_nave: float, origem := "", passos := 180, delta := 1.0 / 60.0, tempo := 0.0, tempo_decolagem := -INF) -> PackedVector2Array:
 	if corpos.any(func(corpo: Dictionary): return corpo.has("orbit")):
 		corpos = corpos.duplicate(true)
 	var pontos := PackedVector2Array([posicao])
 	for indice in range(passos):
 		atualizar_corpos(corpos, tempo + indice * delta)
-		var proximo := passo(posicao, velocidade, delta, corpos, fisica, limites, raio_nave, origem, tempo + indice * delta)
+		var proximo := passo(posicao, velocidade, delta, corpos, fisica, limites, raio_nave, origem, tempo + indice * delta, tempo_decolagem)
 		posicao = proximo.position
 		velocidade = proximo.velocity
 		if proximo.get("teleported", false):

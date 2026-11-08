@@ -39,8 +39,8 @@ const ROTAS = [
 		"etapas": [{"angulo":-19.15,"contato":"apoio"},{"alvo":"terra","velocidade":90,"contato":"terra"}],
 		"coleta": [{"angulo":-19.15,"contato":"apoio"},{"alvo":"terra","velocidade":90,"passos":77},{"ponto":[129.714,111.604],"velocidade":60,"passos":68},{"alvo":"terra","velocidade":60,"correcao":0,"contato":"terra"}]},
 	{"id": "janela_orbital", "margem": 0.5,
-		"etapas": [{"alvo":"terra","velocidade":90,"espera":240,"contato":"terra"}],
-		"coleta": [{"alvo":"terra","velocidade":90,"espera":240,"passos":97},{"ponto":[305.352,207.91],"velocidade":60,"passos":80},{"alvo":"terra","velocidade":60,"correcao":0,"contato":"terra"}]},
+		"etapas": [{"alvo":"terra","velocidade":90,"contato":"terra"}],
+		"coleta": [{"alvo":"terra","velocidade":90,"passos":97},{"ponto":[305.352,207.91],"velocidade":60,"passos":80},{"alvo":"terra","velocidade":60,"correcao":0,"contato":"terra"}]},
 	{"id": "contorno", "margem": 0.5,
 		"etapas": [{"angulo":-15,"passos":120},{"angulo":100,"forca":0.8,"contato":"terra"}],
 		"coleta": [{"angulo":-15,"passos":120},{"angulo":100,"forca":0.8,"passos":70},{"ponto":[429.964,281.033],"velocidade":60,"passos":67},{"alvo":"terra","velocidade":60,"correcao":0,"contato":"terra"}]},
@@ -134,17 +134,19 @@ func jogar(nivel: Node, etapas: Array, estrelas: int, desvio := 0.0) -> bool:
 
 func _executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 20 and ROTAS.size() == 20, "Campanha contém vinte fases válidas"):
+	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 30 and ROTAS.size() == 20, "Campanha contém trinta fases; este teste cobre as vinte originais"):
 		quit(1)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
 	jogo.persistir_progresso = false
 	jogo.ativar_audio = false
+	jogo.preferencias.dicas = false
 	root.add_child(jogo)
 	await process_frame
+	jogo.preferencias.dicas = false
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(jogo.interface_atual.quantidade_cartoes() == 20, "Seleção mostra vinte fases")
+	conferir(jogo.interface_atual.quantidade_cartoes() == 30, "Seleção mostra trinta fases")
 	for indice in range(ROTAS.size()):
 		var rota: Dictionary = ROTAS[indice]
 		var resultado := Carregador.carregar(catalogo.itens[indice].arquivo)
@@ -177,7 +179,7 @@ func _executar() -> void:
 			conferir(jogo.progresso.melhor_azuis(rota.id) == azuis, rota.id + ": chegada confirma a conquista azul separadamente")
 			jogo.mostrar_selecao()
 			await process_frame
-	conferir(jogo.progresso.concluidas.size() == 20 and jogo.progresso.total_estrelas() == 60, "Campanha completa: vinte fases e sessenta estrelas confirmadas")
+	conferir(jogo.progresso.concluidas.size() == 20 and jogo.progresso.total_estrelas() == 60, "Dois primeiros níveis: vinte fases e sessenta estrelas confirmadas")
 	jogo.queue_free()
 	await process_frame
 	print("Fases: %d verificações, %d falhas." % [verificacoes, falhas])

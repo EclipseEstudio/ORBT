@@ -37,7 +37,7 @@ func _executar() -> void:
 		if filho.has_method("_alternar_pausa"):
 			hud = filho
 	var nave = partida.nave
-	for cenario in ["pouso_sem_combustivel", "colisao", "limites", "oxigenio"]:
+	for cenario in ["pouso_sem_combustivel", "colisao", "oxigenio"]:
 		partida.reiniciar()
 		nivel.camera._process(2)
 		var causa := "Sem combustível para decolar"
@@ -48,16 +48,13 @@ func _executar() -> void:
 			"colisao":
 				causa = "Colisão com perigo"
 				partida.resolver_contato({"kind": "body", "body": {"type": "asteroid"}})
-			"limites":
-				causa = "Fora dos limites"
-				partida.resolver_contato({"kind": "bounds"})
 			"oxigenio":
 				causa = "Oxigênio esgotado"
 				nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2(0, -80))
 				partida.avancar(1.0 / 60)
 				partida.tempo_restante = 0
 				partida.avancar(0)
-		hud._process(0)
+		hud._process(0.9)
 		conferir(partida.estado == partida.Estado.PERDIDA and not nave.simulacao_ativa, cenario + ": encerra simulação")
 		conferir(hud._dialogo_derrota.visible and not hud._raiz.visible and not hud._dialogo_pausa.visible and not hud._dialogo_conclusao.visible, cenario + ": mostra apenas diálogo de fim")
 		conferir(hud._dialogo_derrota._motivo.text == causa, cenario + ": mostra causa exata")
@@ -72,17 +69,17 @@ func _executar() -> void:
 			await acomodar()
 			conferir(hud._dialogo_derrota.find_children("*", "Button", true, false).all(func(b): return segura.encloses(b.get_global_rect())), cenario + ": ações cabem na área segura em %d" % altura)
 		hud._dialogo_derrota._resetar.pressed.emit()
-		hud._process(0)
+		hud._process(0.9)
 		conferir(partida.estado == partida.Estado.JOGANDO and not hud._dialogo_derrota.visible and partida.motivo.is_empty(), "Repetir limpa o fim de jogo")
 	partida.finalizar(false, "Colisão com perigo. ".repeat(12))
-	hud._process(0)
+	hud._process(0.9)
 	await acomodar()
 	conferir(hud._dialogo_derrota._rolagem_motivo.get_v_scroll_bar().visible, "Motivo longo pode ser lido por rolagem")
 	hud._dialogo_derrota._continuar.pressed.emit()
-	hud._process(0)
+	hud._process(0.9)
 	conferir(partida.estado == partida.Estado.JOGANDO and not hud._dialogo_derrota.visible, "Último pouso recupera tentativa e fecha diálogo")
-	partida.finalizar(false, "Fora dos limites")
-	hud._process(0)
+	partida.finalizar(false, "Oxigênio esgotado")
+	hud._process(0.9)
 	hud._dialogo_derrota._menu.pressed.emit()
 	await acomodar()
 	conferir(jogo.interface_atual.has_node("Margem/Rolagem/VBoxContainer/Acoes"), "Voltar ao menu fecha fim de jogo")

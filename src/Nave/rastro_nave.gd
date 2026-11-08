@@ -1,7 +1,7 @@
 extends Line2D
-## Histórico curto em coordenadas de mundo, sem participar da simulação.
+## Histórico em coordenadas de mundo, sem participar da simulação.
 
-const CAPACIDADE := 32
+const CAPACIDADE := 64
 const INTERVALO := 1.0 / 30.0
 const VELOCIDADE_MINIMA := 8.0
 const LARGURA_TELA := 2.0
@@ -19,8 +19,8 @@ func _ready() -> void:
 	z_index = -1
 	antialiased = false
 	gradient = Gradient.new()
-	gradient.set_color(0, Color(0.51, 0.94, 0.82, 0.0))
-	gradient.set_color(1, Color("82f0d1"))
+	gradient.set_color(0, Color(0.35, 0.58, 0.78, 0.0))
+	gradient.set_color(1, Color("9ac8e5"))
 	_buffer.resize(CAPACIDADE)
 	partida.estado_alterado.connect(limpar)
 	partida.reiniciada.connect(limpar)

@@ -137,7 +137,7 @@ func testar_fisica(nivel: NivelRes) -> void:
 	conferir(contato.contact.body.id == "terra", "Contato anterior vence independentemente da ordem")
 	for direcao in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT, Vector2(1, 1).normalized()]:
 		contato = Fisica.passo(Vector2.ZERO, direcao * 100000, 1.0 / 60, [], vazio, limites, 8)
-		conferir(contato.contact.kind == "bounds", "Saída pela borda: %s" % direcao)
+		conferir(contato.contact.is_empty() and contato.position.is_equal_approx(direcao * 100000 / 60.0), "Voo continua além da antiga borda: %s" % direcao)
 
 
 func _executar() -> void:
@@ -166,7 +166,8 @@ func _executar() -> void:
 	conferir(inicio.is_equal_approx(Vector2(90, 222)), "Nave inicia na superfície sem sobreposição")
 	conferir(nave.combustivel == 5 and nave.velocidade == Vector2.ZERO, "Estado inicial limpo")
 	partida.avancar(5)
-	conferir(partida.tempo_restante == 30 and nave.global_position == inicio, "Observação pousada não conta tempo")
+	conferir(partida.tempo_restante == 30 and nave.global_position != inicio, "Observação pousada acompanha rotação sem consumir oxigênio")
+	partida.reiniciar()
 	conferir(nave.solicitar_impulso(1, Vector2(0, -80)), "Impulso válido aceito para próximo passo")
 	conferir(not nave.solicitar_impulso(1, Vector2(0, -80)), "Mesmo ID rejeitado antes de aplicar")
 	conferir(nave.combustivel == 5 and confirmacoes == 0, "Pedido não cobra antes da física")
@@ -216,7 +217,7 @@ func _executar() -> void:
 	conferir(not nave.solicitar_impulso(1, Vector2(0, -80)), "Reinício rejeita pedido atrasado da tentativa anterior")
 	lancar(nave, Vector2(0, 40))
 	partida.avancar(1.0 / 60)
-	conferir(nave.condicao == nave.Condicao.POUSADA and nave.global_position.is_equal_approx(inicio) and nave.combustivel == 4, "Contra origem pousa novamente e cobra")
+	conferir(nave.condicao == nave.Condicao.POUSADA and nave.corpo_apoio == "origem" and is_equal_approx(nave.posicao_relativa.length(), nivel.obter_corpo("origem").collision_radius + nave.raio) and nave.combustivel == 5, "Contra origem mantém pouso sem cobrar combustível")
 	var saldo: int = nave.combustivel
 	partida.avancar(2)
 	conferir(nave.combustivel == saldo, "Pouso nunca recarrega")
@@ -242,7 +243,7 @@ func _executar() -> void:
 		if partida.estado != partida.Estado.JOGANDO:
 			break
 	conferir(partida.estado == partida.Estado.CONCLUIDA and vitorias == 1, "Rota de um impulso chega à Terra")
-	conferir(desvio_lateral >= 5.0, "Atração do apoio curva o lançamento vertical em pelo menos 5 unidades")
+	conferir(desvio_lateral >= 1.0, "Atração dos outros apoios continua curvando o lançamento com saída mais suave")
 	posicao = nave.global_position
 	partida.resolver_contato({"kind": "bounds"})
 	partida.avancar(50)
@@ -279,10 +280,14 @@ func _executar() -> void:
 	partida.avancar(0)
 	partida.avancar(0)
 	conferir(alertas.count("origem:true") == 1, "Proximidade não duplica entrada")
+	nave.condicao = nave.Condicao.EM_VOO
+	nave.corpo_apoio = ""
 	nave.global_position = Vector2(300, 400)
 	partida.avancar(0)
 	conferir(alertas.count("origem:false") == 1, "Proximidade emite uma saída")
 	partida.reiniciar()
+	nave.condicao = nave.Condicao.EM_VOO
+	nave.corpo_apoio = ""
 	nave.corpos[0].proximity_radius = 100
 	nave.corpos[1].proximity_radius = 100
 	nave.global_position = Vector2(150, 190)
@@ -292,6 +297,8 @@ func _executar() -> void:
 	partida.avancar(0)
 	conferir(not partida.proximos.has("origem") and partida.proximos.has("apoio"), "Sair de uma área não limpa a outra")
 	partida.reiniciar()
+	nave.condicao = nave.Condicao.EM_VOO
+	nave.corpo_apoio = ""
 	nave.global_position = nivel.obter_corpo("origem").position + Vector2.DOWN * 110.0
 	partida.avancar(0)
 	conferir(partida.proximos.has("origem"), "Aviso de proximidade do planeta alcança 110 unidades")
@@ -303,7 +310,7 @@ func _executar() -> void:
 		partida.avancar(1.0 / 60)
 		if nave.condicao == nave.Condicao.POUSADA:
 			break
-	conferir(nave.condicao == nave.Condicao.POUSADA and nave.corpo_apoio == "origem" and nave.combustivel == 4, "Gravidade da origem recaptura lançamento fraco sem cobrar outro impulso")
+	conferir(nave.condicao in [nave.Condicao.EM_VOO, nave.Condicao.A_DERIVA] and nave.global_position.distance_to(nivel.obter_corpo("origem").position) > nivel.obter_corpo("origem").capture_radius + nave.raio and nave.combustivel == 4, "Folga de decolagem evita recaptura imediata sem cobrar outro impulso")
 	conferir(nivel.dados_autorais == dados, "Simulação não altera JSON autoral")
 	for repeticao in range(5):
 		partida.reiniciar()

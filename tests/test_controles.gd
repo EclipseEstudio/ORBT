@@ -279,6 +279,11 @@ func testar_cena_principal() -> void:
 	conferir(cena.mundo_atual.nivel_res != null, "Escolha carrega nível JSON")
 	var nave_jogo = cena.mundo_atual.get_node("Nave")
 	cena.mundo_atual.partida.set_physics_process(false)
+	for filho in cena.mundo_atual.get_children():
+		if filho.has_method("_alternar_pausa"):
+			await filho.get_node("TituloFase").terminou
+			filho.get_node("DialogoDica").find_children("*", "Button", true, false)[0].pressed.emit()
+			await process_frame
 	cena.mundo_atual.camera._process(2.0)
 	conferir(nave_jogo.get_node("Entrada").gesto.contato_ativo == -1, "Start não transfere gesto à nova nave")
 	nave_jogo.get_node("Entrada").impulso_solicitado.connect(func(impulso: Vector2): impulsos.append(impulso))

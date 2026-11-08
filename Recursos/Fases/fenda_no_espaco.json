@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "fenda_no_espaco",
+  "name": "Fenda no Espaço",
+  "order": 21,
+  "bounds": {
+    "position": [
+      -180,
+      -320
+    ],
+    "size": [
+      1200,
+      880
+    ]
+  },
+  "initial_fuel": 3,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": 0
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      800,
+      0
+    ],
+    "mass": 180000,
+    "visual_radius": 24,
+    "collision_radius": 24,
+    "capture_radius": 24,
+    "danger_radius": 0,
+    "proximity_radius": 49,
+    "gravity_radius": 62
+  },
+  "bodies": [
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -20,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    },
+    {
+      "id": "A",
+      "type": "portal",
+      "position": [
+        120,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "B",
+      "exit_degrees": 180
+    },
+    {
+      "id": "B",
+      "type": "portal",
+      "position": [
+        640,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "A",
+      "exit_degrees": 0
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -80,
+        -220
+      ],
+      "size": [
+        960,
+        700
+      ]
+    }
+  },
+  "tutorial": "Entre no anel A para sair em B. O salto é instantâneo, preserva a rapidez e não consome combustível. A seta do anel indica a direção de saída.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "dourada_1",
+      "type": "gold",
+      "position": [
+        78,
+        0
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_2",
+      "type": "gold",
+      "position": [
+        728.826,
+        -4.425
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_3",
+      "type": "gold",
+      "position": [
+        734.54,
+        -35.403
+      ],
+      "radius": 7
+    },
+    {
+      "id": "azul",
+      "type": "blue",
+      "position": [
+        742.466,
+        -59.692
+      ],
+      "radius": 7
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 5,
+  "content_version": 6,
   "id": "curva_suave",
   "name": "O Labirinto",
   "order": 4,
@@ -106,6 +106,20 @@
       "show_proximity": true
     },
     {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        95.85786437626905,
+        314.14213562373095
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    },
+    {
       "id": "asteroide_001",
       "type": "asteroid",
       "position": [
@@ -137,29 +151,197 @@
       "id": "asteroide_003",
       "type": "asteroid",
       "position": [
+        291.9652392239922,
+        320.95947707403195
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_1",
+      "type": "asteroid",
+      "position": [
+        300.2152392239922,
+        320.95947707403195
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_2",
+      "type": "asteroid",
+      "position": [
+        287.8402392239922,
+        328.10418665525356
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_3",
+      "type": "asteroid",
+      "position": [
         296.0902392239922,
         328.10418665525356
       ],
       "mass": 0,
-      "visual_radius": 15,
-      "collision_radius": 15,
+      "visual_radius": 5,
+      "collision_radius": 5,
       "capture_radius": 0,
-      "danger_radius": 15,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_4",
+      "type": "asteroid",
+      "position": [
+        304.3402392239922,
+        328.10418665525356
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_5",
+      "type": "asteroid",
+      "position": [
+        291.9652392239922,
+        335.24889623647516
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_003_6",
+      "type": "asteroid",
+      "position": [
+        300.2152392239922,
+        335.24889623647516
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
       "proximity_radius": 30
     },
     {
       "id": "asteroide_004",
       "type": "asteroid",
       "position": [
+        362.5080165952116,
+        284.42090775527754
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_1",
+      "type": "asteroid",
+      "position": [
+        372.40801659521156,
+        284.42090775527754
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_2",
+      "type": "asteroid",
+      "position": [
+        357.5580165952116,
+        292.9945592527435
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_3",
+      "type": "asteroid",
+      "position": [
         367.4580165952116,
         292.9945592527435
       ],
       "mass": 0,
-      "visual_radius": 18,
-      "collision_radius": 18,
+      "visual_radius": 6,
+      "collision_radius": 6,
       "capture_radius": 0,
-      "danger_radius": 18,
-      "proximity_radius": 36
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_4",
+      "type": "asteroid",
+      "position": [
+        377.35801659521155,
+        292.9945592527435
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_5",
+      "type": "asteroid",
+      "position": [
+        362.5080165952116,
+        301.56821075020946
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_004_6",
+      "type": "asteroid",
+      "position": [
+        372.40801659521156,
+        301.56821075020946
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
     },
     {
       "id": "asteroide_005",
@@ -221,29 +403,197 @@
       "id": "asteroide_009",
       "type": "asteroid",
       "position": [
+        567.9652392239923,
+        305.95947707403195
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_1",
+      "type": "asteroid",
+      "position": [
+        576.2152392239923,
+        305.95947707403195
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_2",
+      "type": "asteroid",
+      "position": [
+        563.8402392239923,
+        313.10418665525356
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_3",
+      "type": "asteroid",
+      "position": [
         572.0902392239923,
         313.10418665525356
       ],
       "mass": 0,
-      "visual_radius": 15,
-      "collision_radius": 15,
+      "visual_radius": 5,
+      "collision_radius": 5,
       "capture_radius": 0,
-      "danger_radius": 15,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_4",
+      "type": "asteroid",
+      "position": [
+        580.3402392239923,
+        313.10418665525356
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_5",
+      "type": "asteroid",
+      "position": [
+        567.9652392239923,
+        320.24889623647516
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_009_6",
+      "type": "asteroid",
+      "position": [
+        576.2152392239923,
+        320.24889623647516
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
       "proximity_radius": 30
     },
     {
       "id": "asteroide_010",
       "type": "asteroid",
       "position": [
+        626.5080165952115,
+        269.42090775527754
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_1",
+      "type": "asteroid",
+      "position": [
+        636.4080165952116,
+        269.42090775527754
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_2",
+      "type": "asteroid",
+      "position": [
+        621.5580165952116,
+        277.9945592527435
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_3",
+      "type": "asteroid",
+      "position": [
         631.4580165952116,
         277.9945592527435
       ],
       "mass": 0,
-      "visual_radius": 18,
-      "collision_radius": 18,
+      "visual_radius": 6,
+      "collision_radius": 6,
       "capture_radius": 0,
-      "danger_radius": 18,
-      "proximity_radius": 36
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_4",
+      "type": "asteroid",
+      "position": [
+        641.3580165952116,
+        277.9945592527435
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_5",
+      "type": "asteroid",
+      "position": [
+        626.5080165952115,
+        286.56821075020946
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_010_6",
+      "type": "asteroid",
+      "position": [
+        636.4080165952116,
+        286.56821075020946
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
     },
     {
       "id": "asteroide_011",
@@ -305,29 +655,197 @@
       "id": "asteroide_015",
       "type": "asteroid",
       "position": [
+        476.60182614932813,
+        201.75808152228075
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_1",
+      "type": "asteroid",
+      "position": [
+        484.85182614932813,
+        201.75808152228075
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_2",
+      "type": "asteroid",
+      "position": [
+        472.47682614932813,
+        208.90279110350235
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_3",
+      "type": "asteroid",
+      "position": [
         480.72682614932813,
         208.90279110350235
       ],
       "mass": 0,
-      "visual_radius": 15,
-      "collision_radius": 15,
+      "visual_radius": 5,
+      "collision_radius": 5,
       "capture_radius": 0,
-      "danger_radius": 15,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_4",
+      "type": "asteroid",
+      "position": [
+        488.97682614932813,
+        208.90279110350235
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_5",
+      "type": "asteroid",
+      "position": [
+        476.60182614932813,
+        216.04750068472396
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_015_6",
+      "type": "asteroid",
+      "position": [
+        484.85182614932813,
+        216.04750068472396
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
       "proximity_radius": 30
     },
     {
       "id": "asteroide_016",
       "type": "asteroid",
       "position": [
+        551.688677730141,
+        182.00605467102972
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_1",
+      "type": "asteroid",
+      "position": [
+        561.5886777301411,
+        182.00605467102972
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_2",
+      "type": "asteroid",
+      "position": [
+        546.738677730141,
+        190.57970616849565
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_3",
+      "type": "asteroid",
+      "position": [
         556.638677730141,
         190.57970616849565
       ],
       "mass": 0,
-      "visual_radius": 18,
-      "collision_radius": 18,
+      "visual_radius": 6,
+      "collision_radius": 6,
       "capture_radius": 0,
-      "danger_radius": 18,
-      "proximity_radius": 36
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_4",
+      "type": "asteroid",
+      "position": [
+        566.538677730141,
+        190.57970616849565
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_5",
+      "type": "asteroid",
+      "position": [
+        551.688677730141,
+        199.15335766596158
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_016_6",
+      "type": "asteroid",
+      "position": [
+        561.5886777301411,
+        199.15335766596158
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
     },
     {
       "id": "asteroide_017",
@@ -375,29 +893,197 @@
       "id": "asteroide_020",
       "type": "asteroid",
       "position": [
+        476.60182614932813,
+        439.25808152228075
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_1",
+      "type": "asteroid",
+      "position": [
+        484.85182614932813,
+        439.25808152228075
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_2",
+      "type": "asteroid",
+      "position": [
+        472.47682614932813,
+        446.40279110350235
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_3",
+      "type": "asteroid",
+      "position": [
         480.72682614932813,
         446.40279110350235
       ],
       "mass": 0,
-      "visual_radius": 15,
-      "collision_radius": 15,
+      "visual_radius": 5,
+      "collision_radius": 5,
       "capture_radius": 0,
-      "danger_radius": 15,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_4",
+      "type": "asteroid",
+      "position": [
+        488.97682614932813,
+        446.40279110350235
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_5",
+      "type": "asteroid",
+      "position": [
+        476.60182614932813,
+        453.54750068472396
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
+      "proximity_radius": 30
+    },
+    {
+      "id": "asteroide_020_6",
+      "type": "asteroid",
+      "position": [
+        484.85182614932813,
+        453.54750068472396
+      ],
+      "mass": 0,
+      "visual_radius": 5,
+      "collision_radius": 5,
+      "capture_radius": 0,
+      "danger_radius": 5,
       "proximity_radius": 30
     },
     {
       "id": "asteroide_021",
       "type": "asteroid",
       "position": [
+        576.688677730141,
+        413.2560546710297
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_1",
+      "type": "asteroid",
+      "position": [
+        586.5886777301411,
+        413.2560546710297
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_2",
+      "type": "asteroid",
+      "position": [
+        571.738677730141,
+        421.82970616849565
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_3",
+      "type": "asteroid",
+      "position": [
         581.638677730141,
         421.82970616849565
       ],
       "mass": 0,
-      "visual_radius": 18,
-      "collision_radius": 18,
+      "visual_radius": 6,
+      "collision_radius": 6,
       "capture_radius": 0,
-      "danger_radius": 18,
-      "proximity_radius": 36
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_4",
+      "type": "asteroid",
+      "position": [
+        591.538677730141,
+        421.82970616849565
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_5",
+      "type": "asteroid",
+      "position": [
+        576.688677730141,
+        430.4033576659616
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_021_6",
+      "type": "asteroid",
+      "position": [
+        586.5886777301411,
+        430.4033576659616
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
     },
     {
       "id": "asteroide_022",
@@ -417,15 +1103,99 @@
       "id": "asteroide_023",
       "type": "asteroid",
       "position": [
+        475.05,
+        336.42634850253404
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_1",
+      "type": "asteroid",
+      "position": [
+        484.95,
+        336.42634850253404
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_2",
+      "type": "asteroid",
+      "position": [
+        470.1,
+        345
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_3",
+      "type": "asteroid",
+      "position": [
         480,
         345
       ],
       "mass": 0,
-      "visual_radius": 18,
-      "collision_radius": 18,
+      "visual_radius": 6,
+      "collision_radius": 6,
       "capture_radius": 0,
-      "danger_radius": 18,
-      "proximity_radius": 36
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_4",
+      "type": "asteroid",
+      "position": [
+        489.9,
+        345
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_5",
+      "type": "asteroid",
+      "position": [
+        475.05,
+        353.57365149746596
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
+    },
+    {
+      "id": "asteroide_023_6",
+      "type": "asteroid",
+      "position": [
+        484.95,
+        353.57365149746596
+      ],
+      "mass": 0,
+      "visual_radius": 6,
+      "collision_radius": 6,
+      "capture_radius": 0,
+      "danger_radius": 6,
+      "proximity_radius": 31
     },
     {
       "id": "asteroide_024",
@@ -473,29 +1243,197 @@
       "id": "asteroide_027",
       "type": "asteroid",
       "position": [
+        105.326975008643,
+        -75.01916281763482
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_1",
+      "type": "asteroid",
+      "position": [
+        114.12697500864302,
+        -75.01916281763482
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_2",
+      "type": "asteroid",
+      "position": [
+        100.92697500864301,
+        -67.39813926433176
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_3",
+      "type": "asteroid",
+      "position": [
         109.72697500864301,
         -67.39813926433176
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_4",
+      "type": "asteroid",
+      "position": [
+        118.526975008643,
+        -67.39813926433176
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_5",
+      "type": "asteroid",
+      "position": [
+        105.326975008643,
+        -59.7771157110287
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_027_6",
+      "type": "asteroid",
+      "position": [
+        114.12697500864302,
+        -59.7771157110287
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_028",
+      "type": "asteroid",
+      "position": [
+        213.897754850397,
+        -91.16349469055028
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_1",
+      "type": "asteroid",
+      "position": [
+        224.347754850397,
+        -91.16349469055028
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_2",
+      "type": "asteroid",
+      "position": [
+        208.672754850397,
+        -82.11352922100289
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_3",
       "type": "asteroid",
       "position": [
         219.122754850397,
         -82.11352922100289
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_4",
+      "type": "asteroid",
+      "position": [
+        229.572754850397,
+        -82.11352922100289
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_5",
+      "type": "asteroid",
+      "position": [
+        213.897754850397,
+        -73.0635637514555
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_028_6",
+      "type": "asteroid",
+      "position": [
+        224.347754850397,
+        -73.0635637514555
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_029",
@@ -529,29 +1467,197 @@
       "id": "asteroide_031",
       "type": "asteroid",
       "position": [
+        489.54789683608493,
+        -77.97044905878755
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_1",
+      "type": "asteroid",
+      "position": [
+        498.3478968360849,
+        -77.97044905878755
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_2",
+      "type": "asteroid",
+      "position": [
+        485.1478968360849,
+        -70.34942550548449
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_3",
+      "type": "asteroid",
+      "position": [
         493.9478968360849,
         -70.34942550548449
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_4",
+      "type": "asteroid",
+      "position": [
+        502.7478968360849,
+        -70.34942550548449
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_5",
+      "type": "asteroid",
+      "position": [
+        489.54789683608493,
+        -62.72840195218143
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_031_6",
+      "type": "asteroid",
+      "position": [
+        498.3478968360849,
+        -62.72840195218143
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_032",
+      "type": "asteroid",
+      "position": [
+        588.3601996842726,
+        -87.61548547310208
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_1",
+      "type": "asteroid",
+      "position": [
+        598.8101996842727,
+        -87.61548547310208
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_2",
+      "type": "asteroid",
+      "position": [
+        583.1351996842726,
+        -78.5655200035547
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_3",
       "type": "asteroid",
       "position": [
         593.5851996842727,
         -78.5655200035547
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_4",
+      "type": "asteroid",
+      "position": [
+        604.0351996842727,
+        -78.5655200035547
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_5",
+      "type": "asteroid",
+      "position": [
+        588.3601996842726,
+        -69.51555453400731
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_032_6",
+      "type": "asteroid",
+      "position": [
+        598.8101996842727,
+        -69.51555453400731
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_033",
@@ -585,29 +1691,197 @@
       "id": "asteroide_035",
       "type": "asteroid",
       "position": [
+        882.7964619726905,
+        -82.72723753108754
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_1",
+      "type": "asteroid",
+      "position": [
+        891.5964619726905,
+        -82.72723753108754
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_2",
+      "type": "asteroid",
+      "position": [
+        878.3964619726905,
+        -75.10621397778448
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_3",
+      "type": "asteroid",
+      "position": [
         887.1964619726905,
         -75.10621397778448
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_4",
+      "type": "asteroid",
+      "position": [
+        895.9964619726904,
+        -75.10621397778448
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_5",
+      "type": "asteroid",
+      "position": [
+        882.7964619726905,
+        -67.48519042448142
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_035_6",
+      "type": "asteroid",
+      "position": [
+        891.5964619726905,
+        -67.48519042448142
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_036",
+      "type": "asteroid",
+      "position": [
+        961.8591033339637,
+        -82.68322699156619
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_1",
+      "type": "asteroid",
+      "position": [
+        972.3091033339638,
+        -82.68322699156619
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_2",
+      "type": "asteroid",
+      "position": [
+        956.6341033339637,
+        -73.6332615220188
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_3",
       "type": "asteroid",
       "position": [
         967.0841033339638,
         -73.6332615220188
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_4",
+      "type": "asteroid",
+      "position": [
+        977.5341033339638,
+        -73.6332615220188
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_5",
+      "type": "asteroid",
+      "position": [
+        961.8591033339637,
+        -64.58329605247141
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_036_6",
+      "type": "asteroid",
+      "position": [
+        972.3091033339638,
+        -64.58329605247141
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_037",
@@ -641,29 +1915,197 @@
       "id": "asteroide_039",
       "type": "asteroid",
       "position": [
+        105.326975008643,
+        674.9808371823651
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_1",
+      "type": "asteroid",
+      "position": [
+        114.12697500864302,
+        674.9808371823651
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_2",
+      "type": "asteroid",
+      "position": [
+        100.92697500864301,
+        682.6018607356682
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_3",
+      "type": "asteroid",
+      "position": [
         109.72697500864301,
         682.6018607356682
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_4",
+      "type": "asteroid",
+      "position": [
+        118.526975008643,
+        682.6018607356682
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_5",
+      "type": "asteroid",
+      "position": [
+        105.326975008643,
+        690.2228842889713
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_039_6",
+      "type": "asteroid",
+      "position": [
+        114.12697500864302,
+        690.2228842889713
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_040",
+      "type": "asteroid",
+      "position": [
+        213.897754850397,
+        658.8365053094498
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_1",
+      "type": "asteroid",
+      "position": [
+        224.347754850397,
+        658.8365053094498
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_2",
+      "type": "asteroid",
+      "position": [
+        208.672754850397,
+        667.8864707789971
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_3",
       "type": "asteroid",
       "position": [
         219.122754850397,
         667.8864707789971
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_4",
+      "type": "asteroid",
+      "position": [
+        229.572754850397,
+        667.8864707789971
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_5",
+      "type": "asteroid",
+      "position": [
+        213.897754850397,
+        676.9364362485445
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_040_6",
+      "type": "asteroid",
+      "position": [
+        224.347754850397,
+        676.9364362485445
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_041",
@@ -697,29 +2139,197 @@
       "id": "asteroide_043",
       "type": "asteroid",
       "position": [
+        489.54789683608493,
+        672.0295509412124
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_1",
+      "type": "asteroid",
+      "position": [
+        498.3478968360849,
+        672.0295509412124
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_2",
+      "type": "asteroid",
+      "position": [
+        485.1478968360849,
+        679.6505744945155
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_3",
+      "type": "asteroid",
+      "position": [
         493.9478968360849,
         679.6505744945155
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_4",
+      "type": "asteroid",
+      "position": [
+        502.7478968360849,
+        679.6505744945155
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_5",
+      "type": "asteroid",
+      "position": [
+        489.54789683608493,
+        687.2715980478185
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_043_6",
+      "type": "asteroid",
+      "position": [
+        498.3478968360849,
+        687.2715980478185
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_044",
+      "type": "asteroid",
+      "position": [
+        588.3601996842726,
+        662.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_1",
+      "type": "asteroid",
+      "position": [
+        598.8101996842727,
+        662.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_2",
+      "type": "asteroid",
+      "position": [
+        583.1351996842726,
+        671.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_3",
       "type": "asteroid",
       "position": [
         593.5851996842727,
         671.4344799964454
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_4",
+      "type": "asteroid",
+      "position": [
+        604.0351996842727,
+        671.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_5",
+      "type": "asteroid",
+      "position": [
+        588.3601996842726,
+        680.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_044_6",
+      "type": "asteroid",
+      "position": [
+        598.8101996842727,
+        680.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_045",
@@ -753,29 +2363,197 @@
       "id": "asteroide_047",
       "type": "asteroid",
       "position": [
+        882.7964619726905,
+        667.2727624689124
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_1",
+      "type": "asteroid",
+      "position": [
+        891.5964619726905,
+        667.2727624689124
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_2",
+      "type": "asteroid",
+      "position": [
+        878.3964619726905,
+        674.8937860222155
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_3",
+      "type": "asteroid",
+      "position": [
         887.1964619726905,
         674.8937860222155
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_4",
+      "type": "asteroid",
+      "position": [
+        895.9964619726904,
+        674.8937860222155
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_5",
+      "type": "asteroid",
+      "position": [
+        882.7964619726905,
+        682.5148095755186
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_047_6",
+      "type": "asteroid",
+      "position": [
+        891.5964619726905,
+        682.5148095755186
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_048",
+      "type": "asteroid",
+      "position": [
+        961.8591033339637,
+        667.3167730084339
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_1",
+      "type": "asteroid",
+      "position": [
+        972.3091033339638,
+        667.3167730084339
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_2",
+      "type": "asteroid",
+      "position": [
+        956.6341033339637,
+        676.3667384779812
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_3",
       "type": "asteroid",
       "position": [
         967.0841033339638,
         676.3667384779812
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_4",
+      "type": "asteroid",
+      "position": [
+        977.5341033339638,
+        676.3667384779812
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_5",
+      "type": "asteroid",
+      "position": [
+        961.8591033339637,
+        685.4167039475286
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_048_6",
+      "type": "asteroid",
+      "position": [
+        972.3091033339638,
+        685.4167039475286
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_049",
@@ -809,29 +2587,197 @@
       "id": "asteroide_051",
       "type": "asteroid",
       "position": [
+        -85.5821159004479,
+        169.26655146807946
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_1",
+      "type": "asteroid",
+      "position": [
+        -76.78211590044789,
+        169.26655146807946
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_2",
+      "type": "asteroid",
+      "position": [
+        -89.9821159004479,
+        176.8875750213825
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_3",
+      "type": "asteroid",
+      "position": [
         -81.1821159004479,
         176.8875750213825
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_4",
+      "type": "asteroid",
+      "position": [
+        -72.3821159004479,
+        176.8875750213825
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_5",
+      "type": "asteroid",
+      "position": [
+        -85.5821159004479,
+        184.50859857468555
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_051_6",
+      "type": "asteroid",
+      "position": [
+        -76.78211590044789,
+        184.50859857468555
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_052",
+      "type": "asteroid",
+      "position": [
+        -72.46588151323931,
+        240.26507673802112
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_1",
+      "type": "asteroid",
+      "position": [
+        -62.015881513239314,
+        240.26507673802112
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_2",
+      "type": "asteroid",
+      "position": [
+        -77.69088151323932,
+        249.3150422075685
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_3",
       "type": "asteroid",
       "position": [
         -67.24088151323932,
         249.3150422075685
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_4",
+      "type": "asteroid",
+      "position": [
+        -56.79088151323931,
+        249.3150422075685
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_5",
+      "type": "asteroid",
+      "position": [
+        -72.46588151323931,
+        258.3650076771159
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_052_6",
+      "type": "asteroid",
+      "position": [
+        -62.015881513239314,
+        258.3650076771159
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_053",
@@ -865,29 +2811,197 @@
       "id": "asteroide_055",
       "type": "asteroid",
       "position": [
+        -83.17937589118776,
+        514.8866937983552
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_1",
+      "type": "asteroid",
+      "position": [
+        -74.37937589118775,
+        514.8866937983552
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_2",
+      "type": "asteroid",
+      "position": [
+        -87.57937589118775,
+        522.5077173516582
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_3",
+      "type": "asteroid",
+      "position": [
         -78.77937589118775,
         522.5077173516582
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_4",
+      "type": "asteroid",
+      "position": [
+        -69.97937589118776,
+        522.5077173516582
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_5",
+      "type": "asteroid",
+      "position": [
+        -83.17937589118776,
+        530.1287409049613
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_055_6",
+      "type": "asteroid",
+      "position": [
+        -74.37937589118775,
+        530.1287409049613
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_056",
+      "type": "asteroid",
+      "position": [
+        -79.82161849754547,
+        592.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_1",
+      "type": "asteroid",
+      "position": [
+        -69.37161849754548,
+        592.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_2",
+      "type": "asteroid",
+      "position": [
+        -85.04661849754548,
+        601.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_3",
       "type": "asteroid",
       "position": [
         -74.59661849754548,
         601.4344799964454
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_4",
+      "type": "asteroid",
+      "position": [
+        -64.14661849754548,
+        601.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_5",
+      "type": "asteroid",
+      "position": [
+        -79.82161849754547,
+        610.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_056_6",
+      "type": "asteroid",
+      "position": [
+        -69.37161849754548,
+        610.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_057",
@@ -921,29 +3035,197 @@
       "id": "asteroide_059",
       "type": "asteroid",
       "position": [
+        964.4178840995521,
+        169.26655146807946
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_1",
+      "type": "asteroid",
+      "position": [
+        973.2178840995521,
+        169.26655146807946
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_2",
+      "type": "asteroid",
+      "position": [
+        960.0178840995521,
+        176.8875750213825
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_3",
+      "type": "asteroid",
+      "position": [
         968.8178840995521,
         176.8875750213825
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_4",
+      "type": "asteroid",
+      "position": [
+        977.617884099552,
+        176.8875750213825
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_5",
+      "type": "asteroid",
+      "position": [
+        964.4178840995521,
+        184.50859857468555
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_059_6",
+      "type": "asteroid",
+      "position": [
+        973.2178840995521,
+        184.50859857468555
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_060",
+      "type": "asteroid",
+      "position": [
+        977.5341184867607,
+        240.26507673802112
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_1",
+      "type": "asteroid",
+      "position": [
+        987.9841184867607,
+        240.26507673802112
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_2",
+      "type": "asteroid",
+      "position": [
+        972.3091184867607,
+        249.3150422075685
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_3",
       "type": "asteroid",
       "position": [
         982.7591184867607,
         249.3150422075685
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_4",
+      "type": "asteroid",
+      "position": [
+        993.2091184867608,
+        249.3150422075685
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_5",
+      "type": "asteroid",
+      "position": [
+        977.5341184867607,
+        258.3650076771159
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_060_6",
+      "type": "asteroid",
+      "position": [
+        987.9841184867607,
+        258.3650076771159
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_061",
@@ -977,29 +3259,197 @@
       "id": "asteroide_063",
       "type": "asteroid",
       "position": [
+        966.8206241088122,
+        514.8866937983552
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_1",
+      "type": "asteroid",
+      "position": [
+        975.6206241088122,
+        514.8866937983552
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_2",
+      "type": "asteroid",
+      "position": [
+        962.4206241088123,
+        522.5077173516582
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_3",
+      "type": "asteroid",
+      "position": [
         971.2206241088122,
         522.5077173516582
       ],
       "mass": 0,
-      "visual_radius": 16,
-      "collision_radius": 16,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 16,
-      "proximity_radius": 32
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_4",
+      "type": "asteroid",
+      "position": [
+        980.0206241088122,
+        522.5077173516582
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_5",
+      "type": "asteroid",
+      "position": [
+        966.8206241088122,
+        530.1287409049613
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
+    },
+    {
+      "id": "asteroide_063_6",
+      "type": "asteroid",
+      "position": [
+        975.6206241088122,
+        530.1287409049613
+      ],
+      "mass": 0,
+      "visual_radius": 5.333333333333333,
+      "collision_radius": 5.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 5.333333333333333,
+      "proximity_radius": 30.333333333333332
     },
     {
       "id": "asteroide_064",
+      "type": "asteroid",
+      "position": [
+        970.1783815024545,
+        592.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_1",
+      "type": "asteroid",
+      "position": [
+        980.6283815024545,
+        592.384514526898
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_2",
+      "type": "asteroid",
+      "position": [
+        964.9533815024545,
+        601.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_3",
       "type": "asteroid",
       "position": [
         975.4033815024545,
         601.4344799964454
       ],
       "mass": 0,
-      "visual_radius": 19,
-      "collision_radius": 19,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
       "capture_radius": 0,
-      "danger_radius": 19,
-      "proximity_radius": 38
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_4",
+      "type": "asteroid",
+      "position": [
+        985.8533815024546,
+        601.4344799964454
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_5",
+      "type": "asteroid",
+      "position": [
+        970.1783815024545,
+        610.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
+    },
+    {
+      "id": "asteroide_064_6",
+      "type": "asteroid",
+      "position": [
+        980.6283815024545,
+        610.4844454659927
+      ],
+      "mass": 0,
+      "visual_radius": 6.333333333333333,
+      "collision_radius": 6.333333333333333,
+      "capture_radius": 0,
+      "danger_radius": 6.333333333333333,
+      "proximity_radius": 31.333333333333332
     },
     {
       "id": "asteroide_065",
@@ -1056,20 +3506,6 @@
       "capture_radius": 0,
       "danger_radius": 14,
       "proximity_radius": 28
-    },
-    {
-      "id": "estacao_partida",
-      "type": "station",
-      "position": [
-        95.85786437626905,
-        314.14213562373095
-      ],
-      "mass": 0,
-      "visual_radius": 14,
-      "collision_radius": 14,
-      "capture_radius": 14,
-      "danger_radius": 0,
-      "proximity_radius": 39
     }
   ],
   "tutorial": "Pouse no satélite superior esquerdo, depois no da direita. Ajuste cada salto pela prévia até a Terra.",

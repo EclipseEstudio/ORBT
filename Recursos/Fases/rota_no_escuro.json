@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "rota_no_escuro",
+  "name": "Rota no Escuro",
+  "order": 24,
+  "bounds": {
+    "position": [
+      -80,
+      -80
+    ],
+    "size": [
+      800,
+      700
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 25,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": -45
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      500,
+      264
+    ],
+    "mass": 180000,
+    "visual_radius": 22,
+    "collision_radius": 22,
+    "capture_radius": 22,
+    "danger_radius": 0,
+    "proximity_radius": 57,
+    "gravity_radius": 60
+  },
+  "bodies": [
+    {
+      "id": "gravidade",
+      "type": "planet",
+      "position": [
+        270,
+        280
+      ],
+      "mass": 500000,
+      "visual_radius": 26,
+      "collision_radius": 26,
+      "capture_radius": 26,
+      "danger_radius": 0,
+      "proximity_radius": 61
+    },
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        55.857864376269,
+        324.142135623731
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        600,
+        500
+      ]
+    }
+  },
+  "tutorial": "Há um planeta oculto na rota. Observe a direção e a velocidade da nave: a gravidade continua atuando fora do campo de visão.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "estrela_1",
+      "position": [
+        141.352,
+        258.393
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "estrela_2",
+      "position": [
+        223.085,
+        216.86
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "estrela_3",
+      "position": [
+        367.762,
+        247.265
+      ],
+      "radius": 7,
+      "type": "gold"
+    },
+    {
+      "id": "conquista_azul",
+      "type": "blue",
+      "position": [
+        394.136,
+        251.763
+      ],
+      "radius": 7
+    }
+  ],
+  "nebula": {
+    "visibility_radius": 110
+  }
+}

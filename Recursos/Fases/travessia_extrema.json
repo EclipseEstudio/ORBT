@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "content_version": 1,
+  "id": "travessia_extrema",
+  "name": "Travessia Extrema",
+  "order": 29,
+  "bounds": {
+    "position": [
+      -180,
+      -320
+    ],
+    "size": [
+      1380,
+      880
+    ]
+  },
+  "initial_fuel": 4,
+  "flight_timeout": 20,
+  "physics": {
+    "gravity_constant": 1,
+    "softening": 8
+  },
+  "ship": {
+    "radius": 6,
+    "mass": 1,
+    "dead_zone": 10,
+    "max_drag": 80,
+    "max_impulse": 100
+  },
+  "start": {
+    "body_id": "estacao_partida",
+    "angle_degrees": 0
+  },
+  "goal": {
+    "id": "terra",
+    "type": "earth",
+    "position": [
+      980,
+      180
+    ],
+    "mass": 180000,
+    "visual_radius": 24,
+    "collision_radius": 24,
+    "capture_radius": 24,
+    "danger_radius": 0,
+    "proximity_radius": 49,
+    "gravity_radius": 62
+  },
+  "bodies": [
+    {
+      "id": "estacao_partida",
+      "type": "station",
+      "position": [
+        -20,
+        0
+      ],
+      "mass": 0,
+      "visual_radius": 14,
+      "collision_radius": 14,
+      "capture_radius": 14,
+      "danger_radius": 0,
+      "proximity_radius": 39
+    },
+    {
+      "id": "apoio_1",
+      "type": "station",
+      "position": [
+        160,
+        -120
+      ],
+      "mass": 0,
+      "visual_radius": 23,
+      "collision_radius": 23,
+      "capture_radius": 23,
+      "danger_radius": 0,
+      "proximity_radius": 48
+    },
+    {
+      "id": "A",
+      "type": "portal",
+      "position": [
+        330,
+        -120
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "B",
+      "exit_degrees": 180
+    },
+    {
+      "id": "B",
+      "type": "portal",
+      "position": [
+        650,
+        60
+      ],
+      "mass": 0,
+      "visual_radius": 16,
+      "collision_radius": 16,
+      "capture_radius": 0,
+      "danger_radius": 0,
+      "proximity_radius": 41,
+      "target_id": "A",
+      "exit_degrees": 90
+    },
+    {
+      "id": "apoio_2",
+      "type": "station",
+      "position": [
+        650,
+        180
+      ],
+      "mass": 0,
+      "visual_radius": 23,
+      "collision_radius": 23,
+      "capture_radius": 23,
+      "danger_radius": 0,
+      "proximity_radius": 48
+    },
+    {
+      "id": "apoio_3",
+      "type": "station",
+      "position": [
+        810,
+        -100
+      ],
+      "mass": 0,
+      "visual_radius": 22,
+      "collision_radius": 22,
+      "capture_radius": 22,
+      "danger_radius": 0,
+      "proximity_radius": 47
+    },
+    {
+      "id": "movel",
+      "type": "asteroid",
+      "position": [
+        500,
+        120
+      ],
+      "mass": 0,
+      "visual_radius": 10,
+      "collision_radius": 10,
+      "capture_radius": 0,
+      "danger_radius": 10,
+      "proximity_radius": 35,
+      "orbit": {
+        "center": [
+          500,
+          180
+        ],
+        "period_seconds": 18,
+        "clockwise": true
+      }
+    },
+    {
+      "id": "cinturao_0",
+      "type": "asteroid",
+      "position": [
+        500,
+        -220
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_1",
+      "type": "asteroid",
+      "position": [
+        500,
+        -195
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_2",
+      "type": "asteroid",
+      "position": [
+        500,
+        -170
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_3",
+      "type": "asteroid",
+      "position": [
+        500,
+        -145
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_4",
+      "type": "asteroid",
+      "position": [
+        500,
+        -120
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_5",
+      "type": "asteroid",
+      "position": [
+        500,
+        -95
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_6",
+      "type": "asteroid",
+      "position": [
+        500,
+        -70
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_7",
+      "type": "asteroid",
+      "position": [
+        500,
+        -45
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_8",
+      "type": "asteroid",
+      "position": [
+        500,
+        -20
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_9",
+      "type": "asteroid",
+      "position": [
+        500,
+        5
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_10",
+      "type": "asteroid",
+      "position": [
+        500,
+        30
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_11",
+      "type": "asteroid",
+      "position": [
+        500,
+        55
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_12",
+      "type": "asteroid",
+      "position": [
+        500,
+        80
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_13",
+      "type": "asteroid",
+      "position": [
+        500,
+        105
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_14",
+      "type": "asteroid",
+      "position": [
+        500,
+        130
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_15",
+      "type": "asteroid",
+      "position": [
+        500,
+        155
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_16",
+      "type": "asteroid",
+      "position": [
+        500,
+        180
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    },
+    {
+      "id": "cinturao_17",
+      "type": "asteroid",
+      "position": [
+        500,
+        205
+      ],
+      "mass": 0,
+      "visual_radius": 9,
+      "collision_radius": 9,
+      "capture_radius": 0,
+      "danger_radius": 9,
+      "proximity_radius": 34
+    }
+  ],
+  "camera": {
+    "zoom": 0.65,
+    "overview": {
+      "position": [
+        -80,
+        -220
+      ],
+      "size": [
+        1140,
+        700
+      ]
+    }
+  },
+  "tutorial": "Combine os instrumentos, o salto e as escalas. O tanque fora da rota fornece a quinta carga. Uma rocha orbital exige observar a aproximação.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
+  "stars": [
+    {
+      "id": "dourada_1",
+      "type": "gold",
+      "position": [
+        65.282,
+        -185.077
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_2",
+      "type": "gold",
+      "position": [
+        145.392,
+        -180.758
+      ],
+      "radius": 7
+    },
+    {
+      "id": "dourada_3",
+      "type": "gold",
+      "position": [
+        291.04,
+        -132.823
+      ],
+      "radius": 7
+    },
+    {
+      "id": "azul",
+      "type": "blue",
+      "position": [
+        769.329,
+        -36.201
+      ],
+      "radius": 7
+    }
+  ],
+  "nebula": {
+    "visibility_radius": 85
+  },
+  "fuel_pickups": [
+    {
+      "id": "tanque_1",
+      "position": [
+        35,
+        -220
+      ],
+      "radius": 9,
+      "amount": 1
+    }
+  ]
+}

@@ -37,7 +37,7 @@ func _executar() -> void:
 	partida.avancar(4)
 	conferir(is_equal_approx(partida.tempo_restante, 12.5), "Pouso pausa o consumo sem repor oxigênio")
 	nave.entrada.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
-	nave.solicitar_impulso(nave._ultimo_pedido + 1, Vector2.LEFT * 80)
+	nave.solicitar_impulso(nave._ultimo_pedido + 1, nave.posicao_relativa.normalized() * 80)
 	partida.avancar(0.1)
 	conferir(nave.condicao != nave.Condicao.POUSADA and is_equal_approx(partida.tempo_restante, 12.4), "Nova decolagem continua consumindo o saldo do pouso")
 	conferir(partida._checkpoint.corpo == "apoio" and partida._checkpoint.combustivel == 3, "pouso substitui checkpoint")

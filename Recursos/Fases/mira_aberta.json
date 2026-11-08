@@ -75,8 +75,8 @@
       ]
     }
   },
-  "tutorial": "As estrelas são opcionais e só valem ao chegar à Terra. Vá direto ou use mais impulsos para buscar a estrela afastada.",
-  "notes": "Três douradas classificam a fase. As azuis são conquistas opcionais. Confirmação ao chegar à Terra. Conjuntos de 10 exigem 80% das douradas do anterior.",
+  "tutorial": "Ajuste direção e força. A estrela azul é opcional; as douradas abrem o próximo nível. Chegue à Terra para confirmar as coletas.",
+  "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
       "id": "estrela_1",
@@ -108,7 +108,10 @@
     {
       "id": "conquista_azul",
       "type": "blue",
-      "position": [124.3, 281.5],
+      "position": [
+        124.3,
+        281.5
+      ],
       "radius": 7
     }
   ]
