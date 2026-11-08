@@ -1,0 +1,138 @@
+name: Jogo Web no GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/web-pages.yml', 'docs/**']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Obter o site
+        uses: actions/checkout@v4
+        with:
+          path: site
+          persist-credentials: false
+      - name: Obter o jogo aprovado
+        uses: actions/checkout@v4
+        with:
+          ref: alpha
+          path: jogo
+          persist-credentials: false
+      - name: Baixar Godot e modelos oficiais
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $base = 'https://github.com/godotengine/godot/releases/download/4.7.2-stable'
+          $arquivos = @(
+            @{ Nome = 'Godot_v4.7.2-stable_win64.exe.zip'; Hash = '731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953' },
+            @{ Nome = 'Godot_v4.7.2-stable_export_templates.tpz'; Hash = 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011' }
+          )
+          foreach ($arquivo in $arquivos) {
+            $destino = Join-Path $env:RUNNER_TEMP $arquivo.Nome
+            Invoke-WebRequest "$base/$($arquivo.Nome)" -OutFile $destino
+            if ((Get-FileHash $destino -Algorithm SHA256).Hash -ne $arquivo.Hash) { throw "Checksum inválido: $($arquivo.Nome)" }
+          }
+          Expand-Archive (Join-Path $env:RUNNER_TEMP $arquivos[0].Nome) (Join-Path $env:RUNNER_TEMP 'godot')
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip = [IO.Compression.ZipFile]::OpenRead((Join-Path $env:RUNNER_TEMP $arquivos[1].Nome))
+          $modelos = Join-Path $env:APPDATA 'Godot/export_templates/4.7.2.stable'
+          New-Item -ItemType Directory -Force $modelos | Out-Null
+          try {
+            foreach ($nome in @('web_nothreads_release.zip', 'web_nothreads_debug.zip', 'version.txt')) {
+              $entrada = $zip.GetEntry("templates/$nome")
+              if (-not $entrada) { throw "Modelo ausente: $nome" }
+              [IO.Compression.ZipFileExtensions]::ExtractToFile($entrada, (Join-Path $modelos $nome), $true)
+            }
+          } finally { $zip.Dispose() }
+          "ORBT_GODOT=$(Join-Path $env:RUNNER_TEMP 'godot/Godot_v4.7.2-stable_win64_console.exe')" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Preparar exportação compatível com Pages
+        working-directory: jogo
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $presets = Get-Content export_presets.cfg -Raw
+          $web = ($presets -split '\[preset\.0\.options\]')[0]
+          $web = $web.Replace('[preset.0]', '[preset.1]').Replace('name="Android"', 'name="Web"').Replace('platform="Android"', 'platform="Web"')
+          $web = $web -replace 'export_path="[^"]*"', 'export_path="build/web/index.html"'
+          $web += @'
+          [preset.1.options]
+          custom_template/debug=""
+          custom_template/release=""
+          variant/extensions_support=false
+          variant/thread_support=false
+          vram_texture_compression/for_desktop=true
+          vram_texture_compression/for_mobile=false
+          html/export_icon=true
+          html/custom_html_shell=""
+          html/head_include="<meta name=\"theme-color\" content=\"#070e21\">"
+          html/canvas_resize_policy=2
+          html/focus_canvas_on_start=true
+          html/experimental_virtual_keyboard=false
+          progressive_web_app/enabled=false
+          '@
+          Add-Content export_presets.cfg -Value ("`n" + $web) -Encoding utf8
+          $projeto = Get-Content project.godot -Raw
+          $projeto = $projeto.Replace('[rendering]', "[rendering]`nrenderer/rendering_method.web=`"gl_compatibility`"")
+          Set-Content project.godot -Value $projeto -Encoding utf8
+      - name: Importar e exportar o jogo
+        working-directory: jogo
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force build/web | Out-Null
+          $saida = & $env:ORBT_GODOT --headless --editor --rendering-method gl_compatibility --path . --import 2>&1
+          $codigo = $LASTEXITCODE
+          $saida | Write-Output
+          if ($codigo -ne 0 -or ($saida -match 'SCRIPT ERROR:|ERROR:')) { throw 'Falha ao importar o jogo.' }
+          $saida = & $env:ORBT_GODOT --headless --path . --export-release Web build/web/index.html 2>&1
+          $codigo = $LASTEXITCODE
+          $saida | Write-Output
+          if ($codigo -ne 0 -or ($saida -match 'SCRIPT ERROR:|ERROR:')) { throw 'Falha na exportação Web.' }
+          foreach ($arquivo in @('index.html', 'index.js', 'index.wasm', 'index.pck')) {
+            if (-not (Test-Path "build/web/$arquivo") -or (Get-Item "build/web/$arquivo").Length -eq 0) { throw "Exportação incompleta: $arquivo" }
+          }
+      - name: Montar o site com jogo e download Android
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force site/docs/jogar | Out-Null
+          Copy-Item jogo/build/web/* site/docs/jogar/
+          $pagina = Get-Content site/docs/index.html -Raw
+          if ($pagina -notmatch 'id="jogar"') {
+            $alvo = '<a id="download" class="botao"'
+            if (-not $pagina.Contains($alvo)) { throw 'Botão de download não encontrado no site.' }
+            $pagina = $pagina.Replace($alvo, '<a id="jogar" class="botao" href="./jogar/">Jogar no navegador</a>' + "`n            " + $alvo)
+            $pagina = $pagina.Replace('</style>', '#download { margin-top: 1rem; background: #171836; color: #7ae7e0; border-color: #4b4f8f; box-shadow: 3px 3px 0 #4b4f8f; font-size: 1rem; min-height: 54px; }' + "`n</style>")
+          }
+          $pagina = $pagina.Replace('Teste aberto para Android', 'Teste aberto · Web e Android').Replace('pixel art para Android,', 'pixel art para navegador e Android,').Replace('Jogo em desenvolvimento. Não disponível para iPhone.', 'O APK é exclusivo para Android. A versão Web pode ser jogada no navegador.')
+          Set-Content site/docs/index.html $pagina -Encoding utf8
+          New-Item -ItemType File -Force site/docs/.nojekyll | Out-Null
+          $revisao = git -C jogo rev-parse HEAD
+          @{ revisao = $revisao; versao = '0.5.0'; executado_em = '${{ github.run_id }}' } | ConvertTo-Json | Set-Content site/docs/jogar/versao.json -Encoding utf8
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
