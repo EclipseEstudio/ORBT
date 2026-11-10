@@ -1,21 +1,37 @@
-# UI e HUD em pixel art
+# Interface, câmera e apresentação
 
-O redesign se limita à apresentação: não muda física, recursos, progressão, salvamentos nem os sinais de navegação.
+Fonte: scripts de `src/MenuPrincipal/`, `src/Campanha/selecao_fases.gd`, `src/Nivel/`, `src/Visual/`, `src/Configuracoes/` e `src/Audio/`. Conferido em 10/11/2026.
 
-- **Splash:** a imagem padrão de inicialização da engine fica desativada para evitar duplicação; a apresentação da sessão mostra as marcas Eclipse Estudio e Godot; duração de 1,5 s na primeira abertura da sessão, antecipável por toque ou confirmação. A marca Eclipse em `Recursos/Sprites/eclipse-estudio.svg` é uma proposta vetorial criada para esta tela, substituível pela identidade oficial do estúdio. A marca Godot reutiliza o recurso existente do projeto.
-- **Menu:** cenário espacial desenhado em código, somente título ORBT em fonte bitmap própria (atlas 5×7, sem fontes externas) e exatamente três ações na horizontal, embaixo. Jogar tem maior área e fundo ciano. Configurações e créditos usam ícones.
-- **Fases:** botão de retorno por ícone e título à esquerda; quatro colunas com rolagem vertical. Disponível: ciano e play; concluída: amarelo e check; bloqueada: cinza e cadeado. O nome completo e o estado ficam na descrição acessível de cada botão. O catálogo é relido e reconciliado com o progresso sempre que a seleção é aberta; não há botão de atualização manual.
-- **Gameplay:** combustível e tempo exatos acompanhados de ícones; pausa no canto superior direito; distância/direção do destino embaixo do status; exploração à esquerda da pausa; reinício durante a tentativa somente no menu de pausa. A ajuda inicial aparece em popup durante seis segundos ativos da fase e desaparece com fade, sem interceptar gestos. O contador congela na pausa e não reinicia ao resetar a mesma tentativa. Alertas importantes, vitória e derrota continuam explicados.
-- **Pausa:** diálogo modal centralizado, com fundo escurecido e três ações: Continuar, Resetar e Voltar ao menu. Os botões chamam as ações existentes da partida. O diálogo recebe os toques, respeita a área segura e impede que eles alcancem a nave.
-- **Checkpoint:** Continuar fica fixo na parte inferior da seleção de fases. Salvar último pouso, diagnósticos e Reiniciar fase ficam na área de rolagem, quando necessários. A recuperação e a retentativa conservam o comportamento anterior de salvamento.
-- **Conclusão:** diálogo no mesmo estilo da pausa, com Próxima fase, Repetir e Voltar ao menu. Na última fase, informa a conclusão da campanha e não oferece próxima fase. A progressão continua sendo registrada pelo controlador existente.
+| Tela | Estado implementado |
+| --- | --- |
+| Splash | Apresentação da sessão; imagem padrão de boot desativada |
+| Menu | Fundo `Recursos/Sprites/fundo_menu_principal.png`, parallax, título ORBT, Jogar e ícones de configurações/créditos |
+| Seleção | Grade de cinco colunas, três níveis, douradas nos cartões e totais no cabeçalho; bloqueios/metas por nível |
+| Configurações | Música/efeitos, vibração, dicas e reset de progresso; preferências persistidas |
+| Créditos | Participantes e marcas; fundo de estrelas |
+| Fase | Número no topo; explorar/pausar; combustível, O2, dicas e instrumentos |
+| Pausa | Casa/seleção, reset e continuar; configurações; mundo congelado |
+| Vitória | Três douradas e azul apenas se coletada; casa, repetir e próximo quando aplicável |
+| Derrota | Motivo com rolagem, Último pouso, Repetir e retorno ao menu principal |
 
-`src/Visual/icones_ui.gd` gera texturas de 12×12 em memória. Elas não dependem da disponibilidade de glifos no Android. Os controles preservam descrições de acessibilidade, estados de hover, foco, pressionado e desabilitado. O tema comum está em `src/Visual/tema_visual.gd`.
+Menu/seleção não expõem retomada persistida, embora o controlador tenha API de recuperação. Falha ao salvar progresso exibe retentativa na seleção.
 
-As áreas seguras continuam sendo calculadas pelas rotinas existentes. Os testes verificam layouts em alturas lógicas de 240, 320 e 390, estados da campanha, navegação e passagem de gestos. `tests/capturar_ui.gd`, executado com renderizador real, salva splash, menu, fases, gameplay e pausa em `.godot/ui-*.png`.
+## Mira e câmera
 
-Validação visual no desktop não substitui revisão de recortes, contraste e ergonomia no Android.
+A mira desenha círculo de cancelamento, força numérica, linha de dez segmentos azuis (4–6 pixels) e guia reta de até 60 pixels lógicos. Contato potencial marca a guia; mirar para dentro do apoio mostra BLOQUEADO. Não há previsão gravitacional na interface.
 
-Explorar oferece zoom por pinça com dois dedos, roda do mouse e botões +/−. Os limites são 0,05× e 4×; voltar à nave restaura o zoom de voo. Créditos usam o fundo estrelado e mostram apenas os nomes dos participantes.
+`camera_nivel.gd` aproxima o voo e afasta segundo a força do arraste, com retorno suave. Exploração permite pan, pinça, roda e botões de zoom; voltar restaura acompanhamento. O título pode ser dispensado sem que o toque lance a nave. Arrastar sobre cartões rola e cancela seleção.
 
-O diálogo FIM DE JOGO é exibido para toda derrota, incluindo combustível esgotado ou deriva. Mostra a causa exata registrada pela partida e permite recuperar o último pouso, repetir ou voltar ao menu. O motivo tem rolagem vertical para textos longos.
+## Nebulosa e efeitos
+
+`nebulosa.gd` e shader limitam visão em coordenadas de mundo junto da nave. Zoom e pan não revelam regiões externas. Instrumentos mostram Terra, tanques restantes e portais sem mostrar obstáculos. Bússolas ficam junto da nave com distância constante na tela; mira e força permanecem acima da máscara.
+
+Estações são desenhadas em código; a nave usa `nave_detalhada.png`. Há rastro, propulsão pixelada e explosão. Portais usam partículas de entrada/saída, sem nomes/linhas no mapa. Esses efeitos não definem a geometria física.
+
+O tema comum e ícones são gerados por `tema_visual.gd` e `icones_ui.gd`. Fonte comum: Press Start 2P; título ORBT usa atlas bitmap. Filtro nearest e áreas seguras preservam a leitura em viewport expandido. Inventário/procedência: [arte](../arte/README.md).
+
+## Áudio e feedback
+
+`audio_jogo.gd` integra duas músicas e efeitos de botões, impulso, pouso, proximidade e resultados, nos canais Musica/Efeitos. Música continua na pausa; efeitos de simulação são suspensos. O controlador dispara vibração em lançamento, pouso, vitória e derrota quando habilitada e no Android.
+
+Testes de layout/capturas cobrem proporções lógicas variadas; não equivalem a revisão de recortes, áudio ou ergonomia no aparelho. Consulte [validação pendente](../projeto/validacao-pendente.md).

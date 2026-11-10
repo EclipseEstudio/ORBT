@@ -153,7 +153,7 @@ jobs:
           Get-ChildItem build/publicacao -File | Sort-Object Name | ForEach-Object {
             '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name
           } | Set-Content -Encoding utf8 build/publicacao/SHA256SUMS.txt
-          $notas = Get-Content docs/auxiliar/versao-0.5.0-alpha-2026-11-07.md -Raw
+          $notas = Get-Content docs/versoes/versao-0.5.0-alpha-2026-11-07.md -Raw
           $notas += "`n`n[PR #$env:ORBT_PR](https://github.com/$env:ORBT_REPO/pull/$env:ORBT_PR) · Revisão: $env:ORBT_HEAD`n"
           $notas | Set-Content -Encoding utf8 build/publicacao/notas.md
           gh release create $tag build/publicacao/ORBT-debug.apk build/publicacao/atualizacao.json build/publicacao/revisao.txt build/publicacao/SHA256SUMS.txt --repo $env:ORBT_REPO --target $env:ORBT_HEAD --title 'ORBT 0.5.0 alpha' --notes-file build/publicacao/notas.md --prerelease

@@ -2,7 +2,7 @@ extends SceneTree
 ## Redução do asset de arte para a resolução usada pelo jogo.
 
 func _initialize() -> void:
-	var fonte := Image.load_from_file("res://docs/auxiliar/arte/fontes/nave_detalhada.png")
+	var fonte := Image.load_from_file("res://docs/arte/fontes/nave_detalhada.png")
 	if fonte == null or fonte.is_empty():
 		quit(1)
 		return
