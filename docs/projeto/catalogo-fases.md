@@ -1,6 +1,6 @@
 # Catálogo de fases
 
-Extraído de `Recursos/Niveis.json` e dos JSONs apontados pelo catálogo em 10/11/2026. A ordem abaixo segue `order`, não a ordem das chaves do catálogo. Combustível coletável é a soma de `amount`; oxigênio é `flight_timeout` em segundos da simulação.
+Extraído de `Recursos/Niveis.json` e dos JSONs apontados pelo catálogo em 11/11/2026. A ordem abaixo segue `order`, não a ordem das chaves do catálogo. Combustível coletável é a soma de `amount`; oxigênio é `flight_timeout` em segundos da simulação.
 
 | # | ID | Fase | Combustível inicial | Tanques (+cargas) | O2 | Douradas | Azuis | Nebulosa |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
@@ -23,14 +23,14 @@ Extraído de `Recursos/Niveis.json` e dos JSONs apontados pelo catálogo em 10/1
 | 17 | `arco_entre_rochas` | [Arco entre rochas](../../Recursos/Fases/arco_entre_rochas.json) | 3 | 0 (+0) | 25 s | 3 | 1 | Não |
 | 18 | `tres_escalas` | [Três escalas](../../Recursos/Fases/tres_escalas.json) | 6 | 1 (+1) | 25 s | 3 | 1 | Não |
 | 19 | `cinturao_em_movimento` | [Cinturão em movimento](../../Recursos/Fases/cinturao_em_movimento.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Não |
-| 20 | `ultima_manobra` | [Última manobra](../../Recursos/Fases/ultima_manobra.json) | 6 | 1 (+1) | 25 s | 3 | 1 | Não |
+| 20 | `ultima_manobra` | [Manobra combinada](../../Recursos/Fases/ultima_manobra.json) | 6 | 1 (+1) | 25 s | 3 | 1 | Não |
 | 21 | `fenda_no_espaco` | [Fenda no Espaço](../../Recursos/Fases/fenda_no_espaco.json) | 3 | 0 (+0) | 25 s | 3 | 1 | Não |
 | 22 | `salto_entre_rochas` | [Salto entre Rochas](../../Recursos/Fases/salto_entre_rochas.json) | 3 | 0 (+0) | 25 s | 3 | 1 | Não |
 | 23 | `nevoa_cega` | [Névoa Cega](../../Recursos/Fases/nevoa_cega.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Sim |
 | 24 | `rota_no_escuro` | [Rota no Escuro](../../Recursos/Fases/rota_no_escuro.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Sim |
 | 25 | `desvio_nebuloso` | [Desvio Nebuloso](../../Recursos/Fases/desvio_nebuloso.json) | 3 | 1 (+1) | 20 s | 3 | 1 | Sim |
 | 26 | `portal_invisivel` | [Portal Invisível](../../Recursos/Fases/portal_invisivel.json) | 3 | 0 (+0) | 20 s | 3 | 1 | Sim |
-| 27 | `orbita_cega` | [Órbita Cega](../../Recursos/Fases/orbita_cega.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Sim |
+| 27 | `orbita_cega` | [Giro na névoa](../../Recursos/Fases/orbita_cega.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Sim |
 | 28 | `rede_de_portais` | [Rede de Portais](../../Recursos/Fases/rede_de_portais.json) | 4 | 1 (+1) | 25 s | 3 | 1 | Não |
 | 29 | `travessia_extrema` | [Travessia Extrema](../../Recursos/Fases/travessia_extrema.json) | 4 | 1 (+1) | 20 s | 3 | 1 | Sim |
 | 30 | `grande_retorno` | [O Grande Retorno](../../Recursos/Fases/grande_retorno.json) | 5 | 1 (+1) | 25 s | 3 | 1 | Sim |

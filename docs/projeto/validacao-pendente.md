@@ -4,6 +4,8 @@ O código comprova a presença dos recursos, mas não seu aceite humano. Esta li
 
 Os ensaios de desktop, pacote, renderização, editor e Web de 10/11/2026 estão no [relatório de validação](../historico/registros/validacao-2026-11-10.md). Passaram sem falhas funcionais; não substituem os aceites humanos abaixo. O ADB falhou antes de enumerar dispositivos, impedindo o teste Android nesta sessão.
 
+As dicas das 30 fases foram revisadas na [correção da issue #54](../historico/registros/revisao-tutorial-issue-54.md), em 11/11/2026. Os testes conferem apresentação, cancelamento, custo, preferências e encaixe dos diálogos em telas lógicas de 180×240 e 180×320. Ainda falta observar um jogador que não seja autor e conferir leitura e toque no APK atual; a revisão textual não encerra esse aceite.
+
 | Frente | Conferir na revisão atual | Referência |
 | --- | --- | --- |
 | Campanha | Completar 30 fases, avaliar dificuldade, alternativas e douradas necessárias aos portões | `test_fases.gd`, `test_campanha_30.gd` |

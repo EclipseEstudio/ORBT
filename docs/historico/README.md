@@ -9,6 +9,7 @@ Aqui ficam relatórios de implementação, testes e decisões produzidos durante
 
 Entradas úteis:
 
+- [Revisão das dicas da campanha — issue #54](registros/revisao-tutorial-issue-54.md): correções de 11/11/2026 e limites da validação do tutorial.
 - [Validação técnica de 10/11/2026](registros/validacao-2026-11-10.md): suítes, pacote, renderização, editor, Web e limites do teste Android.
 - [Histórico de implementação](registros/historico-implementacao.md).
 - [Revisão de issues de 31/10/2026](registros/revisao-issues-2026-10-31.md).

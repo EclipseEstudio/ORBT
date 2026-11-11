@@ -45,6 +45,7 @@ func _executar() -> void:
 	await hud.get_node("TituloFase").terminou
 	var dica := hud.get_node("DialogoDica")
 	conferir(paused and dica.find_children("*", "Label", true, false).any(func(rotulo): return rotulo.text == partida.nivel.dados_autorais.tutorial), "Dica autoral pausa a tentativa até confirmação")
+	conferir(dica.z_index > hud._bussola.z_index, "Diálogo da dica cobre a bússola para preservar a leitura")
 	var saldo_inicial: int = nave.combustivel
 	toque(8, Vector2(5, 5), true)
 	toque(8, Vector2(5, 5), false)
@@ -71,12 +72,21 @@ func _executar() -> void:
 	partida.avancar(1.0 / 60)
 	hud._process(0)
 	conferir(nave.combustivel == 4 and nave.condicao == nave.Condicao.EM_VOO, "soltar lança uma vez e custa uma unidade")
+	partida.alternar_exploracao()
+	hud._process(0)
+	conferir(hud._mensagem.text.contains("continua diminuindo"), "explorar em voo informa que oxigênio continua sendo consumido")
+	partida.alternar_exploracao()
+	hud._process(0)
 	conferir(hud._mensagem.text.contains("custa 1") and hud._mensagem.text.contains("não recarrega"), "pós-lançamento explica combustível e pouso")
 	var apoio: Dictionary = nivel.nivel_res.obter_corpo("apoio")
 	nave.global_position = apoio.position + Vector2.LEFT * 25
 	partida.resolver_contato({"kind": "body", "body": apoio})
 	hud._process(0)
 	conferir(nave.combustivel == 4 and hud._mensagem.text.contains("não recarrega"), "pouso não reabastece e mantém explicação")
+	partida.alternar_exploracao()
+	hud._process(0)
+	conferir(hud._mensagem.text.contains("interrompe") and not hud._mensagem.text.contains("continua diminuindo"), "explorar pousado informa que oxigênio não é consumido")
+	partida.alternar_exploracao()
 	partida.pausar()
 	hud._process(0)
 	conferir(hud._mensagem.text.contains("pausada"), "pausa tem prioridade sobre dica")
@@ -86,5 +96,44 @@ func _executar() -> void:
 	hud._process(0)
 	conferir(hud._mensagem.text.contains("Toque") and nave.combustivel == 5, "reinício apresenta tutorial novamente")
 	nivel.queue_free()
+	await process_frame
+	await _conferir_dicas_campanha()
 	print("Tutorial: ", verificacoes, " verificações, ", falhas, " falhas.")
 	quit(1 if falhas else 0)
+
+
+func _conferir_dicas_campanha() -> void:
+	var catalogo: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Niveis.json"))
+	for tamanho in [Vector2i(180, 240), Vector2i(180, 320)]:
+		var viewport := SubViewport.new()
+		viewport.size = tamanho
+		root.add_child(viewport)
+		for id_fase in catalogo:
+			var nivel = CenaNivel.instantiate()
+			nivel.nivel_res = Carregador.carregar(catalogo[id_fase]).nivel
+			viewport.add_child(nivel)
+			nivel.partida.set_physics_process(false)
+			await process_frame
+			var hud: CanvasLayer
+			for item in nivel.get_children():
+				if item.has_method("_criar_dica"):
+					hud = item
+			hud.get_node("TituloFase")._encerrar()
+			for quadro in 6:
+				await process_frame
+			var dialogo := hud.get_node("DialogoDica")
+			var rotulo: Label = dialogo.find_children("*", "Label", true, false)[0]
+			var botao: Button = dialogo.find_children("*", "Button", true, false)[0]
+			var painel: PanelContainer = dialogo.find_children("*", "PanelContainer", true, false)[0]
+			var tela := Rect2(Vector2.ZERO, Vector2(tamanho))
+			var contexto := "%s em %s: " % [id_fase, tamanho]
+			conferir(paused and rotulo.text == nivel.nivel_res.dados_autorais.tutorial, contexto + "exibe dica autoral completa antes da tentativa")
+			conferir(tela.encloses(painel.get_global_rect()) and painel.get_global_rect().encloses(rotulo.get_global_rect()), contexto + "painel e texto cabem na tela")
+			conferir(tela.encloses(botao.get_global_rect()) and botao.size.x >= 64 and botao.size.y >= 32, contexto + "confirmação permanece visível e alcançável")
+			botao.pressed.emit()
+			await process_frame
+			conferir(not paused and not hud.has_node("DialogoDica"), contexto + "confirmar retoma a tentativa")
+			nivel.queue_free()
+			await process_frame
+		viewport.queue_free()
+		await process_frame

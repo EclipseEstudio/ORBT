@@ -75,7 +75,7 @@
       ]
     }
   },
-  "tutorial": "Ajuste direção e força. A estrela azul é opcional; as douradas abrem o próximo nível. Chegue à Terra para confirmar as coletas.",
+  "tutorial": "Ajuste a direção e a força. As três douradas de cada fase contam para abrir os próximos níveis; a azul é opcional. Chegue à Terra para confirmar as coletas.",
   "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
