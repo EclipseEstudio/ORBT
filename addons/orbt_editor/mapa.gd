@@ -11,6 +11,7 @@ var _deslocamento := Vector2.ZERO
 var regioes := {"visual_radius": true, "collision_radius": true, "capture_radius": true, "proximity_radius": true, "danger_radius": true}
 const CORES = {"visual_radius": Color.SKY_BLUE, "collision_radius": Color.WHITE, "capture_radius": Color.LIME_GREEN, "proximity_radius": Color.SLATE_BLUE, "danger_radius": Color.ORANGE_RED}
 const Carregador = preload("res://src/Nivel/carregador_fase.gd")
+const Documento = preload("res://addons/orbt_editor/documento.gd")
 
 
 func _ready() -> void:
@@ -77,13 +78,21 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, posicao + Vector2(12, -12), estrela.id, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("ffc845"))
 		if documento.selecao == -3 - indice:
 			draw_rect(Rect2(posicao - Vector2.ONE * 11, Vector2.ONE * 22), Color.YELLOW, false, 2)
-	for tanque in dados.get("fuel_pickups", []):
+	for indice in dados.get("fuel_pickups", []).size():
+		var tanque: Dictionary = dados.fuel_pickups[indice]
 		var ponto := tela(Vector2(tanque.position[0], tanque.position[1]))
 		draw_rect(Rect2(ponto - Vector2(4, 5), Vector2(8, 10)), Color("6af0b4"), false, 2)
-		draw_string(ThemeDB.fallback_font, ponto + Vector2(8, 0), "+" + str(tanque.amount), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("6af0b4"))
+		draw_arc(ponto, maxf(2, tanque.radius * escala), 0, TAU, 32, Color("6af0b488"), 1)
+		draw_string(ThemeDB.fallback_font, ponto + Vector2(12, -12), "%s · +%s" % [tanque.id, str(tanque.amount)], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("6af0b4"))
+		if documento.selecao == Documento.PRIMEIRO_TANQUE - indice:
+			draw_rect(Rect2(ponto - Vector2.ONE * 11, Vector2.ONE * 22), Color.YELLOW, false, 2)
 	var validacao := Carregador.validar(dados)
 	if validacao.nivel != null:
 		var inicio := tela(validacao.nivel.obter_posicao_inicial())
+		if dados.has("nebula"):
+			var raio: float = dados.nebula.visibility_radius * escala
+			draw_arc(inicio, raio, 0, TAU, 96, Color("bd9bdf"), 1.5, true)
+			draw_string(ThemeDB.fallback_font, inicio + Vector2(10, -raio - 5), "Visão inicial · nebulosa", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("bd9bdf"))
 		var normal := Vector2.RIGHT if dados.start.has("position") else Vector2.RIGHT.rotated(deg_to_rad(dados.start.angle_degrees))
 		draw_colored_polygon(PackedVector2Array([inicio + normal * 8, inicio + normal.rotated(2.4) * 7, inicio + normal.rotated(-2.4) * 7]), Color.YELLOW)
 		draw_string(ThemeDB.fallback_font, inicio + Vector2(10, 16), "Nave inicial", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.YELLOW)
@@ -99,6 +108,8 @@ func _gui_input(event: InputEvent) -> void:
 			navegando = event.pressed
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			documento.terminar_grupo()
+			if arrastando and not event.pressed:
+				documento.selecao_alterada.emit()
 			arrastando = false
 			if event.pressed:
 				var escolhido := -2
@@ -117,6 +128,14 @@ func _gui_input(event: InputEvent) -> void:
 					var d := tela(posicao).distance_to(event.position)
 					if d <= maxf(12, estrela.radius * escala) and d < distancia:
 						escolhido = -3 - indice
+						distancia = d
+						_deslocamento = posicao - mundo(event.position)
+				for indice in range(documento.dados.get("fuel_pickups", []).size()):
+					var tanque: Dictionary = documento.dados.fuel_pickups[indice]
+					var posicao := Vector2(tanque.position[0], tanque.position[1])
+					var d := tela(posicao).distance_to(event.position)
+					if d <= maxf(12, tanque.radius * escala) and d < distancia:
+						escolhido = Documento.PRIMEIRO_TANQUE - indice
 						distancia = d
 						_deslocamento = posicao - mundo(event.position)
 				documento.selecionar(escolhido)

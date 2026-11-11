@@ -23,6 +23,6 @@ Pausa preserva conjuntos. Reinício limpa. Checkpoint guarda IDs e restaura o co
 
 ## Editor e verificação
 
-O editor insere, seleciona, move, duplica e exclui estrelas, incluindo escolha `gold`/`blue`. `fuel_pickups` é exposto nos dados/propriedades da fase; não há ferramenta dedicada de inserção de tanque no mapa. A configuração de nebulosa pode exigir edição direta do JSON.
+O editor insere, seleciona, move, duplica e exclui estrelas e tanques. Estrelas permitem escolher `gold`/`blue`; tanques expõem ID, posição, raio e carga de 1 a 100, com +1 na inserção. As propriedades da fase também oferecem ativação e raio da nebulosa, sem editar JSON diretamente. Essas alterações participam do histórico e são preservadas ao salvar ou recuperar o rascunho.
 
-Suítes: `test_estrelas.gd`, `test_editor_estrelas.gd`, `test_estrelas_ui.gd`, `test_progresso_estrelas.gd`, `test_revisao_jogabilidade.gd` e `test_campanha_30.gd`.
+Suítes: `test_estrelas.gd`, `test_editor_estrelas.gd`, `test_editor_recursos.gd`, `test_estrelas_ui.gd`, `test_progresso_estrelas.gd`, `test_revisao_jogabilidade.gd` e `test_campanha_30.gd`.

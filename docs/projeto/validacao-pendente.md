@@ -2,6 +2,8 @@
 
 O código comprova a presença dos recursos, mas não seu aceite humano. Esta lista orienta a validação da versão atual, sem presumir status remoto de issues ou tratar implementação existente como funcionalidade por construir.
 
+Os ensaios de desktop, pacote, renderização, editor e Web de 10/11/2026 estão no [relatório de validação](../historico/registros/validacao-2026-11-10.md). Passaram sem falhas funcionais; não substituem os aceites humanos abaixo. O ADB falhou antes de enumerar dispositivos, impedindo o teste Android nesta sessão.
+
 | Frente | Conferir na revisão atual | Referência |
 | --- | --- | --- |
 | Campanha | Completar 30 fases, avaliar dificuldade, alternativas e douradas necessárias aos portões | `test_fases.gd`, `test_campanha_30.gd` |

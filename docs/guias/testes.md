@@ -35,7 +35,7 @@ Em outros sistemas, execute os GDScripts individualmente e confira saída e logs
 | Mecânicas | `test_orbitas`, `test_rotacao`, `test_portais`, `test_estrelas` |
 | Persistência | `test_persistencia`, `test_checkpoints`, `test_checkpoint_persistente`, `test_retentar_checkpoint`, `test_reset_progresso` |
 | UI/áudio | `test_ui_redesign`, `test_estrelas_ui`, `test_hud_voo`, `test_fim_de_jogo`, `test_audio`, `test_opcoes_jogador` |
-| Editor | `test_editor`, `test_editor_estrelas`, harness de `tests/editor_harness/` |
+| Editor | `test_editor`, `test_editor_estrelas`, `test_editor_recursos`, harness de `tests/editor_harness/` |
 
 Os nomes acima omitem `.gd` por concisão. A lista executável completa permanece no runner, evitando duplicar contagens que mudam a cada revisão.
 

@@ -1,0 +1,82 @@
+[
+  {
+    "arquivo": "campanha30-nebulosa-mapa.png",
+    "bytes": 36708,
+    "sha256": "F8016A03F838FDC013B9AE84D455F1D3D099B331D863F17DC9A6B6D4A22C176B"
+  },
+  {
+    "arquivo": "campanha30-nebulosa-voo.png",
+    "bytes": 45447,
+    "sha256": "BE96F400AC604F388E2764D3A55E86251722326904E5DDA6790974725E8A78F8"
+  },
+  {
+    "arquivo": "campanha30-nivel3.png",
+    "bytes": 11185,
+    "sha256": "3278F1CD94F41D12734B3215A662ECC09366D4703C6A5C1613F6A1A4422EB449"
+  },
+  {
+    "arquivo": "campanha30-selecao.png",
+    "bytes": 11024,
+    "sha256": "BC81BAA9436CD1643D9416529562EBD6D9279B8BB6E3DB8C7499763AA8205D81"
+  },
+  {
+    "arquivo": "capturas-campanha.log",
+    "bytes": 216,
+    "sha256": "5ED94FF66B4677E5783785C7D4E5B10726614B6E2A52C3453E6F70BC30BB3476"
+  },
+  {
+    "arquivo": "capturas-ui.log",
+    "bytes": 177,
+    "sha256": "4E715BC8637F1E358BFBAD1DBF9FD3B084DCC2B5DDE313AF610C3C7078F9810C"
+  },
+  {
+    "arquivo": "editor-orbt.png",
+    "bytes": 93916,
+    "sha256": "A8127F3F211CE133C477D3D26D17B0480F3D3AF68245B5A3E40E3B1591832DB0"
+  },
+  {
+    "arquivo": "editor-plugin.log",
+    "bytes": 1151,
+    "sha256": "928B3251A980C2D19077CE6118307B646386BCC3C7D83DD89904C1F487423338"
+  },
+  {
+    "arquivo": "editor-render.log",
+    "bytes": 455,
+    "sha256": "CB4AD82655153BDBBD76B10DAF394934CAA7B5C183F11BB29B0796C474DCCB41"
+  },
+  {
+    "arquivo": "exportacao.log",
+    "bytes": 25096,
+    "sha256": "9EAD2A3A481CA474AF8CBF148E7C532D47486713ECB872C121CFC21952A6C507"
+  },
+  {
+    "arquivo": "revisao-didatica.json",
+    "bytes": 10259,
+    "sha256": "550C39E75764D9A1D895E7E223DFF8CC7F0F31CC13D05CD1CBF547C3B88F6919"
+  },
+  {
+    "arquivo": "suites-desktop.log",
+    "bytes": 5627,
+    "sha256": "5A9F894E89979B278E93460F6005972546C86E159561A18B8F7F7AE24359D63F"
+  },
+  {
+    "arquivo": "suites-resumo.json",
+    "bytes": 3540,
+    "sha256": "95A73214FFAB11880E9DC4403EC13773DDBF97251E0B6C1CE5DABC4E2085BF7F"
+  },
+  {
+    "arquivo": "ui-configuracoes.png",
+    "bytes": 10516,
+    "sha256": "A6B5F8F2B9D9D580614DB68961DE580971FFEA9CE6ADD58C040A910BBA75CFCC"
+  },
+  {
+    "arquivo": "ui-creditos.png",
+    "bytes": 29771,
+    "sha256": "219B95B6DEC8F627984F2F1013BDC272F6C16ED5FDB094893C17C9496AEB63B0"
+  },
+  {
+    "arquivo": "ui-menu.png",
+    "bytes": 511793,
+    "sha256": "C0E2CAE8FB83494DD8318C02485273114B02CE8AF3489FE3B4E8B4B14C5487BB"
+  }
+]

@@ -1,12 +1,18 @@
 # Página de download e publicação
 
-Fonte: `docs/index.html`, `docs/.nojekyll` e `.github/workflows/android-pr.yml`. A página oferece **download Android**, não uma versão jogável no navegador. Não há preset Web no repositório.
+Fontes locais: `docs/index.html`, `docs/.nojekyll` e `.github/workflows/android-pr.yml`. Esta branch contém a página de download Android e somente o preset Android. A `main` remota também contém `.github/workflows/web-pages.yml`, que prepara um preset Web durante o build e publica o jogo no navegador. Confira as branches antes de concluir que a ausência de preset Web local significa ausência de distribuição Web.
 
 ## GitHub Pages
 
 A página é um HTML autocontido, com CSS/JavaScript, sem build ou dependências externas. Fica em `docs/index.html`; `.nojekyll` permite publicação estática. Endereço previsto: <https://eclipseestudio.github.io/ORBT/>.
 
-A configuração documentada é **Settings → Pages → Deploy from a branch → main → /docs**. A configuração remota não é demonstrável pelo código e deve ser conferida no GitHub antes de mudar publicação. Não mover o HTML ou `.nojekyll` para pastas internas de documentação.
+A configuração histórica usava **Settings → Pages → Deploy from a branch → main → /docs**. A `main` atual inclui publicação por `actions/deploy-pages`; consulte a configuração remota antes de mudar o mecanismo. Não mover o HTML ou `.nojekyll` para pastas internas de documentação.
+
+## Jogo Web na main
+
+O workflow remoto `web-pages.yml` obtém a branch `alpha`, acrescenta um preset Web sem threads, usa renderizador Compatibility e publica os arquivos em `docs/jogar/`, incluindo `versao.json` com a revisão exportada. Também acrescenta o acesso **Jogar no navegador** à página de download. Não é necessário manter um preset Web no checkout Android para esse fluxo existir.
+
+Na consulta de 10/11/2026, a [execução 42440652800](https://github.com/EclipseEstudio/ORBT/actions/runs/42440652800) estava concluída com sucesso; menu, campanha, tutorial, pausa, lançamento por mouse e vitória foram observados em `https://eclipseestudio.github.io/ORBT/jogar/`. Isso não comprova áudio, persistência em nova sessão, desempenho em outros navegadores ou atualização Android; consulte o [relatório](../historico/registros/validacao-2026-11-10.md).
 
 ## Seleção do APK
 

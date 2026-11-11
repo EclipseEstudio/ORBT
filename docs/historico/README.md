@@ -9,6 +9,7 @@ Aqui ficam relatórios de implementação, testes e decisões produzidos durante
 
 Entradas úteis:
 
+- [Validação técnica de 10/11/2026](registros/validacao-2026-11-10.md): suítes, pacote, renderização, editor, Web e limites do teste Android.
 - [Histórico de implementação](registros/historico-implementacao.md).
 - [Revisão de issues de 31/10/2026](registros/revisao-issues-2026-10-31.md).
 - [Roteiro Android de 31/10/2026](registros/validacao-roteiro-android-2026-10-31.md).

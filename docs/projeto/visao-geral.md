@@ -26,6 +26,6 @@ Regras detalhadas: [jogabilidade](../regras-de-negocio/jogabilidade.md) e [campa
 
 `src/Narrativa/narrativa.gd` define Lia, piloto veterana da Corporação Horizonte, transportando suprimentos médicos à Terra. O menu mantém a introdução em um rótulo oculto com tooltip; a partida usa textos de chegada/desfecho. Isso não equivale a uma apresentação narrativa completa. Não há cena final de praia implementada.
 
-Não foram identificados modo infinito, evento de erupção solar, exportação Web jogável ou portais móveis. O GitHub Pages oferece download do APK Android. Exemplos JSON fora do catálogo não aparecem na campanha.
+Não foram identificados modo infinito, evento de erupção solar ou portais móveis. A branch local do jogo tem somente preset Android; a `main` remota contém o workflow `web-pages.yml`, que prepara o preset Web durante o build e publica uma versão jogável no GitHub Pages, além do acesso ao download Android. A inicialização e uma vitória na versão Web foram observadas na [validação de 10/11/2026](../historico/registros/validacao-2026-11-10.md). Exemplos JSON fora do catálogo não aparecem na campanha.
 
 As antigas etapas M1/M2/M3 explicam decisões no histórico. O código orienta o escopo vigente; testes humanos ainda necessários estão em [validação pendente](validacao-pendente.md).

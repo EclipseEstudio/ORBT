@@ -2,14 +2,17 @@
 
 Fonte: `addons/orbt_editor/painel.gd`, `documento.gd`, `mapa.gd` e `teste.gd`. Use a Godot 4.7.2, abra `project.godot` e selecione **ORBT Fases** na barra superior. O plugin está habilitado na configuração do projeto.
 
+Os rótulos dos campos, tipos de corpos e cores das estrelas aparecem em português. As chaves e os valores do JSON permanecem no formato do jogo; os identificadores e textos autorais são preservados.
+
 ## Fluxo de autoria
 
 1. Use **Nova fase** ou **Abrir…** para editar um JSON. Uma nova fase parte do exemplo e recebe ID/nome próprios de rascunho.
 2. Selecione **Fase** e ajuste ID estável, nome, ordem, combustível inicial, oxigênio (`flight_timeout`), limites, física, nave e início.
 3. Insira/mova corpos; configure Terra, raios, órbita, rotação e faixa segura quando aplicável.
-4. Insira estrelas e escolha `gold`/`blue`. A campanha atual usa três douradas e azul nas fases 2–30.
-5. Clique em **Validar** e corrija erros. **Salvar como…** grava em `Recursos/Fases/`. Teste antes de incluir no catálogo.
-6. Para aparecer na campanha, adicione manualmente o par ID/caminho em `Recursos/Niveis.json`. Salvar um arquivo não o cadastra.
+4. Insira estrelas e escolha **Dourada** ou **Azul**. A campanha atual usa três douradas e azul nas fases 2–30.
+5. Use **Inserir tanque** para adicionar combustível coletável. Para limitar a visão, selecione **Fase**, ative **Nebulosa** e ajuste o raio de visão.
+6. Clique em **Validar** e corrija erros. **Salvar como…** grava em `Recursos/Fases/`. Teste antes de incluir no catálogo.
+7. Para aparecer na campanha, adicione manualmente o par ID/caminho em `Recursos/Niveis.json`. Salvar um arquivo não o cadastra.
 
 Exemplo de entrada do catálogo:
 
@@ -23,11 +26,12 @@ O ID do arquivo precisa coincidir com a chave. A ordem define a sequência e as 
 
 | Ação | Operação |
 | --- | --- |
-| Selecionar | Lista ou clique no mapa; Fase, Terra, corpo ou estrela |
+| Selecionar | Lista ou clique no mapa; Fase, Terra, corpo, estrela ou tanque |
 | Mover | Arrastar objeto; arrastar nave inicial move o apoio, quando vinculada |
 | Navegar | Botão central arrasta mapa; roda ajusta zoom; Enquadrar mapa mostra limites |
-| Inserir corpo | Tipos `planet`, `station`, `sun`, `asteroid`, `portal` |
+| Inserir corpo | Tipos Planeta, Estação espacial, Sol, Asteroide e Portal |
 | Inserir estrela | Item independente de `bodies`, com ID, posição, raio e tipo |
+| Inserir tanque | Cria tanque no centro visível do mapa, com carga inicial de +1 |
 | Editar | Painel de propriedades; vetores/dicionários são divididos em campos |
 | Histórico | Desfazer, refazer e duplicar selecionado |
 | Excluir | Selecionar e confirmar; Terra não é removível |
@@ -44,8 +48,12 @@ A legenda liga/desliga visual, colisão, captura, proximidade e perigo, sem modi
 | Órbita | Ative Movimento orbital; configure centro, período e sentido |
 | Giro/faixa | Controles do corpo; setor é local à superfície e gira com ela |
 | Portal | Dois corpos recíprocos, `target_id` e `exit_degrees`; sem órbita/giro |
-| Tanque | `fuel_pickups` nos dados/propriedades da fase; sem botão dedicado no mapa |
-| Nebulosa | `nebula.visibility_radius` no JSON; o painel não oferece um controle dedicado para criar esse campo |
+| Tanque | **Inserir tanque**, depois selecione pela lista/mapa e edite Identificador, Posição, Raio de coleta e Carga de combustível (inteiro de 1 a 100) |
+| Nebulosa | Em **Fase**, ative **Nebulosa** e ajuste **Raio de visão (unidades)** entre 45 e 300; o valor inicial é 120 |
+
+Tanques podem ser arrastados, duplicados e excluídos com o mesmo histórico das estrelas. O raio de coleta aceita de 0,01 a 1.000 unidades. O editor respeita o limite de 256 itens por tipo de coletável.
+
+Com nebulosa ativa, um círculo roxo marca o alcance da visão na posição inicial da nave. O mapa de autoria continua mostrando a fase inteira; **Testar fase** permite conferir a máscara durante o jogo. Desativar nebulosa remove a configuração da fase; desfazer recupera o raio anterior.
 
 O editor preserva campos adicionais carregados, mas não expõe todos como ferramentas visuais. Consulte o [contrato completo](../tecnica/fases-e-simulacao.md) para edição direta. `flight_timeout` é o saldo da tentativa, não um tempo reiniciado a cada impulso. A Terra recebe atração mínima na normalização; não é um destino sem gravidade.
 

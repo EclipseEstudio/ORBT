@@ -5,6 +5,29 @@ signal testar_solicitado
 const Documento = preload("res://addons/orbt_editor/documento.gd")
 const Mapa = preload("res://addons/orbt_editor/mapa.gd")
 const RASCUNHO = "res://.godot/orbt-editor-sessao.json"
+const TIPOS = {
+	"planet": "Planeta", "station": "Estação espacial", "sun": "Sol",
+	"asteroid": "Asteroide", "portal": "Portal", "satellite": "Satélite", "earth": "Terra",
+	"gold": "Dourada", "blue": "Azul",
+}
+const ROTULOS = {
+	"id": "Identificador", "name": "Nome", "type": "Tipo",
+	"schema_version": "Versão do formato", "content_version": "Versão do conteúdo",
+	"order": "Ordem na campanha", "initial_fuel": "Combustível inicial", "flight_timeout": "Oxigênio (s)",
+	"bounds": "Limites", "position": "Posição", "size": "Tamanho",
+	"physics": "Física", "gravity_constant": "Constante gravitacional", "softening": "Suavização da gravidade",
+	"ship": "Nave", "radius": "Raio", "mass": "Massa", "dead_zone": "Arraste mínimo",
+	"max_drag": "Arraste máximo", "max_impulse": "Impulso máximo",
+	"start": "Início", "body_id": "Corpo de apoio", "angle_degrees": "Ângulo de saída (°)",
+	"time_seconds": "Tempo inicial (s)", "tutorial": "Instrução inicial", "notes": "Observações",
+	"visual_radius": "Raio visual", "collision_radius": "Raio de colisão", "capture_radius": "Raio de captura",
+	"danger_radius": "Raio de perigo", "proximity_radius": "Raio de proximidade", "gravity_radius": "Raio de gravidade",
+	"show_proximity": "Mostrar área de proximidade", "target_id": "Portal de destino", "exit_degrees": "Ângulo de saída (°)",
+	"orbit": "Órbita", "center": "Centro", "period_seconds": "Período (s)", "clockwise": "Sentido horário",
+	"rotation": "Rotação", "degrees_per_second": "Velocidade (°/s)", "initial_degrees": "Ângulo inicial (°)",
+	"landing_zone": "Faixa de pouso", "center_degrees": "Ângulo central (°)", "half_width_degrees": "Metade da abertura (°)",
+	"amount": "Carga de combustível", "nebula": "Nebulosa", "visibility_radius": "Raio de visão (unidades)",
+}
 var documento := Documento.new()
 var persistir_sessao := true
 var caminho_rascunho := RASCUNHO
@@ -44,18 +67,20 @@ func _ready() -> void:
 	var ferramentas := HFlowContainer.new()
 	add_child(ferramentas)
 	var tipo := OptionButton.new()
-	for texto in ["planet", "station", "sun", "asteroid", "portal"]:
-		tipo.add_item(texto)
+	for chave in ["planet", "station", "sun", "asteroid", "portal"]:
+		tipo.add_item(TIPOS[chave])
+		tipo.set_item_metadata(tipo.item_count - 1, chave)
 	ferramentas.add_child(tipo)
 	_botao(ferramentas, "Inserir corpo", func():
-		documento.inserir(tipo.get_item_text(tipo.selected), mapa.centro)
+		documento.inserir(tipo.get_item_metadata(tipo.selected), mapa.centro)
 		_mostrar_propriedades())
 	_botao(ferramentas, "Inserir estrela", func(): documento.inserir_estrela(mapa.centro))
+	_botao(ferramentas, "Inserir tanque", func(): documento.inserir_tanque(mapa.centro))
 	_botao(ferramentas, "Excluir selecionado…", func():
 		if documento.selecao >= 0 or documento.selecao <= -3:
 			_exclusao.dialog_text = "Excluir %s?" % documento.objeto(documento.selecao).id
 			if documento.selecao >= 0:
-				_exclusao.dialog_text += " Se for o apoio inicial, será preciso corrigir start.body_id antes de salvar ou testar."
+				_exclusao.dialog_text += " Se for o apoio inicial, será preciso escolher outro corpo de apoio nas propriedades da fase antes de salvar ou testar."
 			_exclusao.popup_centered())
 	_botao(ferramentas, "Enquadrar mapa", func(): mapa.enquadrar())
 	var dica := Label.new()
@@ -71,8 +96,7 @@ func _ready() -> void:
 	_lista.custom_minimum_size.y = 140
 	lateral.add_child(_lista)
 	_lista.item_selected.connect(func(indice: int):
-		var primeiro: int = documento.dados.bodies.size() + 2
-		documento.selecionar(-3 - (indice - primeiro) if indice >= primeiro else indice - 2))
+		documento.selecionar(int(_lista.get_item_metadata(indice))))
 	var rolagem := ScrollContainer.new()
 	rolagem.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	lateral.add_child(rolagem)
@@ -121,6 +145,8 @@ func _ready() -> void:
 	add_child(_confirmacao)
 	_exclusao = ConfirmationDialog.new()
 	_exclusao.title = "Excluir selecionado"
+	_exclusao.ok_button_text = "Excluir"
+	_exclusao.cancel_button_text = "Cancelar"
 	_exclusao.confirmed.connect(func():
 		documento.excluir()
 		_mostrar_propriedades())
@@ -147,6 +173,9 @@ func _botao(pai: Node, texto: String, acao: Callable) -> Button:
 func _dialogo(modo: FileDialog.FileMode) -> FileDialog:
 	var dialogo := FileDialog.new()
 	dialogo.file_mode = modo
+	dialogo.title = "Abrir fase" if modo == FileDialog.FILE_MODE_OPEN_FILE else "Salvar fase como"
+	dialogo.ok_button_text = "Abrir" if modo == FileDialog.FILE_MODE_OPEN_FILE else "Salvar"
+	dialogo.cancel_button_text = "Cancelar"
 	dialogo.access = FileDialog.ACCESS_RESOURCES
 	dialogo.filters = PackedStringArray(["*.json ; Fase JSON"])
 	dialogo.current_dir = "res://Recursos/Fases"
@@ -207,13 +236,26 @@ func _atualizar() -> void:
 	_titulo.text = ("● " if documento.modificado() else "") + (documento.caminho if not documento.caminho.is_empty() else "Nova fase")
 	_lista.clear()
 	_lista.add_item("Fase · " + str(documento.dados.get("name", "")))
+	_lista.set_item_metadata(0, -2)
 	_lista.add_item("Terra · " + str(documento.dados.goal.id))
-	for corpo in documento.dados.bodies:
-		_lista.add_item(str(corpo.id) + " · " + str(corpo.type))
-	for estrela in documento.dados.get("stars", []):
-		_lista.add_item(str(estrela.id) + " · estrela opcional")
-	var indice_lista: int = documento.dados.bodies.size() + 2 + (-3 - documento.selecao) if documento.selecao <= -3 else documento.selecao + 2
-	_lista.select(indice_lista)
+	_lista.set_item_metadata(1, -1)
+	for indice in documento.dados.bodies.size():
+		var corpo: Dictionary = documento.dados.bodies[indice]
+		_lista.add_item(str(corpo.id) + " · " + str(TIPOS.get(corpo.type, corpo.type)))
+		_lista.set_item_metadata(_lista.item_count - 1, indice)
+	for indice in documento.dados.get("stars", []).size():
+		var estrela: Dictionary = documento.dados.stars[indice]
+		_lista.add_item(str(estrela.id) + " · estrela " + str(TIPOS.get(estrela.get("type", "gold"), "Dourada")).to_lower())
+		_lista.set_item_metadata(_lista.item_count - 1, -3 - indice)
+	for indice in documento.dados.get("fuel_pickups", []).size():
+		var tanque: Dictionary = documento.dados.fuel_pickups[indice]
+		_lista.add_item(str(tanque.id) + " · tanque +" + str(tanque.amount))
+		_lista.set_item_metadata(_lista.item_count - 1, Documento.PRIMEIRO_TANQUE - indice)
+	for indice in _lista.item_count:
+		if _lista.get_item_metadata(indice) == documento.selecao:
+			_lista.select(indice)
+			_lista.ensure_current_is_visible()
+			break
 	mapa.queue_redraw()
 	_validar()
 	guardar_rascunho()
@@ -239,16 +281,21 @@ func _mostrar_propriedades() -> void:
 		_propriedades.remove_child(filho)
 		filho.queue_free()
 	if documento.selecao == -2:
-		for chave in ["id", "name", "schema_version", "content_version", "order", "initial_fuel", "fuel_pickups", "flight_timeout", "bounds", "physics", "ship", "start", "tutorial", "notes"]:
+		for chave in ["id", "name", "schema_version", "content_version", "order", "initial_fuel", "flight_timeout", "bounds", "physics", "ship", "start", "tutorial", "notes"]:
 			if documento.dados.has(chave):
 				_campo([chave], documento.dados[chave], chave)
 			elif chave == "initial_fuel":
 				_campo([chave], 5, chave)
 			elif chave in ["tutorial", "notes"]:
 				_campo([chave], "", chave)
+			if chave == "name":
+				_controles_nebulosa()
 	elif documento.selecao <= -3:
+		var tanque: bool = documento.selecao <= Documento.PRIMEIRO_TANQUE
+		var lista := "fuel_pickups" if tanque else "stars"
+		var indice: int = (Documento.PRIMEIRO_TANQUE if tanque else -3) - documento.selecao
 		for chave in documento.objeto(documento.selecao):
-			_campo(["stars", -3 - documento.selecao, chave], documento.objeto(documento.selecao)[chave], chave)
+			_campo([lista, indice, chave], documento.objeto(documento.selecao)[chave], chave)
 	else:
 		var trilha: Array = ["goal"] if documento.selecao == -1 else ["bodies", documento.selecao]
 		var orbita := CheckBox.new()
@@ -287,6 +334,43 @@ func _mostrar_propriedades() -> void:
 			_campo(trilha + [chave], documento.objeto(documento.selecao)[chave], chave)
 
 
+func _controles_nebulosa() -> void:
+	var nebulosa := CheckBox.new()
+	nebulosa.name = "NebulosaAtiva"
+	nebulosa.text = "Nebulosa"
+	nebulosa.tooltip_text = "Limita a visão junto da nave durante o jogo, inclusive ao explorar."
+	nebulosa.button_pressed = documento.dados.has("nebula")
+	nebulosa.toggled.connect(documento.configurar_nebulosa)
+	_propriedades.add_child(nebulosa)
+	if not documento.dados.has("nebula"):
+		return
+	var rotulo := Label.new()
+	rotulo.text = "Raio de visão (unidades)"
+	_propriedades.add_child(rotulo)
+	var raio := SpinBox.new()
+	raio.name = "RaioNebulosa"
+	raio.min_value = 45
+	raio.max_value = 300
+	raio.step = 0.01
+	raio.value = documento.dados.nebula.visibility_radius
+	raio.value_changed.connect(func(valor: float): documento.editar(["nebula", "visibility_radius"], valor))
+	_propriedades.add_child(raio)
+
+
+func _rotulo(nome_campo: String, trilha: Array) -> String:
+	if nome_campo == "radius" and trilha[0] in ["stars", "fuel_pickups"]:
+		return "Raio de coleta"
+	if nome_campo in ["bounds.size.x", "bounds.size.y"]:
+		return "Limites · " + ("Largura" if nome_campo.ends_with(".x") else "Altura")
+	var partes: Array[String] = []
+	for parte in nome_campo.split("."):
+		if parte in ["x", "y"] and not partes.is_empty():
+			partes[-1] += " " + parte.to_upper()
+		else:
+			partes.append(ROTULOS.get(parte, parte.replace("_", " ").capitalize()))
+	return " · ".join(partes)
+
+
 func _campo(trilha: Array, valor: Variant, nome_campo: String) -> void:
 	if valor is Dictionary:
 		for chave in valor:
@@ -297,22 +381,31 @@ func _campo(trilha: Array, valor: Variant, nome_campo: String) -> void:
 			_campo(trilha + [indice], valor[indice], nome_campo + (".x" if indice == 0 else ".y"))
 		return
 	var rotulo := Label.new()
-	rotulo.text = nome_campo
+	rotulo.text = _rotulo(nome_campo, trilha)
 	_propriedades.add_child(rotulo)
 	if nome_campo == "type":
 		var opcao := OptionButton.new()
 		var tipos: Array = ["gold", "blue"] if trilha[0] == "stars" else ["planet", "station", "sun", "asteroid", "portal"]
 		for tipo in tipos:
-			opcao.add_item(tipo)
+			opcao.add_item(TIPOS[tipo])
+			opcao.set_item_metadata(opcao.item_count - 1, tipo)
 			if tipo == valor:
 				opcao.selected = opcao.item_count - 1
-		opcao.item_selected.connect(func(indice: int): documento.editar(trilha, opcao.get_item_text(indice)))
+		opcao.item_selected.connect(func(indice: int): documento.editar(trilha, opcao.get_item_metadata(indice)))
 		_propriedades.add_child(opcao)
 	elif valor is int or valor is float:
 		var numero := SpinBox.new()
 		numero.min_value = -1000000
 		numero.max_value = 1000000
 		numero.step = 1 if nome_campo in ["schema_version", "content_version", "order", "initial_fuel"] else 0.01
+		if trilha[0] == "fuel_pickups":
+			if nome_campo == "amount":
+				numero.min_value = 1
+				numero.max_value = 100
+				numero.step = 1
+			elif nome_campo == "radius":
+				numero.min_value = 0.01
+				numero.max_value = 1000
 		numero.value = valor
 		numero.editable = nome_campo != "schema_version"
 		numero.value_changed.connect(func(novo: float): documento.editar(trilha, novo))
@@ -350,12 +443,18 @@ func _restaurar() -> bool:
 			return false
 	if not dados.get("bodies") is Array:
 		return false
-	# Rascunhos podem ter geometria inválida, mas as estrelas precisam ser editáveis.
-	var estrelas = dados.get("stars", [])
-	if not estrelas is Array or estrelas.size() > 256:
-		return false
-	for estrela in estrelas:
-		if not estrela is Dictionary or not estrela.get("id") is String or not CarregadorFase.vetor(estrela.get("position")) or not CarregadorFase.numero(estrela.get("radius"), -1000000):
+	# A geometria pode ser inválida; a estrutura precisa continuar editável.
+	for campo in ["stars", "fuel_pickups"]:
+		var coletaveis = dados.get(campo, [])
+		if not coletaveis is Array or coletaveis.size() > Documento.LIMITE_COLETAVEIS:
+			return false
+		for coletavel in coletaveis:
+			if not coletavel is Dictionary or not coletavel.get("id") is String or not CarregadorFase.vetor(coletavel.get("position")) or not CarregadorFase.numero(coletavel.get("radius"), -1000000):
+				return false
+			if campo == "fuel_pickups" and not CarregadorFase.numero(coletavel.get("amount"), -1000000):
+				return false
+	if dados.has("nebula"):
+		if not dados.nebula is Dictionary or not CarregadorFase.numero(dados.nebula.get("visibility_radius"), -1000000):
 			return false
 	documento.dados = dados.duplicate(true)
 	documento.caminho = sessao.get("caminho", "")

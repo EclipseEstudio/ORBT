@@ -95,11 +95,20 @@ func _executar() -> void:
 	for campo in painel._propriedades.get_children():
 		if campo is Label:
 			nomes.append(campo.text)
-	conferir("id" in nomes and "radius" in nomes and "position.x" in nomes and "mass" not in nomes, "Estrela exibe propriedades próprias sem física de planetas")
+	conferir("Identificador" in nomes and "Raio de coleta" in nomes and "Posição X" in nomes and "Massa" not in nomes, "Estrela exibe propriedades em português sem física de planetas")
+	var tipo: OptionButton
+	for controle in painel._propriedades.get_children():
+		if controle is OptionButton:
+			tipo = controle
+	conferir(tipo.get_item_text(0) == "Dourada" and tipo.get_item_text(1) == "Azul", "Cores das estrelas aparecem em português")
+	tipo.select(1)
+	tipo.item_selected.emit(1)
+	conferir(painel.documento.objeto(-4).type == "blue" and painel._lista.get_item_text(3).ends_with("estrela azul"), "Selecionar Azul atualiza a lista e preserva o valor do contrato")
+	conferir(painel.documento.exportar_teste(previa).is_empty() and Documento.Carregador.carregar(previa).nivel.estrelas[1].type == "blue", "Cor traduzida continua válida no arquivo de teste do jogo")
 	conferir(not painel._duplicar.disabled, "Ação duplicar fica disponível para estrelas")
 	painel.documento.excluir()
 	conferir(painel.documento.selecao == -2 and painel._lista.item_count == 3, "Exclusão atualiza lista e seleção do painel")
-	conferir(painel._propriedades.get_child(0).text == "id", "Exclusão atualiza propriedades para a fase")
+	conferir(painel._propriedades.get_child(0).text == "Identificador", "Exclusão atualiza propriedades para a fase")
 	painel.persistir_sessao = true
 	painel.caminho_rascunho = rascunho
 	painel.documento.selecionar(-3)

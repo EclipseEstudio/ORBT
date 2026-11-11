@@ -1,0 +1,333 @@
+[
+  {
+    "id": "teste_001",
+    "ordem": 1,
+    "nome": "Primeiro impulso",
+    "tutorial": "Arraste para baixo e solte para voar em direção à Terra.",
+    "inicio": {
+      "body_id": "origem",
+      "angle_degrees": -90
+    },
+    "content_version": 4
+  },
+  {
+    "id": "mira_aberta",
+    "ordem": 2,
+    "nome": "Mira aberta",
+    "tutorial": "Ajuste direção e força. A estrela azul é opcional; as douradas abrem o próximo nível. Chegue à Terra para confirmar as coletas.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "passagem_larga",
+    "ordem": 3,
+    "nome": "Passagem larga",
+    "tutorial": "Encontre a passagem entre as rochas. Escolha a direção antes de lançar.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 4
+  },
+  {
+    "id": "primeiro_pouso",
+    "ordem": 4,
+    "nome": "Primeiro pouso",
+    "tutorial": "Pouse na estação à direita e decole para a Terra. O pouso permite mudar a direção.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "segundo_impulso",
+    "ordem": 5,
+    "nome": "Segundo impulso",
+    "tutorial": "Lance acima da rocha. Ainda em voo, dê outro impulso para voltar em direção à Terra. O tanque verde recupera uma carga de combustível.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "de_lua_em_lua",
+    "ordem": 6,
+    "nome": "Escalas em rotação",
+    "tutorial": "Pouse no planeta e espere o giro para mudar a direção. Ao mirar, o tempo desacelera.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "escala_no_desvio",
+    "ordem": 7,
+    "nome": "Escala no desvio",
+    "tutorial": "Contorne a barreira pelo apoio. Guarde combustível para decolar e, se quiser, buscar a estrela afastada.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "corredor_de_retorno",
+    "ordem": 8,
+    "nome": "Corredor de retorno",
+    "tutorial": "Atravesse por cima e corrija no momento certo. Os impulsos em voo somam velocidade. O tanque verde recupera uma carga de combustível.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "curva_gravitacional",
+    "ordem": 9,
+    "nome": "Curva gravitacional",
+    "tutorial": "O planeta curva o voo com gravidade. Lance por fora da superfície; o tempo desacelera na aproximação.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 2
+  },
+  {
+    "id": "rasante_solar",
+    "ordem": 10,
+    "nome": "Rasante solar",
+    "tutorial": "Use a atração do Sol para contornar o perigo. Chegar perto demais encerra a tentativa.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 2
+  },
+  {
+    "id": "lua_em_movimento",
+    "ordem": 11,
+    "nome": "Estação em movimento",
+    "tutorial": "A estação se move em órbita. Observe a translação para escolher a hora de lançar.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "janela_orbital",
+    "ordem": 12,
+    "nome": "Janela orbital",
+    "tutorial": "A estação já começa perto da janela de lançamento. Mire na Terra; o movimento da estação também ajuda na saída.",
+    "inicio": {
+      "body_id": "origem",
+      "angle_degrees": -90,
+      "time_seconds": 4
+    },
+    "content_version": 5
+  },
+  {
+    "id": "contorno",
+    "ordem": 13,
+    "nome": "O Contorno",
+    "tutorial": "Desvie da rocha e corrija o voo em direção à Terra.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 4
+  },
+  {
+    "id": "duas_rotas",
+    "ordem": 14,
+    "nome": "Duas Rotas",
+    "tutorial": "Escolha passar acima ou abaixo e corrija o voo para a Terra. O tanque verde recupera uma carga de combustível.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 4
+  },
+  {
+    "id": "pouso_de_precisao",
+    "ordem": 15,
+    "nome": "Pouso de precisão",
+    "tutorial": "Pouse nas faixas claras dos dois apoios. Use a superfície para reorganizar o voo entre as rochas.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "travessia_orbital",
+    "ordem": 16,
+    "nome": "Travessia orbital",
+    "tutorial": "Intercepte o apoio orbital sem tocar as rochas. A saída exige compensar o movimento da estação.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "arco_entre_rochas",
+    "ordem": 17,
+    "nome": "Arco entre rochas",
+    "tutorial": "Encontre o arco entre as rochas. A gravidade altera a direção durante todo o voo.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "tres_escalas",
+    "ordem": 18,
+    "nome": "Três escalas",
+    "tutorial": "Planeje três pousos e preserve as cargas para as decolagens. As estrelas podem exigir uma rota mais longa. O tanque verde recupera uma carga de combustível.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "cinturao_em_movimento",
+    "ordem": 19,
+    "nome": "Cinturão em movimento",
+    "tutorial": "Contorne o cinturão e escolha a hora da correção. Uma rocha em órbita atravessa o caminho.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "ultima_manobra",
+    "ordem": 20,
+    "nome": "Última manobra",
+    "tutorial": "Combine órbita, pousos e correção em voo. Volte à Terra para confirmar as estrelas desta última viagem. O tanque verde recupera uma carga de combustível.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 3
+  },
+  {
+    "id": "fenda_no_espaco",
+    "ordem": 21,
+    "nome": "Fenda no Espaço",
+    "tutorial": "Entre no anel A para sair em B. O salto é instantâneo, preserva a rapidez e não consome combustível. A seta do anel indica a direção de saída.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "salto_entre_rochas",
+    "ordem": 22,
+    "nome": "Salto entre Rochas",
+    "tutorial": "O cinturão bloqueia a passagem direta. Use A para atravessar e sair em B. Planeje a saída antes de lançar.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "nevoa_cega",
+    "ordem": 23,
+    "nome": "Névoa Cega",
+    "tutorial": "A nebulosa esconde tudo fora do alcance circular da nave, inclusive no mapa. A bússola aponta para a Terra; os instrumentos indicam tanques e portais.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "rota_no_escuro",
+    "ordem": 24,
+    "nome": "Rota no Escuro",
+    "tutorial": "Há um planeta oculto na rota. Observe a direção e a velocidade da nave: a gravidade continua atuando fora do campo de visão.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 1
+  },
+  {
+    "id": "desvio_nebuloso",
+    "ordem": 25,
+    "nome": "Desvio Nebuloso",
+    "tutorial": "Três cargas não bastam para a rota de escalas. Desvie até o tanque (+1), guiado pelo instrumento, e conserve carga para decolar.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "portal_invisivel",
+    "ordem": 26,
+    "nome": "Portal Invisível",
+    "tutorial": "O portal está escondido na névoa. Use o rumo e a distância do instrumento para encontrar A; depois siga a bússola da Terra.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "orbita_cega",
+    "ordem": 27,
+    "nome": "Órbita Cega",
+    "tutorial": "A gravidade e a rotação continuam ativas na névoa. Pousar interrompe o gasto de oxigênio; espere o giro para escolher a saída.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": -45
+    },
+    "content_version": 1
+  },
+  {
+    "id": "rede_de_portais",
+    "ordem": 28,
+    "nome": "Rede de Portais",
+    "tutorial": "Use dois pares de portais: A–B e C–D. Após o segundo salto, compense a atração solar. Há um tanque +1 para uma correção extra.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "travessia_extrema",
+    "ordem": 29,
+    "nome": "Travessia Extrema",
+    "tutorial": "Combine os instrumentos, o salto e as escalas. O tanque fora da rota fornece a quinta carga. Uma rocha orbital exige observar a aproximação.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  },
+  {
+    "id": "grande_retorno",
+    "ordem": 30,
+    "nome": "O Grande Retorno",
+    "tutorial": "Use o giro do planeta, os portais e a estação móvel. Desvie para o tanque +1: as seis decolagens exigem todas as cargas. A Terra espera além da névoa.",
+    "inicio": {
+      "body_id": "estacao_partida",
+      "angle_degrees": 0
+    },
+    "content_version": 1
+  }
+]

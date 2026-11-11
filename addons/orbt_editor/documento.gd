@@ -6,9 +6,12 @@ signal alterado
 signal selecao_alterada
 const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const EXEMPLO = "res://Recursos/Fases/teste_001.json"
+const LIMITE_COLETAVEIS := 256
+# Mantém os índices dos rascunhos antigos: -3 a -258 são estrelas.
+const PRIMEIRO_TANQUE := -3 - LIMITE_COLETAVEIS
 var dados: Dictionary = {}
 var caminho := ""
-var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo; -3 - índice da estrela.
+var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo; demais índices são coletáveis.
 var _salvo := ""
 var _historico: Array[Dictionary] = []
 var _indice_historico := -1
@@ -93,6 +96,8 @@ func _id_copia(id_original: String) -> String:
 		ids.append(corpo.id)
 	for estrela in dados.get("stars", []):
 		ids.append(estrela.id)
+	for tanque in dados.get("fuel_pickups", []):
+		ids.append(tanque.id)
 	var numero := 1
 	while (id_original + "_copia_%d" % numero) in ids:
 		numero += 1
@@ -101,15 +106,16 @@ func _id_copia(id_original: String) -> String:
 
 func duplicar(deslocamento := Vector2(40, 40)) -> bool:
 	if selecao <= -3:
-		var estrela := objeto(selecao)
-		if estrela.is_empty() or not deslocamento.is_finite():
+		var coletavel := objeto(selecao)
+		var lista := "fuel_pickups" if selecao <= PRIMEIRO_TANQUE else "stars"
+		if coletavel.is_empty() or not deslocamento.is_finite() or dados[lista].size() >= LIMITE_COLETAVEIS:
 			return false
 		terminar_grupo()
-		var copia: Dictionary = estrela.duplicate(true)
-		copia.id = _id_copia(estrela.id)
-		copia.position = [estrela.position[0] + deslocamento.x, estrela.position[1] + deslocamento.y]
-		dados.stars.append(copia)
-		selecao = -3 - (dados.stars.size() - 1)
+		var copia: Dictionary = coletavel.duplicate(true)
+		copia.id = _id_copia(coletavel.id)
+		copia.position = [coletavel.position[0] + deslocamento.x, coletavel.position[1] + deslocamento.y]
+		dados[lista].append(copia)
+		selecao = (PRIMEIRO_TANQUE if lista == "fuel_pickups" else -3) - (dados[lista].size() - 1)
 		alterado.emit()
 		selecao_alterada.emit()
 		return true
@@ -225,6 +231,10 @@ func salvar(arquivo: String) -> Array[String]:
 
 
 func objeto(indice: int) -> Dictionary:
+	if indice <= PRIMEIRO_TANQUE:
+		var tanques: Array = dados.get("fuel_pickups", [])
+		var indice_tanque := PRIMEIRO_TANQUE - indice
+		return tanques[indice_tanque] if indice_tanque < tanques.size() else {}
 	if indice <= -3:
 		var estrelas: Array = dados.get("stars", [])
 		var indice_estrela := -3 - indice
@@ -241,7 +251,7 @@ func selecao_valida(indice: int) -> int:
 
 
 func inserir_estrela(posicao: Vector2) -> void:
-	if not posicao.is_finite():
+	if not posicao.is_finite() or dados.get("stars", []).size() >= LIMITE_COLETAVEIS:
 		return
 	terminar_grupo()
 	if not dados.has("stars"):
@@ -252,6 +262,34 @@ func inserir_estrela(posicao: Vector2) -> void:
 		numero += 1
 	dados.stars.append({"id": "estrela_%d" % numero, "type": "gold", "position": [posicao.x, posicao.y], "radius": 7.0})
 	selecao = -3 - (dados.stars.size() - 1)
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func inserir_tanque(posicao: Vector2) -> void:
+	if not posicao.is_finite() or dados.get("fuel_pickups", []).size() >= LIMITE_COLETAVEIS:
+		return
+	terminar_grupo()
+	if not dados.has("fuel_pickups"):
+		dados["fuel_pickups"] = []
+	var numero := 1
+	var ids: Array = dados.fuel_pickups.map(func(tanque: Dictionary): return tanque.id)
+	while "tanque_%d" % numero in ids:
+		numero += 1
+	dados.fuel_pickups.append({"id": "tanque_%d" % numero, "position": [posicao.x, posicao.y], "radius": 8.0, "amount": 1})
+	selecao = PRIMEIRO_TANQUE - (dados.fuel_pickups.size() - 1)
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func configurar_nebulosa(ativa: bool) -> void:
+	if ativa == dados.has("nebula"):
+		return
+	terminar_grupo()
+	if ativa:
+		dados["nebula"] = {"visibility_radius": 120.0}
+	else:
+		dados.erase("nebula")
 	alterado.emit()
 	selecao_alterada.emit()
 
@@ -296,7 +334,11 @@ func mover(indice: int, posicao: Vector2) -> void:
 
 func excluir() -> void:
 	if selecao <= -3 and not objeto(selecao).is_empty():
-		dados.stars.remove_at(-3 - selecao)
+		terminar_grupo()
+		if selecao <= PRIMEIRO_TANQUE:
+			dados.fuel_pickups.remove_at(PRIMEIRO_TANQUE - selecao)
+		else:
+			dados.stars.remove_at(-3 - selecao)
 		selecao = -2
 		alterado.emit()
 		selecao_alterada.emit()
