@@ -368,7 +368,8 @@ func _process(delta: float) -> void:
 	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
 		_mensagem.text = partida.motivo + "\nEscolha como continuar."
 	elif partida.explorando:
-		_mensagem.text = "Arraste para explorar.\nO oxigênio continua diminuindo."
+		var em_voo: bool = partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]
+		_mensagem.text = "Arraste para explorar.\n" + ("O oxigênio continua diminuindo." if em_voo else "Pousar interrompe o gasto de oxigênio.")
 	elif partida.nave.combustivel == 0:
 		_mensagem.text = "Sem combustível.\nÀ deriva até o oxigênio acabar."
 	elif partida.nivel.id == "teste_001":
@@ -410,6 +411,8 @@ func _criar_dica() -> void:
 		texto = "Arraste e solte para lançar. Volte ao círculo para cancelar."
 	var dialogo := Control.new()
 	dialogo.name = "DialogoDica"
+	# A bússola usa z_index próprio e não deve atravessar o texto da dica.
+	dialogo.z_index = 10
 	dialogo.process_mode = Node.PROCESS_MODE_ALWAYS
 	dialogo.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dialogo)

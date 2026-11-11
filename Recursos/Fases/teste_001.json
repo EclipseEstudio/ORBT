@@ -89,7 +89,7 @@
       "proximity_radius": 40
     }
   ],
-  "tutorial": "Arraste para baixo e solte para voar em direção à Terra.",
+  "tutorial": "Toque e segure numa área livre. Arraste para baixo e solte para voar à Terra, na direção oposta ao arraste. Volte ao círculo para cancelar. Cada impulso custa 1 carga.",
   "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {

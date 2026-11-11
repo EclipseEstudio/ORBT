@@ -2,7 +2,7 @@
   "schema_version": 1,
   "content_version": 1,
   "id": "orbita_cega",
-  "name": "Órbita Cega",
+  "name": "Giro na névoa",
   "order": 27,
   "bounds": {
     "position": [
@@ -92,7 +92,7 @@
       ]
     }
   },
-  "tutorial": "A gravidade e a rotação continuam ativas na névoa. Pousar interrompe o gasto de oxigênio; espere o giro para escolher a saída.",
+  "tutorial": "A gravidade e o giro do planeta continuam ativos na névoa. Pousar interrompe o gasto de oxigênio; observe o giro para escolher a saída.",
   "notes": "Campanha: 3 níveis de 10 fases. Nível 2 exige 30 douradas; nível 3 exige 60 acumuladas. Cada dezena deve estar completa. Azuis opcionais. Coletas confirmadas ao chegar à Terra.",
   "stars": [
     {
