@@ -22,11 +22,17 @@ Se houver vários APKs, prefere `ORBT.apk`, `ORBT-debug.apk` ou `ORBT-universal.
 
 ## Publicar uma versão
 
-1. Gere e valide o APK conforme [Android](android.md), inclusive atualização sobre a versão anterior e preservação de dados.
-2. Associe uma tag nova à revisão validada e prepare notas que identifiquem escopo/limites.
-3. Anexe o APK e relatórios `atualizacao.json`/`revisao.txt` na Release. Artefato temporário de Actions sozinho não alimenta o site.
-4. Publique como prerelease quando experimental e confira o botão/versão no site. Se a seleção automática encontrar o novo APK, não precisa editar o HTML.
+1. Integre as entregas por PRs para `alpha`. Cada PR executa os testes e gera um APK temporário; não publica uma Release nem exige aumentar a versão.
+2. Quando o conjunto estiver pronto, prepare uma entrega de versão: ajuste `config/version`, `version/name` e um `version/code` superior ao do último APK publicado. Valide a atualização e preservação de dados conforme [Android](android.md).
+3. Escreva as notas em `docs/versoes/<tag>.md`, reunindo escopo e limites. Por exemplo, `docs/versoes/v0.5.1-alpha.20261111.md` para uma futura versão interna 0.5.1. Integre essa preparação à `alpha`.
+4. Crie e envie explicitamente a tag sobre a revisão integrada. Tags seguem `vVERSAO` ou `vVERSAO-sufixo`, com a mesma versão de projeto/preset. O workflow só aceita commits pertencentes ao histórico de `alpha`.
+5. O envio da tag dispara importação, testes, validação do PCK, geração do APK, assinatura/alinhamento e comparação com o APK publicado. A comparação exige código superior e é repetida antes da publicação. O job publica exatamente o artefato validado, acompanhado de `atualizacao.json`, `revisao.txt` e `SHA256SUMS.txt`.
+6. Tags com sufixo, como `-alpha.20261111`, geram prerelease; sem sufixo, release estável. Confira o botão/versão no site. Se a seleção automática encontrar o novo APK, não precisa editar o HTML.
 
-O workflow atual contém um job específico para `release/0.5.0`, tag `v0.5.0-alpha.20261107` e notas em `docs/versoes/versao-0.5.0-alpha-2026-11-07.md`. Ele depende do job Android, confere árvore, cabeça atual do PR, versão 0.5.0/código 9 e hash do APK. Não substitui release existente nem integra PR. Para outra versão, revise essa lógica explicitamente.
+O workflow `.github/workflows/android-pr.yml` atende revisão e publicação com condições distintas. Seu job `publicar` só roda no envio de tag, confere revisão/hash/identidade e usa as notas daquela tag. A automação específica de `release/0.5.0` foi substituída; abrir ou atualizar um PR dessa branch também não publica versão. Tags/releases existentes não são substituídas.
+
+O envio da tag deve ser feito pelo usuário ou por credencial que dispare workflows. Criar referências com o `GITHUB_TOKEN` de outro workflow não dispara automaticamente esse fluxo. Não é necessário cadastrar `workflow_dispatch` na branch padrão para a publicação por tag.
+
+O jogo Web no Pages mantém o fluxo separado da `main` descrito acima; publicar o APK não dispara automaticamente a exportação Web.
 
 Publicar prerelease mais recente também muda o download automático. Uma Release sem APK não substitui o download anterior. Este documento descreve o mecanismo; não afirma que uma publicação remota tenha ocorrido.

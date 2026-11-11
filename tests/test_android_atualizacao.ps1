@@ -23,6 +23,15 @@ $orbtNovo.certificado_sha256 = 'a' * 64
 $orbtNovo.pacote = 'com.eclipseestudio.orbt.previa.p99'
 Conferir (Recusa $orbtNovo $orbtAnterior) 'Prévia não substitui aplicativo principal.'
 $orbtConfiguracao = Ler-ConfiguracaoAndroidProjeto
+Conferir (-not (Conferir-TagAndroidPublicacao -Tag ('v' + $orbtConfiguracao.versao) -Configuracao $orbtConfiguracao).previa) 'Tag sem sufixo indica versão estável.'
+$orbtTagPrevia = 'v' + $orbtConfiguracao.versao + '-alpha.20261111'
+$orbtPublicacao = Conferir-TagAndroidPublicacao -Tag $orbtTagPrevia -Configuracao $orbtConfiguracao
+Conferir ($orbtPublicacao.previa -and $orbtPublicacao.notas -eq ('docs/versoes/' + $orbtTagPrevia + '.md')) 'Tag alpha exige notas próprias e publica como prerelease.'
+foreach ($orbtTagInvalida in @('v0.0.0', 'alpha', ('v' + $orbtConfiguracao.versao + '/../outra'), ('v' + $orbtConfiguracao.versao + '-'))) {
+    $orbtRecusou = $false
+    try { $null = Conferir-TagAndroidPublicacao -Tag $orbtTagInvalida -Configuracao $orbtConfiguracao } catch { $orbtRecusou = $true }
+    Conferir $orbtRecusou 'Tag divergente, caminho ou sufixo inválido é recusado.'
+}
 Conferir ($orbtConfiguracao.codigo -gt 5 -and -not [string]::IsNullOrEmpty($orbtConfiguracao.versao)) 'Próximos candidatos usam código posterior ao primeiro certificado permanente.'
 $orbtCandidato = [pscustomobject]@{pacote=$orbtConfiguracao.pacote; codigo=$orbtConfiguracao.codigo; versao=$orbtConfiguracao.versao}
 Conferir-PacoteAndroidProjeto -Pacote $orbtCandidato -Configuracao $orbtConfiguracao

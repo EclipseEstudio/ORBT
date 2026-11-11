@@ -40,11 +40,11 @@ Com vários aparelhos, acrescente `-Serial`. O aparelho deve estar autorizado. O
 
 ## CI de pull request
 
-O workflow **APK Android para revisão** dispara em PRs para `alpha`. Baixa Godot/modelos fixados com checksum, prepara Java/SDK/assinatura, importa, roda `tests/run.ps1`, verifica PCK, gera APK e confere assinatura, alinhamento e atualização.
+O workflow **Android — revisão e publicação** valida PRs para `alpha`. Baixa Godot/modelos fixados com checksum, prepara Java/SDK/assinatura, importa, roda `tests/run.ps1`, verifica PCK, gera APK e confere identidade e alinhamento.
 
-O artefato `ORBT-android-debug-pr-N` contém APK, `revisao.txt` e `atualizacao.json`, com retenção de 14 dias. O relatório identifica cabeça, base, merge testado e hash. PR do mesmo repositório usa assinatura permanente; fork usa pacote de prévia e chave temporária.
+O artefato `ORBT-android-debug-pr-N` contém APK, `revisao.txt` e `atualizacao.json`, com retenção de 14 dias. O relatório identifica cabeça, base, merge testado e hash. PR do mesmo repositório usa assinatura permanente; fork usa pacote de prévia e chave temporária. O PR não publica uma Release e não exige aumento de versão/código em relação ao APK publicado. Assim, várias entregas podem ser integradas à `alpha` usando a mesma versão em desenvolvimento.
 
-Há um job específico da branch `release/0.5.0` para publicar a prerelease identificada em [publicação](publicacao-web.md). Isso não é uma automação genérica para versões futuras.
+Publicação é disparada somente pelo envio explícito de uma tag `v*`. Esse fluxo exige revisão integrada à `alpha`, tag compatível com a versão do projeto, notas próprias e código Android superior ao APK publicado. Ele repete a validação completa e publica o APK dessa execução. A comparação com a última versão é repetida imediatamente antes da publicação. Processo e exemplos: [publicação](publicacao-web.md#publicar-uma-versão).
 
 ## Roteiro no aparelho
 
