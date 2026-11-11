@@ -1,16 +1,18 @@
-name: APK Android para revisão
+name: Android — revisão e publicação
 
 on:
   pull_request:
     branches: [alpha]
     types: [opened, synchronize, reopened, ready_for_review, edited]
+  push:
+    tags: ['v*']
 
 permissions:
   contents: read
 
 concurrency:
-  group: android-pr-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: android-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   android:
@@ -22,7 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Conferir tag de publicação
+        if: github.event_name == 'push'
+        env:
+          ORBT_TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          . ./scripts/android-pacote.ps1
+          $configuracao = Ler-ConfiguracaoAndroidProjeto
+          $publicacao = Conferir-TagAndroidPublicacao -Tag $env:ORBT_TAG -Configuracao $configuracao
+          if (-not (Test-Path -LiteralPath $publicacao.notas -PathType Leaf)) { throw "Notas da versão ausentes: $($publicacao.notas)" }
+          git merge-base --is-ancestor $env:GITHUB_SHA origin/alpha
+          if ($LASTEXITCODE -ne 0) { throw 'A tag deve apontar para uma revisão já integrada à alpha.' }
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -54,7 +69,7 @@ jobs:
           ORBT_ANDROID_KEYSTORE_BASE64: ${{ secrets.ORBT_ANDROID_KEYSTORE_BASE64 }}
           ORBT_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ORBT_ANDROID_KEYSTORE_PASSWORD }}
           ORBT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.ORBT_ANDROID_KEYSTORE_ALIAS }}
-          ORBT_PREVIA_EXTERNA: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+          ORBT_PREVIA_EXTERNA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           $previa = $env:ORBT_PREVIA_EXTERNA -eq 'true'
           ./scripts/configurar-android-ci.ps1 -Java $env:JAVA_HOME -Sdk $env:ANDROID_HOME -DadosGodot (Join-Path $env:APPDATA 'Godot') -DiretorioTemporario $env:RUNNER_TEMP -ChaveTemporaria:$previa -PacotePrevia 'com.eclipseestudio.orbt.previa.p${{ github.event.pull_request.number }}'
@@ -73,26 +88,33 @@ jobs:
       - name: Gerar e verificar APK
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          ORBT_PUBLICAR: ${{ github.event_name == 'push' }}
+          ORBT_PREVIA_EXTERNA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+          ORBT_PR: ${{ github.event.pull_request.number }}
+          ORBT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          ORBT_BASE: ${{ github.event.pull_request.base.sha }}
+          ORBT_REF: ${{ github.ref_name }}
         run: |
-          $previa = '${{ github.event.pull_request.head.repo.full_name != github.repository }}' -eq 'true'
+          $previa = $env:ORBT_PREVIA_EXTERNA -eq 'true'
           ./scripts/exportar-android.ps1 -Godot $env:ORBT_GODOT -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/apksigner.bat') verify --verbose build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Assinatura do APK inválida.' }
           & (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0/zipalign.exe') -c -P 16 4 build/android/ORBT-debug.apk
           if ($LASTEXITCODE -ne 0) { throw 'Alinhamento do APK inválido.' }
-          ./scripts/verificar-atualizacao-android.ps1 -Apk build/android/ORBT-debug.apk -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa -CompararPublicada:(-not $previa) -Saida build/android/atualizacao.json
+          ./scripts/verificar-atualizacao-android.ps1 -Apk build/android/ORBT-debug.apk -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -Previa:$previa -CompararPublicada:($env:ORBT_PUBLICAR -eq 'true') -Saida build/android/atualizacao.json
           @(
-            "PR: #${{ github.event.pull_request.number }}",
-            "Cabeça: ${{ github.event.pull_request.head.sha }}",
-            "Base: ${{ github.event.pull_request.base.sha }}",
-            "Revisão testada (merge): $env:GITHUB_SHA",
+            "PR: $env:ORBT_PR",
+            "Referência: $env:ORBT_REF",
+            "Cabeça: $env:ORBT_HEAD",
+            "Base: $env:ORBT_BASE",
+            "Revisão testada: $env:GITHUB_SHA",
             "Godot: 4.7.2.stable",
             "SHA-256 do APK: $((Get-FileHash build/android/ORBT-debug.apk -Algorithm SHA256).Hash)"
           ) | Set-Content -Encoding utf8 build/android/revisao.txt
       - name: Disponibilizar APK de teste
         uses: actions/upload-artifact@v4
         with:
-          name: ORBT-android-debug-pr-${{ github.event.pull_request.number }}
+          name: ORBT-android-debug-${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || format('release-{0}', github.run_id) }}
           path: |
             build/android/ORBT-debug.apk
             build/android/revisao.txt
@@ -100,12 +122,13 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  publicar-0-5-0:
-    name: Publicar ORBT 0.5.0 alpha
+  publicar:
+    name: Publicar versão Android
     needs: android
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'release/0.5.0'
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-2025
     timeout-minutes: 10
+    concurrency: android-publicacao
     permissions:
       contents: write
     defaults:
@@ -118,43 +141,46 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
-          name: ORBT-android-debug-pr-${{ github.event.pull_request.number }}
+          name: ORBT-android-debug-release-${{ github.run_id }}
           path: build/publicacao
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Revalidar atualização antes de publicar
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ./scripts/verificar-atualizacao-android.ps1 -Apk build/publicacao/ORBT-debug.apk -Ferramentas (Join-Path $env:ANDROID_HOME 'build-tools/36.1.0') -CompararPublicada -Saida build/publicacao/atualizacao.json
       - name: Publicar o APK validado
         env:
           GH_TOKEN: ${{ github.token }}
-          ORBT_HEAD: ${{ github.event.pull_request.head.sha }}
-          ORBT_PR: ${{ github.event.pull_request.number }}
+          ORBT_HEAD: ${{ github.sha }}
+          ORBT_TAG: ${{ github.ref_name }}
           ORBT_REPO: ${{ github.repository }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $tag = 'v0.5.0-alpha.20261107'
-          $testada = git rev-parse 'HEAD^{tree}'
-          $origem = git rev-parse ($env:ORBT_HEAD + '^{tree}')
-          if ($LASTEXITCODE -ne 0 -or $testada -ne $origem) { throw 'A árvore testada difere da revisão a publicar; atualize a branch de release.' }
-          $atual = gh api "repos/$env:ORBT_REPO/pulls/$env:ORBT_PR" --jq '.head.sha'
-          if ($LASTEXITCODE -ne 0 -or $atual -ne $env:ORBT_HEAD) { throw 'O PR mudou durante a validação.' }
           . ./scripts/android-pacote.ps1
           $configuracao = Ler-ConfiguracaoAndroidProjeto
+          $publicacao = Conferir-TagAndroidPublicacao -Tag $env:ORBT_TAG -Configuracao $configuracao
+          $atual = gh api "repos/$env:ORBT_REPO/commits/$env:ORBT_TAG" --jq '.sha'
+          if ($LASTEXITCODE -ne 0 -or $atual -ne $env:ORBT_HEAD) { throw 'A tag mudou durante a validação.' }
           $pacote = Get-Content build/publicacao/atualizacao.json -Raw | ConvertFrom-Json
-          if ($configuracao.versao -ne '0.5.0' -or $configuracao.codigo -ne 9) { throw 'Versão de publicação inesperada.' }
-          if ($pacote.versao -ne '0.5.0' -or $pacote.codigo -ne 9 -or $pacote.canal -ne 'distribuicao') { throw 'Metadados do APK incompatíveis.' }
+          Conferir-PacoteAndroidProjeto -Pacote $pacote -Configuracao $configuracao
+          if ($pacote.canal -ne 'distribuicao') { throw 'Um APK de prévia não pode ser publicado como versão.' }
           $hash = (Get-FileHash build/publicacao/ORBT-debug.apk -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($hash -ne $pacote.apk_sha256) { throw 'O APK difere do arquivo verificado.' }
           if (-not (Select-String -Path build/publicacao/revisao.txt -SimpleMatch "Cabeça: $env:ORBT_HEAD" -Quiet)) { throw 'Artefato de outra revisão.' }
           $releases = gh api "repos/$env:ORBT_REPO/releases?per_page=100" | ConvertFrom-Json
           if ($LASTEXITCODE -ne 0) { throw 'Não foi possível consultar releases.' }
-          if ($releases | Where-Object tag_name -eq $tag) {
-            $publicada = gh api "repos/$env:ORBT_REPO/commits/$tag" --jq '.sha'
-            if ($LASTEXITCODE -ne 0 -or $publicada -ne $env:ORBT_HEAD) { throw 'A tag existente aponta para outra revisão.' }
-            Write-Output "Release já publicada: $tag"
-            exit 0
-          }
+          if ($releases | Where-Object tag_name -eq $env:ORBT_TAG) { throw 'Essa versão já foi publicada; use uma tag nova.' }
           Get-ChildItem build/publicacao -File | Sort-Object Name | ForEach-Object {
             '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name
           } | Set-Content -Encoding utf8 build/publicacao/SHA256SUMS.txt
-          $notas = Get-Content docs/auxiliar/versao-0.5.0-alpha-2026-11-07.md -Raw
-          $notas += "`n`n[PR #$env:ORBT_PR](https://github.com/$env:ORBT_REPO/pull/$env:ORBT_PR) · Revisão: $env:ORBT_HEAD`n"
+          $notas = Get-Content -LiteralPath $publicacao.notas -Raw
+          $notas += "`n`nRevisão: $env:ORBT_HEAD · Tag: $env:ORBT_TAG`n"
           $notas | Set-Content -Encoding utf8 build/publicacao/notas.md
-          gh release create $tag build/publicacao/ORBT-debug.apk build/publicacao/atualizacao.json build/publicacao/revisao.txt build/publicacao/SHA256SUMS.txt --repo $env:ORBT_REPO --target $env:ORBT_HEAD --title 'ORBT 0.5.0 alpha' --notes-file build/publicacao/notas.md --prerelease
+          $argumentos = @('release', 'create', $env:ORBT_TAG, 'build/publicacao/ORBT-debug.apk', 'build/publicacao/atualizacao.json', 'build/publicacao/revisao.txt', 'build/publicacao/SHA256SUMS.txt', '--repo', $env:ORBT_REPO, '--verify-tag', '--title', ('ORBT ' + $env:ORBT_TAG.Substring(1)), '--notes-file', 'build/publicacao/notas.md')
+          if ($publicacao.previa) { $argumentos += '--prerelease' }
+          gh @argumentos
           if ($LASTEXITCODE -ne 0) { throw 'Falha ao publicar a release.' }

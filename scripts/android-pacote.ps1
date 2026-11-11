@@ -12,6 +12,14 @@ function Ler-ConfiguracaoAndroidProjeto {
     [pscustomobject]@{ versao=$orbtVersao; codigo=[int]$orbtCodigo; pacote=$orbtPacote }
 }
 
+function Conferir-TagAndroidPublicacao {
+    param([Parameter(Mandatory)] [string] $Tag, [Parameter(Mandatory)] $Configuracao)
+    $orbtPrefixo = 'v' + $Configuracao.versao
+    $orbtPadrao = '^' + [regex]::Escape($orbtPrefixo) + '(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$'
+    if ($Tag -cnotmatch $orbtPadrao) { throw 'A tag deve corresponder à versão do projeto: vVERSAO ou vVERSAO-sufixo.' }
+    [pscustomobject]@{ tag=$Tag; notas=('docs/versoes/' + $Tag + '.md'); previa=($Tag -cne $orbtPrefixo) }
+}
+
 function Conferir-PacoteAndroidProjeto {
     param([Parameter(Mandatory)] $Pacote, [Parameter(Mandatory)] $Configuracao)
     if ($Pacote.versao -ne $Configuracao.versao -or $Pacote.codigo -ne $Configuracao.codigo -or $Pacote.pacote -ne $Configuracao.pacote) {

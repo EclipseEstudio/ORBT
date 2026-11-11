@@ -1,39 +1,38 @@
-# Página de download do ORBT
+# Página de download e publicação
 
-A página fica em `docs/index.html`: HTML, CSS e JavaScript no mesmo arquivo, sem instalação, compilação, bibliotecas ou fontes externas. O visual e o fundo estrelado foram adaptados dos três arquivos de referência da landing page. `docs/.nojekyll` permite servir os arquivos diretamente, sem processamento pelo Jekyll.
+Fontes locais: `docs/index.html`, `docs/.nojekyll` e `.github/workflows/android-pr.yml`. Esta branch contém a página de download Android e somente o preset Android. A `main` remota também contém `.github/workflows/web-pages.yml`, que prepara um preset Web durante o build e publica o jogo no navegador. Confira as branches antes de concluir que a ausência de preset Web local significa ausência de distribuição Web.
 
-## GitHub Pages (configuração única)
+## GitHub Pages
 
-No repositório **EclipseEstudio/ORBT**, abra **Settings → Pages**:
+A página é um HTML autocontido, com CSS/JavaScript, sem build ou dependências externas. Fica em `docs/index.html`; `.nojekyll` permite publicação estática. Endereço previsto: <https://eclipseestudio.github.io/ORBT/>.
 
-1. Em **Source**, selecione **Deploy from a branch**.
-2. Escolha **main** e a pasta **/docs**; clique em **Save**.
-3. Aguarde a publicação do GitHub Pages.
+A configuração histórica usava **Settings → Pages → Deploy from a branch → main → /docs**. A `main` atual inclui publicação por `actions/deploy-pages`; consulte a configuração remota antes de mudar o mecanismo. Não mover o HTML ou `.nojekyll` para pastas internas de documentação.
 
-Endereço esperado: <https://eclipseestudio.github.io/ORBT/>.
+## Jogo Web na main
 
-Alterações em `docs/index.html` na `main` atualizam a página. A exportação Android já exclui `docs/*`, portanto esta funcionalidade não entra no APK.
+O workflow remoto `web-pages.yml` obtém a branch `alpha`, acrescenta um preset Web sem threads, usa renderizador Compatibility e publica os arquivos em `docs/jogar/`, incluindo `versao.json` com a revisão exportada. Também acrescenta o acesso **Jogar no navegador** à página de download. Não é necessário manter um preset Web no checkout Android para esse fluxo existir.
 
-## Publicar ou atualizar o jogo
+Na consulta de 10/11/2026, a [execução 42440652800](https://github.com/EclipseEstudio/ORBT/actions/runs/42440652800) estava concluída com sucesso; menu, campanha, tutorial, pausa, lançamento por mouse e vitória foram observados em `https://eclipseestudio.github.io/ORBT/jogar/`. Isso não comprova áudio, persistência em nova sessão, desempenho em outros navegadores ou atualização Android; consulte o [relatório](../historico/registros/validacao-2026-11-10.md).
 
-O PR da branch `release/0.5.0` publica automaticamente a prerelease `v0.5.0-alpha.20261107` após o job Android concluir todas as verificações. O job de publicação aceita somente essa branch no próprio repositório, confere a árvore testada contra a revisão da branch e anexa o APK, os relatórios e os hashes. Não substitui uma release existente nem integra o PR automaticamente. A página de download passa a selecionar o APK assim que o upload termina.
+## Seleção do APK
 
-O processo atualizado exige assinatura permanente e validação contra o último APK publicado. Antes de publicar, siga [atualização e reinstalação Android](atualizacao-android.md), comprove a atualização sobre a versão anterior no aparelho preservando os saves e confira a abertura pelo instalador do celular. Anexe também `atualizacao.json` e `revisao.txt`. APKs de prévia externa usam outro pacote e não devem entrar no download do ORBT. As instruções abaixo de criação de release continuam válidas após essa checagem.
+Uma requisição pública consulta até 100 releases. O script ignora rascunhos, ordena por `published_at` decrescente e seleciona a primeira publicação com APK de upload concluído, tamanho positivo e URL do próprio repositório. Prereleases são incluídas.
 
-1. Gere o APK com o fluxo descrito em [Android na branch alpha](https://github.com/EclipseEstudio/ORBT/blob/alpha/docs/tecnica/android.md) e valide-o em um aparelho. A saída atual é `build/android/ORBT-debug.apk`.
-2. Abra **Releases → Draft a new release** no repositório e escolha uma tag nova, por exemplo `v0.3.1-alpha.1`, associada à revisão validada.
-3. Escreva as novidades e anexe o APK como arquivo da release. Não basta enviar o código-fonte nem deixar o APK nos artefatos temporários do Actions.
-4. Para builds experimentais, marque **Set as a pre-release**. Publique a release e aguarde o upload terminar.
-5. Abra a página: o botão apontará diretamente para o arquivo, com tamanho atualizado. A versão fica disponível na descrição do tamanho e no link **Versões**. Não é necessário editar nem republicar o HTML.
+Se houver vários APKs, prefere `ORBT.apk`, `ORBT-debug.apk` ou `ORBT-universal.apk`; fora disso usa o primeiro. A página exibe versão/tamanho e hash quando informado pela API. Sem APK informa indisponibilidade; erro/timeout de 8 s mantém link para Releases. Sem JavaScript, o link também leva às Releases. Feedback aponta às Issues.
 
-A página consulta a API pública do GitHub uma vez por visita, sem token, considerando as 100 releases mais recentes. Seleciona a release publicada mais recentemente que contenha um `.apk` com upload concluído, incluindo prereleases. Releases sem APK e rascunhos são ignorados. Isso permite publicar notas ou outros arquivos sem interromper o download existente.
+## Publicar uma versão
 
-Publique preferencialmente **um APK universal por release**. Se houver vários, a página prefere `ORBT.apk`, `ORBT-debug.apk` ou `ORBT-universal.apk`; fora desses nomes, usa o primeiro APK. O nome pode variar entre versões quando há apenas um APK. Para retirar uma versão de teste do download automático, remova sua publicação ou seu APK; publicar apenas uma release estável não oculta uma prerelease que tenha sido publicada depois.
+1. Integre as entregas por PRs para `alpha`. Cada PR executa os testes e gera um APK temporário; não publica uma Release nem exige aumentar a versão.
+2. Quando o conjunto estiver pronto, prepare uma entrega de versão: ajuste `config/version`, `version/name` e um `version/code` superior ao do último APK publicado. Valide a atualização e preservação de dados conforme [Android](android.md).
+3. Escreva as notas em `docs/versoes/<tag>.md`, reunindo escopo e limites. Por exemplo, `docs/versoes/v0.5.1-alpha.20261111.md` para uma futura versão interna 0.5.1. Integre essa preparação à `alpha`.
+4. Crie e envie explicitamente a tag sobre a revisão integrada. Tags seguem `vVERSAO` ou `vVERSAO-sufixo`, com a mesma versão de projeto/preset. O workflow só aceita commits pertencentes ao histórico de `alpha`.
+5. O envio da tag dispara importação, testes, validação do PCK, geração do APK, assinatura/alinhamento e comparação com o APK publicado. A comparação exige código superior e é repetida antes da publicação. O job publica exatamente o artefato validado, acompanhado de `atualizacao.json`, `revisao.txt` e `SHA256SUMS.txt`.
+6. Tags com sufixo, como `-alpha.20261111`, geram prerelease; sem sufixo, release estável. Confira o botão/versão no site. Se a seleção automática encontrar o novo APK, não precisa editar o HTML.
 
-A versão publicada e o tamanho ficam visíveis abaixo do botão para distinguir um APK novo de um download repetido. Notas e histórico ficam no link **Versões**. As instruções ficam recolhidas em **Como instalar?**. Quando o GitHub informa o SHA-256 do arquivo, ele aparece em **Verificar integridade do arquivo**, dentro da ajuda. Versão mínima do Android e tamanho não são inventados nem fixados no HTML.
+O workflow `.github/workflows/android-pr.yml` atende revisão e publicação com condições distintas. Seu job `publicar` só roda no envio de tag, confere revisão/hash/identidade e usa as notas daquela tag. A automação específica de `release/0.5.0` foi substituída; abrir ou atualizar um PR dessa branch também não publica versão. Tags/releases existentes não são substituídas.
 
-## Ausência de versão e indisponibilidade
+O envio da tag deve ser feito pelo usuário ou por credencial que dispare workflows. Criar referências com o `GITHUB_TOKEN` de outro workflow não dispara automaticamente esse fluxo. Não é necessário cadastrar `workflow_dispatch` na branch padrão para a publicação por tag.
 
-Sem APK publicado, a página avisa que o primeiro teste ainda não está disponível. Se a API falhar, atingir o limite público ou demorar mais de oito segundos, o botão leva à lista de Releases. Esse mesmo link funciona sem JavaScript. O fundo respeita a preferência de movimento reduzido e pausa quando a aba está oculta.
+O jogo Web no Pages mantém o fluxo separado da `main` descrito acima; publicar o APK não dispara automaticamente a exportação Web.
 
-Feedback é encaminhado para as Issues do próprio repositório; o jogador precisa de conta no GitHub. Não há formulário externo configurado.
+Publicar prerelease mais recente também muda o download automático. Uma Release sem APK não substitui o download anterior. Este documento descreve o mecanismo; não afirma que uma publicação remota tenha ocorrido.

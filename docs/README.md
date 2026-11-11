@@ -1,38 +1,25 @@
 # Documentação do ORBT
 
-O [README principal](../README.md) apresenta o projeto e explica como executar o jogo. A documentação detalhada está dividida pelo tipo de informação:
+Atualizada em **10/11/2026**, usando o código e os JSONs como fonte de verdade. Funcionalidades adicionadas para demonstração fazem parte do estado documentado. Implementação não comprova balanceamento ou aceite em aparelho.
 
-| Pasta | Conteúdo | Quando consultar |
+| Pasta | Finalidade | Entrada |
 | --- | --- | --- |
-| [Técnica](tecnica/README.md) | Contratos de dados, arquitetura, simulação, ferramentas e exportação | Implementar, integrar ou depurar o projeto |
-| [Regras de negócio](regras-de-negocio/README.md) | Comportamento do jogo, condições da partida e progressão | Entender, discutir ou validar as regras com a equipe |
-| [Auxiliar](auxiliar/README.md) | Manuais de uso, arte, acompanhamento, histórico e evidências | Criar conteúdo, retomar o trabalho ou consultar registros |
+| `projeto/` | Produto, conteúdo e limites | [Visão geral](projeto/visao-geral.md), [catálogo](projeto/catalogo-fases.md), [validação pendente](projeto/validacao-pendente.md) |
+| `regras-de-negocio/` | Comportamento para o jogador | [Jogabilidade](regras-de-negocio/jogabilidade.md), [campanha](regras-de-negocio/campanha.md) |
+| `guias/` | Procedimentos da equipe | [Editor](guias/editor-de-fases.md), [testes](guias/testes.md) |
+| `tecnica/` | Arquitetura, contratos e distribuição | [Índice técnico](tecnica/README.md) |
+| `arte/` | Inventário, procedência e fontes | [Recursos visuais](arte/README.md) |
+| `versoes/` | Notas de versões identificadas | [Índice de versões](versoes/README.md) |
+| `historico/` | Relatórios datados e evidências | [Arquivo histórico](historico/README.md) |
 
-## Documentação técnica
-
-- [Contrato JSON e modelo de simulação](tecnica/fases-e-simulacao.md)
-- [Catálogo e persistência da campanha](tecnica/campanha.md)
-- [Implementação e testes do editor de fases](tecnica/editor-de-fases.md)
-- [Exportação e aceite Android](tecnica/android.md)
-
-## Regras de negócio
-
-- [Jogabilidade e ciclo da partida](regras-de-negocio/jogabilidade.md)
-- [Acesso às fases e progressão da campanha](regras-de-negocio/campanha.md)
-
-## Documentação auxiliar
-
-- [Editor de fases: manual de uso](auxiliar/guia-editor-de-fases.md)
-- [Identidade visual, fontes e inventário](auxiliar/arte/README.md)
-- [Estado atual, Projects, issues e próximos passos](auxiliar/estado-da-branch.md)
-- [Histórico das implementações e evidências](auxiliar/historico-implementacao.md)
-- [Aceite da issue 40 e evidências da execução](auxiliar/validacao-issue-40.md)
-- [Plano temporário da issue 4 (histórico substituído)](auxiliar/plano-temporario-issue-4.md)
+`index.html` é a página pública de download do GitHub Pages; `.nojekyll` mantém sua publicação estática. Ambos ficam na raiz de `docs`. `.gdignore` evita importar documentação/capturas na Godot; `export_presets.cfg` mantém sua exclusão do APK.
 
 ## Manutenção
 
-Registre cada informação na categoria correspondente e use links para relacionar regras, implementação e evidências. Mudanças de comportamento devem atualizar as regras de negócio e seus contratos técnicos; mudanças de implementação devem manter os guias técnicos coerentes com o código.
+1. Atualize a regra ou o contrato junto com o código correspondente. Cada página identifica suas fontes.
+2. Ao alterar fases, atualize o [catálogo](projeto/catalogo-fases.md). Preserve IDs para conservar progresso; revise `content_version` se checkpoints anteriores deixarem de ser compatíveis.
+3. Guarde relatórios datados em `historico/registros/` e anexos em `historico/evidencias/`, com revisão, ambiente, passos e resultado. Contagens antigas não descrevem a versão atual.
+4. Separe planejamento futuro de implementação. Consulte o GitHub antes de afirmar o status remoto de issues/Projects.
+5. Builds, logs e capturas descartáveis ficam em `build/` ou `.godot/`. Versione evidências somente quando tiverem contexto e utilidade.
 
-Use nomes de arquivos em minúsculas, com hífens e sem acentos. Mantenha os índices e os links relativos atualizados ao criar ou mover páginas. Fontes de arte e evidências pertencem à documentação auxiliar e continuam versionadas. Registros históricos mantêm suas datas e deixam explícito quando foram substituídos.
-
-Os comandos dos guias partem da raiz do repositório. A separação de pastas não altera as regras nem aprova decisões do protótipo: cada documento mantém seus limites de aceite.
+Veja os [critérios da reorganização](projeto/organizacao-documentacao.md).

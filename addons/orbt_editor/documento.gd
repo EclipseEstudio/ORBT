@@ -6,9 +6,12 @@ signal alterado
 signal selecao_alterada
 const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const EXEMPLO = "res://Recursos/Fases/teste_001.json"
+const LIMITE_COLETAVEIS := 256
+# Mantém os índices dos rascunhos antigos: -3 a -258 são estrelas.
+const PRIMEIRO_TANQUE := -3 - LIMITE_COLETAVEIS
 var dados: Dictionary = {}
 var caminho := ""
-var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo; -3 - índice da estrela.
+var selecao := -2 # -2 fase; -1 Terra; >= 0 corpo; demais índices são coletáveis.
 var _salvo := ""
 var _historico: Array[Dictionary] = []
 var _indice_historico := -1
@@ -93,6 +96,8 @@ func _id_copia(id_original: String) -> String:
 		ids.append(corpo.id)
 	for estrela in dados.get("stars", []):
 		ids.append(estrela.id)
+	for tanque in dados.get("fuel_pickups", []):
+		ids.append(tanque.id)
 	var numero := 1
 	while (id_original + "_copia_%d" % numero) in ids:
 		numero += 1
@@ -101,15 +106,16 @@ func _id_copia(id_original: String) -> String:
 
 func duplicar(deslocamento := Vector2(40, 40)) -> bool:
 	if selecao <= -3:
-		var estrela := objeto(selecao)
-		if estrela.is_empty() or not deslocamento.is_finite():
+		var coletavel := objeto(selecao)
+		var lista := "fuel_pickups" if selecao <= PRIMEIRO_TANQUE else "stars"
+		if coletavel.is_empty() or not deslocamento.is_finite() or dados[lista].size() >= LIMITE_COLETAVEIS:
 			return false
 		terminar_grupo()
-		var copia: Dictionary = estrela.duplicate(true)
-		copia.id = _id_copia(estrela.id)
-		copia.position = [estrela.position[0] + deslocamento.x, estrela.position[1] + deslocamento.y]
-		dados.stars.append(copia)
-		selecao = -3 - (dados.stars.size() - 1)
+		var copia: Dictionary = coletavel.duplicate(true)
+		copia.id = _id_copia(coletavel.id)
+		copia.position = [coletavel.position[0] + deslocamento.x, coletavel.position[1] + deslocamento.y]
+		dados[lista].append(copia)
+		selecao = (PRIMEIRO_TANQUE if lista == "fuel_pickups" else -3) - (dados[lista].size() - 1)
 		alterado.emit()
 		selecao_alterada.emit()
 		return true
@@ -180,18 +186,21 @@ func validar() -> Dictionary:
 	var avisos: Array[String] = []
 	if resultado.nivel != null:
 		var corpos: Array = resultado.nivel.corpos
+		var tempo: float = resultado.nivel.obter_tempo_inicial()
 		var raio: float = dados.ship.radius
 		for i in range(corpos.size()):
 			var corpo: Dictionary = corpos[i]
-			if not Carregador.Fisica.dentro_limites(corpo.position, resultado.nivel.limites):
+			var posicao: Vector2 = Carregador.Fisica.posicao_corpo(corpo, tempo)
+			if not Carregador.Fisica.dentro_limites(posicao, resultado.nivel.limites):
 				avisos.append("%s.position: objeto fora dos limites" % corpo.id)
 			for j in range(i + 1, corpos.size()):
 				var a: Dictionary = corpos[i]
 				var b: Dictionary = corpos[j]
-				var livre: float = a.position.distance_to(b.position) - Carregador.Fisica.raio_contato(a) - Carregador.Fisica.raio_contato(b) - 2 * raio
+				var distancia: float = posicao.distance_to(Carregador.Fisica.posicao_corpo(b, tempo))
+				var livre: float = distancia - Carregador.Fisica.raio_contato(a) - Carregador.Fisica.raio_contato(b) - 2 * raio
 				if livre < 2 * raio:
 					avisos.append("%s / %s: passagem estreita (folga %.2f unidades)" % [a.id, b.id, livre])
-				if a.position.distance_to(b.position) < a.visual_radius + b.visual_radius:
+				if distancia < a.visual_radius + b.visual_radius:
 					avisos.append("%s / %s: visuais sobrepostos%s" % [a.id, b.id, "; destino encoberto" if a.type == "earth" or b.type == "earth" else ""])
 	resultado["avisos"] = avisos
 	return resultado
@@ -225,6 +234,10 @@ func salvar(arquivo: String) -> Array[String]:
 
 
 func objeto(indice: int) -> Dictionary:
+	if indice <= PRIMEIRO_TANQUE:
+		var tanques: Array = dados.get("fuel_pickups", [])
+		var indice_tanque := PRIMEIRO_TANQUE - indice
+		return tanques[indice_tanque] if indice_tanque < tanques.size() else {}
 	if indice <= -3:
 		var estrelas: Array = dados.get("stars", [])
 		var indice_estrela := -3 - indice
@@ -241,7 +254,7 @@ func selecao_valida(indice: int) -> int:
 
 
 func inserir_estrela(posicao: Vector2) -> void:
-	if not posicao.is_finite():
+	if not posicao.is_finite() or dados.get("stars", []).size() >= LIMITE_COLETAVEIS:
 		return
 	terminar_grupo()
 	if not dados.has("stars"):
@@ -254,6 +267,91 @@ func inserir_estrela(posicao: Vector2) -> void:
 	selecao = -3 - (dados.stars.size() - 1)
 	alterado.emit()
 	selecao_alterada.emit()
+
+
+func inserir_tanque(posicao: Vector2) -> void:
+	if not posicao.is_finite() or dados.get("fuel_pickups", []).size() >= LIMITE_COLETAVEIS:
+		return
+	terminar_grupo()
+	if not dados.has("fuel_pickups"):
+		dados["fuel_pickups"] = []
+	var numero := 1
+	var ids: Array = dados.fuel_pickups.map(func(tanque: Dictionary): return tanque.id)
+	while "tanque_%d" % numero in ids:
+		numero += 1
+	dados.fuel_pickups.append({"id": "tanque_%d" % numero, "position": [posicao.x, posicao.y], "radius": 8.0, "amount": 1})
+	selecao = PRIMEIRO_TANQUE - (dados.fuel_pickups.size() - 1)
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func configurar_nebulosa(ativa: bool) -> void:
+	if ativa == dados.has("nebula"):
+		return
+	terminar_grupo()
+	if ativa:
+		dados["nebula"] = {"visibility_radius": 120.0}
+	else:
+		dados.erase("nebula")
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func obter_rotacao(indice: int) -> Dictionary:
+	var corpo := objeto(indice)
+	if corpo.is_empty():
+		return {}
+	var resultado := Carregador.validar(dados)
+	if resultado.nivel != null:
+		return resultado.nivel.obter_corpo(corpo.id).get("rotation", {})
+	var giro = corpo.get("rotation", {})
+	return giro if giro is Dictionary else {}
+
+
+func configurar_rotacao(ativa: bool) -> void:
+	var corpo := objeto(selecao)
+	if corpo.is_empty() or selecao <= -2 or corpo.get("type") == "portal":
+		return
+	terminar_grupo()
+	var giro := obter_rotacao(selecao).duplicate(true)
+	if ativa:
+		if is_zero_approx(float(giro.get("degrees_per_second", 0.0))):
+			giro["degrees_per_second"] = 30.0
+	else:
+		# Ausência de rotation reativa o giro padrão de planetas/Terra no carregador.
+		giro["degrees_per_second"] = 0.0
+	giro["initial_degrees"] = giro.get("initial_degrees", 0.0)
+	corpo["rotation"] = giro
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func obter_tempo_inicial() -> float:
+	var tempo = dados.get("start", {}).get("time_seconds", 0.0)
+	return float(tempo) if Carregador.numero(tempo, 0, 86400) else 0.0
+
+
+func _corpo_orbital(indice: int) -> Dictionary:
+	var corpo := objeto(indice).duplicate(true)
+	corpo.position = Vector2(corpo.position[0], corpo.position[1])
+	var orbita = corpo.get("orbit")
+	# Mesmo com outro campo inválido, o objeto deve continuar selecionável no mapa.
+	if not orbita is Dictionary or not Carregador.vetor(orbita.get("center")) or not Carregador.numero(orbita.get("period_seconds"), 1, 86400) or not orbita.get("clockwise", true) is bool:
+		corpo.erase("orbit")
+	return corpo
+
+
+func posicao_no_inicio(indice: int) -> Vector2:
+	return Carregador.Fisica.posicao_corpo(_corpo_orbital(indice), obter_tempo_inicial())
+
+
+func mover_no_inicio(indice: int, posicao: Vector2) -> void:
+	if objeto(indice).is_empty() or not posicao.is_finite():
+		return
+	var corpo := _corpo_orbital(indice)
+	corpo.position = posicao
+	# Converte o ponto exibido de volta à posição autoral (tempo zero).
+	mover(indice, Carregador.Fisica.posicao_corpo(corpo, -obter_tempo_inicial()))
 
 
 func selecionar(indice: int) -> void:
@@ -296,7 +394,11 @@ func mover(indice: int, posicao: Vector2) -> void:
 
 func excluir() -> void:
 	if selecao <= -3 and not objeto(selecao).is_empty():
-		dados.stars.remove_at(-3 - selecao)
+		terminar_grupo()
+		if selecao <= PRIMEIRO_TANQUE:
+			dados.fuel_pickups.remove_at(PRIMEIRO_TANQUE - selecao)
+		else:
+			dados.stars.remove_at(-3 - selecao)
 		selecao = -2
 		alterado.emit()
 		selecao_alterada.emit()

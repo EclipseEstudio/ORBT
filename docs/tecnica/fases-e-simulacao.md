@@ -1,118 +1,62 @@
-# Fases e simulação — contrato de protótipo v1
+# Fases JSON e simulação
 
-Atualização de 06/11/2026: o contrato atual está na [revisão de jogabilidade](revisao-jogabilidade.md): estações, douradas/azuis, tanques, gravidade da Terra, tempo reduzido e lançamento sem força da rotação. JSON de fase no esquema 1; progresso no esquema 3. As descrições do protótipo abaixo são históricas onde divergirem desse contrato.
+Fonte normativa: `src/Nivel/carregador_fase.gd`, `nivel_res.gd`, `src/Nave/simulacao_voo.gd`, `nave.gd` e `src/ControladorJogo/partida.gd`. Conferido em 10/11/2026.
 
-Implementado em 14/10/2026 para integrar #15–#20 às dependências #7–#14 e #32–#37. Este documento registra o contrato JSON, a arquitetura e a resolução determinística da simulação. O comportamento esperado pelo jogador está nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md). As escolhas do protótipo continuam sujeitas ao aceite da equipe e à calibração no Android; o GDD original permanece preservado.
+## Formato v1
 
-## Formato e validação
-
-`Recursos/Niveis.json` mapeia IDs estáveis para caminhos `res://Recursos/Fases/*.json`. Não é mais um agrupamento de fases embutidas. O antigo cadastro global `CorposEstelares.json` foi migrado para a lista de corpos de cada fase, permitindo dois corpos do mesmo tipo com propriedades distintas.
-
-O arquivo `Recursos/Fases/teste_001.json` é o exemplo executável. `CarregadorFase.carregar(caminho)` e `CarregadorFase.validar(dados)` retornam `{nivel, erros}`; `nivel` só é preenchido quando todos os campos e relações são válidos. Esse validador é o contrato comum do jogo e do [editor de fases](editor-de-fases.md). A suíte `tests/test_partida.gd` constrói exemplos inválidos a partir do exemplo válido.
-
-| Campo | Tipo, unidade e regra |
-| --- | --- |
-| `schema_version` | Número inteiro, exatamente 1; nenhuma migração implícita |
-| `content_version`, `order` | Inteiros positivos até 1.000.000 |
-| `id`, `name` | Textos obrigatórios não vazios; ID único no catálogo |
-| `bounds.position`, `bounds.size` | Vetores `[x,y]`; dimensão positiva. Centro da nave determina saída; borda exata ainda pertence ao mundo |
-| `initial_fuel` | Inteiro entre 1 e 1.000.000; único campo físico com padrão autoral: 5 |
-| `flight_timeout` | Número de segundos entre 0,01 e 3.600; exemplo usa 30 |
-| `physics.gravity_constant` | G entre 0 e 1.000; exemplo usa 2 |
-| `physics.softening` | Suavização entre 1 e 10.000 unidades de mundo; exemplo usa 8 |
-| `ship.radius`, `ship.mass` | Números entre 0,01 e 1.000; exemplo: raio 8 e massa 1 |
-| `ship.dead_zone`, `ship.max_drag` | Unidades lógicas do viewport, entre 0,01 e 1.000; máximo maior que zona morta; exemplo 10/80 |
-| `ship.max_impulse` | Impulso entre 0,01 e 1.000; exemplo 80. Variação de velocidade = impulso / massa da nave |
-| `start.body_id` | Referência a planeta/satélite seguro, no modo de início pousado |
-| `start.angle_degrees` | Ângulo entre −360 e 360; zero aponta à direita, −90 para cima; acompanha `body_id` |
-| `start.time_seconds` | Opcional, de 0 a 86.400; adianta a simulação e as órbitas para começar em uma janela favorável, sem consumir oxigênio |
-| `start.position` | Alternativa `[x,y]` para início livre e parado; não pode coexistir com `body_id`/`angle_degrees` |
-| `camera.zoom` | Opcional, maior que zero até 4; padrão 1, mapas adaptados usam 0,5 |
-| `camera.overview` | Opcional, `position` e `size` em vetores; tamanho positivo define o enquadramento ao explorar |
-| `goal` | Objeto com os campos de corpo abaixo, sem necessidade de `type`; sempre Terra |
-| `bodies` | Lista de corpos com IDs distintos entre si e distintos da Terra |
-| `tutorial`, `notes` | Textos opcionais de autoria; separados das regras físicas |
-
-Coordenadas ficam entre −1.000.000 e 1.000.000. Números devem ser finitos; booleanos e textos não são números. Grandezas de mundo são unidades convencionais do jogo (apresentadas como metros na interface), não uma simulação astronômica em escala real. Combustível é uma contagem abstrata.
-
-Cada corpo exige:
+Fases são objetos JSON. O carregador retorna `{"nivel": NivelRes, "erros": []}` ou nível nulo com diagnósticos. Jogo e editor usam esse mesmo contrato. Coordenadas/raios são unidades de mundo; arraste e zona morta são unidades lógicas da tela; tempos são segundos da simulação.
 
 | Campo | Regra |
 | --- | --- |
-| `id` | Texto não vazio e único |
-| `type` | `planet`, `satellite`, `sun` ou `asteroid`; `earth` é reservado para `goal` |
-| `position` | `[x,y]` no mundo |
-| `mass` | 0 a 1.000.000; asteroide e Terra exigem zero |
-| `visual_radius` | Positivo até 1.000.000; altera somente o desenho |
-| `collision_radius` | Positivo até 1.000.000; superfície física |
-| `capture_radius` | 0 a 1.000.000; apoios/Terra exigem valor ≥ colisão; perigos exigem zero |
-| `danger_radius` | 0 a 1.000.000; Sol/asteroide exigem valor ≥ colisão; apoios/Terra exigem zero |
-| `proximity_radius` | Positivo até 1.000.000 e pelo menos o raio de contato; não altera gravidade |
-| `show_proximity` | Opcional; `true` mantém o anel visível mesmo fora da proximidade da nave |
+| `schema_version` | Exatamente 1 |
+| `id`, `name` | Strings não vazias |
+| `content_version`, `order` | Inteiros positivos, até 1.000.000 |
+| `initial_fuel` | Inteiro positivo, padrão 5 |
+| `flight_timeout` | 0,01 a 3.600; saldo de oxigênio da tentativa |
+| `bounds` | `position: [x,y]`, `size: [w,h]`, dimensões positivas; fora dele o oxigênio dobra |
+| `physics` | `gravity_constant`: 0–1.000; `softening`: 1–10.000 |
+| `ship` | `radius`, `mass`, `dead_zone`, `max_drag`, `max_impulse`: 0,01–1.000; arraste máximo maior que zona morta |
+| `start` | `body_id` seguro + `angle_degrees` (-360–360), ou `position: [x,y]`; formas mutuamente exclusivas |
+| `start.time_seconds` | Opcional, 0–86.400; relógio inicial de órbitas/giro |
+| `bodies` | Array de corpos; Terra fica exclusivamente em `goal` |
+| `goal` | Corpo normalizado como `earth` |
+| `stars`, `fuel_pickups` | Arrays opcionais, até 256 itens de cada; [coletáveis](estrelas-coletaveis.md) |
+| `nebula` | Opcional; `visibility_radius` obrigatório entre 45 e 300 |
+| `camera` | Opcional: `zoom` positivo até 4; `overview` com posição e tamanho positivo |
+| `tutorial`, `notes` | Metadados usados pela interface/autoria; sem a validação numérica dos parâmetros físicos |
 
-O validador rejeita arquivo ausente/malformado, versão incompatível, campos inválidos, IDs duplicados, referência inicial inválida, nave inicial fora dos limites ou dentro de um contato, Terra fora dos limites e interseção entre zonas de contato expandidas pelo raio da nave que envolvam um corpo seguro. Dois perigos podem se sobrepor para formar muros contínuos de asteroides. A resolução física tem desempate determinístico. Parâmetros de movimento, rotação e portais não são implementados nesta versão.
+Vetores precisam de dois números finitos entre -1.000.000 e 1.000.000. Não há exigência genérica de IDs sequenciais ou de exatamente três estrelas: isso pertence ao conteúdo da campanha.
 
-O recurso validado mantém uma cópia dos dados autorais. Cada nave recebe uma cópia das fontes; posição, velocidade, combustível, gestos e tempo ficam no estado da tentativa. A simulação não escreve no JSON. O controlador persiste checkpoints separadamente do progresso da campanha (#49).
+## Corpo
 
-## Modelo físico e decisão de arquitetura
+Cada corpo tem `id`, `type`, `position`, `mass`, `visual_radius`, `collision_radius`, `capture_radius`, `danger_radius` e `proximity_radius`. IDs são únicos entre corpos e Terra. Campos de raio/massa têm máximo 1.000.000; visual, colisão e proximidade são positivos; os demais podem ser zero.
 
-A decisão proposta para aceite na #13 é manter a fórmula suavizada candidata do GDD, substituindo as antigas faixas discretas de força:
+| Tipo | Restrições/normalização |
+| --- | --- |
+| `planet`, `station` | Captura cobre colisão; perigo zero; estação exige massa zero |
+| `satellite` | Legado: normalizado para planeta se massa positiva, estação se zero |
+| `sun`, `asteroid` | Perigo cobre colisão, captura zero; asteroide exige massa zero |
+| `earth` | Criada por `goal`; massa elevada a pelo menos 180.000; alcance padrão de gravidade = captura + 38 |
+| `portal` | Massa/captura/perigo zero, destino recíproco, direção de saída; sem órbita/giro |
 
-```text
-r_i = posição da fonte i − posição da nave
-a = soma(G × massa_i × r_i / (|r_i|² + epsilon²)^(3/2))
-v_nova = v + a × dt
-p_nova = p + v_nova × dt
-```
+Proximidade cobre o raio de contato. `show_proximity` opcional é booleano. `gravity_radius`, quando definido, cobre a captura e não ultrapassa 10.000. Planetas/Terra sem `rotation` recebem giro de 24 graus/s, ou 8 quando têm faixa; estações permanecem sem giro padrão.
 
-Usa-se Euler semi-implícito, a 60 passos fixos/s, sem amortecimento ou frenagem gratuita. A aceleração não é multiplicada pela massa da nave. O impulso é dividido por essa massa exatamente uma vez. Apenas os corpos com massa positiva atraem; gravitação mútua e movimento dos corpos não são simulados.
+Extensões: [órbita](orbitas.md), [rotação/faixa](rotacao-e-pouso.md), [portal](portais.md). Início e Terra devem estar dentro de `bounds`. O início não pode sobrepor outro contato. Zonas de corpos são verificadas com margem para a nave; sobreposição entre dois perigos é permitida. As checagens iniciais não demonstram segurança de toda uma órbita.
 
-O modelo soma contribuições contínuas e permite calibrar cada fase. Longe da fonte a intensidade se aproxima do inverso do quadrado da distância; com suavização positiva ela é finita, nula no centro e não cresce indefinidamente ao se aproximar. Portanto, a intensidade não é monotônica em todas as distâncias: atinge seu máximo em `epsilon / sqrt(2)`. `G` e massa são grandezas convencionais de jogo; posição e epsilon usam unidades de mundo, tempo usa segundos, velocidade unidades/s e aceleração unidades/s². Os limites validados estão na tabela acima. O raio de proximidade não altera a força. O registro dos cenários e tolerâncias está em [validação da #13](../auxiliar/validacao-issue-13.md); integração em Android continua na #4.
+## Integração e contatos
 
-Nave e corpos são `Node2D`, com atualização explícita em `SimulacaoVoo`. Isso evita misturar a integração nativa de `RigidBody2D` com outra física de previsão. Sprites, fogo e RCS foram preservados; a orientação da nave em voo é visual e não altera a direção livre do impulso. O pouso preserva orientação radial e posição relativa no apoio estático. O início livre usa `Nave.Condicao.PRONTA`: fica imóvel até o primeiro impulso, e o reinício restaura essa condição sem vínculo residual com um apoio anterior. `NivelRes.obter_posicao_inicial()` é compartilhado pela nave, pelo carregador e pelo mapa do editor.
+A gravidade soma `G * M * r / (|r|² + softening²)^(3/2)` das fontes elegíveis. Estações, asteroides e portais não atraem. `gravity_radius` corta a contribuição fora do alcance. Só o apoio de origem recebe a folga de decolagem: 1,2 s sem atração, retorno suave de 1 s e limite 12 durante o voo.
 
-Contato é testado no segmento do passo, contra círculos expandidos pelo raio da nave. A captura usa o maior entre raio de colisão e captura; perigos usam o raio fatal. O contato mais cedo vence. Para frações iguais dentro de `1e-6`: perigo antes de Terra antes de apoio. Saída dos limites vence empate com contato. Colisão ocorre no segmento mesmo se a nave atravessaria todo o corpo em um único passo.
+O passo usa Euler semi-implícito: atualiza velocidade pela aceleração e depois posição. A partida escala o delta conforme mira/proximidade. `project.godot` não sobrescreve a taxa padrão de física. A varredura entre começo/fim do passo considera o raio da nave e o movimento relativo dos corpos.
 
-Ao sair da origem, a captura é ignorada somente se a nave está fora da superfície sólida e o movimento aponta para fora. Um impulso para dentro produz contato imediato, sem imunidade temporal à colisão. O consumo já confirmado não é revertido pelo contato; o resultado segue as [regras de pouso e combustível](../regras-de-negocio/jogabilidade.md#combustível-pouso-e-deriva).
+O primeiro contato prevalece. Em empate dentro da tolerância, perigo precede Terra e depois os demais corpos. Apoios usam maior raio entre colisão/captura; perigos usam `danger_radius`; portais usam colisão. Faixas seguras são avaliadas no instante interpolado do contato. Sair de `bounds` não emite derrota; a partida aumenta o consumo de oxigênio.
 
-A comparação de superfície tolera até 0,0001 unidade de arredondamento, evitando recaptura imediata em decolagens diagonais ou depois de pousar. A tolerância não amplia a região de captura; penetrações reais, inclusive de 0,0005 unidade, continuam produzindo contato.
+O relógio começa em `start.time_seconds` (padrão zero) e avança também pousado/pronto, exceto pausa, título e desfecho. Oxigênio é um saldo separado e só diminui em voo após lançamento. Contato alcançado no passo limitado pelo oxigênio é resolvido antes da verificação final de esgotamento.
 
-## Pedidos de impulso e estado da tentativa
+## Guia e previsão
 
-- Cada pedido carrega um ID monotônico. Repetições são rejeitadas antes e depois da aplicação, inclusive após reinício. Cancelar a mira não gera pedido; cancelar outro gesto no mesmo passo preserva um lançamento já solicitado. Pausa, perda de foco e bloqueio de controle descartam pedidos ainda não processados sem cobrança.
-- A física aceita cada pedido uma vez, desconta uma unidade e emite a confirmação que ativa o consumo de oxigênio. Correção em voo soma o incremento à velocidade existente sem repor oxigênio; decolagem parte de velocidade zero do apoio estático.
-- `Partida` mantém os estados `JOGANDO`, `PAUSADO`, `PERDIDA` e `CONCLUIDA`; `Nave` distingue pouso, voo e deriva. Sem combustível, a nave continua à deriva até esgotar o oxigênio ou alcançar um contato. Pousar zera a velocidade e guarda ID/posição relativa do apoio; pouso em apoio sem combustível encerra a tentativa.
-- O oxigênio é um saldo único da tentativa, ativado na primeira confirmação de impulso e decrementado fora do pouso. Pousar suspende o consumo; a próxima decolagem usa o saldo restante. Novos impulsos não recarregam oxigênio. O passo em voo é limitado ao saldo restante; pousada, a nave acompanha os corpos pelo passo normal sem consumir oxigênio. Contato dentro do passo é resolvido antes do esgotamento.
-- A pausa cancela a entrada e congela a árvore da simulação. `Partida` e HUD continuam processando os controles de retomada. As notificações de perda de foco/suspensão acionam a pausa; o retorno de foco não altera o estado. A exploração desabilita o controle da nave sem pausar a árvore.
-- A finalização emite um único evento de conclusão ou perda e mantém o resultado estável. O reinício reconfigura a nave com os dados autorais e restaura posição, orientação, combustível, tempo, vínculos, alertas, câmera e gestos.
-- Na #48, o controlador registra fase, corpo, posição relativa (ou posição livre), orientação, combustível, tempo e ativação do temporizador no início e a cada pouso. A restauração após derrota ou pausa cancela gestos e pedidos, zera velocidade e limpa alertas; saldo zero mantém derrota. Reiniciar substitui o checkpoint pelo início. Na #49, o checkpoint é salvo com versão de formato/conteúdo e checksum em `user://checkpoint.json`, usando temporário e cópia do último válido. Continuar valida a fase e seus dados, recupera pausado e não substitui progresso de campanha. Vitória remove o checkpoint; save incompatível bloqueia gravação e preserva o diagnóstico. A seleção não cria botão de descarte; a API interna de limpeza permanece para os fluxos existentes. Editor e testes isolados não usam o save real.
+`Nave.obter_guia_mira()` produz um segmento de até 60 pixels lógicos com teste dos obstáculos atuais; não integra gravidade e não prevê portais. `prever_trajetoria()` usa o integrador em cópia independente e mantém compatibilidade com ferramentas/testes. A previsão pode conter `Vector2(INF, INF)` separando trechos de teleporte; consumidores devem ignorar ligações com pontos não finitos.
 
-As condições de vitória, derrota, consumo e retomada estão centralizadas nas [regras de jogabilidade](../regras-de-negocio/jogabilidade.md), incluindo o pouso sem combustível adotado pelo protótipo.
+## Compatibilidade e validação
 
-## Implementação da prévia e apresentação
-
-O círculo da mira fica no ponto inicial do toque, em coordenadas lógicas de tela. A guia nasce na nave e mede 60 pixels lógicos na direção do impulso, sem prever a trajetória. O simulador de prévia continua disponível para ferramentas e testes, separado da apresentação durante o jogo. Cancelar, lançar, pausar, explorar ou terminar limpa o indicador.
-
-`GestoMira.obter_intensidade()` fornece a intensidade normalizada usada tanto no impulso quanto na linha de força. A linha usa dez segmentos de gradiente ciano → amarelo → laranja → vermelho até a cor da intensidade atual; a largura é arredondada entre 1 e 3 pixels, com contorno de largura + 2. A zona morta fica amarelo apagado e fina. O anel de saturação é vermelho. Os desenhos permanecem sem antialias na camada 5, abaixo do HUD 10.
-
-`RastroNave` é um `Line2D` sob `Nivel`, atrás da nave. Um buffer circular guarda até 32 posições de mundo, amostradas a 30 Hz quando a velocidade é de pelo menos 8 unidades/s em `EM_VOO` ou `A_DERIVA`. A cauda transparente termina em ciano; a largura de mundo é `2 / camera.zoom.x`, preservando 2 pixels lógicos na tela. Pouso, baixa velocidade, pausa, perda de foco, reinício, parada e teleporte limpam o histórico. O sinal `trajeto_interrompido` comunica reposicionamento/parada sem alterar a simulação.
-
-Na primeira fase (`teste_001`), o HUD usa o texto autoral `tutorial` na instrução inicial e acompanha o contato ativo e a saída da zona morta para orientar arraste, cancelamento, soltura e custo. Após o primeiro impulso, apresenta custo e ausência de recarga no pouso. O rótulo ignora entrada, não bloqueia a simulação e não adiciona estado persistente. Pausa, exploração e desfecho têm prioridade; reinício volta às dicas iniciais. As demais fases mantêm suas dicas autorais. O resultado e os limites estão em [validação da #54](../auxiliar/validacao-issue-54.md).
-
-A câmera inicia centralizada e próxima da nave, sem passeio inicial pela Terra, habilitando a entrada imediatamente. A transformação da câmera não altera as unidades lógicas do gesto. Os indicadores e controles disponíveis ao jogador estão descritos nas [regras de apresentação](../regras-de-negocio/jogabilidade.md#prévia-câmera-e-indicadores).
-
-Somente em `JOGANDO` e fora da exploração, o alvo de zoom interpola linearmente entre 1,4× (sem arraste válido) e 0,75× (força máxima) da base autoral, usando `GestoMira.obter_intensidade()`. Para base 0,5, os limites são 0,375–0,7. A suavização exponencial usa `1 - exp(-6 * delta)`. Soltar ou cancelar devolve o alvo ao enquadramento próximo. Posição e tipo dos corpos não participam do cálculo. Explorar mantém o controle manual e salva/restaura o zoom de voo; pausa preserva o enquadramento e reinício recupera o zoom próximo.
-
-## Evidências e limites de aceite
-
-Na Godot 4.7.2/Windows, a rota do exemplo, partindo da superfície de `origem` em `(90,222)` e aplicando `(0,-80)`, chega à Terra com um impulso. Foi repetida com saldos iniciais 5 e 1. O teste compara o voo com cada ponto amostrado da prévia usando erro menor que 0,001 unidade de mundo. Fontes simétricas, centro, distância, velocidade alta, contato contra origem, desempate, limites, pausa, deriva, timeout, repetição de evento e reinícios têm verificações automatizadas.
-
-Em 29/10/2026, a gravidade da fase **Primeiro impulso** foi recalibrada (`content_version: 2`): `gravity_constant` passou de 1 para 2, a massa de `origem` de 6.000 para 24.000 e a de `apoio` de 500 para 30.000. O integrador já aplicava atração, mas o lançamento vertical desviava apenas 0,044 unidade lateralmente até a Terra. Agora desvia aproximadamente 7,809 unidades e chega em 2,12 s. A atração do planeta ficou oito vezes mais forte que na configuração original: isolado, ele desloca uma nave inicialmente parada a 200 unidades em cerca de 5,467 unidades durante três segundos. Seu aviso de proximidade também foi ampliado de 55 para 110 unidades; esse raio continua sendo apenas um indicador, sem limitar a gravidade nem antecipar o pouso.
-
-A suíte exige atração perceptível a 200 unidades, desvio lateral mínimo de 5 unidades na rota do tutorial, aceleração durante a deriva, aviso de proximidade ampliado e retorno à origem de um lançamento `(0,-30)` em até três segundos, além da correspondência entre prévia e voo. A alteração é dos parâmetros desta fase; a fórmula permanece a mesma.
-
-As capturas de mira/pausa/vitória foram verificadas no renderizador Mobile/D3D12 e também geradas com Compatibility/OpenGL em Intel UHD Graphics. O ambiente restrito impediu o cache de shaders em `user://`; os PNGs foram gerados normalmente em `.godot/`. Isso não substitui medir desempenho, ergonomia e suspensão no Android.
-
-Ainda precisam de aceite da equipe: mapeamento livre, curva/valores de impulso, gravidade, regra contra origem, contato seguro sem saldo e contagem no pouso. Nenhuma issue foi encerrada apenas por esses testes. O APK de depuração foi gerado e verificado em 15/10/2026; instalação e aparelho de referência permanecem pendentes, conforme [android.md](android.md). Campanha, editor e progresso persistente já estão integrados pelos PRs #43/#44/#46. Checkpoints e recursos condicionais continuam pendentes. Consulte [estado-da-branch.md](../auxiliar/estado-da-branch.md) para o estado consolidado em 26/10/2026.
-
-Referências da engine: [pausa e modos de processamento](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html), [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html), [fluxo de entrada](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html).
+`NivelRes.dados_autorais` preserva o objeto de autoria; valores normalizados podem diferir dele. Incrementar `content_version` quando mudanças invalidarem checkpoints; preservar `id` mantém progresso. Um JSON válido não comprova solução, dificuldade adequada ou desempenho. Consulte [testes](../guias/testes.md) e [validação pendente](../projeto/validacao-pendente.md).

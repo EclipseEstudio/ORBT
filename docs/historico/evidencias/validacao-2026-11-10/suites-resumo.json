@@ -1,0 +1,212 @@
+[
+  {
+    "suite": "Atualização Android",
+    "verificacoes": 24,
+    "falhas": 0
+  },
+  {
+    "suite": "Decolagem",
+    "verificacoes": 52,
+    "falhas": 0
+  },
+  {
+    "suite": "Ajustes de interface e voo",
+    "verificacoes": 25,
+    "falhas": 0
+  },
+  {
+    "suite": "Campanha 30",
+    "verificacoes": 252,
+    "falhas": 0
+  },
+  {
+    "suite": "Reset de progresso",
+    "verificacoes": 6,
+    "falhas": 0
+  },
+  {
+    "suite": "Revisão de jogabilidade",
+    "verificacoes": 156,
+    "falhas": 0
+  },
+  {
+    "suite": "Estrelas",
+    "verificacoes": 42,
+    "falhas": 0
+  },
+  {
+    "suite": "Progresso de estrelas",
+    "verificacoes": 25,
+    "falhas": 0
+  },
+  {
+    "suite": "Interface de estrelas",
+    "verificacoes": 26,
+    "falhas": 0
+  },
+  {
+    "suite": "Editor estrelas",
+    "verificacoes": 29,
+    "falhas": 0
+  },
+  {
+    "suite": "Efeitos de voo",
+    "verificacoes": 55,
+    "falhas": 0
+  },
+  {
+    "suite": "Opções do jogador",
+    "verificacoes": 22,
+    "falhas": 0
+  },
+  {
+    "suite": "HUD e voo",
+    "verificacoes": 53,
+    "falhas": 0
+  },
+  {
+    "suite": "Fim de jogo",
+    "verificacoes": 27,
+    "falhas": 0
+  },
+  {
+    "suite": "Mira leve",
+    "verificacoes": 21,
+    "falhas": 0
+  },
+  {
+    "suite": "Redesign UI",
+    "verificacoes": 52,
+    "falhas": 0
+  },
+  {
+    "suite": "Portais",
+    "verificacoes": 23,
+    "falhas": 0
+  },
+  {
+    "suite": "Rotação",
+    "verificacoes": 24,
+    "falhas": 0
+  },
+  {
+    "suite": "Órbitas",
+    "verificacoes": 20,
+    "falhas": 0
+  },
+  {
+    "suite": "Controles",
+    "verificacoes": 69,
+    "falhas": 0
+  },
+  {
+    "suite": "Partida",
+    "verificacoes": 147,
+    "falhas": 0
+  },
+  {
+    "suite": "Gravidade #13",
+    "verificacoes": 189,
+    "falhas": 0
+  },
+  {
+    "suite": "Checkpoints",
+    "verificacoes": 18,
+    "falhas": 0
+  },
+  {
+    "suite": "Checkpoint persistente",
+    "verificacoes": 21,
+    "falhas": 0
+  },
+  {
+    "suite": "Retentativa de checkpoint",
+    "verificacoes": 17,
+    "falhas": 0
+  },
+  {
+    "suite": "Preferências",
+    "verificacoes": 12,
+    "falhas": 0
+  },
+  {
+    "suite": "Retentativa de preferências",
+    "verificacoes": 14,
+    "falhas": 0
+  },
+  {
+    "suite": "Menus",
+    "verificacoes": 26,
+    "falhas": 0
+  },
+  {
+    "suite": "Voltar",
+    "verificacoes": 18,
+    "falhas": 0
+  },
+  {
+    "suite": "Áreas dos menus",
+    "verificacoes": 25,
+    "falhas": 0
+  },
+  {
+    "suite": "Layout dos resultados",
+    "verificacoes": 29,
+    "falhas": 0
+  },
+  {
+    "suite": "Tutorial",
+    "verificacoes": 14,
+    "falhas": 0
+  },
+  {
+    "suite": "Áudio",
+    "verificacoes": 21,
+    "falhas": 0
+  },
+  {
+    "suite": "Narrativa",
+    "verificacoes": 14,
+    "falhas": 0
+  },
+  {
+    "suite": "Início livre",
+    "verificacoes": 40,
+    "falhas": 0
+  },
+  {
+    "suite": "Editor",
+    "verificacoes": 71,
+    "falhas": 0
+  },
+  {
+    "suite": "Campanha",
+    "verificacoes": 31,
+    "falhas": 0
+  },
+  {
+    "suite": "Layout da campanha",
+    "verificacoes": 12,
+    "falhas": 0
+  },
+  {
+    "suite": "Fases",
+    "verificacoes": 1209,
+    "falhas": 0
+  },
+  {
+    "suite": "Visual",
+    "verificacoes": 57,
+    "falhas": 0
+  },
+  {
+    "suite": "Reabertura",
+    "verificacoes": 9,
+    "falhas": 0
+  },
+  {
+    "suite": "Persistência",
+    "verificacoes": 45,
+    "falhas": 0
+  }
+]

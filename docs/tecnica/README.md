@@ -1,17 +1,18 @@
-# Documentação técnica
+# Referência técnica
 
-Contratos, decisões de implementação e procedimentos para desenvolver e exportar o ORBT. Consulte o [índice geral](../README.md) para navegar pelas outras categorias.
+| Documento | Conteúdo |
+| --- | --- |
+| [Arquitetura](arquitetura.md) | Responsabilidades, cenas e fluxo de dados |
+| [Fases e simulação](fases-e-simulacao.md) | JSON v1, normalização, gravidade e contatos |
+| [Campanha e persistência](campanha.md) | Catálogo, progresso, checkpoints e preferências |
+| [Estrelas e tanques](estrelas-coletaveis.md) | Contrato, coleta contínua e confirmação |
+| [Órbitas](orbitas.md) | Movimento prescrito e relógio |
+| [Rotação e pouso](rotacao-e-pouso.md) | Giro, faixa segura e decolagem |
+| [Portais](portais.md) | Pares, saída e segmentos |
+| [Interface](ui-hud.md) | Telas, HUD, câmera, nebulosa e áudio |
+| [Editor](editor-de-fases.md) | Plugin, dados e isolamento do teste |
+| [Android](android.md) | Exportação, CI e roteiro no aparelho |
+| [Atualização Android](atualizacao-android.md) | Identidade, assinatura e preservação de dados |
+| [Site e publicação](publicacao-web.md) | GitHub Pages e seleção de APK |
 
-- [Fases e simulação](fases-e-simulacao.md): formato JSON v1, validação, unidades, integrador e contatos.
-- [Revisão de jogabilidade de 06/11](revisao-jogabilidade.md): estações, parallax, giroscópio, tempo, combustível e estrelas.
-- [Campanha](campanha.md): leitura do catálogo, carregamento, serviço de progresso e recuperação de saves.
-- [Editor de fases](editor-de-fases.md): integração do plugin, operações e reprodução dos testes.
-- [Android](android.md): configuração de exportação, pacotes e roteiro de validação em aparelho.
-
-O comportamento esperado pelo jogador fica nas [regras de negócio](../regras-de-negocio/README.md). O [manual do editor](../auxiliar/guia-editor-de-fases.md) e os registros de execução ficam na documentação auxiliar. Todos os comandos são executados a partir da raiz do repositório.
-
-- [Órbitas e corpos móveis](orbitas.md): configuração, editor, pouso, decolagem e persistência.
-
-- [Rotação e faixa segura de pouso](rotacao-e-pouso.md): superfície móvel, decolagem e setor angular opcional.
-
-- [Portais pareados](portais.md): configuração, editor, direção de saída e prévia após travessia.
+Procedimentos: [testes](../guias/testes.md) e [autoria de fases](../guias/editor-de-fases.md). Comandos partem da raiz do repositório.

@@ -1,48 +1,27 @@
-# Editor de fases JSON
+# Plugin ORBT Fases
 
-Implementação de #2 e #21–#26 integrada pelo PR #43 em `45466e2`, em Godot 4.7.2. Estado conferido em 26/10/2026; reprodução por outro integrante permanece pendente (#2/#25). O plugin é uma ferramenta interna para o contrato v1 de [fases e simulação](fases-e-simulacao.md). O aceite Android de #4 continua independente e pendente.
+Fonte: `addons/orbt_editor/`. Manual de operação: [guia do editor](../guias/editor-de-fases.md).
 
-Para instruções completas de uso, consulte o [manual do editor de fases](../auxiliar/guia-editor-de-fases.md). Esta página registra contexto técnico, implementação e roteiro para reprodução do aceite.
+| Arquivo | Responsabilidade |
+| --- | --- |
+| `plugin.cfg`, `plugin.gd` | Registro/habilitação, tela principal e execução do preview |
+| `documento.gd` | Dados autorais, seleção, inserção/exclusão, duplicação, undo/redo e validação |
+| `painel.gd` | Ações, diálogos, propriedades e rascunho |
+| `mapa.gd` | Viewport 2D, seleção, arraste, zoom, raios e avisos geométricos |
+| `teste.gd`, `teste.tscn` | Cena de execução isolada pelo carregador comum |
 
-## Abrir, ativar e desativar
+Scripts de edição usam `@tool`. O documento preserva dados JSON autorais; normalização física fica em `CarregadorFase`. A seleção distingue fase, Terra, corpos, estrelas e tanques. A lista associa cada item à seleção por metadados. Os índices antigos de estrelas são preservados nos rascunhos; tanques usam uma faixa separada após o limite de 256 estrelas. Alterações ficam no histórico e um rascunho local permite recuperar a sessão.
 
-Abra `project.godot` com Godot 4.7.2 e selecione **ORBT Fases** na barra superior, junto de 2D/3D/Script. O plugin vem habilitado. Em **Projeto > Configurações do Projeto > Plugins**, ative ou desative **ORBT Fases**. Desativar remove a interface sem excluir fases e sem modificar o fluxo do jogo. A estrutura segue o [plugin de tela principal da Godot](https://docs.godotengine.org/en/stable/tutorials/plugins/editor/making_main_screen_plugins.html).
+Salvar valida, escreve temporário e renomeia. Trocar de documento com alterações pede salvar/descartar/cancelar. Testar grava `.godot/orbt-editor-preview.json`, valida e instancia o nível, sem serviço de progresso real. Jogo e editor compartilham o contrato, sem carregador paralelo.
 
-O editor desenha dados estáticos: não instancia nave, corpos físicos, áudio ou controlador da partida. As alterações ficam em uma cópia autoral na memória. Um rascunho local em `.godot/orbt-editor-sessao.json` preserva dados, caminho e seleção ao desativar/reabrir; esse cache não substitui salvar o JSON nem entra no Git/exportação. Não há propriedades de portais, órbitas ou rotação de corpos.
+O painel suporta planetas, estações, sóis, asteroides e portais; satélite é apenas compatibilidade do carregador. Estrelas e tanques têm inserção, seleção, arraste, edição, duplicação e exclusão próprios. Tanques continuam serializados em `fuel_pickups`, com carga inteira de 1 a 100. Inserção e duplicação respeitam os limites do carregador para os arrays de coletáveis.
 
-## Criar e editar
+As propriedades da fase oferecem ativação de nebulosa e raio de visão entre 45 e 300 unidades. Ativar cria `nebula.visibility_radius` com 120; desativar remove `nebula`. Ambas as ações participam do histórico. O mapa desenha o alcance inicial como referência e deixa a fase visível para autoria. A máscara de visão continua sendo executada pela cena comum de nível no preview.
 
-1. Clique em **Nova fase**. Ela começa como cópia da fase de exemplo, com outro ID/nome e sem caminho de salvamento.
-2. Selecione **Fase** na lista para editar ID, nome, ordem, versões, combustível, tempo, limites, física, parâmetros da nave e apoio inicial. As unidades e os limites são os do contrato v1. IDs precisam permanecer únicos no catálogo; o editor não cadastra automaticamente uma fase no catálogo.
-3. Escolha planeta, satélite, Sol ou asteroide e use **Inserir corpo**. O corpo aparece no centro visível, com ID único. Selecione-o na lista ou pelo círculo no mapa. Arraste para mover ou edite posição, massa e raios nas propriedades. O ID permanece estável durante o movimento.
-4. Selecione **Terra** para editar destino e raios. O triângulo amarelo identifica a nave inicial; o quadrado destaca o corpo selecionado. A roda amplia o mapa; o botão central arrasta a visualização; **Enquadrar mapa** mostra os limites.
-5. As caixas **Visual**, **Colisão**, **Captura**, **Proximidade** e **Perigo** controlam separadamente os contornos. Para distinguir raios coincidentes, ative um por vez. Proximidade não limita a gravidade.
-6. **Excluir selecionado** confirma a remoção de um corpo. A Terra é permanente. Se excluir o apoio inicial, o diagnóstico identifica `start.body_id`; escolha outro planeta/satélite antes de salvar ou testar. Renomear o apoio atualiza essa referência.
+O mapa usa as funções da simulação para mostrar corpos orbitais e faixas em `start.time_seconds`, no mesmo instante da nave inicial. Seleção/arraste usam a posição exibida; o documento aplica a transformação orbital inversa ao gravar a posição autoral, preservando centro/período/sentido. Arrastar a nave pousada move seu apoio; início livre altera apenas `start.position`. Os arrastes participam do histórico em um único grupo.
 
-Inserir no centro pode criar sobreposição com outro objeto. Mova o novo corpo e confira os diagnósticos antes de testar. Trocar o tipo de um corpo também exige ajustar massa, captura e perigo conforme o contrato; o editor não altera esses valores silenciosamente.
+O controle de rotação consulta o carregador para refletir o giro efetivo quando os dados são válidos. Desligar grava `rotation.degrees_per_second: 0` em vez de remover `rotation`, preservando `initial_degrees` e evitando reativar os padrões de planetas/Terra. A leitura dos padrões não modifica o JSON autoral.
 
-## Arquivos e alterações pendentes
+Os raios e as órbitas desenhados são inspeção inicial, não prova de rota ou segurança ao longo do movimento. Desativar o plugin não deve afetar o jogo; o preset exclui `addons/orbt_editor/*`.
 
-**Abrir** aceita JSON válido pelo mesmo carregador do jogo. Erros de leitura, sintaxe, schema ou geometria mostram o diagnóstico e preservam a edição atual. **Salvar como** escolhe um arquivo `.json` e confirma sobrescrita no diálogo. **Salvar** atualiza o arquivo aberto. A gravação usa arquivo temporário ao lado do destino e só depois substitui o anterior; uma falha mantém a cópia em memória marcada como alterada.
-
-Antes de abrir outro arquivo ou criar nova fase com alterações pendentes, escolha **Salvar**, **Descartar** ou **Cancelar**. Cancelar o diálogo de salvamento também cancela a troca. Um ponto junto ao caminho indica alterações. Valores numéricos são escritos com precisão completa; espaços e ordem das chaves podem mudar ao salvar, preservando valores e campos adicionais.
-
-Salve fases em `Recursos/Fases/`. Para disponibilizá-las no jogo, acrescente o ID/caminho a `Recursos/Niveis.json`, respeitando o contrato do catálogo. O editor não implementa campanha ou progresso.
-
-## Validar, jogar e voltar
-
-**Validar** e a atualização automática usam `CarregadorFase.validar`: IDs, referências, números finitos, raios, versões, início, Terra e zonas incompatíveis. Erros mostram campo/objeto e bloqueiam salvar/testar. Os mesmos erros também bloqueiam o jogo. Avisos adicionais não bloqueiam: passagem com folga menor que o diâmetro da nave, visuais sobrepostos (incluindo destino encoberto) e centro de corpo fora dos limites. Órbitas e decoração independente não fazem parte do schema implementado. Validade geométrica não demonstra solução.
-
-**Testar fase** grava uma cópia temporária em `.godot/orbt-editor-preview.json` e inicia a cena de teste pelo editor. Essa cena valida novamente a cópia e instancia `Nivel.tscn`, a mesma construção usada no jogo. Não usa controlador de campanha, checkpoints ou serviço de progresso. Encerre uma execução existente antes de iniciar outra.
-
-Use **Voltar ao editor**, Esc ou F8 para encerrar o teste. A edição e a seleção permanecem no painel. Movimento, consumo, vitória, derrota e reinício só afetam a tentativa. Ao reativar a tela, a Godot pode manter o foco na aba Jogo; selecione novamente **ORBT Fases**.
-
-## Verificação e reprodução
-
-Execute `tests/run.ps1` para controles, partida e editor. `tests/run_editor_plugin.ps1` abre a Godot real para dois ciclos de ativação/desativação e testa as decisões de salvar/descartar/cancelar. Execute esse segundo script com outros editores do mesmo projeto fechados: ele habilita temporariamente o plugin de testes e restaura `project.godot` em `finally`. Passe `-Capturar` para usar renderização real e salvar `.godot/editor-orbt.png`. Ambos aceitam `-Godot` com o caminho completo do executável.
-
-`tests/run_exportacao.ps1` confere também a exclusão do plugin e da cena de teste. Exportação Android permanece sem dependência da ferramenta.
-
-Em 22/10/2026, Godot 4.7.2 / Windows: 68 verificações de controles, 142 de partida, 32 de editor, 12 de ciclo do plugin com captura e 12 do pacote exportado passaram. A captura foi inspecionada. Não constitui aceite Android nem reprodução por outro integrante.
-
-Para aceite por outro integrante: criar fase, inserir dois corpos, mover/excluir um, ajustar ID/nome/combustível/tempo, salvar, fechar/reabrir e comparar os parâmetros. Provocar referência inválida ao excluir o apoio e confirmar que o teste bloqueia; cancelar abertura com trabalho pendente; testar fase válida, vencer/perder e voltar. Registrar revisão, Godot, passos, resultados e captura. Essa reprodução humana continua pendente; as issues não foram encerradas automaticamente.
+Testes: `tests/test_editor.gd`, `test_editor_estrelas.gd`, `test_editor_recursos.gd` e `run_editor_plugin.ps1`. A suíte do editor cobre giro desligado, posições no tempo inicial e arrastes de nave/apoio, incluindo histórico e salvamento; com renderização, confere pixels de uma faixa em órbita e rotação. A suíte de recursos cobre controles e arraste de tanques, nebulosa, histórico, salvamento/reabertura, preview e rascunho. O harness cobre integração real no editor e, com renderização, captura os controles de tanque e nebulosa; reprodução humana por outro integrante continua necessária para avaliar o fluxo de autoria.
