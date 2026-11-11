@@ -186,18 +186,21 @@ func validar() -> Dictionary:
 	var avisos: Array[String] = []
 	if resultado.nivel != null:
 		var corpos: Array = resultado.nivel.corpos
+		var tempo: float = resultado.nivel.obter_tempo_inicial()
 		var raio: float = dados.ship.radius
 		for i in range(corpos.size()):
 			var corpo: Dictionary = corpos[i]
-			if not Carregador.Fisica.dentro_limites(corpo.position, resultado.nivel.limites):
+			var posicao: Vector2 = Carregador.Fisica.posicao_corpo(corpo, tempo)
+			if not Carregador.Fisica.dentro_limites(posicao, resultado.nivel.limites):
 				avisos.append("%s.position: objeto fora dos limites" % corpo.id)
 			for j in range(i + 1, corpos.size()):
 				var a: Dictionary = corpos[i]
 				var b: Dictionary = corpos[j]
-				var livre: float = a.position.distance_to(b.position) - Carregador.Fisica.raio_contato(a) - Carregador.Fisica.raio_contato(b) - 2 * raio
+				var distancia: float = posicao.distance_to(Carregador.Fisica.posicao_corpo(b, tempo))
+				var livre: float = distancia - Carregador.Fisica.raio_contato(a) - Carregador.Fisica.raio_contato(b) - 2 * raio
 				if livre < 2 * raio:
 					avisos.append("%s / %s: passagem estreita (folga %.2f unidades)" % [a.id, b.id, livre])
-				if a.position.distance_to(b.position) < a.visual_radius + b.visual_radius:
+				if distancia < a.visual_radius + b.visual_radius:
 					avisos.append("%s / %s: visuais sobrepostos%s" % [a.id, b.id, "; destino encoberto" if a.type == "earth" or b.type == "earth" else ""])
 	resultado["avisos"] = avisos
 	return resultado
@@ -292,6 +295,63 @@ func configurar_nebulosa(ativa: bool) -> void:
 		dados.erase("nebula")
 	alterado.emit()
 	selecao_alterada.emit()
+
+
+func obter_rotacao(indice: int) -> Dictionary:
+	var corpo := objeto(indice)
+	if corpo.is_empty():
+		return {}
+	var resultado := Carregador.validar(dados)
+	if resultado.nivel != null:
+		return resultado.nivel.obter_corpo(corpo.id).get("rotation", {})
+	var giro = corpo.get("rotation", {})
+	return giro if giro is Dictionary else {}
+
+
+func configurar_rotacao(ativa: bool) -> void:
+	var corpo := objeto(selecao)
+	if corpo.is_empty() or selecao <= -2 or corpo.get("type") == "portal":
+		return
+	terminar_grupo()
+	var giro := obter_rotacao(selecao).duplicate(true)
+	if ativa:
+		if is_zero_approx(float(giro.get("degrees_per_second", 0.0))):
+			giro["degrees_per_second"] = 30.0
+	else:
+		# Ausência de rotation reativa o giro padrão de planetas/Terra no carregador.
+		giro["degrees_per_second"] = 0.0
+	giro["initial_degrees"] = giro.get("initial_degrees", 0.0)
+	corpo["rotation"] = giro
+	alterado.emit()
+	selecao_alterada.emit()
+
+
+func obter_tempo_inicial() -> float:
+	var tempo = dados.get("start", {}).get("time_seconds", 0.0)
+	return float(tempo) if Carregador.numero(tempo, 0, 86400) else 0.0
+
+
+func _corpo_orbital(indice: int) -> Dictionary:
+	var corpo := objeto(indice).duplicate(true)
+	corpo.position = Vector2(corpo.position[0], corpo.position[1])
+	var orbita = corpo.get("orbit")
+	# Mesmo com outro campo inválido, o objeto deve continuar selecionável no mapa.
+	if not orbita is Dictionary or not Carregador.vetor(orbita.get("center")) or not Carregador.numero(orbita.get("period_seconds"), 1, 86400) or not orbita.get("clockwise", true) is bool:
+		corpo.erase("orbit")
+	return corpo
+
+
+func posicao_no_inicio(indice: int) -> Vector2:
+	return Carregador.Fisica.posicao_corpo(_corpo_orbital(indice), obter_tempo_inicial())
+
+
+func mover_no_inicio(indice: int, posicao: Vector2) -> void:
+	if objeto(indice).is_empty() or not posicao.is_finite():
+		return
+	var corpo := _corpo_orbital(indice)
+	corpo.position = posicao
+	# Converte o ponto exibido de volta à posição autoral (tempo zero).
+	mover(indice, Carregador.Fisica.posicao_corpo(corpo, -obter_tempo_inicial()))
 
 
 func selecionar(indice: int) -> void:

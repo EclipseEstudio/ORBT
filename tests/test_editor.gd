@@ -21,6 +21,7 @@ func conferir(condicao: bool, mensagem: String) -> void:
 
 func _executar() -> void:
 	testar_historico()
+	await testar_correcoes()
 	var itens: Array = load("res://src/Campanha/catalogo.gd").carregar("res://Recursos/Niveis.json").itens
 	for item in itens:
 		var fase := Documento.new()
@@ -164,3 +165,136 @@ func testar_historico() -> void:
 	var primeiro: Dictionary = documento.dados.bodies[-2]
 	var segundo: Dictionary = documento.dados.bodies[-1]
 	conferir(primeiro.target_id == segundo.id and segundo.target_id == primeiro.id and documento.dados.bodies[0].target_id == documento.dados.bodies[1].id, "Par duplicado preserva ligações próprias e par original")
+
+
+func clicar(mapa: Control, ponto: Vector2, pressionado: bool) -> void:
+	var evento := InputEventMouseButton.new()
+	evento.button_index = MOUSE_BUTTON_LEFT
+	evento.pressed = pressionado
+	evento.position = mapa.tela(ponto)
+	mapa._gui_input(evento)
+
+
+func mover_mouse(mapa: Control, ponto: Vector2) -> void:
+	var evento := InputEventMouseMotion.new()
+	evento.position = mapa.tela(ponto)
+	mapa._gui_input(evento)
+
+
+func testar_correcoes() -> void:
+	var painel := Painel.new()
+	painel.persistir_sessao = false
+	root.add_child(painel)
+	await process_frame
+	var doc = painel.documento
+	doc.selecionar(1)
+	conferir(painel._propriedades.get_node("RotacaoAtiva").button_pressed and not doc.modificado(), "Checkbox reflete giro padrão sem modificar JSON ao selecionar planeta")
+	painel._propriedades.get_node("RotacaoAtiva").button_pressed = false
+	conferir(doc.validar().nivel.obter_corpo("apoio").rotation.degrees_per_second == 0 and not painel._propriedades.get_node("RotacaoAtiva").button_pressed, "Desmarcar rotação do planeta desliga giro no carregador do jogo")
+	conferir(doc.desfazer() and not doc.dados.bodies[1].has("rotation") and painel._propriedades.get_node("RotacaoAtiva").button_pressed, "Desfazer recupera giro implícito e estado do checkbox")
+	conferir(doc.refazer() and doc.validar().nivel.obter_corpo("apoio").rotation.degrees_per_second == 0, "Refazer volta ao giro explicitamente desligado")
+	doc.editar(["bodies", 1, "rotation", "initial_degrees"], 45.0)
+	painel._propriedades.get_node("RotacaoAtiva").button_pressed = true
+	painel._propriedades.get_node("RotacaoAtiva").button_pressed = false
+	conferir(doc.dados.bodies[1].rotation.initial_degrees == 45, "Alternar rotação preserva orientação inicial")
+	doc.editar(["bodies", 1, "rotation", "degrees_per_second"], -20.0)
+	conferir(painel._propriedades.get_node("RotacaoAtiva").button_pressed, "Editar velocidade atualiza checkbox inclusive em giro anti-horário")
+	doc.configurar_rotacao(false)
+	var destino := "res://.godot/editor-correcao-%d.json" % OS.get_process_id()
+	var reaberto := Documento.new()
+	conferir(doc.salvar(destino).is_empty() and reaberto.abrir(destino).is_empty() and reaberto.validar().nivel.obter_corpo("apoio").rotation.degrees_per_second == 0, "Salvar/reabrir mantém giro desligado")
+	DirAccess.remove_absolute(destino)
+	doc.selecionar(-1)
+	painel._propriedades.get_node("RotacaoAtiva").button_pressed = false
+	conferir(doc.validar().nivel.obter_corpo("terra").rotation.degrees_per_second == 0, "Terra também permite desligar giro padrão")
+	doc.selecionar(0)
+	conferir(not painel._propriedades.get_node("RotacaoAtiva").button_pressed, "Estação sem giro começa desmarcada")
+	painel._propriedades.get_node("RotacaoAtiva").button_pressed = true
+	conferir(doc.validar().nivel.obter_corpo("origem").rotation.degrees_per_second == 30, "Ativar rotação da estação cria giro válido")
+
+	doc.abrir("res://Recursos/Fases/demo_orbitas.json")
+	doc.editar(["start", "time_seconds"], 3.0)
+	var nivel = doc.validar().nivel
+	var apoio_inicial: Vector2 = Carregador.Fisica.posicao_corpo(nivel.obter_corpo("origem"), 3.0)
+	conferir(doc.posicao_no_inicio(0).is_equal_approx(Vector2(30, 310)) and doc.posicao_no_inicio(0).is_equal_approx(apoio_inicial), "Mapa usa mesmo instante inicial do jogo para o apoio orbital")
+	painel.mapa.escala = 1.5
+	painel.mapa.centro = Vector2(80, 240)
+	var antes: Dictionary = doc.dados.duplicate(true)
+	clicar(painel.mapa, apoio_inicial, true)
+	conferir(doc.selecao == 0 and painel.mapa.arrastando and doc.dados == antes, "Clique no apoio desenhado seleciona sem alterar os dados")
+	mover_mouse(painel.mapa, apoio_inicial + Vector2(18, -15))
+	clicar(painel.mapa, apoio_inicial + Vector2(18, -15), false)
+	conferir(doc.posicao_no_inicio(0).is_equal_approx(apoio_inicial + Vector2(18, -15)) and doc.dados.bodies[0].orbit == antes.bodies[0].orbit, "Arraste orbital segue mouse sem salto nem mudança de centro/período")
+	conferir(doc.desfazer() and doc.dados == antes, "Arraste orbital desfaz em um passo")
+	conferir(doc.refazer() and doc.posicao_no_inicio(0).is_equal_approx(apoio_inicial + Vector2(18, -15)), "Refazer restaura posição orbital exibida")
+	doc.desfazer()
+	# Campo inválido em outro lugar não deve mudar o local onde o corpo é selecionado.
+	doc.editar(["initial_fuel"], 0)
+	clicar(painel.mapa, apoio_inicial, true)
+	conferir(doc.selecao == 0 and painel.mapa.arrastando, "Apoio orbital continua selecionável com erro em outro campo")
+	clicar(painel.mapa, apoio_inicial, false)
+	doc.desfazer()
+	var nave_inicial: Vector2 = doc.validar().nivel.obter_posicao_inicial()
+	clicar(painel.mapa, nave_inicial, true)
+	conferir(doc.selecao == 0 and painel.mapa.arrastando, "Clique na nave pousada inicia arraste do apoio")
+	mover_mouse(painel.mapa, nave_inicial + Vector2(15, -10))
+	clicar(painel.mapa, nave_inicial + Vector2(15, -10), false)
+	conferir(doc.validar().nivel.obter_posicao_inicial().is_equal_approx(nave_inicial + Vector2(15, -10)) and doc.dados.start == antes.start, "Arrastar nave orbital move apoio e preserva vínculo/ângulo/tempo inicial")
+	conferir(doc.desfazer() and doc.dados == antes, "Desfazer arraste da nave recupera apoio e fase inteira")
+	var planeta: Vector2 = doc.posicao_no_inicio(1)
+	clicar(painel.mapa, planeta, true)
+	conferir(doc.selecao == 1, "Seleção também acompanha órbita anti-horária")
+	mover_mouse(painel.mapa, planeta + Vector2(12, 8))
+	clicar(painel.mapa, planeta + Vector2(12, 8), false)
+	conferir(doc.posicao_no_inicio(1).is_equal_approx(planeta + Vector2(12, 8)), "Arraste respeita inversa da órbita anti-horária")
+
+	doc.abrir(Documento.EXEMPLO)
+	nave_inicial = doc.validar().nivel.obter_posicao_inicial()
+	clicar(painel.mapa, nave_inicial, true)
+	mover_mouse(painel.mapa, nave_inicial + Vector2(10, 5))
+	clicar(painel.mapa, nave_inicial + Vector2(10, 5), false)
+	conferir(doc.dados.bodies[0].position == [100.0, 255.0] and doc.validar().nivel.obter_posicao_inicial().is_equal_approx(nave_inicial + Vector2(10, 5)), "Arrastar nave em apoio estático move apoio pela mesma distância")
+	doc.editar(["start"], {"position": [0, 0]})
+	antes = doc.dados.duplicate(true)
+	clicar(painel.mapa, Vector2.ZERO, true)
+	conferir(doc.selecao == -2 and painel.mapa.arrastando, "Nave em início livre é arrastável com propriedades da fase selecionadas")
+	mover_mouse(painel.mapa, Vector2(15, 10))
+	mover_mouse(painel.mapa, Vector2(30, 20))
+	clicar(painel.mapa, Vector2(30, 20), false)
+	conferir(doc.dados.start.position == [30.0, 20.0] and doc.dados.bodies == antes.bodies, "Arraste de início livre altera somente posição inicial")
+	conferir(doc.desfazer() and doc.dados == antes, "Arraste de início livre inteiro desfaz em um passo")
+	conferir(doc.refazer() and doc.dados.start.position == [30.0, 20.0], "Refazer recupera início livre")
+	await testar_mapa_renderizado(painel)
+	painel.queue_free()
+	await process_frame
+
+
+func testar_mapa_renderizado(painel: Control) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	var doc = painel.documento
+	doc.abrir("res://Recursos/Fases/demo_rotacao.json")
+	doc.editar(["start", "time_seconds"], 3.0)
+	conferir(doc.validar().nivel != null, "Cena de renderização com tempo inicial é válida")
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(800, 600)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	var mapa := Painel.Mapa.new()
+	mapa.documento = doc
+	mapa.size = Vector2(800, 600)
+	mapa.centro = Vector2(80, 240)
+	mapa.escala = 2
+	for regiao in mapa.regioes:
+		mapa.regioes[regiao] = false
+	viewport.add_child(mapa)
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var imagem := viewport.get_texture().get_image()
+	# Aos 3 s, origem está em (30, 310), com a faixa antes superior voltada à direita.
+	var faixa := imagem.get_pixelv(Vector2i(mapa.tela(Vector2(53, 310))))
+	conferir(faixa.g > 0.8 and faixa.r < 0.3 and faixa.b < 0.3, "Pixels da faixa confirmam posição orbital e giro no instante inicial")
+	var antigo := imagem.get_pixelv(Vector2i(mapa.tela(Vector2(30, 287))))
+	conferir(not (antigo.g > 0.8 and antigo.r < 0.3 and antigo.b < 0.3), "Faixa não permanece na orientação do tempo zero")
+	viewport.queue_free()
+	await process_frame

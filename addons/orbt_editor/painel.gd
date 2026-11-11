@@ -258,6 +258,9 @@ func _atualizar() -> void:
 			break
 	mapa.queue_redraw()
 	_validar()
+	var rotacao := _propriedades.get_node_or_null("RotacaoAtiva") as CheckBox
+	if rotacao != null:
+		rotacao.set_pressed_no_signal(not is_zero_approx(float(documento.obter_rotacao(documento.selecao).get("degrees_per_second", 0.0))))
 	guardar_rascunho()
 
 
@@ -311,18 +314,25 @@ func _mostrar_propriedades() -> void:
 			documento.alterado.emit()
 			_mostrar_propriedades())
 		_propriedades.add_child(orbita)
-		for campo in ["rotation", "landing_zone"]:
+		if documento.objeto(documento.selecao).get("type") != "portal":
+			var rotacao := CheckBox.new()
+			rotacao.name = "RotacaoAtiva"
+			rotacao.text = "Rotação do corpo"
+			rotacao.button_pressed = not is_zero_approx(float(documento.obter_rotacao(documento.selecao).get("degrees_per_second", 0.0)))
+			rotacao.toggled.connect(documento.configurar_rotacao)
+			_propriedades.add_child(rotacao)
+		for campo in ["landing_zone"]:
 			if documento.objeto(documento.selecao).get("type") == "portal":
 				continue
 			if campo == "landing_zone" and documento.objeto(documento.selecao).get("type", "earth") not in ["planet", "station"]:
 				continue
 			var opcao := CheckBox.new()
-			opcao.text = "Rotação do corpo" if campo == "rotation" else "Faixa segura de pouso"
+			opcao.text = "Faixa segura de pouso"
 			opcao.button_pressed = documento.objeto(documento.selecao).has(campo)
 			opcao.toggled.connect(func(ativo: bool):
 				var corpo: Dictionary = documento.objeto(documento.selecao)
 				if ativo:
-					corpo[campo] = {"degrees_per_second": 30.0, "initial_degrees": 0.0} if campo == "rotation" else {"center_degrees": -90.0, "half_width_degrees": 45.0}
+					corpo[campo] = {"center_degrees": -90.0, "half_width_degrees": 45.0}
 				else:
 					corpo.erase(campo)
 				documento.alterado.emit()

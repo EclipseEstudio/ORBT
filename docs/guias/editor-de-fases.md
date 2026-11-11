@@ -36,7 +36,9 @@ O ID do arquivo precisa coincidir com a chave. A ordem define a sequência e as 
 | Histórico | Desfazer, refazer e duplicar selecionado |
 | Excluir | Selecionar e confirmar; Terra não é removível |
 
-A legenda liga/desliga visual, colisão, captura, proximidade e perigo, sem modificar o JSON. O mapa desenha dados estáticos; não demonstra uma solução nem simula movimento durante a edição.
+A legenda liga/desliga visual, colisão, captura, proximidade e perigo, sem modificar o JSON. O mapa mostra um retrato no tempo inicial da fase (`start.time_seconds`, zero quando ausente): corpos orbitais, faixas e nave usam esse mesmo instante. Não demonstra uma solução nem simula movimento durante a edição. Arrastar um corpo orbital converte o ponto exibido para a posição autoral no tempo zero, preservando centro, período e sentido da órbita.
+
+Arrastar a nave inicial move seu apoio, preservando o vínculo e o ângulo de saída; em início livre, altera somente `start.position`. Cada arraste pode ser desfeito em uma única ação.
 
 ## Mecânicas e campos especiais
 
@@ -52,6 +54,8 @@ A legenda liga/desliga visual, colisão, captura, proximidade e perigo, sem modi
 | Nebulosa | Em **Fase**, ative **Nebulosa** e ajuste **Raio de visão (unidades)** entre 45 e 300; o valor inicial é 120 |
 
 Tanques podem ser arrastados, duplicados e excluídos com o mesmo histórico das estrelas. O raio de coleta aceita de 0,01 a 1.000 unidades. O editor respeita o limite de 256 itens por tipo de coletável.
+
+**Rotação do corpo** reflete o giro efetivo, inclusive o padrão de planetas/Terra sem configuração explícita. Desmarcar grava velocidade zero e preserva a orientação inicial; remover a configuração do JSON reativa o padrão do carregador. Desfazer recupera a configuração anterior.
 
 Com nebulosa ativa, um círculo roxo marca o alcance da visão na posição inicial da nave. O mapa de autoria continua mostrando a fase inteira; **Testar fase** permite conferir a máscara durante o jogo. Desativar nebulosa remove a configuração da fase; desfazer recupera o raio anterior.
 
