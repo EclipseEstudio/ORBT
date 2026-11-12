@@ -86,7 +86,7 @@ func solicitar_voltar(nativo := false) -> void:
 func _executar_voltar(nativo: bool) -> void:
 	_liberar_voltar()
 	# Fechar somente a tela sobreposta; a pausa permanece como estava.
-	for nome in ["TutorialDemonstrativo", "TelaConfiguracoes", "TelaCreditos"]:
+	for nome in ["TutorialDemonstrativo", "TelaConfiguracoes", "TelaCreditos", "TelaConquistas"]:
 		var tela := find_child(nome, true, false)
 		if tela != null and not tela.is_queued_for_deletion():
 			tela.fechar()
@@ -139,7 +139,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
-			progresso.concluir_com_coletas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.quantidade_coletada("gold"), instancia.partida.quantidade_coletada("blue"))
+			progresso.concluir_com_coletas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.quantidade_coletada("gold"), instancia.partida.quantidade_coletada("blue"), instancia.partida.lancamentos_aplicados)
 			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:

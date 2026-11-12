@@ -30,7 +30,7 @@ func executar() -> void:
 		var f: NivelRes = resultado.nivel
 		conferir(f.ordem==i+1 and f.combustivel_inicial==RECURSOS[i][0] and f.tempo_voo==RECURSOS[i][1],item.id+": ordem e recursos oficiais")
 		conferir(f.combustiveis.size()==RECURSOS[i][2] and f.combustiveis.all(func(t:Dictionary):return t.amount==1),item.id+": disponibilidade exata de tanques +1")
-		conferir(f.quantidade_estrelas()==3 and f.quantidade_estrelas("blue")==int(i>0),item.id+": estrelas douradas e azul opcionais")
+		conferir(f.quantidade_estrelas()==3 and f.quantidade_estrelas("blue")==1,item.id+": estrelas douradas e azul opcionais")
 		conferir(f.corpos.all(func(b:Dictionary):return b.type!="asteroid" or (b.visual_radius<=14 and b.mass==0)),item.id+": apenas asteroides pequenos sem gravidade")
 		conferir(f.dados_autorais.has("nebula")==((i+1) in [23,24,25,26,27,29,30]),item.id+": nebulosa somente onde prevista")
 	var progresso := Progresso.new()

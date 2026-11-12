@@ -67,7 +67,7 @@ func _executar() -> void:
 	conferir(segura.encloses(tela.find_child("Voltar", true, false).get_global_rect()), "Voltar das configurações permanece no cabeçalho seguro")
 	tela.find_child("Voltar", true, false).pressed.emit()
 	await acomodar()
-	coluna.get_node("Acoes/Creditos").pressed.emit()
+	coluna.get_node("Titulo").pressed.emit()
 	var creditos = menu.get_node("TelaCreditos")
 	Area.aplicar(creditos._margem, 0, fisica)
 	await acomodar()

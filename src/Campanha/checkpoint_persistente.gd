@@ -50,6 +50,10 @@ func validar(nivel: NivelRes) -> Dictionary:
 		valido = float(combustivel) == floorf(float(combustivel))
 	valido = valido and _numero(dados.get("tempo"), 0, nivel.tempo_voo)
 	valido = valido and _numero(dados.get("tempo_simulacao", 0.0), 0, 1.0e12)
+	var lancamentos = dados.get("lancamentos", -1)
+	valido = valido and _numero(lancamentos, -1, 1000000)
+	if valido:
+		valido = float(lancamentos) == floorf(float(lancamentos))
 	# Checkpoints anteriores às estrelas são retomados com coleta vazia.
 	var coletadas = dados.get("estrelas_coletadas", [])
 	valido = valido and coletadas is Array

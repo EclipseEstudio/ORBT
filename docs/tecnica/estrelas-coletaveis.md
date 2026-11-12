@@ -11,7 +11,7 @@ Fonte: `carregador_fase.gd`, `partida.gd`, `nave.gd`, `progresso_sessao.gd`, `pr
 
 Cada lista aceita até 256 itens e IDs não vazios, únicos dentro da lista e de até 256 caracteres. Objetos devem caber nos limites e não sobrepor corpos/saídas de portais na configuração inicial. São independentes de `bodies` e não atraem nem bloqueiam a nave. `NivelRes` normaliza posições para `Vector2`.
 
-Na campanha há três douradas por fase e azul nas fases 2–30. Totais e recursos atuais: [catálogo](../projeto/catalogo-fases.md).
+Na campanha há três douradas por fase e uma azul em cada fase. Totais e recursos atuais: [catálogo](../projeto/catalogo-fases.md).
 
 ## Coleta
 
@@ -19,7 +19,7 @@ Na campanha há três douradas por fase e azul nas fases 2–30. Totais e recurs
 
 Teleporte retorna somente o segmento até a entrada; o salto espacial não coleta. IDs já recolhidos são ignorados. Tanques incrementam combustível imediatamente e mudam A_DERIVA para EM_VOO. Douradas/azuis só são confirmadas como recordes na vitória, por `concluir_com_coletas()`.
 
-Pausa preserva conjuntos. Reinício limpa. Checkpoint guarda IDs e restaura o conjunto do pouso, recolocando coletas posteriores. Recordes usam progresso esquema 3; esquemas antigos são migrados. Reposicionar estrelas sem mudar ID da fase não apaga recordes.
+Pausa preserva conjuntos. Reinício limpa. Checkpoint guarda IDs e restaura o conjunto do pouso, recolocando coletas posteriores. Recordes usam progresso esquema 4; esquemas antigos são migrados. Reposicionar estrelas sem mudar ID da fase não apaga recordes.
 
 ## Editor e verificação
 

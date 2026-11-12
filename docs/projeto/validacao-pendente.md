@@ -12,6 +12,7 @@ As dicas das 30 fases foram revisadas na [correção da issue #54](../historico/
 | Controles | Uma mão, multitouch, cancelamento, bloqueio contra origem e suspensão sem disparo | `test_controles.gd`, `test_decolagem.gd` |
 | Mecânicas | Leitura de faixas, apoios móveis, instrumentos na nebulosa e saída de portais | Suítes de órbitas, rotação, portais e campanha |
 | Interface/arte | Contraste, recortes, oclusão pelo dedo e alvos de toque no Android | `test_ui_redesign.gd`, `test_estrelas_ui.gd` |
+| Conquistas | No APK, abrir créditos pelo título e conquistas pela medalha; conferir arraste da lista, cards bloqueados/obtidos e persistência após fechar o jogo | `test_conquistas.gd`, `capturar_conquistas.gd` |
 | Tutorial | Jogador que não seja autor assistir às duas demonstrações na primeira fase e conseguir cancelar/lançar na campanha sem ajuda verbal; conferir navegação e Voltar no APK | `test_tutorial.gd`, `test_tutorial_demonstrativo.gd` e [plano](plano-narrativa-tutorial.md) |
 | Áudio/vibração | Alto-falante, fones, alertas, pausa, volumes e pulsos | `test_audio.gd`, `test_opcoes_jogador.gd` |
 | Saves | Atualização do APK anterior, recuperação e falha de escrita | [Atualização Android](../tecnica/atualizacao-android.md) |

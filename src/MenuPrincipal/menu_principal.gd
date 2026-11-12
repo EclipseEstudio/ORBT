@@ -3,6 +3,7 @@ extends Control
 const Tema = preload("res://src/Visual/tema_visual.gd")
 const TelaConfiguracoes = preload("res://src/Configuracoes/tela_configuracoes.gd")
 const TelaCreditos = preload("res://src/MenuPrincipal/tela_creditos.gd")
+const TelaConquistas = preload("res://src/Conquistas/tela_conquistas.gd")
 const Narrativa = preload("res://src/Narrativa/narrativa.gd")
 const AreaSegura = preload("res://src/Visual/area_segura_menu.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
@@ -42,14 +43,23 @@ func _ready() -> void:
 	espaco_superior.custom_minimum_size.y = 16
 	coluna.add_child(espaco_superior)
 	coluna.move_child(espaco_superior, 0)
-	var titulo := Label.new()
+	var titulo := Button.new()
 	titulo.name = "Titulo"
 	titulo.text = "ORBT"
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	titulo.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	titulo.flat = true
+	titulo.tooltip_text = "Créditos"
+	titulo.accessibility_name = "ORBT: abrir créditos"
+	titulo.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	titulo.pressed.connect(_abrir_creditos)
 	titulo.add_theme_font_override("font", preload("res://Recursos/Fontes/orbt-pixel.fnt"))
 	titulo.add_theme_font_size_override("font_size", 40)
 	titulo.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	titulo.add_theme_color_override("font_color", Tema.DESTAQUE)
+	# O título continua sendo um atalho, mantendo a aparência de texto ao retornar.
+	for cor in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color", "font_disabled_color"]:
+		titulo.add_theme_color_override(cor, Tema.DESTAQUE)
+	for estado in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+		titulo.add_theme_stylebox_override(estado, StyleBoxEmpty.new())
 	coluna.add_child(titulo)
 	coluna.move_child(titulo, 1)
 	var espaco := Control.new()
@@ -103,20 +113,24 @@ func configurar_acoes() -> void:
 			tela.preferencias = jogo.preferencias
 			tela.acao_resetar = jogo.resetar_progresso
 			add_child(tela))
-	var creditos := Button.new()
-	creditos.name = "Creditos"
-	creditos.text = "Créditos"
-	creditos.custom_minimum_size = Vector2(32, 32)
-	creditos.add_theme_font_size_override("font_size", 12)
-	_acoes.add_child(creditos)
-	creditos.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	Icones.aplicar(creditos, "info", "Créditos")
-	creditos.custom_minimum_size = Vector2(32, 32)
-	creditos.pressed.connect(func():
-		if not has_node("TelaCreditos"):
-			var tela := TelaCreditos.new()
-			tela.name = "TelaCreditos"
+	var conquistas := Button.new()
+	conquistas.name = "Conquistas"
+	_acoes.add_child(conquistas)
+	Icones.aplicar(conquistas, "medalha", "Conquistas")
+	conquistas.custom_minimum_size = Vector2(32, 32)
+	conquistas.pressed.connect(func():
+		if not has_node("TelaConquistas"):
+			var tela := TelaConquistas.new()
+			tela.progresso = jogo.progresso
+			tela.itens = GLOBAL.gerendiador_de_nivel.itens
 			add_child(tela))
+
+
+func _abrir_creditos() -> void:
+	if not has_node("TelaCreditos"):
+		var tela := TelaCreditos.new()
+		tela.name = "TelaCreditos"
+		add_child(tela)
 
 
 func _on_button_pressed() -> void:

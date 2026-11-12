@@ -5,17 +5,20 @@ Fonte: scripts de `src/MenuPrincipal/`, `src/Campanha/selecao_fases.gd`, `src/Ni
 | Tela | Estado implementado |
 | --- | --- |
 | Splash | Apresentação da sessão; imagem padrão de boot desativada |
-| Menu | Fundo `Recursos/Sprites/fundo_menu_principal.png`, parallax, título ORBT, Jogar e ícones de configurações/créditos |
+| Menu | Fundo `Recursos/Sprites/fundo_menu_principal.png`, parallax, título ORBT clicável para créditos, Jogar e ícones de configurações/conquistas |
 | Tutorial | Duas demonstrações animadas de impulso/cancelamento, com lembretes dos recursos, apenas no diálogo da primeira fase |
 | Seleção | Grade de cinco colunas, três níveis, douradas nos cartões e totais no cabeçalho; bloqueios/metas por nível |
 | Configurações | Música/efeitos, vibração, dicas e reset de progresso; preferências persistidas |
 | Créditos | Participantes e marcas; fundo de estrelas |
+| Conquistas | Medalha no menu; título, Voltar e lista vertical de nove cards com imagem, descrição, progresso e cadeado nas bloqueadas |
 | Fase | Número no topo; explorar/pausar; combustível, O2, dicas e instrumentos |
 | Pausa | Casa/seleção, reset e continuar; configurações; mundo congelado |
 | Vitória | Título verde; três douradas e azul apenas se coletada; casa, repetir e próximo quando aplicável |
 | Derrota | Título vermelho; motivo com rolagem, Último pouso, Repetir e retorno ao menu principal |
 
 Menu/seleção não expõem retomada persistida, embora o controlador tenha API de recuperação. Falha ao salvar progresso exibe retentativa na seleção.
+
+`src/Conquistas/conquistas.gd` deriva as conquistas dos recordes do catálogo; `tela_conquistas.gd` apresenta os cards usando tema, ícones pixelados, área segura e fundo de estrelas existentes. A lista reage a `progresso.alterado`; desbloqueadas usam cor e confirmação no lugar do cadeado. Voltar pelo cabeçalho ou pelo sistema fecha a sobreposição e devolve o foco à medalha. Créditos usam o título como entrada e restauram seu foco ao fechar.
 
 O tutorial de `src/Tutorial/` aparece automaticamente no painel central de `DialogoDica` da primeira fase e pausa a campanha. A área animada não reconhece gestos nem comanda a nave real. Próximo/Voltar alternam as duas demonstrações sem exigir prática; Jogar, fechar ou Voltar nativo removem o diálogo e liberam a tentativa. Recursos, posição, checkpoint e progresso permanecem intactos. Perda de foco e suspensão congelam a animação. A preferência de dicas controla a apresentação automática. Direção narrativa e migração futura dos destinos: [plano](../projeto/plano-narrativa-tutorial.md).
 

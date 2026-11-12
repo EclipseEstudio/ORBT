@@ -4,7 +4,7 @@ Extraído de `Recursos/Niveis.json` e dos JSONs apontados pelo catálogo em 11/1
 
 | # | ID | Fase | Combustível inicial | Tanques (+cargas) | O2 | Douradas | Azuis | Nebulosa |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | `teste_001` | [Primeiro impulso](../../Recursos/Fases/teste_001.json) | 5 | 0 (+0) | 30 s | 3 | 0 | Não |
+| 1 | `teste_001` | [Primeiro impulso](../../Recursos/Fases/teste_001.json) | 5 | 0 (+0) | 30 s | 3 | 1 | Não |
 | 2 | `mira_aberta` | [Mira aberta](../../Recursos/Fases/mira_aberta.json) | 3 | 0 (+0) | 25 s | 3 | 1 | Não |
 | 3 | `passagem_larga` | [Passagem larga](../../Recursos/Fases/passagem_larga.json) | 3 | 0 (+0) | 25 s | 3 | 1 | Não |
 | 4 | `primeiro_pouso` | [Primeiro pouso](../../Recursos/Fases/primeiro_pouso.json) | 4 | 0 (+0) | 25 s | 3 | 1 | Não |
@@ -35,7 +35,7 @@ Extraído de `Recursos/Niveis.json` e dos JSONs apontados pelo catálogo em 11/1
 | 29 | `travessia_extrema` | [Travessia Extrema](../../Recursos/Fases/travessia_extrema.json) | 4 | 1 (+1) | 20 s | 3 | 1 | Sim |
 | 30 | `grande_retorno` | [O Grande Retorno](../../Recursos/Fases/grande_retorno.json) | 5 | 1 (+1) | 25 s | 3 | 1 | Sim |
 
-Total: **30 fases, 90 douradas e 29 azuis**. Azul ausente na primeira fase é conteúdo real do JSON, não falha de contagem.
+Total: **30 fases, 90 douradas e 30 azuis**. A primeira fase recebeu uma azul no desvio de coleta em 12/11/2026; seu `content_version` passou a 5, mantendo ID e recordes anteriores.
 
 Níveis: 1–10, 11–20 e 21–30. As metas e a sequência estão nas [regras de campanha](../regras-de-negocio/campanha.md). Presença de um recurso não comprova balanceamento da rota.
 

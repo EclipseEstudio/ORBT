@@ -24,7 +24,7 @@ func _capturar() -> void:
 	var splash = jogo.interface_atual.get_node_or_null("Splash")
 	if splash != null:
 		splash.free()
-	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos").pressed.emit()
+	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Titulo").pressed.emit()
 	await salvar("creditos-%d" % altura)
 	if altura != 320 or (argumentos.size() > 1 and argumentos[1] == "creditos"):
 		quit()

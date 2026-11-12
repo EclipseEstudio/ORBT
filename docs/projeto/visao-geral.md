@@ -10,12 +10,12 @@ O projeto declara versão 0.5.0 e código Android 9. Usa renderizador Mobile e v
 | --- | --- |
 | Campanha | 30 fases, três blocos de dez, sequência e metas de estrelas |
 | Recursos | Combustível por impulso, oxigênio por tentativa e tanques coletáveis |
-| Estrelas | Três douradas por fase; azul secreta nas fases 2–30; recordes confirmados na vitória |
+| Estrelas | Três douradas por fase; uma azul secreta por fase; recordes confirmados na vitória |
 | Física | Gravidade suavizada, contatos por segmento, pouso, correção e deriva |
 | Corpos | Planetas, estações, Terra, sóis, asteroides; leitura de satélites antigos |
 | Mecânicas avançadas | Órbitas circulares, rotação, faixas de pouso, portais pareados e nebulosas |
 | Apresentação | Títulos dispensáveis, dicas, câmera, bússolas, parallax, explosão e rastro |
-| Interface | Splash, menu, seleção, pausa, configurações, créditos, resultados e tutorial demonstrativo na primeira fase |
+| Interface | Splash, menu, seleção, pausa, configurações, conquistas, créditos pelo título, resultados e tutorial demonstrativo na primeira fase |
 | Persistência | Progresso e checkpoint separados, backups/retentativas; preferências |
 | Autoria | Plugin ORBT Fases com edição, histórico, validação, rascunho e teste isolado |
 | Distribuição | Scripts Android, CI de PR e página que seleciona APKs das Releases |

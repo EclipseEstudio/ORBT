@@ -26,9 +26,9 @@ func _executar() -> void:
 	await process_frame
 	var menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(coluna.has_node("Acoes/Configuracoes") and coluna.has_node("Acoes/Creditos"), "menu oferece configurações e créditos")
+	conferir(coluna.has_node("Acoes/Configuracoes") and coluna.has_node("Acoes/Conquistas") and coluna.get_node("Titulo") is Button, "menu oferece configurações, conquistas e créditos pelo título")
 	conferir(not coluna.get_children().any(func(item): return item is Button and item.text == "Continuar"), "menu sem checkpoint não oferece Continuar")
-	coluna.get_node("Acoes/Creditos").pressed.emit()
+	coluna.get_node("Titulo").pressed.emit()
 	conferir(menu.has_node("TelaCreditos"), "abre créditos")
 	var creditos = menu.get_node("TelaCreditos")
 	conferir(creditos.find_child("Texto", true, false).text == "Miguel Alves\nRubens Augusto\nGustavo Costa\nCesar Caus", "Créditos mostram os quatro nomes solicitados")
@@ -41,7 +41,7 @@ func _executar() -> void:
 	jogo.mostrar_menu()
 	menu = jogo.interface_atual
 	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(menu.find_children("*", "Button", true, false).size() == 3 and not menu.has_node("Margem/Rolagem/VBoxContainer/ComoJogar"), "menu mantém somente três ações principais, sem tutorial ou ação de checkpoint incompatível")
+	conferir(menu.find_children("*", "Button", true, false).size() == 4 and not menu.has_node("Margem/Rolagem/VBoxContainer/ComoJogar"), "menu mantém três ações e título clicável, sem tutorial ou ação de checkpoint incompatível")
 	jogo.mostrar_selecao()
 	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Seleção não contém controles de checkpoint")
 	conferir(not jogo.checkpoint_disponivel() and jogo.checkpoint.bloqueado, "API interna preserva diagnóstico de versão")

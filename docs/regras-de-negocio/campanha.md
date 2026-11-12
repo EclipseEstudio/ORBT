@@ -16,7 +16,7 @@ O código verifica cada bloco anterior separadamente. Azuis não desbloqueiam n�
 
 ## Estrelas
 
-Cada fase tem três douradas. As fases 2–30 têm uma azul secreta; a primeira não contém azul. Total: **90 douradas e 29 azuis**.
+Cada fase tem três douradas e uma azul secreta. Total: **90 douradas e 30 azuis**.
 
 Chegar à Terra confirma a coleta. O recorde de cada cor por fase é o máximo obtido numa conclusão; tentativas diferentes não somam estrelas da mesma cor. Derrota não confirma coleta e resultado pior não reduz recorde. Douradas e azuis têm recordes independentes.
 
@@ -26,7 +26,22 @@ Pausa preserva coletas. Reinício restaura estrelas/tanques. Último pouso recup
 
 ## Progresso e checkpoint
 
-`user://progresso.json`, esquema 3, guarda conclusões, liberações e recordes. Esquemas 1/2 são migrados após validação. IDs estáveis preservam recordes; fases fora do catálogo podem manter dados salvos, mas não entram nos totais exibidos.
+`user://progresso.json`, esquema 4, guarda conclusões, liberações, recordes e fases vencidas com um lançamento. Esquemas 1–3 são migrados após validação, preservando estrelas e sem inventar lançamentos antigos. IDs estáveis preservam recordes; fases fora do catálogo podem manter dados salvos, mas não entram nos totais exibidos.
+
+## Conquistas
+
+O ícone de medalha no menu abre a lista vertical de conquistas. Créditos são acessados pelo título ORBT. Cada card contém imagem, título, descrição, progresso e cadeado enquanto bloqueado; uma confirmação substitui o cadeado após o desbloqueio.
+
+| Conquista | Requisito |
+| --- | --- |
+| Nível 1/2/3 dourado | As 30 amarelas do respectivo bloco de dez fases |
+| Explorador azul 1/2/3 | 10, 20 ou 30 estrelas azuis confirmadas |
+| Coleção celeste | Todas as 30 azuis da campanha |
+| Impulso certeiro 1/2 | Chegar à Terra com um único lançamento em 5 ou 10 fases distintas |
+
+As nove conquistas são derivadas do progresso confirmado. Impulsos efetivamente aplicados, inclusive correções em voo, contam como lançamentos; cancelamentos, mira bloqueada e pedidos descartados não contam. Portais não adicionam lançamentos. Repetir a mesma fase não aumenta a quantidade de fases distintas. Um replay pior preserva o resultado anterior.
+
+Último pouso restaura a contagem do trecho salvo; checkpoint antigo sem contagem não comprova a conquista até reiniciar a fase. Resetar Progresso também limpa as conquistas. Não há bônus de combustível, moedas ou alteração dos portões por desbloquear uma conquista.
 
 `user://checkpoint.json` guarda início/último pouso, não um estado arbitrário em voo: posição, apoio, orientação, recursos, relógio e coletas. A validação compara fase e `content_version`. Mudanças incompatíveis devem incrementar essa versão. Vitória limpa o checkpoint compatível.
 

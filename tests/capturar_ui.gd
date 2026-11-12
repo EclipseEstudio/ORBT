@@ -27,7 +27,7 @@ func _capturar() -> void:
 	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Acoes/Configuracoes").pressed.emit()
 	await salvar("configuracoes")
 	jogo.interface_atual.get_node("TelaConfiguracoes").free()
-	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos").pressed.emit()
+	jogo.interface_atual.get_node("Margem/Rolagem/VBoxContainer/Titulo").pressed.emit()
 	await salvar("creditos")
 	jogo.interface_atual.get_node("TelaCreditos").free()
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
