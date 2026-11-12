@@ -70,7 +70,7 @@ jobs:
           foreach ($arquivo in @('index.html', 'index.js', 'index.wasm', 'index.pck')) {
             if (-not (Test-Path "docs/jogar/$arquivo")) { throw "Exportação incompleta: $arquivo" }
           }
-          @{ revisao = (git rev-parse HEAD); versao = ((Select-String project.godot '^config/version="(.*)"$').Matches.Groups[1].Value) } | ConvertTo-Json | Set-Content docs/jogar/versao.json -Encoding utf8
+          @{ revisao = (git rev-parse HEAD); versao = ((Select-String -LiteralPath project.godot -Pattern '^config/version="(.*)"$').Matches.Groups[1].Value) } | ConvertTo-Json | Set-Content docs/jogar/versao.json -Encoding utf8
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
