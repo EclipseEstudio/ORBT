@@ -1,10 +1,10 @@
-name: Página de download no GitHub Pages
+name: Site e jogo Web no GitHub Pages
 
 on:
   workflow_dispatch:
   push:
     branches: [main, alpha]
-    paths: ['.github/workflows/web-pages.yml', 'docs/**']
+    paths: ['.github/workflows/web-pages.yml', 'docs/**', 'src/**', 'Recursos/**', 'project.godot', 'export_presets.cfg']
 
 permissions:
   contents: read
@@ -17,7 +17,10 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-2025
+    defaults:
+      run:
+        shell: pwsh
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -27,6 +30,47 @@ jobs:
           ref: alpha
           persist-credentials: false
       - uses: actions/configure-pages@v5
+      - name: Preparar Godot e modelos oficiais
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $base = 'https://github.com/godotengine/godot/releases/download/4.7.2-stable'
+          $arquivos = @(
+            @{ Nome = 'Godot_v4.7.2-stable_win64.exe.zip'; Hash = '731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953' },
+            @{ Nome = 'Godot_v4.7.2-stable_export_templates.tpz'; Hash = 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011' }
+          )
+          foreach ($arquivo in $arquivos) {
+            $destino = Join-Path $env:RUNNER_TEMP $arquivo.Nome
+            Invoke-WebRequest "$base/$($arquivo.Nome)" -OutFile $destino
+            if ((Get-FileHash -LiteralPath $destino -Algorithm SHA256).Hash -ne $arquivo.Hash) { throw "Checksum inválido: $($arquivo.Nome)" }
+          }
+          Expand-Archive (Join-Path $env:RUNNER_TEMP $arquivos[0].Nome) (Join-Path $env:RUNNER_TEMP 'godot')
+          $zip = Join-Path $env:RUNNER_TEMP 'modelos.zip'
+          Copy-Item (Join-Path $env:RUNNER_TEMP $arquivos[1].Nome) $zip
+          Expand-Archive $zip (Join-Path $env:RUNNER_TEMP 'modelos')
+          $modelos = Join-Path $env:APPDATA 'Godot/export_templates/4.7.2.stable'
+          New-Item -ItemType Directory -Force -Path $modelos | Out-Null
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'modelos/templates/*') $modelos -Recurse
+          "ORBT_GODOT=$(Join-Path $env:RUNNER_TEMP 'godot/Godot_v4.7.2-stable_win64_console.exe')" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Exportar alternativa para navegador
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Alterações exclusivas do checkout de publicação; Android continua Mobile.
+          $projeto = Get-Content project.godot -Raw
+          $projeto.Replace('renderer/rendering_method="mobile"', 'renderer/rendering_method="gl_compatibility"') | Set-Content project.godot -Encoding utf8
+          $preset = Get-Content export_presets.cfg -Raw
+          $web = ($preset -split '\[preset\.0\.options\]')[0]
+          $web = $web.Replace('[preset.0]', '[preset.1]').Replace('name="Android"', 'name="Web"').Replace('platform="Android"', 'platform="Web"').Replace('export_path="build/android/ORBT-debug.apk"', 'export_path="docs/jogar/index.html"')
+          $web += "`n[preset.1.options]`nvariant/extensions_support=false`nvariant/thread_support=false`nhtml/export_icon=true`nhtml/canvas_resize_policy=2`nprogressive_web_app/enabled=false`n"
+          Add-Content export_presets.cfg $web -Encoding utf8
+          New-Item -ItemType Directory -Force docs/jogar | Out-Null
+          & $env:ORBT_GODOT --headless --path . --editor --import --quit
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao importar projeto Web.' }
+          & $env:ORBT_GODOT --headless --path . --export-release Web docs/jogar/index.html
+          if ($LASTEXITCODE -ne 0) { throw 'Falha ao exportar jogo Web.' }
+          foreach ($arquivo in @('index.html', 'index.js', 'index.wasm', 'index.pck')) {
+            if (-not (Test-Path "docs/jogar/$arquivo")) { throw "Exportação incompleta: $arquivo" }
+          }
+          @{ revisao = (git rev-parse HEAD); versao = ((Select-String project.godot '^config/version="(.*)"$').Matches.Groups[1].Value) } | ConvertTo-Json | Set-Content docs/jogar/versao.json -Encoding utf8
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
