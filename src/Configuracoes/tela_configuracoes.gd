@@ -159,17 +159,18 @@ func _criar_reset(coluna: VBoxContainer) -> void:
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	texto.add_theme_font_size_override("font_size", 8)
 	confirmacao.add_child(texto)
-	var acoes := VBoxContainer.new()
+	var acoes := HBoxContainer.new()
+	acoes.alignment = BoxContainer.ALIGNMENT_CENTER
 	confirmacao.add_child(acoes)
 	var cancelar := Button.new()
-	cancelar.text = "Cancelar"
+	Icones.aplicar(cancelar, "fechar", "Cancelar")
 	cancelar.custom_minimum_size.y = 32
 	cancelar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cancelar.add_theme_font_size_override("font_size", 8)
 	acoes.add_child(cancelar)
 	var confirmar := Button.new()
 	confirmar.name = "ConfirmarReset"
-	confirmar.text = "Apagar"
+	Icones.aplicar(confirmar, "concluida", "Apagar progresso")
 	confirmar.custom_minimum_size.y = 32
 	confirmar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	confirmar.add_theme_font_size_override("font_size", 8)
