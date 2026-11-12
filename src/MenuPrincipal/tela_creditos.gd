@@ -6,8 +6,10 @@ const Icones = preload("res://src/Visual/icones_ui.gd")
 const LOGO_WMDG = preload("res://Recursos/Logos/wmdg.png")
 const LOGO_GODOT = preload("res://Recursos/Logos/godot.svg")
 var _margem: MarginContainer
+var _foco_anterior: Control
 
 func _ready() -> void:
+	_foco_anterior = get_viewport().gui_get_focus_owner()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	theme = Tema.criar()
@@ -32,6 +34,7 @@ func _ready() -> void:
 	Icones.aplicar(voltar, "voltar", "Voltar")
 	voltar.pressed.connect(fechar)
 	cabecalho.add_child(voltar)
+	voltar.grab_focus()
 	var titulo := Label.new()
 	titulo.text = "CRÉDITOS"
 	titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -98,6 +101,8 @@ func _adicionar_logo(pai: Control, textura: Texture2D, nome: String, legenda: St
 	coluna.add_child(texto)
 
 func fechar() -> void:
+	if is_instance_valid(_foco_anterior) and _foco_anterior.is_visible_in_tree():
+		_foco_anterior.grab_focus()
 	queue_free()
 
 func _area_segura() -> void:

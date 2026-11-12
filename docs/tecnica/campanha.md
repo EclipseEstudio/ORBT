@@ -14,17 +14,17 @@ Ao abrir a seleção, o controlador relê o catálogo e chama `progresso.configu
 
 | Arquivo | Esquema escrito | Conteúdo |
 | --- | --- | --- |
-| `user://progresso.json` | 3 | `geracao`, `concluidas`, `liberadas`, `melhores_estrelas`, `melhores_azuis`, `checksum` |
+| `user://progresso.json` | 4 | `geracao`, `concluidas`, `liberadas`, `melhores_estrelas`, `melhores_azuis`, `fases_um_lancamento`, `checksum` |
 | `user://checkpoint.json` | 1 | Envelope `checkpoint` e checksum; conteúdo inclui `content_version` |
 | `user://preferencias.json` | 2 | `musica`, `efeitos`, `vibracao`, `dicas` |
 
-O progresso lê versões 1–3 e migra antigas após validar checksum. Recordes são por ID estável e cor; vitória chama `concluir_com_coletas()`. A interface soma somente itens do catálogo, limitando ao total autoral. O método genérico `total_estrelas()` do serviço soma o dicionário e não deve substituir essa filtragem visual.
+O progresso lê versões 1–4 e migra antigas após validar checksum. Recordes são por ID estável e cor; vitória chama `concluir_com_coletas()` com a contagem de impulsos efetivamente aplicados. Conclusão, duas cores e lançamento único são salvos em uma geração. `fases_um_lancamento` contém IDs distintos e concluídos; versões antigas começam sem registros de lançamentos. A interface e `src/Conquistas/conquistas.gd` consideram apenas itens do catálogo. O método genérico `total_estrelas()` do serviço soma o dicionário e não deve substituir essa filtragem visual.
 
 Progresso/checkpoint usam `.tmp`, `.bak.tmp`, `.bak` e conferência antes da substituição. A geração e os dados válidos orientam recuperação de progresso. Esquemas desconhecidos bloqueiam sobrescrita. Falha mantém estado pendente e aviso; retentativa exige sucesso de gravação para retirar o aviso. Preferências usam temporário/renomeação, sem o mesmo envelope de checksum/backup.
 
 ## Checkpoint
 
-Registrado no início e a cada pouso. Campos: fase, corpo, posição, posição relativa, orientação, combustível, tempo, temporizador ativo, tempo da simulação, estrelas/tanques coletados e versão de conteúdo. Vetores são serializados como arrays.
+Registrado no início e a cada pouso. Campos: fase, corpo, posição, posição relativa, orientação, combustível, tempo, temporizador ativo, tempo da simulação, estrelas/tanques coletados, `lancamentos` e versão de conteúdo. Vetores são serializados como arrays. A contagem é restaurada junto do trecho; ausência em saves antigos usa -1 (desconhecida), que não habilita a conquista de lançamento único.
 
 A restauração atualiza corpos para o relógio salvo e recompõe a posição no apoio. Não reaplica gesto ou impulso. Checkpoints antigos sem coletas/relógio recebem os valores de compatibilidade previstos pelo validador. ID ou `content_version` incompatíveis impedem recuperação.
 

@@ -111,6 +111,7 @@ func _executar() -> void:
 	conferir(hud.has_node("DialogoDica") and paused, "Ativar dicas durante a tentativa abre ajuda com confirmação")
 	hud.get_node("DialogoDica").find_children("*", "Button", true, false)[0].pressed.emit()
 	await process_frame
+	await process_frame
 	espia.alterar("vibracao", true)
 	partida.reiniciar()
 	mundo.camera._process(2)

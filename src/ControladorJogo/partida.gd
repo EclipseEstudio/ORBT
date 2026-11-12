@@ -25,6 +25,7 @@ var apresentando_fase := false
 var proximos: Dictionary = {}
 var estrelas_coletadas: Dictionary = {}
 var combustiveis_coletados: Dictionary = {}
+var lancamentos_aplicados := 0
 var nivel: NivelRes
 var nave: Node2D
 var _checkpoint: Dictionary = {}
@@ -53,6 +54,7 @@ func reiniciar() -> void:
 	temporizador_ativo = false
 	estrelas_coletadas.clear()
 	combustiveis_coletados.clear()
+	lancamentos_aplicados = 0
 	_limpar_proximidade()
 	nave.configurar(nivel)
 	_registrar_checkpoint()
@@ -110,6 +112,8 @@ func avancar(delta: float) -> void:
 
 func _ao_impulso(_gesto_id: int) -> void:
 	temporizador_ativo = true
+	if lancamentos_aplicados >= 0:
+		lancamentos_aplicados += 1
 
 
 func _coletar_trecho(inicio: Vector2, fim: Vector2) -> void:
@@ -175,6 +179,7 @@ func _registrar_checkpoint() -> void:
 		"tempo_simulacao": nave.tempo_simulacao,
 		"estrelas_coletadas": estrelas_coletadas.keys(),
 		"combustiveis_coletados": combustiveis_coletados.keys(),
+		"lancamentos": lancamentos_aplicados,
 	}
 	checkpoint_alterado.emit(_checkpoint.duplicate(true))
 
@@ -210,6 +215,8 @@ func restaurar_checkpoint(ao_reabrir := false) -> bool:
 	nave.condicao = nave.Condicao.POUSADA if not corpo.is_empty() else nave.Condicao.PRONTA
 	tempo_restante = _checkpoint.tempo
 	temporizador_ativo = _checkpoint.temporizador_ativo
+	# Saves antigos não comprovam o número de impulsos anteriores ao pouso.
+	lancamentos_aplicados = int(_checkpoint.get("lancamentos", -1))
 	estrelas_coletadas.clear()
 	for id in _checkpoint.get("estrelas_coletadas", []):
 		estrelas_coletadas[id] = true

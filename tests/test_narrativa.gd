@@ -37,7 +37,7 @@ func _executar() -> void:
 	await process_frame
 	menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(menu.find_children("*", "Button", true, false).size() == 3 and not coluna.has_node("Continuar"), "menu com checkpoint continua tendo somente três ações")
+	conferir(menu.find_children("*", "Button", true, false).size() == 4 and not coluna.has_node("ComoJogar") and not coluna.has_node("Continuar"), "menu com checkpoint mantém três ações e título clicável, sem tutorial ou ação Continuar")
 	jogo.mostrar_selecao()
 	var selecao: Control = jogo.interface_atual
 	selecao.falhou("Checkpoint inválido. Reinicie a fase para continuar.")

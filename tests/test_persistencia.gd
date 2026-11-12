@@ -138,7 +138,7 @@ func _executar() -> void:
 	escrever(base, JSON.stringify(danificado))
 	progresso = novo(base)
 	conferir(not progresso.concluidas.has("desconhecido") and progresso.aviso.contains("recuperado"), "Checksum impede usar payload alterado")
-	var futuro := "{\"schema_version\": 4}"
+	var futuro := "{\"schema_version\": 5}"
 	escrever(base, futuro)
 	progresso = novo(base)
 	conferir(progresso.aviso.contains("incompatível") and not progresso.salvar() and FileAccess.get_file_as_string(base) == futuro, "Versão futura não é sobrescrita nem rebaixada pelo backup")

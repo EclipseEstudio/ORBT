@@ -11,6 +11,7 @@ var _continuar: Button
 var _resetar: Button
 var _menu: Button
 var titulo := "PAUSA"
+var cor_titulo := Tema.TEXTO
 var texto_primario := "Continuar"
 var texto_secundario := "Resetar"
 var texto_menu := "Voltar ao menu"
@@ -53,9 +54,9 @@ func _ready() -> void:
 	rotulo_titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	rotulo_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rotulo_titulo.add_theme_font_size_override("font_size", 8)
+	rotulo_titulo.add_theme_color_override("font_color", cor_titulo)
 	coluna.add_child(rotulo_titulo)
 	if modo_conclusao:
-		rotulo_titulo.add_theme_color_override("font_color", Tema.DESTAQUE)
 		_estrelas_resultado = HBoxContainer.new()
 		_estrelas_resultado.name = "EstrelasResultado"
 		_estrelas_resultado.alignment = BoxContainer.ALIGNMENT_CENTER

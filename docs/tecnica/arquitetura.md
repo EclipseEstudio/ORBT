@@ -14,7 +14,7 @@ A cena principal é `src/ControladorJogo/main.tscn`. Os autoloads `GLOBAL` e `UT
 | Dados de fase | `carregador_fase.gd`, `nivel_res.gd`: validação, cópia normalizada e início |
 | Montagem do nível | `gerenciador_de_nivel.gd`, `nivel.gd`, `CorpoEstelar/`: catálogo, instanciação e apresentação dos corpos |
 | Campanha | `catalogo.gd`, `progresso_sessao.gd`, `progresso_persistente.gd`, `checkpoint_persistente.gd` |
-| Interface | `interface_partida.gd`, `dialogo_pausa.gd`, seleção, menu, configurações e créditos |
+| Interface | `interface_partida.gd`, `dialogo_pausa.gd`, seleção, menu, configurações, conquistas e créditos |
 | Visual | `src/Visual/`: tema, ícones, sprites, nebulosa, bússolas, efeitos e parallax |
 | Áudio | `audio_jogo.gd`: duas músicas, efeitos e integração com estado/volumes |
 | Autoria | `addons/orbt_editor/`: plugin, documento, mapa, painel e cena de teste |

@@ -55,7 +55,7 @@ func _ler(arquivo: String) -> Dictionary:
 	var versao = dados.get("schema_version")
 	if not (versao is int or versao is float) or not is_finite(float(versao)) or versao != floorf(versao):
 		return {"estado": "invalido"}
-	if int(versao) not in [1, 2, 3]:
+	if int(versao) not in [1, 2, 3, 4]:
 		return {"estado": "incompativel"}
 	var numero = dados.get("geracao")
 	if not (numero is float or numero is int) or not is_finite(numero) or numero < 1 or numero > 1000000000 or numero != floorf(numero):
@@ -82,7 +82,7 @@ func _ler(arquivo: String) -> Dictionary:
 				return {"estado": "invalido"}
 			recordes[id] = int(quantidade)
 		conteudo["melhores_estrelas"] = recordes
-	if versao == 3:
+	if versao >= 3:
 		if not dados.get("melhores_azuis") is Dictionary or dados.melhores_azuis.size() > 10000:
 			return {"estado": "invalido"}
 		var azuis: Dictionary = {}
@@ -92,6 +92,15 @@ func _ler(arquivo: String) -> Dictionary:
 				return {"estado": "invalido"}
 			azuis[id] = int(quantidade)
 		conteudo["melhores_azuis"] = azuis
+	if versao >= 4:
+		if not dados.get("fases_um_lancamento") is Array or dados.fases_um_lancamento.size() > 10000:
+			return {"estado": "invalido"}
+		var fases: Dictionary = {}
+		for id in dados.fases_um_lancamento:
+			if not id is String or id not in dados.concluidas or fases.has(id):
+				return {"estado": "invalido"}
+			fases[id] = true
+		conteudo["fases_um_lancamento"] = dados.fases_um_lancamento
 	if dados.get("checksum") != JSON.stringify(conteudo, "", true).sha256_text():
 		return {"estado": "invalido"}
 	return {"estado": "valido", "dados": conteudo, "texto": texto}
@@ -119,6 +128,7 @@ func carregar() -> bool:
 	liberadas.clear()
 	melhores_estrelas.clear()
 	melhores_azuis.clear()
+	fases_um_lancamento.clear()
 	for id in escolhido.dados.concluidas:
 		concluidas[id] = true
 	for id in escolhido.dados.liberadas:
@@ -128,12 +138,14 @@ func carregar() -> bool:
 	geracao = escolhido.dados.geracao
 	for id in escolhido.dados.get("melhores_azuis", {}):
 		melhores_azuis[id] = int(escolhido.dados.melhores_azuis[id])
+	for id in escolhido.dados.get("fases_um_lancamento", []):
+		fases_um_lancamento[id] = true
 	_ultimo_valido = escolhido.texto
 	if principal.estado != "valido":
 		aviso = "Progresso recuperado da última cópia válida."
 	alterado.emit()
 	# Migrar apenas depois de verificar o checksum antigo; a cópia mantém o legado.
-	if escolhido.dados.schema_version < 3:
+	if escolhido.dados.schema_version < 4:
 		_sujo = true
 		salvar()
 	return true
@@ -176,11 +188,21 @@ func registrar_azuis(id: String, quantidade: int) -> bool:
 	return mudou
 
 
-func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int) -> bool:
+func registrar_lancamentos(id: String, quantidade: int) -> bool:
+	var mudou := super.registrar_lancamentos(id, quantidade)
+	if mudou or _sujo:
+		_sujo = true
+		if not _agrupando:
+			salvar()
+	return mudou
+
+
+func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int, lancamentos := -1) -> bool:
+	var ja_agrupando := _agrupando
 	_agrupando = true
-	var mudou := super.concluir_com_coletas(id, itens, douradas, azuis)
-	_agrupando = false
-	if _sujo:
+	var mudou := super.concluir_com_coletas(id, itens, douradas, azuis, lancamentos)
+	_agrupando = ja_agrupando
+	if _sujo and not _agrupando:
 		salvar()
 	return mudou
 
@@ -203,7 +225,9 @@ func salvar() -> bool:
 	var abertas: Array = liberadas.keys()
 	completas.sort()
 	abertas.sort()
-	var dados := {"schema_version": 3, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas, "melhores_estrelas": melhores_estrelas.duplicate(), "melhores_azuis": melhores_azuis.duplicate()}
+	var fases: Array = fases_um_lancamento.keys()
+	fases.sort()
+	var dados := {"schema_version": 4, "geracao": geracao + 1, "concluidas": completas, "liberadas": abertas, "melhores_estrelas": melhores_estrelas.duplicate(), "melhores_azuis": melhores_azuis.duplicate(), "fases_um_lancamento": fases}
 	dados["checksum"] = JSON.stringify(dados, "", true).sha256_text()
 	var texto := JSON.stringify(dados, "\t") + "\n"
 	aviso = "Não foi possível salvar. O progresso novo vale só nesta sessão."

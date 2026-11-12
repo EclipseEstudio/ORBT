@@ -36,7 +36,7 @@ func _capturar() -> void:
 	await salvar("configuracoes")
 	await salvar("configuracoes-voltar")
 	configuracoes.free()
-	menu.get_node("Margem/Rolagem/VBoxContainer/Acoes/Creditos").pressed.emit()
+	menu.get_node("Margem/Rolagem/VBoxContainer/Titulo").pressed.emit()
 	Area.aplicar(menu.get_node("TelaCreditos")._margem, 0, fisica)
 	await salvar("creditos")
 	quit()

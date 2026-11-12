@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": 4,
+  "content_version": 5,
   "id": "teste_001",
   "name": "Primeiro impulso",
   "order": 1,
@@ -118,6 +118,12 @@
       ],
       "radius": 7,
       "type": "gold"
+    },
+    {
+      "id": "estrela_azul",
+      "position": [135, 85],
+      "radius": 7,
+      "type": "blue"
     }
   ]
 }

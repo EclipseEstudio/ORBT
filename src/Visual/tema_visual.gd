@@ -3,6 +3,9 @@ extends RefCounted
 const FUNDO = Color("070e21")
 const TEXTO = Color("f4f8ff")
 const DESTAQUE = Color("87b6d9")
+const SUCESSO = Color("72e6a2")
+const ERRO = Color("ff6b78")
+const TAMANHO_TEXTO_AJUDA := 7
 const PERIGO = Color("ff9c38")
 const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
 

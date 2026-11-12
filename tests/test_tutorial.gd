@@ -44,7 +44,7 @@ func _executar() -> void:
 	conferir(hud.has_node("TituloFase") and not hud.has_node("DialogoDica"), "Título precede a dica")
 	await hud.get_node("TituloFase").terminou
 	var dica := hud.get_node("DialogoDica")
-	conferir(paused and dica.find_children("*", "Label", true, false).any(func(rotulo): return rotulo.text == partida.nivel.dados_autorais.tutorial), "Dica autoral pausa a tentativa até confirmação")
+	conferir(paused and dica.has_node("TutorialDemonstrativo") and dica.get_node("TutorialDemonstrativo").etapa == 0, "Primeira fase apresenta tutorial demonstrativo no diálogo antes da tentativa")
 	conferir(dica.z_index > hud._bussola.z_index, "Diálogo da dica cobre a bússola para preservar a leitura")
 	var saldo_inicial: int = nave.combustivel
 	toque(8, Vector2(5, 5), true)
@@ -52,7 +52,8 @@ func _executar() -> void:
 	conferir(nave.entrada.gesto.contato_ativo == -1 and nave.combustivel == saldo_inicial, "Fundo da dica não inicia gesto")
 	dica.find_children("*", "Button", true, false)[0].pressed.emit()
 	await process_frame
-	conferir(not paused and not hud.has_node("DialogoDica"), "OK fecha dica e libera a tentativa")
+	await process_frame
+	conferir(not paused and not hud.has_node("DialogoDica"), "Fechar tutorial dispensa diálogo e libera a tentativa")
 	hud._process(0)
 	conferir(hud._mensagem.text.contains("Toque") and hud._mensagem.text.contains("Arraste para baixo"), "instrução inicial mostra toque e dica autoral")
 	conferir(hud._mensagem.mouse_filter == Control.MOUSE_FILTER_IGNORE, "texto não intercepta entrada")
@@ -127,10 +128,12 @@ func _conferir_dicas_campanha() -> void:
 			var painel: PanelContainer = dialogo.find_children("*", "PanelContainer", true, false)[0]
 			var tela := Rect2(Vector2.ZERO, Vector2(tamanho))
 			var contexto := "%s em %s: " % [id_fase, tamanho]
-			conferir(paused and rotulo.text == nivel.nivel_res.dados_autorais.tutorial, contexto + "exibe dica autoral completa antes da tentativa")
+			var primeira_fase: bool = nivel.nivel_res.id == "teste_001"
+			conferir(paused and (dialogo.has_node("TutorialDemonstrativo") if primeira_fase else rotulo.text == nivel.nivel_res.dados_autorais.tutorial), contexto + "exibe tutorial integrado na primeira fase e dica autoral nas demais")
 			conferir(tela.encloses(painel.get_global_rect()) and painel.get_global_rect().encloses(rotulo.get_global_rect()), contexto + "painel e texto cabem na tela")
-			conferir(tela.encloses(botao.get_global_rect()) and botao.size.x >= 64 and botao.size.y >= 32, contexto + "confirmação permanece visível e alcançável")
+			conferir(tela.encloses(botao.get_global_rect()) and botao.size.x >= (32 if primeira_fase else 64) and botao.size.y >= (28 if primeira_fase else 32), contexto + "ação de saída permanece visível e alcançável")
 			botao.pressed.emit()
+			await process_frame
 			await process_frame
 			conferir(not paused and not hud.has_node("DialogoDica"), contexto + "confirmar retoma a tentativa")
 			nivel.queue_free()

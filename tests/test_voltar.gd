@@ -37,7 +37,7 @@ func _executar() -> void:
 	conferir(not quit_on_go_back, "Saída automática por Voltar desativada no projeto")
 	var menu = jogo.interface_atual
 	var coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	coluna.get_node("Acoes/Creditos").pressed.emit()
+	coluna.get_node("Titulo").pressed.emit()
 	escape(true)
 	await acomodar()
 	conferir(menu.has_node("TelaCreditos"), "Repetição de Escape não atravessa telas")

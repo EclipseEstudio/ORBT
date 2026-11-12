@@ -6,6 +6,7 @@ var concluidas: Dictionary = {}
 var liberadas: Dictionary = {}
 var melhores_estrelas: Dictionary = {}
 var melhores_azuis: Dictionary = {}
+var fases_um_lancamento: Dictionary = {}
 var _itens: Array = []
 
 
@@ -36,6 +37,7 @@ func resetar() -> bool:
 	liberadas.clear()
 	melhores_estrelas.clear()
 	melhores_azuis.clear()
+	fases_um_lancamento.clear()
 	if not _itens.is_empty():
 		liberadas[_itens[0].id] = true
 	alterado.emit()
@@ -90,9 +92,21 @@ func registrar_azuis(id: String, quantidade: int) -> bool:
 	return true
 
 
-func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int) -> bool:
+func concluir_com_coletas(id: String, itens: Array, douradas: int, azuis: int, lancamentos := -1) -> bool:
+	if not itens.any(func(item: Dictionary): return item.id == id) or not pode_abrir(id):
+		return false
 	var mudou := concluir_com_estrelas(id, itens, douradas)
-	return registrar_azuis(id, azuis) or mudou
+	var azul := registrar_azuis(id, azuis)
+	var lancamento := registrar_lancamentos(id, lancamentos)
+	return mudou or azul or lancamento
+
+
+func registrar_lancamentos(id: String, quantidade: int) -> bool:
+	if quantidade != 1 or not concluidas.has(id) or fases_um_lancamento.has(id):
+		return false
+	fases_um_lancamento[id] = true
+	alterado.emit()
+	return true
 
 
 func melhor_estrelas(id: String) -> int:

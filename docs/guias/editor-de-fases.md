@@ -9,7 +9,7 @@ Os rótulos dos campos, tipos de corpos e cores das estrelas aparecem em portugu
 1. Use **Nova fase** ou **Abrir…** para editar um JSON. Uma nova fase parte do exemplo e recebe ID/nome próprios de rascunho.
 2. Selecione **Fase** e ajuste ID estável, nome, ordem, combustível inicial, oxigênio (`flight_timeout`), limites, física, nave e início.
 3. Insira/mova corpos; configure Terra, raios, órbita, rotação e faixa segura quando aplicável.
-4. Insira estrelas e escolha **Dourada** ou **Azul**. A campanha atual usa três douradas e azul nas fases 2–30.
+4. Insira estrelas e escolha **Dourada** ou **Azul**. A campanha atual usa três douradas e uma azul em cada uma das 30 fases.
 5. Use **Inserir tanque** para adicionar combustível coletável. Para limitar a visão, selecione **Fase**, ative **Nebulosa** e ajuste o raio de visão.
 6. Clique em **Validar** e corrija erros. **Salvar como…** grava em `Recursos/Fases/`. Teste antes de incluir no catálogo.
 7. Para aparecer na campanha, adicione manualmente o par ID/caminho em `Recursos/Niveis.json`. Salvar um arquivo não o cadastra.

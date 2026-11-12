@@ -32,9 +32,11 @@ Em outros sistemas, execute os GDScripts individualmente e confira saída e logs
 | Entrada/mira | `test_controles`, `test_decolagem`, `test_mira_leve`, `test_ajustes_interface_voo` |
 | Física/partida | `test_partida`, `test_gravidade_issue_13`, `test_inicio_livre`, `test_revisao_jogabilidade` |
 | Campanha | `test_campanha`, `test_fases`, `test_campanha_30`, `test_progresso_estrelas` |
+| Conquistas | `test_conquistas`: marcos, fases distintas, replay/reset, migração, falha de escrita, contagem de impulsos, checkpoints e cards/rolagem |
 | Mecânicas | `test_orbitas`, `test_rotacao`, `test_portais`, `test_estrelas` |
 | Persistência | `test_persistencia`, `test_checkpoints`, `test_checkpoint_persistente`, `test_retentar_checkpoint`, `test_reset_progresso` |
 | UI/áudio | `test_ui_redesign`, `test_estrelas_ui`, `test_hud_voo`, `test_fim_de_jogo`, `test_audio`, `test_opcoes_jogador` |
+| Tutorial | `test_tutorial`, `test_tutorial_demonstrativo`: gestos, interrupções, pausa, foco, recursos preservados e telas pequenas |
 | Editor | `test_editor`, `test_editor_estrelas`, `test_editor_recursos`, harness de `tests/editor_harness/` |
 
 Os nomes acima omitem `.gd` por concisão. A lista executável completa permanece no runner, evitando duplicar contagens que mudam a cada revisão.
@@ -44,6 +46,8 @@ Os nomes acima omitem `.gd` por concisão. A lista executável completa permanec
 ```powershell
 godot --path . --script tests/capturar_ui.gd
 godot --path . --rendering-method gl_compatibility --script tests/capturar_campanha30.gd
+godot --path . --rendering-method gl_compatibility --script tests/capturar_tutorial_demonstrativo.gd
+godot --path . --rendering-method gl_compatibility --script tests/capturar_conquistas.gd
 ```
 
 Scripts `capturar_*` precisam de renderização real e gravam saídas locais, normalmente em `.godot/`. Não adicionar automaticamente cada captura ao Git. Para evidência durável, registre revisão, ambiente, procedimento e observações em `docs/historico/`.

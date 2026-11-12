@@ -32,7 +32,7 @@ func _executar() -> void:
 	conferir(splash.size == Vector2(180, 320) and splash.find_children("*", "TextureRect", true, false).size() == 1, "Splash apresenta somente Eclipse Estudio")
 	splash.free()
 	var acoes: HBoxContainer = menu.get_node("Margem/Rolagem/VBoxContainer/Acoes")
-	var titulo: Label = menu.get_node("Margem/Rolagem/VBoxContainer/Titulo")
+	var titulo: Button = menu.get_node("Margem/Rolagem/VBoxContainer/Titulo")
 	conferir(titulo.get_theme_font("font").resource_path.ends_with("orbt-pixel.fnt") and not menu.get_node("Margem/Rolagem/VBoxContainer/Narrativa").visible, "Título usa fonte bitmap sem subtítulo")
 	for altura in [240, 320, 390]:
 		viewport.size.y = altura

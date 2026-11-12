@@ -284,6 +284,7 @@ func testar_cena_principal() -> void:
 			await filho.get_node("TituloFase").terminou
 			filho.get_node("DialogoDica").find_children("*", "Button", true, false)[0].pressed.emit()
 			await process_frame
+			await process_frame
 	cena.mundo_atual.camera._process(2.0)
 	conferir(nave_jogo.get_node("Entrada").gesto.contato_ativo == -1, "Start não transfere gesto à nova nave")
 	nave_jogo.get_node("Entrada").impulso_solicitado.connect(func(impulso: Vector2): impulsos.append(impulso))

@@ -173,6 +173,8 @@ func _executar() -> void:
 			await process_frame
 		if conferir(jogo.iniciar_fase(rota.id), rota.id + ": repetição abre fase concluída"):
 			jogar(jogo.mundo_atual, rota.coleta, 3)
+			if rota.id == "teste_001":
+				conferir(jogo.mundo_atual.partida.quantidade_coletada("blue") == 1, "Primeira fase: azul acessível no desvio de coleta sem alterar a rota econômica")
 			conferir(jogo.progresso.melhor_estrelas(rota.id) == 3, rota.id + ": repetição melhora recorde para três estrelas")
 			var azuis: int = resultado.nivel.quantidade_estrelas("blue")
 			conferir(jogo.mundo_atual.partida.quantidade_coletada("blue") == azuis, rota.id + ": rota alternativa permite a conquista azul com combustível disponível")
