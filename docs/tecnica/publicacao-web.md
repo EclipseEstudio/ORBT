@@ -1,5 +1,13 @@
 # Página de download e publicação
 
+## Entrega 0.5.2
+
+O workflow `web-pages.yml` passa a publicar somente `docs/` da `alpha`, sem exportar o jogo Web nem inserir o botão de navegador. Ele executa após alterações da página/workflow integradas à `alpha`; também pode ser executado manualmente quando disponível na branch padrão. O ambiente `github-pages` deve permitir a branch `alpha`. O fluxo anterior da `main`, descrito abaixo como histórico, deve ser substituído pelo mesmo workflow para não reinserir a opção Web em futuras publicações.
+
+As notas da entrega Android estão em `docs/versoes/v0.5.2-alpha.20261112.md`.
+
+## Histórico anterior à entrega 0.5.2
+
 Fontes locais: `docs/index.html`, `docs/.nojekyll` e `.github/workflows/android-pr.yml`. Esta branch contém a página de download Android e somente o preset Android. A `main` remota também contém `.github/workflows/web-pages.yml`, que prepara um preset Web durante o build e publica o jogo no navegador. Confira as branches antes de concluir que a ausência de preset Web local significa ausência de distribuição Web.
 
 ## GitHub Pages

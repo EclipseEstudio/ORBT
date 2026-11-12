@@ -116,6 +116,7 @@ func configurar_acoes() -> void:
 	var conquistas := Button.new()
 	conquistas.name = "Conquistas"
 	_acoes.add_child(conquistas)
+	_acoes.move_child(conquistas, configuracoes.get_index())
 	Icones.aplicar(conquistas, "medalha", "Conquistas")
 	conquistas.custom_minimum_size = Vector2(32, 32)
 	conquistas.pressed.connect(func():
