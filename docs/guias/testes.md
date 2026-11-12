@@ -35,6 +35,7 @@ Em outros sistemas, execute os GDScripts individualmente e confira saída e logs
 | Mecânicas | `test_orbitas`, `test_rotacao`, `test_portais`, `test_estrelas` |
 | Persistência | `test_persistencia`, `test_checkpoints`, `test_checkpoint_persistente`, `test_retentar_checkpoint`, `test_reset_progresso` |
 | UI/áudio | `test_ui_redesign`, `test_estrelas_ui`, `test_hud_voo`, `test_fim_de_jogo`, `test_audio`, `test_opcoes_jogador` |
+| Tutorial | `test_tutorial`, `test_tutorial_demonstrativo`: gestos, interrupções, pausa, foco, recursos preservados e telas pequenas |
 | Editor | `test_editor`, `test_editor_estrelas`, `test_editor_recursos`, harness de `tests/editor_harness/` |
 
 Os nomes acima omitem `.gd` por concisão. A lista executável completa permanece no runner, evitando duplicar contagens que mudam a cada revisão.
@@ -44,6 +45,7 @@ Os nomes acima omitem `.gd` por concisão. A lista executável completa permanec
 ```powershell
 godot --path . --script tests/capturar_ui.gd
 godot --path . --rendering-method gl_compatibility --script tests/capturar_campanha30.gd
+godot --path . --rendering-method gl_compatibility --script tests/capturar_tutorial_demonstrativo.gd
 ```
 
 Scripts `capturar_*` precisam de renderização real e gravam saídas locais, normalmente em `.godot/`. Não adicionar automaticamente cada captura ao Git. Para evidência durável, registre revisão, ambiente, procedimento e observações em `docs/historico/`.

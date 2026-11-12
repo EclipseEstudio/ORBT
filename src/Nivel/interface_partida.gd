@@ -9,6 +9,7 @@ const AreaSeguraMenu = preload("res://src/Visual/area_segura_menu.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 const DialogoPausa = preload("res://src/Nivel/dialogo_pausa.gd")
 const TituloFase = preload("res://src/Nivel/titulo_fase.gd")
+const Tutorial = preload("res://src/Tutorial/tutorial_demonstrativo.gd")
 const InstrumentosNebulosa = preload("res://src/Visual/instrumentos_nebulosa.gd")
 const DURACAO_AJUDA := 6.0
 var _ajuda_restante := DURACAO_AJUDA
@@ -194,6 +195,7 @@ func _ready() -> void:
 	_dialogo_conclusao = DialogoPausa.new()
 	_dialogo_conclusao.name = "DialogoConclusao"
 	_dialogo_conclusao.modo_conclusao = true
+	_dialogo_conclusao.cor_titulo = Tema.SUCESSO
 	_dialogo_conclusao.titulo = "CAMPANHA CONCLUÍDA" if partida.campanha_permitida and proxima_fase.is_empty() else "FASE CONCLUÍDA"
 	_dialogo_conclusao.texto_primario = "Próximo"
 	_dialogo_conclusao.texto_secundario = "Repetir"
@@ -206,6 +208,7 @@ func _ready() -> void:
 	_dialogo_derrota = DialogoPausa.new()
 	_dialogo_derrota.name = "DialogoDerrota"
 	_dialogo_derrota.titulo = "FIM DE JOGO"
+	_dialogo_derrota.cor_titulo = Tema.ERRO
 	_dialogo_derrota.texto_primario = "Último pouso"
 	_dialogo_derrota.texto_secundario = "Repetir"
 	_dialogo_derrota.continuar.connect(partida.restaurar_checkpoint)
@@ -417,6 +420,11 @@ func _criar_dica() -> void:
 	dialogo.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dialogo)
 	dialogo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if partida.nivel.id == "teste_001":
+		var tutorial := Tutorial.new()
+		tutorial.fechada.connect(dialogo.queue_free)
+		dialogo.add_child(tutorial)
+		return
 	var fundo := ColorRect.new()
 	fundo.color = Color(0.015, 0.025, 0.06, 0.8)
 	dialogo.add_child(fundo)
@@ -432,7 +440,7 @@ func _criar_dica() -> void:
 	coluna.custom_minimum_size.x = minf(180, get_viewport().get_visible_rect().size.x - 32)
 	coluna.add_theme_constant_override("separation", 12)
 	painel.add_child(coluna)
-	var dica := rotulo(coluna, texto, 8)
+	var dica := rotulo(coluna, texto, Tema.TAMANHO_TEXTO_AJUDA)
 	dica.custom_minimum_size.x = coluna.custom_minimum_size.x
 	dica.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

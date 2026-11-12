@@ -41,7 +41,7 @@ func _executar() -> void:
 	jogo.mostrar_menu()
 	menu = jogo.interface_atual
 	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
-	conferir(menu.find_children("*", "Button", true, false).size() == 3, "checkpoint incompatível não acrescenta ações ao menu principal")
+	conferir(menu.find_children("*", "Button", true, false).size() == 3 and not menu.has_node("Margem/Rolagem/VBoxContainer/ComoJogar"), "menu mantém somente três ações principais, sem tutorial ou ação de checkpoint incompatível")
 	jogo.mostrar_selecao()
 	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Seleção não contém controles de checkpoint")
 	conferir(not jogo.checkpoint_disponivel() and jogo.checkpoint.bloqueado, "API interna preserva diagnóstico de versão")

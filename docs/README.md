@@ -4,7 +4,7 @@ Atualizada em **10/11/2026**, usando o código e os JSONs como fonte de verdade.
 
 | Pasta | Finalidade | Entrada |
 | --- | --- | --- |
-| `projeto/` | Produto, conteúdo e limites | [Visão geral](projeto/visao-geral.md), [catálogo](projeto/catalogo-fases.md), [validação pendente](projeto/validacao-pendente.md) |
+| `projeto/` | Produto, conteúdo e limites | [Visão geral](projeto/visao-geral.md), [catálogo](projeto/catalogo-fases.md), [narrativa e tutorial](projeto/plano-narrativa-tutorial.md), [validação pendente](projeto/validacao-pendente.md) |
 | `regras-de-negocio/` | Comportamento para o jogador | [Jogabilidade](regras-de-negocio/jogabilidade.md), [campanha](regras-de-negocio/campanha.md) |
 | `guias/` | Procedimentos da equipe | [Editor](guias/editor-de-fases.md), [testes](guias/testes.md) |
 | `tecnica/` | Arquitetura, contratos e distribuição | [Índice técnico](tecnica/README.md) |

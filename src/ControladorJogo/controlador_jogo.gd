@@ -86,7 +86,7 @@ func solicitar_voltar(nativo := false) -> void:
 func _executar_voltar(nativo: bool) -> void:
 	_liberar_voltar()
 	# Fechar somente a tela sobreposta; a pausa permanece como estava.
-	for nome in ["TelaConfiguracoes", "TelaCreditos"]:
+	for nome in ["TutorialDemonstrativo", "TelaConfiguracoes", "TelaCreditos"]:
 		var tela := find_child(nome, true, false)
 		if tela != null and not tela.is_queued_for_deletion():
 			tela.fechar()
