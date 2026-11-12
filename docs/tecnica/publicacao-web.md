@@ -1,26 +1,16 @@
 # Página de download e publicação
 
-## Entrega 0.5.2
+## Publicação atual
 
-O workflow `web-pages.yml` passa a publicar somente `docs/` da `alpha`, sem exportar o jogo Web nem inserir o botão de navegador. Ele executa após alterações da página/workflow integradas à `alpha`; também pode ser executado manualmente quando disponível na branch padrão. O ambiente `github-pages` deve permitir a branch `alpha`. O fluxo anterior da `main`, descrito abaixo como histórico, deve ser substituído pelo mesmo workflow para não reinserir a opção Web em futuras publicações.
+O download Android continua como ação principal. O link secundário **Jogar no navegador** abre `jogar/`, sem instalação. O progresso do navegador é separado do aplicativo Android.
 
-As notas da entrega Android estão em `docs/versoes/v0.5.2-alpha.20261112.md`.
+O workflow `.github/workflows/web-pages.yml` obtém a `alpha`, prepara um preset Web sem threads e usa Compatibility somente no checkout de publicação. Exporta para `docs/jogar/`, confere HTML, JavaScript, WebAssembly e PCK e registra versão/revisão em `versao.json`. Publica a página e o jogo juntos pelo GitHub Pages.
 
-## Histórico anterior à entrega 0.5.2
+Alterações integradas em `alpha` ou `main` na página, workflow, código, recursos e configurações do jogo disparam a publicação; há também execução manual. O ambiente `github-pages` deve permitir a branch que dispara a execução (`alpha` ou `main`). O download e a publicação Android mantêm seu fluxo próprio.
 
-Fontes locais: `docs/index.html`, `docs/.nojekyll` e `.github/workflows/android-pr.yml`. Esta branch contém a página de download Android e somente o preset Android. A `main` remota também contém `.github/workflows/web-pages.yml`, que prepara um preset Web durante o build e publica o jogo no navegador. Confira as branches antes de concluir que a ausência de preset Web local significa ausência de distribuição Web.
+Endereço previsto: <https://eclipseestudio.github.io/ORBT/>. A opção Web fica em <https://eclipseestudio.github.io/ORBT/jogar/>. A exportação sem threads dispensa cabeçalhos de isolamento entre origens. Valide áudio, toque, persistência e desempenho no navegador após publicar.
 
-## GitHub Pages
-
-A página é um HTML autocontido, com CSS/JavaScript, sem build ou dependências externas. Fica em `docs/index.html`; `.nojekyll` permite publicação estática. Endereço previsto: <https://eclipseestudio.github.io/ORBT/>.
-
-A configuração histórica usava **Settings → Pages → Deploy from a branch → main → /docs**. A `main` atual inclui publicação por `actions/deploy-pages`; consulte a configuração remota antes de mudar o mecanismo. Não mover o HTML ou `.nojekyll` para pastas internas de documentação.
-
-## Jogo Web na main
-
-O workflow remoto `web-pages.yml` obtém a branch `alpha`, acrescenta um preset Web sem threads, usa renderizador Compatibility e publica os arquivos em `docs/jogar/`, incluindo `versao.json` com a revisão exportada. Também acrescenta o acesso **Jogar no navegador** à página de download. Não é necessário manter um preset Web no checkout Android para esse fluxo existir.
-
-Na consulta de 10/11/2026, a [execução 42440652800](https://github.com/EclipseEstudio/ORBT/actions/runs/42440652800) estava concluída com sucesso; menu, campanha, tutorial, pausa, lançamento por mouse e vitória foram observados em `https://eclipseestudio.github.io/ORBT/jogar/`. Isso não comprova áudio, persistência em nova sessão, desempenho em outros navegadores ou atualização Android; consulte o [relatório](../historico/registros/validacao-2026-11-10.md).
+A entrega 0.5.2 havia retirado o jogo Web. Esta alteração restaura essa opção secundária. As notas daquela entrega Android permanecem em `docs/versoes/v0.5.2-alpha.20261112.md`.
 
 ## Seleção do APK
 
@@ -41,6 +31,6 @@ O workflow `.github/workflows/android-pr.yml` atende revisão e publicação com
 
 O envio da tag deve ser feito pelo usuário ou por credencial que dispare workflows. Criar referências com o `GITHUB_TOKEN` de outro workflow não dispara automaticamente esse fluxo. Não é necessário cadastrar `workflow_dispatch` na branch padrão para a publicação por tag.
 
-O jogo Web no Pages mantém o fluxo separado da `main` descrito acima; publicar o APK não dispara automaticamente a exportação Web.
+O jogo Web no Pages é atualizado pelas alterações integradas descritas acima; publicar uma tag Android não dispara a exportação Web.
 
 Publicar prerelease mais recente também muda o download automático. Uma Release sem APK não substitui o download anterior. Este documento descreve o mecanismo; não afirma que uma publicação remota tenha ocorrido.
