@@ -8,7 +8,7 @@ Fonte: `project.godot`, `export_presets.cfg`, `.github/workflows/android-pr.yml`
 | --- | --- |
 | Preset | Android; APK debug, modelos prontos, Gradle personalizado desativado |
 | Pacote | `com.eclipseestudio.orbt` |
-| Versão/código | 0.5.0 / 9 |
+| Versão/código | 0.5.1 / 10 |
 | Arquiteturas | ARM 32 e 64 bits |
 | Tela/renderização | Retrato, Mobile, ETC2/ASTC habilitado |
 | Permissão | Vibração |

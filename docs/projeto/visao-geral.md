@@ -4,7 +4,7 @@ Fonte: `project.godot`, `Recursos/Niveis.json`, `src/ControladorJogo/`, `src/Nav
 
 ORBT é um puzzle espacial 2D em pixel art para Android. A nave retorna à Terra usando impulsos, gravidade e pousos. O desenvolvimento e os testes também rodam no desktop.
 
-O projeto declara versão 0.5.0 e código Android 9. Usa renderizador Mobile e viewport 180 × 320; o CI fixa Godot 4.7.2, Java 17 e Build-Tools Android 36.1.0. O único preset de exportação versionado é Android.
+O projeto declara versão 0.5.1 e código Android 10. Usa renderizador Mobile e viewport 180 × 320; o CI fixa Godot 4.7.2, Java 17 e Build-Tools Android 36.1.0. O único preset de exportação versionado é Android.
 
 | Área | Implementação presente |
 | --- | --- |

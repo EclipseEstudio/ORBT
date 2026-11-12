@@ -2,7 +2,7 @@
 
 Fonte: `scripts/android-pacote.ps1`, `assinatura-android.json`, `instalar-android.ps1`, `verificar-atualizacao-android.ps1`, `configurar-android-ci.ps1` e preset Android.
 
-O canal de distribuição mantém pacote `com.eclipseestudio.orbt`, certificado permanente registrado em `scripts/assinatura-android.json` e código crescente. Estado local: 0.5.0/código 9. A verificação rejeita identidade diferente, certificado diferente e downgrade.
+O canal de distribuição mantém pacote `com.eclipseestudio.orbt`, certificado permanente registrado em `scripts/assinatura-android.json` e código crescente. Estado local: 0.5.1/código 10. A verificação rejeita identidade diferente, certificado diferente e downgrade.
 
 Versões 0.3.1 e anteriores usaram chaves temporárias conforme os registros históricos. Uma instalação com certificado antigo pode exigir migração por reinstalação; não é possível obter a chave privada a partir do APK. Desinstalar pode apagar dados. Atualizações compatíveis devem ser instaladas sobre o aplicativo existente.
 
