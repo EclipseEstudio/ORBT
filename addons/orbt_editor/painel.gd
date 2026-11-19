@@ -8,10 +8,11 @@ const RASCUNHO = "res://.godot/orbt-editor-sessao.json"
 const TIPOS = {
 	"planet": "Planeta", "station": "Estação espacial", "sun": "Sol",
 	"asteroid": "Asteroide", "portal": "Portal", "satellite": "Satélite", "earth": "Terra",
-	"gold": "Dourada", "blue": "Azul",
+	"gold": "Dourada", "blue": "Azul", "outpost": "Posto",
 }
 const ROTULOS = {
 	"id": "Identificador", "name": "Nome", "type": "Tipo",
+	"visual_type": "Identidade visual do destino",
 	"schema_version": "Versão do formato", "content_version": "Versão do conteúdo",
 	"order": "Ordem na campanha", "initial_fuel": "Combustível inicial", "flight_timeout": "Oxigênio (s)",
 	"bounds": "Limites", "position": "Posição", "size": "Tamanho",

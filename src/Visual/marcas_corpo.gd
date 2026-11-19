@@ -3,6 +3,9 @@ extends Node2D
 var dados: Dictionary = {}
 var proximo := false
 var depuracao := false
+var rotulo_destino: String:
+	get:
+		return "POSTO" if dados.get("visual_type", "earth") == "outpost" else "TERRA"
 const ESCURO = Color("0b1423")
 const FONTE = preload("res://Recursos/Fontes/PressStart2P-Regular.ttf")
 
@@ -30,7 +33,7 @@ func _draw() -> void:
 		traco(Vector2(-3, 0), Vector2(-3, 4))
 		traco(Vector2(3, 0), Vector2(3, 4))
 		traco(Vector2(-3, 4), Vector2(3, 4))
-		draw_string(FONTE, Vector2(-20, -dados.visual_radius - 5), "TERRA", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.WHITE)
+		draw_string(FONTE, Vector2(-20, -dados.visual_radius - 5), rotulo_destino, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.WHITE)
 	else:
 		traco(Vector2(-3, 0), Vector2(3, 0))
 		traco(Vector2(0, -3), Vector2(0, 3))

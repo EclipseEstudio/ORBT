@@ -20,7 +20,7 @@ func _ready() -> void:
 	position = dados.position
 	sprite = Sprite2D.new()
 	sprite.name = "Sprite"
-	sprite.texture = Arte.textura("earth" if dados.type == "portal" else dados.type)
+	sprite.texture = Arte.textura(dados.get("visual_type", "earth" if dados.type == "portal" else dados.type))
 	sprite.visible = dados.type != "portal"
 	Arte.ajustar(sprite, dados.visual_radius)
 	if dados.type == "planet":
