@@ -57,7 +57,18 @@ func _executar() -> void:
 	conferir(rodape.size() == 1 and rodape.all(func(item): return segura.encloses(item.get_global_rect())) and segura.encloses(voltar.get_global_rect()), "Retentativa de salvar e voltar permanecem acessíveis sem atualização manual")
 	conferir(tela.rolagem.get_v_scroll_bar().visible and not tela.rolagem.get_h_scroll_bar().visible, "Avisos e nomes longos usam rolagem vertical")
 	var primeiro: Button = tela.obter_cartao(0).get_child(2)
-	conferir((tela.obter_cartao(0).get_parent() as GridContainer).columns == 5 and primeiro.tooltip_text.contains(itens[0].nome) and primeiro.size.x <= tela.rolagem.size.x / 5, "Grade tem cinco colunas sem transbordar e conserva nome completo na descrição")
+	var trilha: VBoxContainer = tela.find_child("Fases01", true, false)
+	var area := tela.rolagem.get_global_rect()
+	var ultimo_y := -INF
+	for indice in itens.size():
+		var cartao := tela.obter_cartao(indice)
+		var no := trilha.get_child(indice) as Control
+		conferir(cartao.get_parent() == no and no.name == "No%02d" % (indice + 1) and no.position.y > ultimo_y, "Trilha mantém a ordem vertical dos cartões")
+		conferir(cartao.global_position.x >= area.position.x and cartao.get_global_rect().end.x <= area.end.x, "Cartão cabe horizontalmente na área segura")
+		ultimo_y = no.position.y
+	var segundo: Button = tela.obter_cartao(1).get_child(2)
+	conferir(primeiro.global_position.x < segundo.global_position.x and primeiro.get_node(primeiro.focus_neighbor_bottom) == segundo and tela.rolagem.follow_focus, "Cartões alternam de lado e o foco segue a sequência")
+	conferir(primeiro.size.x >= 28 and primeiro.tooltip_text == primeiro.accessibility_name and primeiro.accessibility_name == "01 - %s - Concluída - Estrelas: 0/0" % itens[0].nome, "Alvo de toque e descrição acessível mantêm número, nome, estado e recorde")
 	var ultimo: Button = tela.obter_cartao(9).get_child(2)
 	tela.rolagem.ensure_control_visible(ultimo)
 	await acomodar()

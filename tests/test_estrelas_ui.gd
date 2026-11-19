@@ -48,6 +48,11 @@ func _executar() -> void:
 		await acomodar()
 		var area := Rect2(Vector2.ZERO, Vector2(viewport.size))
 		conferir(area.encloses(selecao._colecao.get_global_rect()) and selecao._colecao.get_line_count() == 1, "Coleção cabe em uma linha no cabeçalho em 180x%d" % altura)
+		var largura := selecao.rolagem.size.x
+		for indice in itens.size():
+			var cartao := selecao.obter_cartao(indice)
+			var no := cartao.get_parent() as Control
+			conferir(no.size.x <= largura and cartao.position.x >= 0 and cartao.get_rect().end.x <= no.size.x, "Nó e cartão com estrelas cabem em 180x%d" % altura)
 		conferir(not selecao.rolagem.get_h_scroll_bar().visible, "Vinte fases com estrelas mantêm largura em 180x%d" % altura)
 		var ultimo: Button = selecao.obter_cartao(19).get_child(2)
 		selecao.rolagem.ensure_control_visible(ultimo)
@@ -56,7 +61,9 @@ func _executar() -> void:
 	itens[0].estrelas = 256
 	selecao.atualizar(itens, [])
 	await acomodar()
-	conferir(not selecao.rolagem.get_h_scroll_bar().visible and selecao.cartoes.size.x <= selecao.rolagem.size.x, "Fase do editor com muitas estrelas usa contador compacto sem alargar grade")
+	var cartao := selecao.obter_cartao(0)
+	var no := cartao.get_parent() as Control
+	conferir(not selecao.rolagem.get_h_scroll_bar().visible and no.size.x <= selecao.rolagem.size.x and cartao.get_rect().end.x <= no.size.x, "Fase do editor com muitas estrelas usa contador compacto dentro do nó")
 	selecao.free()
 	var dados: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Fases/teste_001.json"))
 	dados["stars"] = [{"id": "a", "position": [90, 180], "radius": 7}, {"id": "b", "position": [130, 140], "radius": 7}, {"id": "c", "position": [150, 90], "radius": 7}]

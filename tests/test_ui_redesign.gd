@@ -49,7 +49,9 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	await acomodar()
 	var selecao: Control = jogo.interface_atual
-	conferir((selecao.obter_cartao(0).get_parent() as GridContainer).columns == 5, "Seleção usa cinco colunas")
+	var primeiro: Control = selecao.obter_cartao(0)
+	var segundo: Control = selecao.obter_cartao(1)
+	conferir(primeiro.global_position.y < segundo.global_position.y and primeiro.global_position.x < segundo.global_position.x, "Seleção usa trilha vertical com cartões alternados")
 	conferir(selecao.quantidade_cartoes() == itens.size(), "Abrir seleção relê o catálogo sem depender da lista em memória")
 	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.text.contains("Atualizar")), "Seleção não oferece atualização manual")
 	for i in 3:

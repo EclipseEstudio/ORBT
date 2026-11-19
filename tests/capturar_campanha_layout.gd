@@ -28,13 +28,13 @@ func _capturar() -> void:
 	root.add_child(tela)
 	Area.aplicar(tela._margem, 0, root.get_screen_transform() * Rect2(8, 16, 164, 208))
 	await salvar("avisos")
-	tela.rolagem.ensure_control_visible(tela.cartoes.get_child(9).get_child(2))
+	tela.rolagem.ensure_control_visible(tela.obter_cartao(9).get_child(2))
 	await salvar("decima-fase")
 	tela.falhou("Não foi possível abrir a fase. Tente novamente.")
 	await salvar("erro-abertura")
 	progresso.pendente = false
 	tela.atualizar(itens, [])
 	await process_frame
-	tela.rolagem.ensure_control_visible(tela.cartoes.get_child(0).get_child(0))
+	tela.rolagem.ensure_control_visible(tela.obter_cartao(0).get_child(0))
 	await salvar("nome-longo")
 	quit()
