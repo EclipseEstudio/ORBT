@@ -32,6 +32,7 @@
     "angle_degrees": 0
   },
   "goal": {
+    "visual_type": "earth",
     "id": "terra",
     "type": "earth",
     "position": [

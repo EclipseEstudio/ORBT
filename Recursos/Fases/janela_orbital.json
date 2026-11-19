@@ -33,6 +33,7 @@
     "time_seconds": 4
   },
   "goal": {
+    "visual_type": "outpost",
     "id": "terra",
     "type": "earth",
     "position": [
