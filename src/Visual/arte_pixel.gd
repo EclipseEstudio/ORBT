@@ -41,10 +41,50 @@ static func textura(tipo: String) -> Texture2D:
 			imagem.fill_rect(Rect2i(18, 32, 4, 2), Color("354d69"))
 			_texturas[tipo] = ImageTexture.create_from_image(imagem)
 		return _texturas[tipo]
+	if tipo == "outpost":
+		if not _texturas.has(tipo):
+			_texturas[tipo] = _textura_posto()
+		return _texturas[tipo]
 	# Carregar após a importação, sem exigir arquivos .ctex ao analisar os scripts.
 	if not _texturas.has(tipo):
 		_texturas[tipo] = load(TEXTURAS[tipo])
 	return _texturas[tipo]
+
+
+static func _textura_posto() -> Texture2D:
+	var imagem := Image.create(48, 48, false, Image.FORMAT_RGBA8)
+	var casco := [Color("26354d"), Color("3e5270"), Color("607893"), Color("8ba0b5"), Color("b8c9d9")]
+	var borda := Color("162238")
+	var doca := Vector2(-9, -9)
+	for y in range(48):
+		for x in range(48):
+			var ponto := Vector2(x - 23.5, y - 23.5)
+			var distancia := ponto.length_squared()
+			if distancia > 23.0 * 23.0:
+				continue
+			if distancia > 22.0 * 22.0:
+				imagem.set_pixel(x, y, borda)
+				continue
+			# Quantizar a iluminação do casco em tons de metal.
+			var profundidade := sqrt(23.0 * 23.0 - distancia)
+			var luz := 0.7 * profundidade - 0.4 * ponto.x - 0.5 * ponto.y
+			var cor: Color = casco[clampi(floori((luz + 8.0) / 7.0), 0, casco.size() - 1)]
+			var latitude := roundi(ponto.y - ponto.x * 0.12 - profundidade * 0.16)
+			var coluna := posmod(x + (2 if latitude < 0 else 0), 7)
+			if posmod(latitude, 7) == 0 or coluna == 0 and posmod(latitude, 7) < 4:
+				cor = cor.darkened(0.24)
+			if absi(latitude) <= 2:
+				cor = borda if absi(latitude) < 2 else cor.darkened(0.36)
+				if latitude == 0 and coluna in [2, 3, 4]:
+					cor = Color("7ceaff") if posmod(x, 14) < 7 else Color("ffd080")
+			# A doca circular é recuada, com um aro e janelas iluminadas.
+			var raio_doca := ponto.distance_squared_to(doca)
+			if raio_doca < 30.0:
+				cor = cor.lightened(0.15) if raio_doca > 19.0 else borda
+				if raio_doca < 12.0 and y in [14, 16] and posmod(x, 3) < 2:
+					cor = Color("a3eaff")
+			imagem.set_pixel(x, y, cor)
+	return ImageTexture.create_from_image(imagem)
 
 
 static func raio_textura(textura: Texture2D) -> float:

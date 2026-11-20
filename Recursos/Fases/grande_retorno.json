@@ -3,7 +3,7 @@
   "content_version": 1,
   "id": "grande_retorno",
   "name": "O Grande Retorno",
-  "order": 30,
+  "order": 31,
   "bounds": {
     "position": [
       -180,
@@ -32,6 +32,7 @@
     "angle_degrees": 0
   },
   "goal": {
+    "visual_type": "earth",
     "id": "terra",
     "type": "earth",
     "position": [

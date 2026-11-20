@@ -134,7 +134,7 @@ func jogar(nivel: Node, etapas: Array, estrelas: int, desvio := 0.0) -> bool:
 
 func _executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 30 and ROTAS.size() == 20, "Campanha contém trinta fases; este teste cobre as vinte originais"):
+	if not conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 31 and ROTAS.size() == 20, "Campanha contém 31 fases, com rotas de teste para as vinte originais"):
 		quit(1)
 		return
 	var jogo = load("res://src/ControladorJogo/main.tscn").instantiate()
@@ -146,7 +146,7 @@ func _executar() -> void:
 	jogo.preferencias.dicas = false
 	jogo.mostrar_selecao()
 	await process_frame
-	conferir(jogo.interface_atual.quantidade_cartoes() == 30, "Seleção mostra trinta fases")
+	conferir(jogo.interface_atual.quantidade_cartoes() == 31, "Seleção mostra 31 fases")
 	for indice in range(ROTAS.size()):
 		var rota: Dictionary = ROTAS[indice]
 		var resultado := Carregador.carregar(catalogo.itens[indice].arquivo)

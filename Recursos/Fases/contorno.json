@@ -45,6 +45,7 @@
     }
   },
   "goal": {
+    "visual_type": "outpost",
     "id": "terra",
     "position": [
       496.9616,

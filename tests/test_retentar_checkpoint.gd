@@ -53,6 +53,7 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	await acomodar()
 	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Menu sem ações de último pouso")
+	var preferencias_antes := FileAccess.get_file_as_string(base + "-preferencias")
 	conferir(not jogo.tentar_salvar_checkpoint() and jogo.checkpoint.salvamento_pendente() and FileAccess.get_file_as_string(base) == anterior, "Nova falha mantém arquivo válido e pouso pendente")
 	jogo.checkpoint.falhar = false
 	conferir(jogo.tentar_salvar_checkpoint() and not jogo.checkpoint.salvamento_pendente(), "API interna persiste retentativa")
@@ -60,7 +61,7 @@ func _executar() -> void:
 	salvo.caminho = base
 	conferir(salvo.carregar() and salvo.dados.corpo == "apoio" and salvo.dados.combustivel == 3 and is_equal_approx(salvo.dados.tempo, 12.5), "Nova instância lê último pouso gravado de verdade")
 	conferir(FileAccess.get_file_as_string(base + ".bak") == anterior, "Retentativa mantém checkpoint anterior como cópia")
-	conferir(not FileAccess.file_exists(base + "-progresso") and not FileAccess.file_exists(base + "-preferencias"), "Retentativa não grava progresso nem preferências")
+	conferir(not FileAccess.file_exists(base + "-progresso") and FileAccess.get_file_as_string(base + "-preferencias") == preferencias_antes, "Retentativa não grava progresso nem altera preferências")
 	conferir(jogo.continuar_checkpoint(), "API interna valida checkpoint salvo")
 	await acomodar()
 	partida = jogo.mundo_atual.partida

@@ -108,11 +108,22 @@ func _executar() -> void:
 	tutorial._avancar.pressed.emit()
 	await acomodar()
 	conferir(not paused and not hud.has_node("DialogoDica") and partida.nave.combustivel == saldo, "Jogar dispensa o diálogo e libera a fase sem gasto")
-	hud._criar_dica()
+	conferir(jogo.preferencias.dicas_vistas == ["teste_001"], "Fechar registra a introdução como vista")
+	jogo.mostrar_menu()
+	await acomodar()
+	hud = await _abrir_fase(jogo, "teste_001")
+	conferir(not paused and not hud.has_node("DialogoDica"), "Ao reabrir a fase, a introdução vista não reaparece")
+	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
+	for indice in 3:
+		jogo.progresso.concluir(itens[indice].id, itens)
+	hud = await _abrir_fase(jogo, "primeiro_pouso")
+	conferir(paused and hud.has_node("DialogoDica"), "Estreia do pouso abre o mesmo tutorial")
 	jogo.solicitar_voltar(true)
 	await acomodar()
-	conferir(not paused and not hud.has_node("DialogoDica") and partida.estado == partida.Estado.JOGANDO, "Voltar nativo dispensa demonstração sem abrir pausa")
-	hud._criar_dica()
+	conferir(not paused and not hud.has_node("DialogoDica") and hud.partida.estado == hud.partida.Estado.JOGANDO, "Voltar nativo dispensa demonstração sem abrir pausa")
+	jogo.progresso.concluir("primeiro_pouso", itens)
+	hud = await _abrir_fase(jogo, "segundo_impulso")
+	conferir(paused and hud.has_node("DialogoDica"), "Estreia da correção em voo abre demonstração")
 	var voltar := InputEventKey.new()
 	voltar.keycode = KEY_ESCAPE
 	voltar.pressed = true
@@ -120,7 +131,8 @@ func _executar() -> void:
 	await acomodar()
 	conferir(not paused and not hud.has_node("DialogoDica"), "Escape fecha o diálogo")
 	jogo.preferencias.dicas = false
-	hud._criar_dica()
+	jogo.progresso.concluir("segundo_impulso", itens)
+	hud = await _abrir_fase(jogo, "de_lua_em_lua")
 	conferir(not hud.has_node("DialogoDica"), "Dicas desativadas ocultam demonstração automática")
 	jogo.mostrar_menu()
 	await acomodar()
@@ -131,3 +143,13 @@ func _executar() -> void:
 	await process_frame
 	print("Tutorial demonstrativo: ", verificacoes, " verificações, ", falhas, " falhas.")
 	quit(1 if falhas else 0)
+
+
+func _abrir_fase(jogo, id: String) -> CanvasLayer:
+	jogo.iniciar_fase(id)
+	await acomodar()
+	for hud in jogo.mundo_atual.get_children():
+		if hud.has_method("_criar_dica"):
+			hud.get_node("TituloFase")._encerrar()
+			return hud
+	return null

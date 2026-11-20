@@ -2,6 +2,7 @@ extends SceneTree
 
 const Carregador = preload("res://src/Nivel/carregador_fase.gd")
 const CenaNivel = preload("res://src/Nivel/Nivel.tscn")
+const ESTREIAS := ["teste_001", "primeiro_pouso", "segundo_impulso", "de_lua_em_lua", "rasante_solar", "lua_em_movimento", "pouso_de_precisao", "fenda_no_espaco", "nevoa_cega"]
 var verificacoes := 0
 var falhas := 0
 
@@ -54,15 +55,10 @@ func _executar() -> void:
 	await process_frame
 	await process_frame
 	conferir(not paused and not hud.has_node("DialogoDica"), "Fechar tutorial dispensa diálogo e libera a tentativa")
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("Toque") and hud._mensagem.text.contains("Arraste para baixo"), "instrução inicial mostra toque e dica autoral")
-	conferir(hud._mensagem.mouse_filter == Control.MOUSE_FILTER_IGNORE, "texto não intercepta entrada")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Primeira tentativa começa sem dica textual")
 	toque(0, Vector2(90, 145), true)
-	hud._process(0)
-	conferir(nave.entrada.gesto.contato_ativo == 0 and hud._mensagem.text.contains("Arraste") and hud._mensagem.text.contains("cancelar"), "toque livre inicia mira e ensina cancelamento")
+	conferir(nave.entrada.gesto.contato_ativo == 0, "toque livre inicia mira")
 	arrastar(0, Vector2(90, 190))
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("Solte") and hud._mensagem.text.contains("custa 1") and hud._mensagem.text.contains("cancelar"), "arraste mostra soltura, custo e cancelamento")
 	arrastar(0, Vector2(90, 145))
 	toque(0, Vector2(90, 145), false)
 	partida.avancar(1.0 / 60)
@@ -71,31 +67,39 @@ func _executar() -> void:
 	arrastar(1, Vector2(90, 225))
 	toque(1, Vector2(90, 225), false)
 	partida.avancar(1.0 / 60)
-	hud._process(0)
 	conferir(nave.combustivel == 4 and nave.condicao == nave.Condicao.EM_VOO, "soltar lança uma vez e custa uma unidade")
-	partida.alternar_exploracao()
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("continua diminuindo"), "explorar em voo informa que oxigênio continua sendo consumido")
-	partida.alternar_exploracao()
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("custa 1") and hud._mensagem.text.contains("não recarrega"), "pós-lançamento explica combustível e pouso")
 	var apoio: Dictionary = nivel.nivel_res.obter_corpo("apoio")
 	nave.global_position = apoio.position + Vector2.LEFT * 25
 	partida.resolver_contato({"kind": "body", "body": apoio})
-	hud._process(0)
-	conferir(nave.combustivel == 4 and hud._mensagem.text.contains("não recarrega"), "pouso não reabastece e mantém explicação")
-	partida.alternar_exploracao()
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("interrompe") and not hud._mensagem.text.contains("continua diminuindo"), "explorar pousado informa que oxigênio não é consumido")
-	partida.alternar_exploracao()
-	partida.pausar()
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("pausada"), "pausa tem prioridade sobre dica")
-	partida.retomar()
+	conferir(nave.combustivel == 4, "pouso não reabastece")
 	partida.reiniciar()
-	nivel.camera._process(2.0)
+	await process_frame
+	conferir(not hud.has_node("DialogoDica") and nave.combustivel == 5, "reinício repõe recursos sem repetir tutorial")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Reiniciar sem derrota não libera a dica textual")
+	partida.finalizar(false, "Colisão com perigo")
+	hud._process(1.0)
+	conferir(not hud._mensagem.is_visible_in_tree() and hud._dialogo_derrota.visible, "Derrota mostra o resultado antes da dica")
+	hud._dialogo_derrota._resetar.pressed.emit()
 	hud._process(0)
-	conferir(hud._mensagem.text.contains("Toque") and nave.combustivel == 5, "reinício apresenta tutorial novamente")
+	conferir(hud._mensagem.is_visible_in_tree() and hud._mensagem.text == nivel.nivel_res.dados_autorais.tutorial and not paused, "Repetir após perder exibe a dica autoral sem pausar")
+	hud._process(10.0)
+	conferir(hud._mensagem.is_visible_in_tree(), "Dica permanece até a confirmação")
+	for quadro in 4:
+		await process_frame
+	var ok := hud.find_child("ConfirmarDicaTextual", true, false) as Button
+	conferir(ok.text == "OK" and root.get_visible_rect().encloses(ok.get_global_rect()), "Botão OK fica acessível no rodapé")
+	for pressionado in [true, false]:
+		var evento := InputEventScreenTouch.new()
+		evento.position = root.get_final_transform() * ok.get_global_rect().get_center()
+		evento.pressed = pressionado
+		Input.parse_input_event(evento)
+		Input.flush_buffered_events()
+	hud._process(0)
+	conferir(not hud._mensagem.is_visible_in_tree() and nave.entrada.gesto.contato_ativo == -1 and nave.combustivel == saldo_inicial, "Tocar em OK fecha a dica sem acionar a nave")
+	partida.finalizar(false, "Oxigênio esgotado")
+	conferir(partida.restaurar_checkpoint(), "Último pouso pode ser restaurado após derrota")
+	hud._process(0)
+	conferir(hud._mensagem.is_visible_in_tree(), "Voltar ao último pouso também apresenta dica textual")
 	nivel.queue_free()
 	await process_frame
 	await _conferir_dicas_campanha()
@@ -106,9 +110,11 @@ func _executar() -> void:
 func _conferir_dicas_campanha() -> void:
 	var catalogo: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Niveis.json"))
 	for tamanho in [Vector2i(180, 240), Vector2i(180, 320)]:
+		var suporte := SubViewportContainer.new()
+		root.add_child(suporte)
 		var viewport := SubViewport.new()
 		viewport.size = tamanho
-		root.add_child(viewport)
+		suporte.add_child(viewport)
 		for id_fase in catalogo:
 			var nivel = CenaNivel.instantiate()
 			nivel.nivel_res = Carregador.carregar(catalogo[id_fase]).nivel
@@ -120,23 +126,25 @@ func _conferir_dicas_campanha() -> void:
 				if item.has_method("_criar_dica"):
 					hud = item
 			hud.get_node("TituloFase")._encerrar()
-			for quadro in 6:
-				await process_frame
-			var dialogo := hud.get_node("DialogoDica")
-			var rotulo: Label = dialogo.find_children("*", "Label", true, false)[0]
-			var botao: Button = dialogo.find_children("*", "Button", true, false)[0]
-			var painel: PanelContainer = dialogo.find_children("*", "PanelContainer", true, false)[0]
-			var tela := Rect2(Vector2.ZERO, Vector2(tamanho))
 			var contexto := "%s em %s: " % [id_fase, tamanho]
-			var primeira_fase: bool = nivel.nivel_res.id == "teste_001"
-			conferir(paused and (dialogo.has_node("TutorialDemonstrativo") if primeira_fase else rotulo.text == nivel.nivel_res.dados_autorais.tutorial), contexto + "exibe tutorial integrado na primeira fase e dica autoral nas demais")
-			conferir(tela.encloses(painel.get_global_rect()) and painel.get_global_rect().encloses(rotulo.get_global_rect()), contexto + "painel e texto cabem na tela")
-			conferir(tela.encloses(botao.get_global_rect()) and botao.size.x >= (32 if primeira_fase else 64) and botao.size.y >= (28 if primeira_fase else 32), contexto + "ação de saída permanece visível e alcançável")
-			botao.pressed.emit()
-			await process_frame
-			await process_frame
-			conferir(not paused and not hud.has_node("DialogoDica"), contexto + "confirmar retoma a tentativa")
+			var tutorial = hud.get_node_or_null("DialogoDica/TutorialDemonstrativo")
+			if id_fase in ESTREIAS:
+				conferir(paused and tutorial != null, contexto + "estreia pausa a fase e abre demonstração")
+				if tutorial != null:
+					for quadro in 6:
+						await process_frame
+					var tela := Rect2(Vector2.ZERO, Vector2(tamanho))
+					var painel: Rect2 = tutorial._painel.get_global_rect()
+					conferir(tela.encloses(painel) and painel.encloses(tutorial._instrucao.get_global_rect()) and painel.encloses(tutorial.area.get_global_rect()) and painel.encloses(tutorial._avancar.get_global_rect()), contexto + "instrução, animação e botão cabem no painel")
+					if id_fase == "teste_001":
+						tutorial._avancar.pressed.emit()
+					tutorial._avancar.pressed.emit()
+					await process_frame
+					await process_frame
+					conferir(not paused and not hud.has_node("DialogoDica"), contexto + "Jogar retoma a fase")
+			else:
+				conferir(not paused and not hud.has_node("DialogoDica"), contexto + "fase sem novidade começa direto")
 			nivel.queue_free()
 			await process_frame
-		viewport.queue_free()
+		suporte.queue_free()
 		await process_frame

@@ -99,12 +99,14 @@ static func validar(dados: Variant) -> Dictionary:
 	var todos: Array = dados.bodies.duplicate(true)
 	var terra: Dictionary = dados.goal.duplicate(true)
 	terra["type"] = "earth"
+	terra["visual_type"] = terra.get("visual_type", "earth")
 	todos.append(terra)
 	var ids: Dictionary = {}
 	var normalizados: Array = []
 	for indice in range(todos.size()):
 		var corpo = todos[indice]
-		var prefixo := "bodies[%d]" % indice if indice < dados.bodies.size() else "goal"
+		var eh_destino := indice == todos.size() - 1
+		var prefixo := "goal" if eh_destino else "bodies[%d]" % indice
 		if not corpo is Dictionary:
 			erros.append(prefixo + ": objeto obrigatório")
 			continue
@@ -114,8 +116,13 @@ static func validar(dados: Variant) -> Dictionary:
 		else:
 			ids[corpo.id] = true
 			prefixo += " (" + corpo.id + ")"
-		if not corpo.get("type") in ["planet", "station", "satellite", "sun", "asteroid", "earth", "portal"] or (indice < dados.bodies.size() and corpo.get("type") == "earth"):
+		if not corpo.get("type") in ["planet", "station", "satellite", "sun", "asteroid", "earth", "portal"] or (not eh_destino and corpo.get("type") == "earth"):
 			erros.append(prefixo + ".type: tipo inválido")
+		if eh_destino:
+			if not corpo.visual_type in ["earth", "outpost"]:
+				erros.append(prefixo + ".visual_type: esperado earth ou outpost")
+		elif corpo.has("visual_type"):
+			erros.append(prefixo + ".visual_type: permitido apenas no destino")
 		if not vetor(corpo.get("position")):
 			erros.append(prefixo + ".position: esperado [x, y]")
 		if corpo.get("type") == "portal":

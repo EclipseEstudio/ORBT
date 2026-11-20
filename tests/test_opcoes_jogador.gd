@@ -39,6 +39,16 @@ func _executar() -> void:
 	reabertas.caminho = caminho
 	reabertas.carregar()
 	conferir(not reabertas.vibracao and not reabertas.dicas and reabertas.musica == 0.25 and reabertas.efeitos == 0.75 and reabertas.aviso.is_empty(), "Reabrir versão nova preserva todas as preferências")
+	reabertas.registrar_dica_vista("teste_001")
+	reabertas.registrar_dica_vista("menu/fases/estrelas")
+	reabertas.registrar_derrota("teste_001")
+	reabertas.registrar_derrota("teste_001")
+	reabertas.carregar()
+	conferir(reabertas.dicas_vistas == ["teste_001", "menu/fases/estrelas"], "Dicas vistas permanecem registradas após reabrir preferências")
+	conferir(reabertas.fases_com_derrota == ["teste_001"], "Derrota fica registrada por fase sem duplicar o ID")
+	reabertas.limpar_derrotas()
+	reabertas.carregar()
+	conferir(reabertas.fases_com_derrota.is_empty() and "menu/fases/estrelas" in reabertas.dicas_vistas, "Limpar derrotas preserva a dica de seleção já vista")
 	var antes := FileAccess.get_file_as_string(caminho)
 	conferir(not reabertas.alterar("vibracao", 1) and not reabertas.alterar("dicas", "false") and not reabertas.alterar("musica", true), "Booleanos e volumes exigem os tipos corretos")
 	conferir(FileAccess.get_file_as_string(caminho) == antes, "Valores inválidos não alteram arquivo")
@@ -93,7 +103,7 @@ func _executar() -> void:
 		if filho.has_method("_alternar_pausa"):
 			hud = filho
 	hud._process(0)
-	conferir(not hud._mensagem.visible, "Ocultar dicas remove ajuda durante a partida")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Ocultar dicas remove ajuda durante a partida")
 	partida.aviso_salvamento = "Não foi possível salvar."
 	hud._process(0)
 	conferir(hud._alerta.visible, "Ocultar dicas preserva avisos de salvamento")
@@ -125,6 +135,12 @@ func _executar() -> void:
 	partida.resolver_contato({"kind":"body", "body":partida.nivel.obter_corpo("apoio")})
 	partida.finalizar(true, "Terra")
 	conferir(espia.pulsos == [25, 40, 60], "Pouso e chegada têm retorno tátil")
+	espia.alterar("dicas", false)
+	partida.reiniciar()
+	partida.finalizar(false, "Colisão")
+	partida.reiniciar()
+	hud._process(0)
+	conferir(not hud._mensagem.is_visible_in_tree() and "teste_001" in espia.fases_com_derrota, "Derrota é registrada mesmo com dicas desativadas")
 	conferir(not espia.vibrar(0) and not espia.vibrar(501), "Pulsos fora do limite são recusados")
 	suporte.queue_free()
 	await process_frame

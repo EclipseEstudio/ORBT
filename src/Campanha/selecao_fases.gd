@@ -5,12 +5,19 @@ const Tema = preload("res://src/Visual/tema_visual.gd")
 const Icones = preload("res://src/Visual/icones_ui.gd")
 const Fundo = preload("res://src/Visual/fundo_menu.gd")
 const RolagemFases = preload("res://src/Campanha/rolagem_fases.gd")
+const NoTrilha = preload("res://src/Campanha/no_trilha.gd")
+const DESLOCAMENTOS := [-0.75, 0.18, 0.94, 0.51, -0.38, -0.92, 0.28, -0.15, 0.83, 0.42,
+	-0.24, -0.86, 0.47, 0.95, 0.12, -0.64, 0.36, 0.78, -0.32, -0.89,
+	0.52, -0.17, -0.80, -0.43, 0.72, 0.26, -0.61, 0.39, 0.91, -0.66]
+const ID_DICA_ESTRELAS := "menu/fases/estrelas"
 signal fase_escolhida(id: String)
 signal voltar
 var itens: Array = []
 var progresso: RefCounted
+var preferencias: RefCounted
 var erros: Array = []
 var cartoes: VBoxContainer
+var _botoes_trilha: Array[Button] = []
 var mensagem: Label
 var _margem: MarginContainer
 var _ocupada := false
@@ -68,7 +75,10 @@ func _ready() -> void:
 	rolagem.add_child(conteudo)
 	_nota = _rotulo(conteudo, progresso.descricao() if progresso != null else "", 8)
 	mensagem = _rotulo(conteudo, "", 8)
+	if preferencias != null and preferencias.dicas and ID_DICA_ESTRELAS not in preferencias.dicas_vistas and not itens.is_empty():
+		_adicionar_dica_estrelas(conteudo)
 	cartoes = VBoxContainer.new()
+	cartoes.draw.connect(_desenhar_trilha)
 	cartoes.add_theme_constant_override("separation", 6)
 	cartoes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	conteudo.add_child(cartoes)
@@ -80,6 +90,30 @@ func _ready() -> void:
 	atualizar(itens, erros)
 	get_viewport().size_changed.connect(_area_segura)
 	_area_segura()
+
+
+func _adicionar_dica_estrelas(pai: VBoxContainer) -> void:
+	var painel := PanelContainer.new()
+	painel.name = "DicaEstrelas"
+	var estilo := Tema.painel()
+	estilo.border_color = Color("ffc845")
+	estilo.set_content_margin_all(5)
+	painel.add_theme_stylebox_override("panel", estilo)
+	pai.add_child(painel)
+	var coluna := VBoxContainer.new()
+	painel.add_child(coluna)
+	var linha := HBoxContainer.new()
+	coluna.add_child(linha)
+	var titulo := _rotulo(linha, "Estrelas douradas", Tema.TAMANHO_TEXTO_AJUDA)
+	titulo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	titulo.modulate = estilo.border_color
+	var fechar := _botao(linha, "OK", func():
+		preferencias.registrar_dica_vista(ID_DICA_ESTRELAS)
+		painel.queue_free(), 28)
+	fechar.name = "DispensarDica"
+	fechar.accessibility_name = "OK, dispensar dica"
+	fechar.custom_minimum_size.x = 32
+	_rotulo(coluna, "Colete todas as estrelas douradas de um nível para liberar o próximo. Termine a fase para guardar as estrelas.", Tema.TAMANHO_TEXTO_AJUDA)
 
 
 func _rotulo(pai: Node, texto: String, fonte: int) -> Label:
@@ -111,6 +145,8 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 	rolagem.scroll_vertical = 0
 	_nota.text = progresso.descricao() if progresso != null else ""
 	_tentar_salvar.visible = progresso != null and progresso.salvamento_pendente()
+	_botoes_trilha.clear()
+	cartoes.queue_redraw()
 	_nota.visible = _tentar_salvar.visible
 	for filho in cartoes.get_children():
 		cartoes.remove_child(filho)
@@ -118,48 +154,59 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 	mensagem.text = "\n".join(erros) if not erros.is_empty() else ("Nenhuma fase cadastrada." if itens.is_empty() else "")
 	var total_azuis := 0
 	var obtidas_azuis := 0
-	var grade: GridContainer
+	var trilha: VBoxContainer
+	var anterior: Button
 	for indice_item in range(itens.size()):
 		var item: Dictionary = itens[indice_item]
+		var destino_final: bool = item.id == "grande_retorno"
 		if indice_item % 10 == 0:
-			_adicionar_divisor(indice_item)
-			grade = GridContainer.new()
-			grade.name = "Fases%02d" % (indice_item + 1)
-			grade.columns = 5
-			grade.add_theme_constant_override("h_separation", 2)
-			grade.add_theme_constant_override("v_separation", 6)
-			grade.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			if not progresso.bloqueio(item.id).is_empty():
+			if not destino_final:
+				_adicionar_divisor(indice_item)
+			trilha = VBoxContainer.new()
+			trilha.name = "Fases%02d" % (indice_item + 1)
+			trilha.add_theme_constant_override("separation", 0)
+			trilha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			if not destino_final and not progresso.bloqueio(item.id).is_empty():
 				var bloco := PanelContainer.new()
 				bloco.name = "Bloco%02d" % (indice_item + 1)
 				bloco.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 				cartoes.add_child(bloco)
-				bloco.add_child(grade)
+				bloco.add_child(trilha)
 				_adicionar_meta(bloco, indice_item)
 			else:
-				cartoes.add_child(grade)
+				cartoes.add_child(trilha)
 		var quantidade: int = item.get("estrelas", 0)
 		var recorde: int = mini(quantidade, progresso.melhor_estrelas(item.id))
 		var azuis: int = int(item.get("azuis", 0))
 		total_azuis += azuis
 		obtidas_azuis += mini(azuis, progresso.melhor_azuis(item.id))
+		var no := NoTrilha.new()
+		no.name = "No%02d" % (indice_item + 1)
+		no.lado = 0.0 if destino_final else DESLOCAMENTOS[indice_item % DESLOCAMENTOS.size()]
+		if destino_final:
+			no.custom_minimum_size.y = 104
+		trilha.add_child(no)
 		var cartao := VBoxContainer.new()
+		cartao.name = "Cartao%02d" % (indice_item + 1)
 		cartao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cartao.add_theme_constant_override("separation", 3)
-		grade.add_child(cartao)
+		no.add_child(cartao)
 		var nome := _rotulo(cartao, item.nome, 8)
 		nome.hide()
 		var estado: String = progresso.estado(item.id)
 		var rotulo_estado := _rotulo(cartao, estado, 8)
 		rotulo_estado.hide()
-		var botao := _botao(cartao, "%02d" % item.ordem, func(): escolher(item.id), 40)
-		botao.custom_minimum_size.x = 28
+		var botao := _botao(cartao, "%02d" % item.ordem, func(): escolher(item.id), NoTrilha.DIAMETRO_PLANETA)
+		_botoes_trilha.append(botao)
+		no.item_rect_changed.connect(cartoes.queue_redraw)
+		cartao.item_rect_changed.connect(cartoes.queue_redraw)
+		botao.item_rect_changed.connect(cartoes.queue_redraw)
+		botao.custom_minimum_size.x = NoTrilha.DIAMETRO_PLANETA
 		botao.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		botao.disabled = not progresso.pode_abrir(item.id)
-		var icone := "cadeado" if botao.disabled else ("concluida" if estado == "Concluída" else "jogar")
-		var descricao := "%02d - %s - %s" % [item.ordem, item.nome, estado]
-		if quantidade > 0:
-			descricao += " - Estrelas: %d/%d" % [recorde, quantidade]
+		var concluida := estado == "Concluída"
+		var icone := "cadeado" if botao.disabled else ("concluida" if concluida else "jogar")
+		var descricao := "%02d - %s - %s - Estrelas: %d/%d" % [item.ordem, item.nome, estado, recorde, quantidade]
 		var bloqueio: String = progresso.bloqueio(item.id)
 		if not bloqueio.is_empty():
 			descricao += " - " + bloqueio
@@ -169,26 +216,21 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 		botao.set_meta("estado", estado)
 		botao.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		botao.add_theme_constant_override("h_separation", 2)
-		botao.add_theme_font_size_override("font_size", 8)
+		no.estilizar_planeta(botao, concluida, destino_final)
 		if not botao.disabled:
-			Tema.destacar(botao, Color("ffc845") if estado == "Concluída" else Tema.DESTAQUE)
-		else:
-			var sombra := StyleBoxFlat.new()
-			sombra.bg_color = Color("181b20")
-			sombra.border_color = Color("44484f")
-			sombra.set_border_width_all(1)
-			sombra.set_content_margin_all(4)
-			botao.add_theme_stylebox_override("disabled", sombra)
-			botao.add_theme_color_override("font_disabled_color", Color("8b8d91"))
-			botao.add_theme_color_override("icon_disabled_color", Color("797c80"))
+			if anterior != null:
+				anterior.focus_neighbor_bottom = anterior.get_path_to(botao)
+				botao.focus_neighbor_top = botao.get_path_to(anterior)
+			anterior = botao
+		var colecao := HBoxContainer.new()
+		colecao.name = "Estrelas"
+		colecao.alignment = BoxContainer.ALIGNMENT_CENTER
+		colecao.add_theme_constant_override("separation", 1)
+		colecao.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		colecao.visible = quantidade > 0
+		colecao.tooltip_text = "Melhor coleta ao chegar à Terra: %d/%d" % [recorde, quantidade]
+		cartao.add_child(colecao)
 		if quantidade > 0:
-			var colecao := HBoxContainer.new()
-			colecao.name = "Estrelas"
-			colecao.alignment = BoxContainer.ALIGNMENT_CENTER
-			colecao.add_theme_constant_override("separation", 1)
-			colecao.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			colecao.tooltip_text = "Melhor coleta ao chegar à Terra: %d/%d" % [recorde, quantidade]
-			cartao.add_child(colecao)
 			for indice in range(quantidade if quantidade <= 3 else 1):
 				var pequena := TextureRect.new()
 				pequena.texture = Icones.obter("estrela")
@@ -202,9 +244,41 @@ func atualizar(novos: Array, diagnosticos: Array) -> void:
 				var contagem := _rotulo(colecao, str(recorde), 6)
 				contagem.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 				contagem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if destino_final:
+			var legenda := _rotulo(cartao, "TERRA", 8)
+			legenda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_colecao.text = "%d/%d" % [obtidas_azuis, total_azuis]
 	_colecao.accessibility_name = "Estrelas azuis descobertas: %d de %d" % [obtidas_azuis, total_azuis]
 	_colecao.tooltip_text = "Estrelas azuis descobertas. Elas são segredos e não bloqueiam fases."
+
+
+func _curva_trilha() -> Curve2D:
+	var curva := Curve2D.new()
+	var centros := PackedVector2Array()
+	for botao in _botoes_trilha:
+		var centro := botao.get_global_rect().get_center() - cartoes.global_position
+		if not centros.is_empty() and centro.y <= centros[-1].y:
+			return curva # Os containers ainda estão acomodando os cartões.
+		centros.append(centro)
+
+	for i in centros.size():
+		var centro := centros[i]
+		var entrada := centro - centros[maxi(0, i - 1)]
+		var saida := centros[mini(i + 1, centros.size() - 1)] - centro
+		var vizinhos := entrada + saida
+		var inclinacao := vizinhos.x / vizinhos.y if vizinhos.y > 0 else 0.0
+		# Nos extremos laterais, a onda muda de lado com tangente vertical.
+		if i > 0 and i + 1 < centros.size() and entrada.x * saida.x <= 0:
+			inclinacao = 0.0
+		var direcao := Vector2(inclinacao, 1.0)
+		curva.add_point(centro, -direcao * entrada.y / 3.0, direcao * saida.y / 3.0)
+	return curva
+
+
+func _desenhar_trilha() -> void:
+	var curva := _curva_trilha()
+	if curva.point_count >= 2:
+		cartoes.draw_polyline(curva.tessellate_even_length(6, 4.0), Color("567697a6"), 1.0, true)
 
 
 func _adicionar_divisor(indice: int) -> void:
@@ -285,8 +359,8 @@ func quantidade_cartoes() -> int:
 func obter_cartao(indice: int) -> Control:
 	if indice < 0 or indice >= itens.size():
 		return null
-	var grade := cartoes.find_child("Fases%02d" % (indice / 10 * 10 + 1), true, false) as GridContainer
-	return grade.get_child(indice % 10) if grade != null else null
+	var trilha := cartoes.find_child("Fases%02d" % (indice / 10 * 10 + 1), true, false)
+	return trilha.get_node_or_null("No%02d/Cartao%02d" % [indice + 1, indice + 1]) as Control if trilha != null else null
 
 
 func escolher(id: String) -> void:

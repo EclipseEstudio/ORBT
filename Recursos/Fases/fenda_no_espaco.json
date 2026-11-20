@@ -32,6 +32,7 @@
     "angle_degrees": 0
   },
   "goal": {
+    "visual_type": "outpost",
     "id": "terra",
     "type": "earth",
     "position": [

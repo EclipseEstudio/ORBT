@@ -42,11 +42,24 @@ func _executar() -> void:
 	menu = jogo.interface_atual
 	coluna = menu.get_node("Margem/Rolagem/VBoxContainer")
 	conferir(menu.find_children("*", "Button", true, false).size() == 4 and not menu.has_node("Margem/Rolagem/VBoxContainer/ComoJogar"), "menu mantém três ações e título clicável, sem tutorial ou ação de checkpoint incompatível")
+	jogo.preferencias.dicas = false
 	jogo.mostrar_selecao()
+	conferir(jogo.interface_atual.find_child("DicaEstrelas", true, false) == null and jogo.preferencias.dicas_vistas.is_empty(), "Desativar dicas preserva a primeira apresentação")
+	jogo.preferencias.dicas = true
+	jogo.mostrar_selecao()
+	var dica_estrelas = jogo.interface_atual.find_child("DicaEstrelas", true, false)
+	conferir(dica_estrelas != null and dica_estrelas.find_children("*", "Label", true, false).any(func(rotulo): return rotulo.text.contains("liberar o próximo")), "Primeira visita explica como usar estrelas douradas para liberar níveis")
+	conferir(not paused and jogo.interface_atual.quantidade_cartoes() == 31, "Dica de estrelas não bloqueia a seleção de fases")
+	jogo.mostrar_selecao()
+	dica_estrelas = jogo.interface_atual.find_child("DicaEstrelas", true, false)
+	var ok: Button = dica_estrelas.find_child("DispensarDica", true, false)
+	conferir(ok.text == "OK" and jogo.preferencias.dicas_vistas.is_empty(), "Dica de estrelas aguarda confirmação pelo OK")
+	ok.pressed.emit()
 	conferir(jogo.interface_atual.find_child("Checkpoint", true, false) == null, "Seleção não contém controles de checkpoint")
 	conferir(not jogo.checkpoint_disponivel() and jogo.checkpoint.bloqueado, "API interna preserva diagnóstico de versão")
 	await process_frame
 	await process_frame
+	conferir(jogo.interface_atual.find_child("DicaEstrelas", true, false) == null, "Dica pode ser dispensada na primeira visita")
 	conferir(jogo.checkpoint.dados == {"fase": "teste_001", "content_version": -1} and jogo.interface_atual.get_script() == preload("res://src/Campanha/selecao_fases.gd"), "Exibir o aviso preserva os dados e mantém a seleção navegável")
 	jogo.checkpoint.dados = {}
 	jogo.checkpoint.bloqueado = false
@@ -62,6 +75,7 @@ func _executar() -> void:
 	hud._dialogo_pausa._menu.pressed.emit()
 	await process_frame
 	conferir(not paused and jogo.interface_atual.get("cartoes") != null and jogo.mundo_atual != mundo, "retorno à seleção limpa mundo e pausa")
+	conferir(jogo.interface_atual.find_child("DicaEstrelas", true, false) == null, "Dica de estrelas não se repete na seleção")
 	conferir(not is_instance_valid(partida) or (not partida.is_inside_tree() and not partida.nave.simulacao_ativa), "simulação anterior não permanece ativa")
 	conferir(jogo.iniciar_fase("teste_001"), "reabre fase")
 	await process_frame
@@ -82,6 +96,17 @@ func _executar() -> void:
 	await process_frame
 	conferir(jogo.mundo_atual != anterior and jogo.mundo_atual.nivel_res.id == jogo.get_node("GerenciadorDeNivel").itens[1].id, "próxima fase abre após vitória seguindo a ordem da campanha")
 	conferir(jogo.progresso.estado("teste_001") == "Concluída" and (not is_instance_valid(anterior) or not anterior.is_inside_tree()), "progresso preservado e fase anterior removida")
+	hud = hud_de(jogo)
+	hud.get_node("TituloFase")._encerrar()
+	hud._process(0)
+	conferir(not hud._mensagem.is_visible_in_tree(), "Derrota em uma fase não libera dicas na próxima")
+	jogo.mostrar_selecao()
+	conferir(jogo.iniciar_fase("teste_001"), "Reabre fase que teve derrota")
+	await process_frame
+	hud = hud_de(jogo)
+	hud.get_node("TituloFase")._encerrar()
+	hud._process(0)
+	conferir(hud._mensagem.is_visible_in_tree(), "Dica de nova tentativa aparece ao voltar à fase após derrota")
 	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
 	for item in itens:
 		jogo.progresso.concluir_com_estrelas(item.id, itens, 3)

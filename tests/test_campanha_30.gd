@@ -8,7 +8,7 @@ const Selecao = preload("res://src/Campanha/selecao_fases.gd")
 const Titulo = preload("res://src/Nivel/titulo_fase.gd")
 const RECURSOS := [[5,30,0],[3,25,0],[3,25,0],[4,25,0],[4,25,1],[5,25,0],[4,25,0],[4,25,1],[3,25,0],[3,25,0],
 	[4,25,0],[3,25,0],[4,20,0],[4,20,1],[5,25,0],[4,25,0],[3,25,0],[6,25,1],[4,25,0],[6,25,1],
-	[3,25,0],[3,25,0],[4,25,0],[4,25,0],[3,20,1],[3,20,0],[4,25,0],[4,25,1],[4,20,1],[5,25,1]]
+	[3,25,0],[3,25,0],[4,25,0],[4,25,0],[3,20,1],[3,20,0],[4,25,0],[4,25,1],[4,20,1],[3,25,0],[5,25,1]]
 var verificacoes := 0
 var falhas := 0
 func conferir(ok: bool, mensagem: String) -> void:
@@ -21,7 +21,7 @@ func _initialize() -> void:
 
 func executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	conferir(catalogo.itens.size()==30 and catalogo.erros.is_empty(),"Três níveis de dez fases")
+	conferir(catalogo.itens.size()==31 and catalogo.erros.is_empty(),"Três níveis de dez fases e a Terra")
 	for i in catalogo.itens.size():
 		var item: Dictionary = catalogo.itens[i]
 		var resultado := Carregador.carregar(item.arquivo)
@@ -32,13 +32,26 @@ func executar() -> void:
 		conferir(f.combustiveis.size()==RECURSOS[i][2] and f.combustiveis.all(func(t:Dictionary):return t.amount==1),item.id+": disponibilidade exata de tanques +1")
 		conferir(f.quantidade_estrelas()==3 and f.quantidade_estrelas("blue")==1,item.id+": estrelas douradas e azul opcionais")
 		conferir(f.corpos.all(func(b:Dictionary):return b.type!="asteroid" or (b.visual_radius<=14 and b.mass==0)),item.id+": apenas asteroides pequenos sem gravidade")
-		conferir(f.dados_autorais.has("nebula")==((i+1) in [23,24,25,26,27,29,30]),item.id+": nebulosa somente onde prevista")
+		conferir(f.dados_autorais.has("nebula")==((i+1) in [23,24,25,26,27,29,31]),item.id+": nebulosa somente onde prevista")
 	var progresso := Progresso.new()
 	progresso.configurar(catalogo.itens)
 	var selecao := Selecao.new()
 	selecao.itens = catalogo.itens
 	selecao.progresso = progresso
 	root.add_child(selecao)
+	for quadro in range(4):
+		await process_frame
+	var curva := selecao._curva_trilha()
+	conferir(curva.point_count == 31, "Uma única trilha liga as 31 fases")
+	for i in curva.point_count:
+		var botao := selecao.obter_cartao(i).get_child(2) as Button
+		var centro := botao.get_global_rect().get_center() - selecao.cartoes.global_position
+		conferir(curva.get_point_position(i).is_equal_approx(centro), "Trilha passa pelo centro da fase %d" % (i + 1))
+		if i > 0 and i + 1 < curva.point_count:
+			var entrada := -curva.get_point_in(i).normalized()
+			conferir(entrada.is_equal_approx(curva.get_point_out(i).normalized()), "Tangente contínua na fase %d" % (i + 1))
+		if i == 30:
+			conferir(absf(centro.x - selecao.cartoes.size.x * 0.5) <= 1, "Terra encerra a trilha no centro")
 	conferir(selecao.find_child("Meta11",true,false).get_child(1).text == "0/30", "Seleção mostra meta de 30 para o nível 2")
 	conferir(selecao.find_child("Meta21",true,false).get_child(1).text == "0/60", "Seleção mostra meta acumulada de 60 para o nível 3")
 	selecao.free()
@@ -57,11 +70,11 @@ func executar() -> void:
 		conferir(resultado.douradas==3 and mundo.partida.quantidade_coletada("blue")==1,rota.id+": todas as estrelas alcançáveis")
 		conferir(resultado.tanques==RECURSOS[f.ordem-1][2],rota.id+": tanque acessível no desvio validado")
 		conferir(mundo.partida.tempo_restante>0,rota.id+": oxigênio suficiente")
-		if f.ordem in [21,22,26,28,29,30]:
-			conferir(resultado.saltos>= (2 if f.ordem in [28,30] else 1),rota.id+": portais fazem parte da rota")
+		if f.ordem in [21,22,26,28,29,30,31]:
+			conferir(resultado.saltos>= (2 if f.ordem in [28,31] else 1),rota.id+": portais fazem parte da rota")
 		conferir(progresso.concluir_com_coletas(f.id,catalogo.itens,3,1),rota.id+": conclusão da fase registrada na sequência")
 		mundo.free()
-		if f.ordem in [25,29,30]:
+		if f.ordem in [25,29,31]:
 			var sem_tanque: NivelRes = Carregador.carregar("res://Recursos/Fases/"+rota.id+".json").nivel
 			sem_tanque.combustiveis=[]
 			var tentativa = Cena.instantiate()
@@ -70,7 +83,7 @@ func executar() -> void:
 			tentativa.partida.set_physics_process(false)
 			conferir(not Rotas.executar(tentativa.partida,rota.etapas).venceu,rota.id+": rota de escalas exige a carga coletável")
 			tentativa.free()
-	conferir(progresso.concluidas.size()==30 and progresso.total_estrelas()==90,"Campanha inteira registra 30 fases e 90 douradas")
+	conferir(progresso.concluidas.size()==31 and progresso.total_estrelas()==93,"Campanha inteira registra 31 fases e 93 douradas")
 	var dados: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Fases/nevoa_cega.json"))
 	for invalido in [null,{}, {"visibility_radius":0},{"visibility_radius":301},{"visibility_radius":"90"}]:
 		dados.nebula=invalido

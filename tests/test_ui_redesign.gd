@@ -49,7 +49,9 @@ func _executar() -> void:
 	jogo.mostrar_selecao()
 	await acomodar()
 	var selecao: Control = jogo.interface_atual
-	conferir((selecao.obter_cartao(0).get_parent() as GridContainer).columns == 5, "Seleção usa cinco colunas")
+	var primeiro: Control = selecao.obter_cartao(0)
+	var segundo: Control = selecao.obter_cartao(1)
+	conferir(primeiro.global_position.y < segundo.global_position.y and primeiro.global_position.x < segundo.global_position.x, "Seleção usa trilha vertical com cartões alternados")
 	conferir(selecao.quantidade_cartoes() == itens.size(), "Abrir seleção relê o catálogo sem depender da lista em memória")
 	conferir(not selecao.find_children("*", "Button", true, false).any(func(b): return b.text.contains("Atualizar")), "Seleção não oferece atualização manual")
 	for i in 3:
@@ -95,9 +97,9 @@ func _executar() -> void:
 	hud._explorar.pressed.emit()
 	hud._process(0)
 	conferir(camera.zoom == zoom_voo and camera._toques.is_empty() and not hud._zoom_controles.visible, "Voltar à nave restaura zoom de voo e limpa os toques")
-	conferir(not hud._mensagem.visible and hud.has_node("TituloFase"), "Título substitui a antiga ajuda sobreposta")
+	conferir(not hud._mensagem.is_visible_in_tree() and hud.has_node("TituloFase"), "Título precede a ajuda da fase")
 	hud._process(6.1)
-	conferir(not hud._mensagem.visible, "Ajuda desaparece após seis segundos")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Primeira tentativa não exibe dica textual")
 	var partida: Node = jogo.mundo_atual.partida
 	var saldo: int = partida.nave.combustivel
 	var tempo: float = partida.tempo_restante
@@ -117,7 +119,7 @@ func _executar() -> void:
 	hud._dialogo_pausa._continuar.pressed.emit()
 	hud._process(0)
 	conferir(not paused and not hud._dialogo_pausa.visible and partida.nave.combustivel == saldo and partida.tempo_restante == tempo, "Continuar preserva combustível e tempo")
-	conferir(not hud._mensagem.visible, "Continuar não repete a ajuda já encerrada")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Continuar não reabre a dica na primeira tentativa")
 	partida.pausar()
 	hud._process(0)
 	hud._dialogo_pausa._resetar.pressed.emit()

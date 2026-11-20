@@ -41,13 +41,21 @@ func _executar() -> void:
 	viewport.add_child(selecao)
 	await acomodar()
 	conferir(selecao._colecao.text == "0/20" and selecao._colecao.modulate.is_equal_approx(Color("57b9ff")), "Cabeçalho mostra apenas estrelas azuis descobertas")
-	conferir(selecao.obter_cartao(0).get_node("Estrelas").get_child_count() == 3, "Cartão apresenta três estrelas douradas")
+	var planeta: Button = selecao.obter_cartao(0).get_child(2)
+	var estrelas: HBoxContainer = selecao.obter_cartao(0).get_node("Estrelas")
+	conferir(estrelas.get_child_count() == 3, "Planeta apresenta três estrelas douradas")
+	conferir(estrelas.get_rect().position.y > planeta.get_rect().end.y and is_equal_approx(estrelas.get_rect().get_center().x, planeta.get_rect().get_center().x), "Estrelas ficam alinhadas abaixo do planeta")
 	conferir(selecao.obter_cartao(0).get_child(2).accessibility_name.contains("Estrelas: 2/3") and selecao.obter_cartao(0).find_child("Azuis", true, false) == null, "Cartão mantém recorde dourado e oculta segredo azul")
 	for altura in [240, 320, 390]:
 		viewport.size.y = altura
 		await acomodar()
 		var area := Rect2(Vector2.ZERO, Vector2(viewport.size))
 		conferir(area.encloses(selecao._colecao.get_global_rect()) and selecao._colecao.get_line_count() == 1, "Coleção cabe em uma linha no cabeçalho em 180x%d" % altura)
+		var largura := selecao.rolagem.size.x
+		for indice in itens.size():
+			var cartao := selecao.obter_cartao(indice)
+			var no := cartao.get_parent() as Control
+			conferir(no.size.x <= largura and cartao.position.x >= 0 and cartao.get_rect().end.x <= no.size.x, "Nó e cartão com estrelas cabem em 180x%d" % altura)
 		conferir(not selecao.rolagem.get_h_scroll_bar().visible, "Vinte fases com estrelas mantêm largura em 180x%d" % altura)
 		var ultimo: Button = selecao.obter_cartao(19).get_child(2)
 		selecao.rolagem.ensure_control_visible(ultimo)
@@ -56,7 +64,9 @@ func _executar() -> void:
 	itens[0].estrelas = 256
 	selecao.atualizar(itens, [])
 	await acomodar()
-	conferir(not selecao.rolagem.get_h_scroll_bar().visible and selecao.cartoes.size.x <= selecao.rolagem.size.x, "Fase do editor com muitas estrelas usa contador compacto sem alargar grade")
+	var cartao := selecao.obter_cartao(0)
+	var no := cartao.get_parent() as Control
+	conferir(not selecao.rolagem.get_h_scroll_bar().visible and no.size.x <= selecao.rolagem.size.x and cartao.get_rect().end.x <= no.size.x, "Fase do editor com muitas estrelas usa contador compacto dentro do nó")
 	selecao.free()
 	var dados: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Recursos/Fases/teste_001.json"))
 	dados["stars"] = [{"id": "a", "position": [90, 180], "radius": 7}, {"id": "b", "position": [130, 140], "radius": 7}, {"id": "c", "position": [150, 90], "radius": 7}]
