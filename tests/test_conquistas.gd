@@ -137,7 +137,7 @@ func testar_interface() -> void:
 		await acomodar()
 		conferir(tela.rolagem.get_global_rect().intersects(tela.cartoes.get_child(8).get_global_rect()), "Último card alcançável por rolagem")
 	var catalogo: Array = jogo.get_node("GerenciadorDeNivel").itens
-	conferir(catalogo.reduce(func(total, item): return total + item.azuis, 0) == 30, "Catálogo possui exatamente 30 estrelas azuis")
+	conferir(obter(jogo.progresso, catalogo, "todas_azuis").meta == 31, "Coleção completa exige as 31 estrelas azuis do catálogo")
 	for item in catalogo:
 		jogo.progresso.concluir_com_coletas(item.id, catalogo, 3, 1, 1)
 	await acomodar()
