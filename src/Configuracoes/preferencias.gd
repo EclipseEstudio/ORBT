@@ -7,6 +7,8 @@ var musica := 1.0
 var efeitos := 1.0
 var vibracao := true
 var dicas := true
+var dicas_vistas: Array[String] = []
+var fases_com_derrota: Array[String] = []
 var aviso := ""
 var _pendente := false
 
@@ -18,6 +20,8 @@ func carregar() -> void:
 	efeitos = 1.0
 	vibracao = true
 	dicas = true
+	dicas_vistas.clear()
+	fases_com_derrota.clear()
 	aviso = ""
 	_pendente = false
 	if persistir and FileAccess.file_exists(caminho):
@@ -37,7 +41,17 @@ func carregar() -> void:
 				if versao == 2:
 					vibracao = dados.vibracao
 					dicas = dados.dicas
+					dicas_vistas = _ler_ids(dados.get("dicas_vistas"))
+					fases_com_derrota = _ler_ids(dados.get("fases_com_derrota"))
 	aplicar()
+
+func _ler_ids(valor: Variant) -> Array[String]:
+	var ids: Array[String] = []
+	if valor is Array:
+		for id in valor:
+			if id is String:
+				ids.append(id)
+	return ids
 
 func aplicar() -> void:
 	for item in [["Musica", musica], ["Efeitos", efeitos]]:
@@ -76,13 +90,36 @@ func _vibrar_dispositivo(duracao_ms: int) -> void:
 	if OS.has_feature("android"):
 		Input.vibrate_handheld(duracao_ms)
 
+func registrar_dica_vista(id: String) -> void:
+	if id not in dicas_vistas:
+		dicas_vistas.append(id)
+		salvar()
+
+func registrar_derrota(id: String) -> void:
+	if id not in fases_com_derrota:
+		fases_com_derrota.append(id)
+		salvar()
+
+func limpar_derrotas() -> void:
+	if not fases_com_derrota.is_empty():
+		fases_com_derrota.clear()
+		salvar()
+
 func salvar() -> bool:
 	if not persistir:
 		_pendente = false
 		aviso = ""
 		return true
 	_pendente = true
-	var texto := JSON.stringify({"schema_version": 2, "musica": musica, "efeitos": efeitos, "vibracao": vibracao, "dicas": dicas})
+	var texto := JSON.stringify({
+		"schema_version": 2,
+		"musica": musica,
+		"efeitos": efeitos,
+		"vibracao": vibracao,
+		"dicas": dicas,
+		"dicas_vistas": dicas_vistas,
+		"fases_com_derrota": fases_com_derrota,
+	})
 	var arquivo := FileAccess.open(caminho + ".tmp", FileAccess.WRITE)
 	if arquivo == null:
 		aviso = "Não foi possível salvar as configurações."

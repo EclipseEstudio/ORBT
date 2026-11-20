@@ -50,8 +50,12 @@ func _executar() -> void:
 	var partida = jogo.mundo_atual.partida
 	partida.set_physics_process(false)
 	var hud = obter_hud(jogo)
-	hud._process(0)
-	conferir(hud._mensagem.text.contains("Toque"), "tutorial permanece visível no início")
+	hud.get_node("TituloFase")._encerrar()
+	var tutorial: Control = hud.get_node_or_null("DialogoDica/TutorialDemonstrativo")
+	conferir(tutorial != null, "tutorial demonstrativo aparece no início")
+	tutorial.fechar()
+	await process_frame
+	await process_frame
 	partida.finalizar(false, "Colisão com perigo")
 	hud._process(0)
 	conferir(hud._mensagem.text.contains("Colisão") and not hud._mensagem.text.contains("Lia"), "derrota mantém sua causa")

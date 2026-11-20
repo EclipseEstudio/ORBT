@@ -17,6 +17,7 @@ const ROTAS := [
 	{"id":"rede_de_portais", "etapas":[{"alvo":"A","velocidade":90,"contato":"terra"}],
 	 "coleta":[{"alvo":"A","velocidade":40,"passos":430},{"ponto":[897,-100],"velocidade":45,"passos":180},{"alvo":"terra","velocidade":50,"contato":"terra"}]},
 	{"id":"travessia_extrema", "etapas":[{"alvo":"apoio_1","velocidade":90,"contato":"apoio_1"},{"ponto":[35,-220],"velocidade":50,"passos":180},{"alvo":"A","velocidade":50,"contato":"apoio_2"},{"alvo":"apoio_3","velocidade":90,"contato":"apoio_3"},{"alvo":"terra","velocidade":90,"contato":"terra"}]},
+	{"id":"aproximacao_final", "etapas":[{"alvo":"A","velocidade":90,"passos":110},{"ponto":[555,120],"velocidade":45,"passos":85},{"alvo":"terra","velocidade":50,"contato":"terra"}]},
 	{"id":"grande_retorno", "etapas":[{"alvo":"planeta","velocidade":90,"contato":"planeta"},{"alvo":"A","velocidade":90,"espera":225,"contato":"orbital"},{"ponto":[530,-130],"velocidade":50,"passos":210},{"alvo":"C","velocidade":50,"contato":"apoio_3"},{"alvo":"apoio_4","velocidade":90,"contato":"apoio_4"},{"alvo":"terra","velocidade":90,"contato":"terra"}]}
 ]
 

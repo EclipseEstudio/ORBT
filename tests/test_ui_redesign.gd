@@ -97,9 +97,9 @@ func _executar() -> void:
 	hud._explorar.pressed.emit()
 	hud._process(0)
 	conferir(camera.zoom == zoom_voo and camera._toques.is_empty() and not hud._zoom_controles.visible, "Voltar à nave restaura zoom de voo e limpa os toques")
-	conferir(not hud._mensagem.visible and hud.has_node("TituloFase"), "Título substitui a antiga ajuda sobreposta")
+	conferir(not hud._mensagem.is_visible_in_tree() and hud.has_node("TituloFase"), "Título precede a ajuda da fase")
 	hud._process(6.1)
-	conferir(not hud._mensagem.visible, "Ajuda desaparece após seis segundos")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Primeira tentativa não exibe dica textual")
 	var partida: Node = jogo.mundo_atual.partida
 	var saldo: int = partida.nave.combustivel
 	var tempo: float = partida.tempo_restante
@@ -119,7 +119,7 @@ func _executar() -> void:
 	hud._dialogo_pausa._continuar.pressed.emit()
 	hud._process(0)
 	conferir(not paused and not hud._dialogo_pausa.visible and partida.nave.combustivel == saldo and partida.tempo_restante == tempo, "Continuar preserva combustível e tempo")
-	conferir(not hud._mensagem.visible, "Continuar não repete a ajuda já encerrada")
+	conferir(not hud._mensagem.is_visible_in_tree(), "Continuar não reabre a dica na primeira tentativa")
 	partida.pausar()
 	hud._process(0)
 	hud._dialogo_pausa._resetar.pressed.emit()

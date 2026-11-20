@@ -11,9 +11,11 @@ const DialogoPausa = preload("res://src/Nivel/dialogo_pausa.gd")
 const TituloFase = preload("res://src/Nivel/titulo_fase.gd")
 const Tutorial = preload("res://src/Tutorial/tutorial_demonstrativo.gd")
 const InstrumentosNebulosa = preload("res://src/Visual/instrumentos_nebulosa.gd")
-const DURACAO_AJUDA := 6.0
-var _ajuda_restante := DURACAO_AJUDA
-var _dicas_ativas := true
+var _dica_textual := ""
+var _dica_textual_pendente := false
+var _painel_dica_textual: PanelContainer
+var _fase_teve_derrota := false
+var _dica_apresentada := false
 var _dialogo_pausa: Control
 var _dialogo_conclusao: Control
 var _dialogo_derrota: Control
@@ -149,16 +151,7 @@ func _ready() -> void:
 	_rolagem_rodape.add_child(base)
 	base.minimum_size_changed.connect(_ajustar_rodape)
 	_raiz.resized.connect(_ajustar_rodape)
-	_mensagem = rotulo(base, "", 8)
-	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_mensagem.custom_minimum_size.y = 0
-	_mensagem.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-	var estilo_ajuda := StyleBoxFlat.new()
-	estilo_ajuda.bg_color = Color("070e21ee")
-	estilo_ajuda.border_color = Tema.DESTAQUE
-	estilo_ajuda.set_border_width_all(1)
-	estilo_ajuda.set_content_margin_all(4)
-	_mensagem.add_theme_stylebox_override("normal", estilo_ajuda)
+	_criar_painel_dica_textual(base)
 	var acoes := HBoxContainer.new()
 	acoes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base.add_child(acoes)
@@ -216,13 +209,45 @@ func _ready() -> void:
 	_dialogo_derrota.menu.connect(func(): partida.menu_solicitado.emit.call_deferred())
 	add_child(_dialogo_derrota)
 	_dialogo_derrota.hide()
-	partida.perdida.connect(func(_causa): _tempo_explosao = 0.85)
+	var texto: Variant = partida.nivel.dados_autorais.get("tutorial")
+	if texto is String:
+		_dica_textual = texto.strip_edges()
+	if partida.campanha_permitida and preferencias != null:
+		_fase_teve_derrota = partida.nivel.id in preferencias.fases_com_derrota
+	partida.perdida.connect(_ao_perder)
+	partida.reiniciada.connect(_preparar_dica_textual)
+	_preparar_dica_textual()
+	partida.estado_alterado.connect(func(): _criar_dica.call_deferred())
 	_apresentar_fase.call_deferred()
 
 func _icone_status(pai: Control, nome: String) -> void:
 	var icone := TextureRect.new()
 	icones_configurar(icone, nome)
 	pai.add_child(icone)
+
+func _criar_painel_dica_textual(pai: Control) -> void:
+	_painel_dica_textual = PanelContainer.new()
+	_painel_dica_textual.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var estilo := Tema.painel()
+	estilo.bg_color = Color("070e21ed")
+	estilo.set_content_margin_all(4)
+	_painel_dica_textual.add_theme_stylebox_override("panel", estilo)
+	pai.add_child(_painel_dica_textual)
+	var linha := HBoxContainer.new()
+	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_painel_dica_textual.add_child(linha)
+	_mensagem = rotulo(linha, "", Tema.TAMANHO_TEXTO_AJUDA)
+	_mensagem.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_mensagem.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ok := botao(linha, "OK", func():
+		_dica_textual_pendente = false
+		_painel_dica_textual.hide())
+	ok.name = "ConfirmarDicaTextual"
+	ok.accessibility_name = "OK, dispensar dica"
+	ok.custom_minimum_size.x = 32
+	ok.size_flags_horizontal = Control.SIZE_SHRINK_END
+	ok.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_painel_dica_textual.hide()
 
 func icones_configurar(icone: TextureRect, nome: String) -> void:
 	icone.texture = Icones.obter(nome)
@@ -283,18 +308,6 @@ func _abrir_configuracoes() -> void:
 	add_child(tela)
 
 
-func _dica_tutorial() -> String:
-	var gesto = partida.nave.entrada.gesto
-	if gesto.contato_ativo != -1:
-		if gesto.saiu_da_zona_morta:
-			return "Solte para lançar: custa 1.\nVolte ao círculo para cancelar."
-		return "Arraste para mirar.\nVolte ao círculo para cancelar."
-	if partida.nave.combustivel < partida.nivel.combustivel_inicial:
-		return "Cada impulso custa 1.\nPousar não recarrega combustível."
-	var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
-	return "Toque e segure para mirar.\n" + dica if not dica.is_empty() else "Toque e segure para mirar.\nArraste e solte para lançar."
-
-
 func _process(delta: float) -> void:
 	var pausado: bool = partida.estado == partida.Estado.PAUSADO
 	var concluida: bool = partida.estado == partida.Estado.CONCLUIDA
@@ -321,14 +334,6 @@ func _process(delta: float) -> void:
 	elif not pausado and _dialogo_pausa.visible:
 		_dialogo_pausa.hide()
 		_pausa.grab_focus()
-	var mostrar_dicas: bool = preferencias == null or preferencias.dicas
-	if mostrar_dicas and not _dicas_ativas:
-		_ajuda_restante = DURACAO_AJUDA
-		if not has_node("TituloFase"):
-			_criar_dica.call_deferred()
-	_dicas_ativas = mostrar_dicas
-	if partida.estado == partida.Estado.JOGANDO and mostrar_dicas:
-		_ajuda_restante = maxf(0, _ajuda_restante - delta)
 	if OS.has_feature("android") and (_area_fisica != Rect2(DisplayServer.get_display_safe_area()) or _transformacao_tela != get_viewport().get_screen_transform()):
 		_atualizar_area_segura()
 	_status.text = str(partida.nave.combustivel)
@@ -364,27 +369,7 @@ func _process(delta: float) -> void:
 		_menu.visible = partida.estado == partida.Estado.PAUSADO
 	if _configuracoes != null:
 		_configuracoes.visible = partida.estado == partida.Estado.PAUSADO
-	if partida.estado == partida.Estado.PAUSADO:
-		_mensagem.text = "Partida pausada.\nToque em Retomar para continuar."
-	elif partida.estado == partida.Estado.CONCLUIDA and partida.campanha_permitida:
-		_mensagem.text = Narrativa.chegada(proxima_fase.is_empty())
-	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
-		_mensagem.text = partida.motivo + "\nEscolha como continuar."
-	elif partida.explorando:
-		var em_voo: bool = partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]
-		_mensagem.text = "Arraste para explorar.\n" + ("O oxigênio continua diminuindo." if em_voo else "Pousar interrompe o gasto de oxigênio.")
-	elif partida.nave.combustivel == 0:
-		_mensagem.text = "Sem combustível.\nÀ deriva até o oxigênio acabar."
-	elif partida.nivel.id == "teste_001":
-		_mensagem.text = _dica_tutorial()
-	elif partida.nave.condicao in [partida.nave.Condicao.EM_VOO, partida.nave.Condicao.A_DERIVA]:
-		_mensagem.text = "Arraste para corrigir."
-	else:
-		var dica := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
-		_mensagem.text = dica if not dica.is_empty() else "Arraste e solte para lançar.\nCírculo cancela. Linha indica direção."
-	var jogando: bool = partida.estado == partida.Estado.JOGANDO
-	_mensagem.visible = false
-	_mensagem.modulate.a = clampf(_ajuda_restante / 0.4, 0, 1) if jogando else 1.0
+	_atualizar_mensagem()
 	var avisos := PackedStringArray()
 	var perigos := 0
 	for id_corpo in partida.proximos:
@@ -402,16 +387,42 @@ func _process(delta: float) -> void:
 	_ajustar_rodape()
 
 
+func _ao_perder(_causa: String) -> void:
+	_tempo_explosao = 0.85
+	_fase_teve_derrota = true
+	if partida.campanha_permitida and preferencias != null:
+		preferencias.registrar_derrota(partida.nivel.id)
+
+
+func _preparar_dica_textual() -> void:
+	_dica_textual_pendente = _fase_teve_derrota and not _dica_textual.is_empty()
+
+
+func _atualizar_mensagem() -> void:
+	var mostrar_dica: bool = _dica_textual_pendente and partida.estado == partida.Estado.JOGANDO \
+		and not partida.apresentando_fase and not get_tree().paused and (preferencias == null or preferencias.dicas)
+	_painel_dica_textual.visible = mostrar_dica
+	if mostrar_dica:
+		_mensagem.text = _dica_textual
+	elif partida.estado == partida.Estado.PAUSADO:
+		_mensagem.text = "Partida pausada.\nToque em Retomar para continuar."
+	elif partida.estado == partida.Estado.CONCLUIDA and partida.campanha_permitida:
+		_mensagem.text = Narrativa.chegada(proxima_fase.is_empty())
+	elif partida.estado in [partida.Estado.PERDIDA, partida.Estado.CONCLUIDA]:
+		_mensagem.text = partida.motivo + "\nEscolha como continuar."
+	else:
+		_mensagem.text = ""
+
+
 func _criar_dica() -> void:
-	if has_node("DialogoDica"):
+	if _dica_apresentada or partida.apresentando_fase or partida.estado != partida.Estado.JOGANDO:
 		return
-	if preferencias != null and not preferencias.dicas:
+	var id: String = partida.nivel.id
+	if not Tutorial.tem_dica(id) or (progresso != null and progresso.concluidas.has(id)):
 		return
-	var texto := str(partida.nivel.dados_autorais.get("tutorial", "")).strip_edges()
-	if partida.estado != partida.Estado.JOGANDO:
+	if preferencias != null and (not preferencias.dicas or id in preferencias.dicas_vistas):
 		return
-	if texto.is_empty():
-		texto = "Arraste e solte para lançar. Volte ao círculo para cancelar."
+	_dica_apresentada = true
 	var dialogo := Control.new()
 	dialogo.name = "DialogoDica"
 	# A bússola usa z_index próprio e não deve atravessar o texto da dica.
@@ -420,39 +431,14 @@ func _criar_dica() -> void:
 	dialogo.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dialogo)
 	dialogo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	if partida.nivel.id == "teste_001":
-		var tutorial := Tutorial.new()
-		tutorial.fechada.connect(dialogo.queue_free)
-		dialogo.add_child(tutorial)
-		return
-	var fundo := ColorRect.new()
-	fundo.color = Color(0.015, 0.025, 0.06, 0.8)
-	dialogo.add_child(fundo)
-	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var centro := CenterContainer.new()
-	dialogo.add_child(centro)
-	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var painel := PanelContainer.new()
-	painel.theme = Tema.criar()
-	painel.add_theme_stylebox_override("panel", Tema.painel())
-	centro.add_child(painel)
-	var coluna := VBoxContainer.new()
-	coluna.custom_minimum_size.x = minf(180, get_viewport().get_visible_rect().size.x - 32)
-	coluna.add_theme_constant_override("separation", 12)
-	painel.add_child(coluna)
-	var dica := rotulo(coluna, texto, Tema.TAMANHO_TEXTO_AJUDA)
-	dica.custom_minimum_size.x = coluna.custom_minimum_size.x
-	dica.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var linha := CenterContainer.new()
-	coluna.add_child(linha)
-	var confirmar := botao(linha, "OK", func():
+	var tutorial := Tutorial.new()
+	tutorial.id_fase = id
+	tutorial.fechada.connect(func():
+		if preferencias != null:
+			preferencias.registrar_dica_vista(id)
 		dialogo.queue_free()
-		get_tree().paused = false
 	)
-	confirmar.custom_minimum_size = Vector2(64, 32)
-	get_tree().paused = true
-	confirmar.grab_focus()
+	dialogo.add_child(tutorial)
 
 
 func _apresentar_fase() -> void:

@@ -25,7 +25,7 @@ func conferir(condicao: bool, mensagem: String) -> bool:
 
 func _executar() -> void:
 	var catalogo := Catalogo.carregar("res://Recursos/Niveis.json")
-	conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 30, "Catálogo contém as 30 fases válidas")
+	conferir(catalogo.erros.is_empty() and catalogo.itens.size() == 31, "Catálogo contém as 31 fases válidas")
 	var terra := Arte.textura("earth")
 	var posto := Arte.textura("outpost")
 	conferir(posto != terra and posto == Arte.textura("outpost"), "Posto usa textura procedural própria em cache")
@@ -53,7 +53,7 @@ func _executar() -> void:
 
 
 func _conferir_fase(nivel: NivelRes, ordem: int) -> void:
-	var final := ordem == 30
+	var final := ordem == 31
 	var identidade := "earth" if final else "outpost"
 	var rotulo := "TERRA" if final else "POSTO"
 	var autoral: Dictionary = nivel.dados_autorais.goal

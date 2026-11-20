@@ -191,7 +191,52 @@ func testar_interface() -> void:
 	partida.avancar(0)
 	partida.resolver_contato({"kind": "body", "body": {"type": "earth"}})
 	conferir(jogo.progresso.fases_um_lancamento.has("teste_001"), "Contato com Terra confirma lançamento único pelo controlador real")
+	await testar_notificacoes(jogo, viewport)
 	jogo.queue_free()
 	await acomodar()
 	suporte.queue_free()
 	await process_frame
+
+
+func testar_notificacoes(jogo, viewport: SubViewport) -> void:
+	conferir(not jogo.has_node("NotificacaoConquistas"), "Vitória sem desbloqueio não cria aviso")
+	var itens: Array = jogo.get_node("GerenciadorDeNivel").itens
+	jogo.progresso.resetar()
+	for indice in 9:
+		jogo.progresso.concluir_com_coletas(itens[indice].id, itens, 3, 1, 1)
+	conferir(not jogo.has_node("NotificacaoConquistas"), "Carregar progresso com conquistas anteriores não exibe avisos")
+	conferir(jogo.iniciar_fase(itens[9].id), "Abre décima fase para testar desbloqueios simultâneos")
+	await acomodar()
+	var partida = jogo.mundo_atual.partida
+	partida.set_physics_process(false)
+	for estrela in partida.nivel.estrelas:
+		partida.estrelas_coletadas[estrela.id] = true
+	partida.lancamentos_aplicados = 1
+	partida.finalizar(true, "Vitória")
+	var notificacao = jogo.get_node_or_null("NotificacaoConquistas")
+	conferir(notificacao != null, "Uma vitória que cruza metas exibe a notificação")
+	if notificacao == null:
+		return
+	viewport.size = Vector2i(180, 240)
+	await acomodar()
+	conferir(notificacao._painel.visible and notificacao._titulo.text == "Nível 1 dourado" and notificacao._fila.size() == 2, "Três novas conquistas entram na fila e aparecem uma por vez")
+	var tela := Rect2(Vector2.ZERO, Vector2(viewport.size))
+	conferir(tela.encloses(notificacao._painel.get_global_rect()) and notificacao._painel.get_global_rect().encloses(notificacao._titulo.get_global_rect()), "Aviso cabe em 180x240")
+	conferir(notificacao._painel.mouse_filter == Control.MOUSE_FILTER_IGNORE and not paused, "Aviso não bloqueia toque nem pausa o jogo")
+	jogo.mostrar_selecao()
+	conferir(notificacao._painel.visible, "Trocar de tela preserva o aviso em exibição")
+	conferir(jogo.iniciar_fase(itens[9].id), "Reabre a fase para testar repetição")
+	await acomodar()
+	partida = jogo.mundo_atual.partida
+	partida.finalizar(true, "Vitória repetida")
+	conferir(notificacao._fila.size() == 2, "Repetir vitória não gera conquistas duplicadas")
+	var duracao: float = notificacao.DURACAO + notificacao.FADE
+	var meio_do_fade: float = duracao - notificacao.FADE * 0.5
+	notificacao._transicao.custom_step(meio_do_fade - notificacao._transicao.get_total_elapsed_time())
+	conferir(notificacao._painel.modulate.a > 0.0 and notificacao._painel.modulate.a < 1.0, "Aviso perde a opacidade no fim do tempo de leitura")
+	notificacao._transicao.custom_step(notificacao.FADE)
+	conferir(notificacao._painel.visible and notificacao._titulo.text == "Explorador azul 1", "Após sumir, o primeiro aviso dá lugar ao próximo")
+	notificacao._transicao.custom_step(duracao + 0.1)
+	conferir(notificacao._painel.visible and notificacao._titulo.text == "Impulso certeiro 2", "Terceiro aviso também é exibido")
+	notificacao._transicao.custom_step(duracao + 0.1)
+	conferir(not notificacao._painel.visible, "O último aviso desaparece sozinho")

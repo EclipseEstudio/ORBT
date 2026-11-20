@@ -41,7 +41,10 @@ func _executar() -> void:
 	viewport.add_child(selecao)
 	await acomodar()
 	conferir(selecao._colecao.text == "0/20" and selecao._colecao.modulate.is_equal_approx(Color("57b9ff")), "Cabeçalho mostra apenas estrelas azuis descobertas")
-	conferir(selecao.obter_cartao(0).get_node("Estrelas").get_child_count() == 3, "Cartão apresenta três estrelas douradas")
+	var planeta: Button = selecao.obter_cartao(0).get_child(2)
+	var estrelas: HBoxContainer = selecao.obter_cartao(0).get_node("Estrelas")
+	conferir(estrelas.get_child_count() == 3, "Planeta apresenta três estrelas douradas")
+	conferir(estrelas.get_rect().position.y > planeta.get_rect().end.y and is_equal_approx(estrelas.get_rect().get_center().x, planeta.get_rect().get_center().x), "Estrelas ficam alinhadas abaixo do planeta")
 	conferir(selecao.obter_cartao(0).get_child(2).accessibility_name.contains("Estrelas: 2/3") and selecao.obter_cartao(0).find_child("Azuis", true, false) == null, "Cartão mantém recorde dourado e oculta segredo azul")
 	for altura in [240, 320, 390]:
 		viewport.size.y = altura

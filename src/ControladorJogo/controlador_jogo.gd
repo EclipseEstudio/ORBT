@@ -5,6 +5,8 @@ const ProgressoPersistente = preload("res://src/Campanha/progresso_persistente.g
 const CheckpointPersistente = preload("res://src/Campanha/checkpoint_persistente.gd")
 const Preferencias = preload("res://src/Configuracoes/preferencias.gd")
 const AudioJogo = preload("res://src/Audio/audio_jogo.gd")
+const Conquistas = preload("res://src/Conquistas/conquistas.gd")
+const NotificacaoConquistas = preload("res://src/Conquistas/notificacao_conquistas.gd")
 @export var persistir_progresso := true
 @export var ativar_audio := true
 var caminho_progresso := "user://progresso.json"
@@ -18,6 +20,7 @@ var progresso := ProgressoSessao.new()
 var erro_abertura := ""
 var _abrindo := false
 var _voltar_pendente := false
+var _notificacao_conquistas: CanvasLayer
 
 @onready var mundo: Node = $Mundo
 @onready var interface: Control = $Interface
@@ -65,6 +68,9 @@ func resetar_progresso() -> String:
 		return checkpoint.aviso
 	if not progresso.resetar():
 		return progresso.aviso
+	preferencias.limpar_derrotas()
+	if is_instance_valid(_notificacao_conquistas):
+		_notificacao_conquistas.limpar()
 	if is_instance_valid(mundo_atual) and mundo_atual.get("partida") != null:
 		mostrar_menu.call_deferred()
 	return "Progresso resetado."
@@ -139,8 +145,7 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	audio.trocar_musica("fase")
 	instancia.partida.concluida.connect(func(id: String):
 		if mundo_atual == instancia:
-			progresso.concluir_com_coletas(id, GLOBAL.gerendiador_de_nivel.itens, instancia.partida.quantidade_coletada("gold"), instancia.partida.quantidade_coletada("blue"), instancia.partida.lancamentos_aplicados)
-			instancia.partida.aviso_salvamento = progresso.aviso_para_partida())
+			_registrar_conclusao(id, instancia.partida))
 	instancia.partida.selecao_solicitada.connect(func():
 		if mundo_atual == instancia:
 			mostrar_selecao())
@@ -179,6 +184,24 @@ func iniciar_fase(id_nivel: String, recuperacao: Dictionary = {}) -> bool:
 	alterar_interface_nodo(vazio)
 	_liberar_abertura.call_deferred()
 	return true
+
+
+func _registrar_conclusao(id: String, partida: Node) -> void:
+	var itens: Array = GLOBAL.gerendiador_de_nivel.itens
+	var bloqueadas := {}
+	for conquista in Conquistas.listar(progresso, itens):
+		if not conquista.desbloqueada:
+			bloqueadas[conquista.id] = true
+	var mudou := progresso.concluir_com_coletas(id, itens, partida.quantidade_coletada("gold"), partida.quantidade_coletada("blue"), partida.lancamentos_aplicados)
+	partida.aviso_salvamento = progresso.aviso_para_partida()
+	if not mudou:
+		return
+	for conquista in Conquistas.listar(progresso, itens):
+		if conquista.desbloqueada and bloqueadas.has(conquista.id):
+			if not is_instance_valid(_notificacao_conquistas):
+				_notificacao_conquistas = NotificacaoConquistas.new()
+				add_child(_notificacao_conquistas)
+			_notificacao_conquistas.mostrar(conquista)
 
 
 func proxima_fase(id: String) -> String:
@@ -247,6 +270,7 @@ func mostrar_selecao() -> void:
 	tela.itens = gerenciador.itens
 	tela.erros = gerenciador.erros.duplicate()
 	tela.progresso = progresso
+	tela.preferencias = preferencias
 	tela.fase_escolhida.connect(func(id: String):
 		if interface_atual == tela and not iniciar_fase(id):
 			tela.falhou(erro_abertura))

@@ -1,5 +1,5 @@
 extends Control
-## Demonstrações animadas no diálogo da primeira fase, com a campanha pausada.
+## Demonstrações animadas de recursos novos, com a campanha pausada.
 
 signal fechada
 const Tema = preload("res://src/Visual/tema_visual.gd")
@@ -10,6 +10,17 @@ const INSTRUCOES := [
 	"Arraste para baixo.\nDistância = força.\nSolte para subir.",
 	"Arraste e volte ao\ncírculo sem soltar.\nCancelar não gasta."
 ]
+const DICAS := {
+	"primeiro_pouso": [AreaDemonstracao.Modo.POUSO, "POUSO", "Faça escala em um apoio para redirecionar a nave. Reserve uma carga para decolar."],
+	"segundo_impulso": [AreaDemonstracao.Modo.COMBUSTIVEL, "CORREÇÃO EM VOO", "Dê outro impulso em voo para mudar a trajetória. O tanque verde repõe uma carga."],
+	"de_lua_em_lua": [AreaDemonstracao.Modo.GIRO, "APOIO GIRATÓRIO", "Depois de pousar, espere o apoio girar até a nave apontar para uma saída livre."],
+	"rasante_solar": [AreaDemonstracao.Modo.SOL, "SOL", "Use a gravidade do Sol para curvar o voo. Mantenha distância para evitar a zona de perigo."],
+	"lua_em_movimento": [AreaDemonstracao.Modo.ORBITA, "APOIO EM ÓRBITA", "Intercepte o apoio em movimento. Ao sair, a nave leva junto a velocidade da órbita."],
+	"pouso_de_precisao": [AreaDemonstracao.Modo.FAIXA_POUSO, "POUSO DE PRECISÃO", "Aproxime-se pelo arco verde. Tocar o apoio fora da faixa encerra a tentativa."],
+	"fenda_no_espaco": [AreaDemonstracao.Modo.PORTAL, "PORTAIS", "Entre pelo portal escuro e saia pelo claro. A saída muda a direção do voo."],
+	"nevoa_cega": [AreaDemonstracao.Modo.NEBULOSA, "NEBULOSA", "A névoa limita a visão da nave e do mapa. Siga a bússola para encontrar o destino."]
+}
+var id_fase := "teste_001"
 var etapa := 0
 var _fechando := false
 var _pausa_anterior := false
@@ -23,6 +34,10 @@ var _retorno: Label
 var _avancar: Button
 var _anterior: Button
 var area: Control
+
+
+static func tem_dica(id: String) -> bool:
+	return id == "teste_001" or DICAS.has(id)
 
 
 func _ready() -> void:
@@ -64,12 +79,13 @@ func _ready() -> void:
 	sair.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_titulo = _rotulo(coluna, "")
 	_titulo.modulate = Tema.DESTAQUE
+	_titulo.custom_minimum_size.x = 1
 	_instrucao = _rotulo(coluna, "")
 	_instrucao.add_theme_font_size_override("font_size", Tema.TAMANHO_TEXTO_AJUDA)
 	_instrucao.custom_minimum_size.y = 32
 	area = AreaDemonstracao.new()
 	area.name = "AreaDemonstracao"
-	area.accessibility_name = "Demonstração animada do gesto"
+	area.accessibility_name = "Demonstração animada"
 	area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	coluna.add_child(area)
 	_retorno = _rotulo(coluna, "")
@@ -82,7 +98,17 @@ func _ready() -> void:
 	Tema.destacar(_avancar)
 	get_viewport().size_changed.connect(_ajustar_area)
 	_ajustar_area()
-	_mostrar_etapa(0)
+	if DICAS.has(id_fase):
+		var dica: Array = DICAS[id_fase]
+		_contador.text = "NOVO RECURSO"
+		_titulo.text = dica[1]
+		_instrucao.text = dica[2]
+		area.configurar(dica[0])
+		_retorno.hide()
+		_anterior.hide()
+		_avancar.text = "Jogar"
+	else:
+		_mostrar_etapa(0)
 	sair.grab_focus()
 
 
@@ -118,7 +144,7 @@ func _mostrar_etapa(indice: int) -> void:
 
 
 func _proxima() -> void:
-	if etapa == TITULOS.size() - 1:
+	if DICAS.has(id_fase) or etapa == TITULOS.size() - 1:
 		fechar()
 	else:
 		_mostrar_etapa(etapa + 1)
